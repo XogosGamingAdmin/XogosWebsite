@@ -67,7 +67,8 @@
 }
 
 @keyframes calmingPulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 0.08;
     transform: scale(1);
   }
@@ -709,75 +710,76 @@
   .panicAttackPage {
     padding-top: 80px;
   }
-  
+
   .heroContent {
     grid-template-columns: 1fr;
     gap: 40px;
     text-align: center;
   }
-  
+
   .heroTitle {
     font-size: 2.5rem;
   }
-  
+
   .heroDescription {
     font-size: 1.1rem;
   }
-  
+
   .heroActions {
     flex-direction: column;
     align-items: center;
   }
-  
-  .primaryButton, .secondaryButton {
+
+  .primaryButton,
+  .secondaryButton {
     width: 100%;
     max-width: 300px;
   }
-  
+
   .tabContainer {
     flex-wrap: wrap;
     gap: 0;
   }
-  
+
   .tabButton {
     flex: 1;
     min-width: 120px;
     font-size: 0.85rem;
     padding: 12px 15px;
   }
-  
+
   .featuresGrid {
     grid-template-columns: 1fr;
     gap: 20px;
     padding: 0 1rem;
   }
-  
+
   .gameplayGrid {
     grid-template-columns: 1fr;
     gap: 20px;
     padding: 0 1rem;
   }
-  
+
   .objectivesGrid {
     grid-template-columns: 1fr;
     gap: 15px;
   }
-  
+
   .curriculumCards {
     grid-template-columns: 1fr;
     gap: 20px;
   }
-  
+
   .resourcesGrid {
     grid-template-columns: 1fr;
     gap: 20px;
   }
-  
+
   .safetyNotice {
     flex-direction: column;
     text-align: center;
   }
-  
+
   .ctaButtons {
     flex-direction: column;
     align-items: center;
@@ -788,21 +790,24 @@
   .heroTitle {
     font-size: 2rem;
   }
-  
+
   .sectionTitle {
     font-size: 2rem;
   }
-  
+
   .ctaTitle {
     font-size: 2rem;
   }
-  
+
   .tabButton {
     font-size: 0.8rem;
     padding: 10px 12px;
   }
-  
-  .featureCard, .gameplayCard, .resourceCard, .curriculumCard {
+
+  .featureCard,
+  .gameplayCard,
+  .resourceCard,
+  .curriculumCard {
     padding: 20px;
   }
 }

@@ -585,7 +585,8 @@
 }
 
 @keyframes pixelPulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 0.6;
     transform: scale(1);
   }
@@ -871,7 +872,8 @@
     align-items: center;
   }
 
-  .primaryButton, .secondaryButton {
+  .primaryButton,
+  .secondaryButton {
     width: 100%;
     max-width: 300px;
   }

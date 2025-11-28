@@ -45,14 +45,7 @@ export function RSSFeedSection({
   const [feeds, setFeeds] = useState<FeedWithCommentary[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [selectedFeed, setSelectedFeed] = useState<string | null>(null);
-
-  useEffect(() => {
-    fetchFeeds();
-    // Refresh every 5 minutes
-    const interval = setInterval(fetchFeeds, 300000);
-    return () => clearInterval(interval);
-  }, [category]);
+  const [, setSelectedFeed] = useState<string | null>(null);
 
   const fetchFeeds = async () => {
     try {
@@ -68,6 +61,14 @@ export function RSSFeedSection({
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchFeeds();
+    // Refresh every 5 minutes
+    const interval = setInterval(fetchFeeds, 300000);
+    return () => clearInterval(interval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [category]);
 
   const getSentimentIcon = (sentiment?: string) => {
     switch (sentiment) {

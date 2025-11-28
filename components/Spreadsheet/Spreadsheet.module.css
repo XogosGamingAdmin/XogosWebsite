@@ -18,7 +18,11 @@
 .container {
   display: flex;
   flex-direction: column;
-  background: linear-gradient(135deg, var(--spreadsheet-bg) 0%, var(--spreadsheet-surface) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--spreadsheet-bg) 0%,
+    var(--spreadsheet-surface) 100%
+  );
   position: absolute;
   top: 0;
   right: 0;
@@ -193,7 +197,9 @@
 .cellInput:focus {
   outline: none;
   background: var(--spreadsheet-cell-focus);
-  box-shadow: inset 0 0 0 2px var(--spreadsheet-accent), 0 0 12px var(--spreadsheet-accent-glow);
+  box-shadow:
+    inset 0 0 0 2px var(--spreadsheet-accent),
+    0 0 12px var(--spreadsheet-accent-glow);
 }
 
 .cellInput[readonly] {
@@ -223,7 +229,6 @@
   white-space: nowrap;
   font-weight: 500;
 }
-
 
 /* First row styling */
 .table tbody tr:first-child .cell {

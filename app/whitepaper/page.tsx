@@ -1,10 +1,10 @@
 // whitepaper/page.tsx
 "use client";
 
-import React from "react";
-import { Container } from "@/primitives/Container";
-import { MarketingLayout } from "@/layouts/Marketing";
 import Link from "next/link";
+import React from "react";
+import { MarketingLayout } from "@/layouts/Marketing";
+import { Container } from "@/primitives/Container";
 import styles from "./whitepaper.module.css";
 
 export default function WhitepaperPage() {

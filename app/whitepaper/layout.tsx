@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title:
-    "Whitepaper | Educational Gaming Platform for K-12 Students & Schools",
+  title: "Whitepaper | Educational Gaming Platform for K-12 Students & Schools",
   description:
     "Read the Xogos Gaming Whitepaper detailing our educational gaming platform for K-12 students, homeschoolers, and schools. Learn about our dual-token system, scholarship opportunities, curriculum-aligned games, and how students can earn rewards through learning.",
   keywords: [

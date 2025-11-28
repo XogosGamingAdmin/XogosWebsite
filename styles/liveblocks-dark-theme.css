@@ -46,7 +46,11 @@
 
 /* Main document container */
 [class*="Document_container"] {
-  background: linear-gradient(135deg, var(--lb-dark-bg) 0%, var(--lb-dark-surface) 100%) !important;
+  background: linear-gradient(
+    135deg,
+    var(--lb-dark-bg) 0%,
+    var(--lb-dark-surface) 100%
+  ) !important;
 }
 
 /* Document header */
@@ -61,7 +65,11 @@
 
 /* Editor container */
 [class*="TextEditor_container"] {
-  background: linear-gradient(135deg, var(--lb-dark-bg) 0%, var(--lb-dark-surface) 100%) !important;
+  background: linear-gradient(
+    135deg,
+    var(--lb-dark-bg) 0%,
+    var(--lb-dark-surface) 100%
+  ) !important;
 }
 
 /* Editor header/toolbar area */
@@ -95,7 +103,11 @@
 
 /* Whiteboard canvas */
 [class*="Whiteboard_canvas"] {
-  background: linear-gradient(135deg, var(--lb-dark-bg) 0%, var(--lb-dark-surface) 100%) !important;
+  background: linear-gradient(
+    135deg,
+    var(--lb-dark-bg) 0%,
+    var(--lb-dark-surface) 100%
+  ) !important;
 }
 
 /* Whiteboard toolbar */
