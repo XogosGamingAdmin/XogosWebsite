@@ -34,7 +34,7 @@ Click **"Manage variables"** and add the following:
 |--------------|---------------|-------------|
 | `LIVEBLOCKS_SECRET_KEY` | `sk_prod_xxxxxxxxxxxx...` | Your Liveblocks secret key |
 | `NEXTAUTH_SECRET` | `your-random-32-char-string` | NextAuth encryption key |
-| `NEXTAUTH_URL` | `https://your-domain.amplifyapp.com` | Your deployment URL |
+| `NEXTAUTH_URL` | `https://www.histronics.com` | Your production deployment URL |
 | `GOOGLE_CLIENT_ID` | `123456789.apps.googleusercontent.com` | Google OAuth client ID |
 | `GOOGLE_CLIENT_SECRET` | `GOCSPX-xxxxxxxxxxxxx` | Google OAuth client secret |
 
