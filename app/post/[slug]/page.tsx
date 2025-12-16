@@ -4,8 +4,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { remark } from "remark";
 import html from "remark-html";
-import { getAllPostSlugs, getPostBySlug, getRelatedPosts } from "@/lib/posts";
 import { MarketingLayout } from "@/layouts/Marketing/Marketing";
+import { getAllPostSlugs, getPostBySlug, getRelatedPosts } from "@/lib/posts";
 import styles from "./page.module.css";
 
 interface PageProps {

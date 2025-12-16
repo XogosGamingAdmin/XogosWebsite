@@ -1,9 +1,9 @@
 // app/timeline/page.tsx
 "use client";
 
+import Link from "next/link";
 import React, { useState } from "react";
 import { MarketingLayout } from "@/layouts/Marketing";
-import Link from "next/link";
 import styles from "./page.module.css";
 
 // Utility function to get the current month and upcoming months

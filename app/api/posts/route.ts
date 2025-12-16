@@ -1,6 +1,6 @@
 import fs from "fs";
-import { NextRequest, NextResponse } from "next/server";
 import path from "path";
+import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 
 const postsDirectory = path.join(process.cwd(), "content/posts");
