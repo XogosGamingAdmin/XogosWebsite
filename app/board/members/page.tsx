@@ -95,8 +95,8 @@ const BoardMembers: React.FC = () => {
           </div>
           <div className={styles.memberImage}>
             <img
-              src="/images/board//Zack.jpg"
-              alt=" CEO - Zack Edwards (CEO)"
+              src="/images/board/Zack.jpg"
+              alt="CEO - Zack Edwards"
             />
           </div>
         </div>
