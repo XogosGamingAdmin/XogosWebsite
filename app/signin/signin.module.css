@@ -22,9 +22,17 @@
 }
 
 .title {
-  margin-bottom: var(--space-9);
+  margin-bottom: var(--space-4);
   font-size: var(--size-2xl);
   font-weight: 700;
+}
+
+.description {
+  margin-bottom: var(--space-9);
+  font-size: var(--size-base);
+  color: var(--color-text-secondary);
+  text-align: center;
+  max-width: 400px;
 }
 
 .actions {
