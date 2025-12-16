@@ -19,7 +19,7 @@ const boardMembers = [
     name: "Zack Edwards",
     title: "CEO",
     role: "Executive Oversight",
-    imagePath: "/images/board/zack.jpg",
+    imagePath: "/images/board/zack.png",
     seatPosition: "head",
     status: "present",
   },
