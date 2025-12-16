@@ -89,7 +89,7 @@ Create a `.env.local` file in the project root:
 # ====================================
 LIVEBLOCKS_SECRET_KEY=sk_prod_...
 NEXTAUTH_SECRET=<generate-random-string>
-NEXTAUTH_URL=http://localhost:3000
+NEXTAUTH_URL=https://www.histronics.com  # Use http://localhost:3000 for local development
 
 # ====================================
 # REQUIRED - Google OAuth
@@ -210,6 +210,7 @@ npm run dev
 ```
 ▲ Next.js 14.2.3
 - Local:        http://localhost:3000
+- Production:   https://www.histronics.com
 - Environments: .env.local
 
 ✓ Ready in 3.5s
@@ -225,10 +226,11 @@ npm run dev
 
 ### Verify Development Build
 
-1. Open browser to [http://localhost:3000](http://localhost:3000)
-2. You should see the Xogos Gaming home page
-3. Check browser console for any errors (F12 → Console tab)
-4. Verify no 404 errors for assets in Network tab
+1. Open browser to [http://localhost:3000](http://localhost:3000) for local development
+2. Production site: [https://www.histronics.com](https://www.histronics.com)
+3. You should see the Xogos Gaming home page
+4. Check browser console for any errors (F12 → Console tab)
+5. Verify no 404 errors for assets in Network tab
 
 ### Development Build Characteristics
 
