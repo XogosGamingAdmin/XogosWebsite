@@ -4,8 +4,6 @@ import { getProviders } from "@/auth";
 // Your Liveblocks secret key
 export const SECRET_API_KEY = process.env.LIVEBLOCKS_SECRET_KEY;
 
-export const liveblocks = new Liveblocks({ secret: SECRET_API_KEY as string });
-
 // ============================================================================
 if (typeof window !== "undefined") {
   console.log();
@@ -16,17 +14,27 @@ if (typeof window !== "undefined") {
   console.log();
 }
 
+// Check for secret key before initializing Liveblocks
 if (!SECRET_API_KEY) {
-  throw new Error(`You must add your Liveblocks secret key to .env.local to use the starter kit 
+  // During build time, provide a placeholder to prevent build errors
+  // At runtime, this will throw an error if the key is missing
+  if (process.env.NODE_ENV === 'production' && !SECRET_API_KEY) {
+    throw new Error(`You must add your Liveblocks secret key to environment variables
 
-Example .env.local file:
+Example environment variable:
 LIVEBLOCKS_SECRET_KEY=sk_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
-You can find your secret keys on https://liveblocks.io/dashboard/apikeys 
+You can find your secret keys on https://liveblocks.io/dashboard/apikeys
 Follow the full starter kit guide on https://liveblocks.io/docs/guides/nextjs-starter-kit
- 
+
 `);
+  }
 }
+
+// Initialize Liveblocks with fallback for build time
+export const liveblocks = new Liveblocks({
+  secret: SECRET_API_KEY || 'sk_build_placeholder_key_replace_with_real_key'
+});
 
 (async () => {
   const providers = await getProviders();
