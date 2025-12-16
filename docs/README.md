@@ -81,11 +81,14 @@ Common issues, debugging guides, and problem resolution.
 **MANDATORY READING ORDER:**
 
 1. **[Current State](./00-current-state/README.md)** - Start here (CTO directive)
-2. [Project Checklist](./01-project-checklist/README.md) - What we're building
-3. [Architecture](./03-architecture/README.md) - System design
-4. Reference specific sections as needed for feature development
+2. **[BUILD.md](./BUILD.md)** - Build process and setup
+3. [Project Checklist](./01-project-checklist/README.md) - What we're building
+4. [Architecture](./03-architecture/README.md) - System design
+5. Reference specific sections as needed for feature development
 
 **Section 00 is mandatory reading. Do not skip it.**
+
+**BUILD.md is required reading for anyone setting up the project.**
 
 ---
 

@@ -54,12 +54,14 @@ This section documents deployment procedures, environment configuration, and CI/
 
 **Build Scripts:**
 ```bash
-pnpm dev          # Development server
-pnpm build        # Production build
-pnpm start        # Start production
-pnpm lint         # Lint code
-pnpm typecheck    # Type check
+npm dev          # Development server
+npm build        # Production build
+npm start        # Start production
+npm lint         # Lint code
+npm typecheck    # Type check
 ```
+
+**IMPORTANT:** See [BUILD.md](../BUILD.md) for complete build process documentation.
 
 **No CI/CD pipeline yet** - See Section 01 for implementation checklist.
 
