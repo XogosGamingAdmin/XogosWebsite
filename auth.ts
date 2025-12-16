@@ -23,7 +23,20 @@ export const {
       const userInfo = await getUser(session.user.email);
 
       if (!userInfo) {
-        throw new Error("User not found");
+        console.warn(
+          `⚠️ User ${session.user.email} not found in data/users.ts. Add them to grant board access.`
+        );
+        // Create a basic user object for users not in the database
+        // They won't have access to board features but can still sign in
+        session.user.info = {
+          id: session.user.email,
+          name: session.user.name || "Guest User",
+          avatar:
+            session.user.image || "https://liveblocks.io/avatars/avatar-0.png",
+          color: "#000000",
+          groupIds: [], // No group access until added to users.ts
+        };
+        return session;
       }
 
       session.user.info = userInfo;
