@@ -44,15 +44,10 @@ if (providers.length === 0) {
     "❌ ERROR: No authentication providers configured! " +
       "You must set environment variables for at least one provider:\n" +
       "  - Google: GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET\n" +
-      "  - Auth0: AUTH0_CLIENT_ID, AUTH0_CLIENT_SECRET, and AUTH0_ISSUER"
+      "  - Auth0: AUTH0_CLIENT_ID, AUTH0_CLIENT_SECRET, and AUTH0_ISSUER\n" +
+      "Authentication will not work until these are set."
   );
-
-  // In production, this is a fatal error
-  if (process.env.NODE_ENV === "production") {
-    throw new Error(
-      "No authentication providers configured. Set environment variables for Google or Auth0."
-    );
-  }
+  // Don't throw - let the app run without auth rather than crash completely
 }
 
 export const authConfig: NextAuthConfig = {

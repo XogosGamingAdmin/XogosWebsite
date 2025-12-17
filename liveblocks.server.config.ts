@@ -78,9 +78,9 @@ https://liveblocks.io/docs/guides/nextjs-starter-kit#github-authentication
       !process.env.AUTH0_CLIENT_SECRET ||
       !process.env.AUTH0_ISSUER
     ) {
-      throw new Error(`Your Auth0 secrets are missing from .env.local
+      console.warn(`⚠️ Your Auth0 secrets are missing from environment variables
 
-Example .env.local file:
+Example environment variables:
 AUTH0_CLIENT_ID=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 AUTH0_CLIENT_SECRET=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 AUTH0_ISSUER=https://XXXXXXXXXXXXXXXXXX.com
