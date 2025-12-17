@@ -38,6 +38,23 @@ if (
   );
 }
 
+// Ensure we have at least one provider
+if (providers.length === 0) {
+  console.error(
+    "❌ ERROR: No authentication providers configured! " +
+      "You must set environment variables for at least one provider:\n" +
+      "  - Google: GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET\n" +
+      "  - Auth0: AUTH0_CLIENT_ID, AUTH0_CLIENT_SECRET, and AUTH0_ISSUER"
+  );
+
+  // In production, this is a fatal error
+  if (process.env.NODE_ENV === "production") {
+    throw new Error(
+      "No authentication providers configured. Set environment variables for Google or Auth0."
+    );
+  }
+}
+
 export const authConfig: NextAuthConfig = {
   // Configure one or more authentication providers
   // More info: https://next-auth.js.org/providers/
