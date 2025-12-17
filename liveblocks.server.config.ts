@@ -76,14 +76,14 @@ https://liveblocks.io/docs/guides/nextjs-starter-kit#github-authentication
     if (
       !process.env.AUTH0_CLIENT_ID ||
       !process.env.AUTH0_CLIENT_SECRET ||
-      !process.env.AUTH0_ISSUER_BASE_URL
+      !process.env.AUTH0_ISSUER
     ) {
       throw new Error(`Your Auth0 secrets are missing from .env.local
 
 Example .env.local file:
 AUTH0_CLIENT_ID=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 AUTH0_CLIENT_SECRET=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-AUTH0_ISSUER_BASE_URL=https://XXXXXXXXXXXXXXXXXX.com
+AUTH0_ISSUER=https://XXXXXXXXXXXXXXXXXX.com
 
 Follow the full starter kit guide to learn how to get them:
 https://liveblocks.io/docs/guides/nextjs-starter-kit#auth0-authentication
