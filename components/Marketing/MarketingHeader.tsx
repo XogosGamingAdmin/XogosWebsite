@@ -71,7 +71,7 @@ export function MarketingHeader({
               <button
                 className={styles.navLink}
                 onClick={async () => {
-                  await signIn(undefined, { callbackUrl: "/board" });
+                  await signIn("google", { callbackUrl: "/board" });
                 }}
               >
                 <div className={styles.signInContainer}>
