@@ -9,20 +9,29 @@ import GoogleProvider from "next-auth/providers/google";
  * - GOOGLE_CLIENT_SECRET
  */
 
-// Validate Google credentials are present
-if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || "";
+const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET || "";
+
+// Validate credentials
+if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET) {
   console.error(
-    "❌ MISSING CREDENTIALS: GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET must be set in environment variables.\n" +
-    "Add these to AWS Amplify Environment Variables or your .env.local file.\n" +
-    "Authentication will not work until these are configured."
+    "\n" +
+    "❌ ERROR: Google OAuth credentials are missing!\n" +
+    "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" +
+    "GOOGLE_CLIENT_ID: " + (GOOGLE_CLIENT_ID ? "✓ Set" : "✗ Missing") + "\n" +
+    "GOOGLE_CLIENT_SECRET: " + (GOOGLE_CLIENT_SECRET ? "✓ Set" : "✗ Missing") + "\n" +
+    "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" +
+    "Add these to AWS Amplify Environment Variables:\n" +
+    "App Settings → Environment variables → Manage variables\n" +
+    "Then redeploy the application.\n"
   );
 }
 
 export const authConfig: NextAuthConfig = {
   providers: [
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      clientId: GOOGLE_CLIENT_ID,
+      clientSecret: GOOGLE_CLIENT_SECRET,
       authorization: {
         params: {
           prompt: "select_account",
