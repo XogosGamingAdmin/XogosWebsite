@@ -2,7 +2,6 @@
 import clsx from "clsx";
 import Image from "next/image";
 import Link from "next/link";
-import { signIn } from "next-auth/react";
 import { ComponentProps, useEffect, useState } from "react";
 import { SignInIcon } from "@/icons";
 import { Container } from "@/primitives/Container";
@@ -68,17 +67,12 @@ export function MarketingHeader({
               <Link href="/board" className={styles.navLink}>
                 Board Room
               </Link>
-              <button
-                className={styles.navLink}
-                onClick={async () => {
-                  await signIn("google", { callbackUrl: "/board" });
-                }}
-              >
+              <Link href="/board-signin" className={styles.navLink}>
                 <div className={styles.signInContainer}>
                   <SignInIcon className={styles.signInIcon} />
                   <span>Board Sign-in</span>
                 </div>
-              </button>
+              </Link>
             </div>
           </nav>
         </div>

@@ -8,8 +8,11 @@
 
 export const AUTHORIZED_EMAILS = [
   // Board Members - Add authorized emails here
-  "zack@xogos.io",
-  "your-email@example.com", // Replace with actual board member emails
+  "zack@xogosgaming.com",
+  "braden@kennyhertzperry.com",
+  "enjoyweaver@gmail.com",
+  "mckaylaareece@gmail.com"
+  "sturs49@gmail.com" // Replace with actual board member emails
 
   // Add more authorized emails below:
 ];
