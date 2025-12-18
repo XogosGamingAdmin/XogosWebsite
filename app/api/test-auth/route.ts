@@ -8,9 +8,7 @@ export async function GET() {
     GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET
       ? `Set (${process.env.GOOGLE_CLIENT_SECRET.substring(0, 10)}...)`
       : "❌ NOT SET",
-    NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET
-      ? "✓ Set"
-      : "❌ NOT SET",
+    NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET ? "✓ Set" : "❌ NOT SET",
     NEXTAUTH_URL: process.env.NEXTAUTH_URL || "❌ NOT SET",
     NODE_ENV: process.env.NODE_ENV,
   };
