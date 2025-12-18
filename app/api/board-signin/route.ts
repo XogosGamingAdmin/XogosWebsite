@@ -1,17 +1,17 @@
-import { redirect } from "next/navigation";
+import { NextResponse } from "next/server";
 
-export default function BoardSignInPage() {
+export async function GET() {
   // Read Client ID from environment variable
   const clientId = process.env.GOOGLE_CLIENT_ID;
   const redirectUri = "https://www.histronics.com/api/auth/callback/google";
 
   if (!clientId) {
-    return (
-      <div style={{ padding: "2rem", textAlign: "center" }}>
-        <h2>Configuration Error</h2>
-        <p>GOOGLE_CLIENT_ID is not set in environment variables.</p>
-        <p>Please contact the administrator.</p>
-      </div>
+    return NextResponse.json(
+      {
+        error: "Configuration Error",
+        message: "GOOGLE_CLIENT_ID is not set in environment variables.",
+      },
+      { status: 500 }
     );
   }
 
@@ -24,5 +24,5 @@ export default function BoardSignInPage() {
   googleAuthUrl.searchParams.set("prompt", "select_account");
 
   // Redirect to Google
-  redirect(googleAuthUrl.toString());
+  return NextResponse.redirect(googleAuthUrl.toString());
 }

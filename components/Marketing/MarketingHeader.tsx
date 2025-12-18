@@ -67,7 +67,7 @@ export function MarketingHeader({
               <Link href="/board" className={styles.navLink}>
                 Board Room
               </Link>
-              <Link href="/board-signin" className={styles.navLink}>
+              <Link href="/api/board-signin" className={styles.navLink}>
                 <div className={styles.signInContainer}>
                   <SignInIcon className={styles.signInIcon} />
                   <span>Board Sign-in</span>
