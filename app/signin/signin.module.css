@@ -40,6 +40,31 @@
   gap: var(--space-6);
 }
 
+.error {
+  margin-bottom: var(--space-6);
+  padding: var(--space-4);
+  background-color: #fee;
+  border: 1px solid #fcc;
+  border-radius: var(--radius-md);
+  color: #c00;
+  text-align: center;
+  max-width: 400px;
+}
+
+.error p {
+  margin: 0;
+  margin-bottom: var(--space-2);
+}
+
+.error p:last-child {
+  margin-bottom: 0;
+}
+
+.errorDetails {
+  font-size: var(--size-sm);
+  color: #900;
+}
+
 @media (min-width: 1024px) {
   .aside {
     display: block;

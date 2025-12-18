@@ -1,37 +1,41 @@
 import { redirect } from "next/navigation";
-import { auth, getProviders } from "@/auth";
-import { DemoLogin } from "./DemoLogin";
+import { auth } from "@/auth";
 import { NextAuthLogin } from "./NextAuthLogin";
 import styles from "./signin.module.css";
 
 export default async function SignInPage({
   searchParams,
 }: {
-  searchParams: { callbackUrl?: string };
+  searchParams: { callbackUrl?: string; error?: string };
 }) {
   const session = await auth();
 
-  // If logged in, redirect to callback URL or board
+  // If already signed in, redirect to board
   if (session) {
     redirect(searchParams.callbackUrl || "/board");
   }
 
-  const providers = await getProviders();
   return (
     <div className={styles.container}>
       <main className={styles.main}>
-        <h2 className={styles.title}>Sign in to Board Members Section</h2>
+        <h2 className={styles.title}>Board Members Sign-In</h2>
         <p className={styles.description}>
-          Access the Board of Directors portal with your authorized account
+          Sign in with your authorized Google account to access the Board of
+          Directors portal
         </p>
-        {providers && providers.credentials ? (
-          <DemoLogin />
-        ) : (
-          <NextAuthLogin
-            providers={providers}
-            callbackUrl={searchParams.callbackUrl}
-          />
+
+        {searchParams.error && (
+          <div className={styles.error}>
+            <p>
+              ❌ Access Denied: Your email is not authorized for Board access.
+            </p>
+            <p className={styles.errorDetails}>
+              Please contact the administrator if you believe this is an error.
+            </p>
+          </div>
         )}
+
+        <NextAuthLogin callbackUrl={searchParams.callbackUrl} />
       </main>
       <aside className={styles.aside} />
     </div>
