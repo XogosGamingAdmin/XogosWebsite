@@ -13,12 +13,19 @@ export const {
   signOut,
 } = NextAuth({
   secret: NEXTAUTH_SECRET,
+  debug: true, // Enable debug logging
   callbacks: {
     /**
      * Check if user is authorized during sign-in
      * Only allow users on the whitelist
      */
     async signIn({ user, account, profile }) {
+      console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+      console.log("🔐 Sign-in callback triggered");
+      console.log("User:", JSON.stringify(user, null, 2));
+      console.log("Account:", JSON.stringify(account, null, 2));
+      console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+
       const email = user.email;
 
       // Check if email is on the authorized list
