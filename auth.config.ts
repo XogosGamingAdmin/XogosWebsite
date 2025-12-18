@@ -9,11 +9,25 @@ import GoogleProvider from "next-auth/providers/google";
  * - GOOGLE_CLIENT_SECRET
  */
 
+// Validate Google credentials are present
+if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
+  console.error(
+    "❌ MISSING CREDENTIALS: GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET must be set in environment variables.\n" +
+    "Add these to AWS Amplify Environment Variables or your .env.local file.\n" +
+    "Authentication will not work until these are configured."
+  );
+}
+
 export const authConfig: NextAuthConfig = {
   providers: [
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID || "",
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      authorization: {
+        params: {
+          prompt: "select_account",
+        },
+      },
     }),
   ],
 
