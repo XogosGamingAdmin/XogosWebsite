@@ -1,5 +1,4 @@
 import { Liveblocks } from "@liveblocks/node";
-import { getProviders } from "@/auth";
 
 // Your Liveblocks secret key
 export const SECRET_API_KEY = process.env.LIVEBLOCKS_SECRET_KEY;
@@ -40,54 +39,3 @@ Follow the full starter kit guide on https://liveblocks.io/docs/guides/nextjs-st
 export const liveblocks = new Liveblocks({
   secret: SECRET_API_KEY || 'sk_dev_placeholder_for_build_replace_with_real_key_in_production'
 });
-
-(async () => {
-  const providers = await getProviders();
-
-  if (providers?.google) {
-    if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
-      console.log(`Your Google secrets are missing from .env.local
-
-Example .env.local file:
-GOOGLE_CLIENT_ID=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-GOOGLE_CLIENT_SECRET=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-
-Follow the full starter kit guide to learn how to get them:
-https://liveblocks.io/docs/guides/nextjs-starter-kit#google-authentication
-      `);
-    }
-  }
-
-  if (providers?.github) {
-    if (!process.env.GITHUB_CLIENT_ID || !process.env.GITHUB_CLIENT_SECRET) {
-      console.log(`Your GitHub secrets are missing from .env.local
-
-Example .env.local file:
-GITHUB_CLIENT_ID=sk_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-GITHUB_CLIENT_SECRET=sk_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-
-Follow the full starter kit guide to learn how to get them:
-https://liveblocks.io/docs/guides/nextjs-starter-kit#github-authentication
-      `);
-    }
-  }
-
-  if (providers?.auth0) {
-    if (
-      !process.env.AUTH0_CLIENT_ID ||
-      !process.env.AUTH0_CLIENT_SECRET ||
-      !process.env.AUTH0_ISSUER
-    ) {
-      console.warn(`⚠️ Your Auth0 secrets are missing from environment variables
-
-Example environment variables:
-AUTH0_CLIENT_ID=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-AUTH0_CLIENT_SECRET=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-AUTH0_ISSUER=https://XXXXXXXXXXXXXXXXXX.com
-
-Follow the full starter kit guide to learn how to get them:
-https://liveblocks.io/docs/guides/nextjs-starter-kit#auth0-authentication
-      `);
-    }
-  }
-})();
