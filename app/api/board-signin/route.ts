@@ -1,15 +1,37 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
-export async function GET(_request: NextRequest) {
-  // Build the NextAuth sign-in URL with Google provider
-  // This properly handles state management and callback URLs
+export async function GET() {
+  // Get environment variables
+  const clientId = process.env.GOOGLE_CLIENT_ID;
   const baseUrl = process.env.NEXTAUTH_URL || "https://www.histronics.com";
-  const signInUrl = new URL(`${baseUrl}/api/auth/signin/google`);
 
-  // Add callback URL to redirect to board after successful sign-in
-  signInUrl.searchParams.set("callbackUrl", `${baseUrl}/board`);
+  if (!clientId) {
+    return NextResponse.json(
+      {
+        error: "Configuration Error",
+        message: "GOOGLE_CLIENT_ID is not set in environment variables.",
+      },
+      { status: 500 }
+    );
+  }
 
-  // Redirect to NextAuth's Google sign-in endpoint
-  // This ensures proper state management and CSRF protection
-  return NextResponse.redirect(signInUrl.toString());
+  // Build the state parameter with callback URL
+  const state = Buffer.from(
+    JSON.stringify({ callbackUrl: `${baseUrl}/board` })
+  ).toString("base64");
+
+  // Construct Google OAuth URL with NextAuth callback
+  const googleAuthUrl = new URL("https://accounts.google.com/o/oauth2/v2/auth");
+  googleAuthUrl.searchParams.set("client_id", clientId);
+  googleAuthUrl.searchParams.set(
+    "redirect_uri",
+    `${baseUrl}/api/auth/callback/google`
+  );
+  googleAuthUrl.searchParams.set("response_type", "code");
+  googleAuthUrl.searchParams.set("scope", "openid email profile");
+  googleAuthUrl.searchParams.set("prompt", "select_account");
+  googleAuthUrl.searchParams.set("state", state);
+
+  // Redirect to Google
+  return NextResponse.redirect(googleAuthUrl.toString());
 }
