@@ -20,52 +20,90 @@ export const {
      * Only allow users on the whitelist
      */
     async signIn({ user, account, profile }) {
-      console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-      console.log("🔐 Sign-in callback triggered");
-      console.log("User:", JSON.stringify(user, null, 2));
-      console.log("Account:", JSON.stringify(account, null, 2));
-      console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+      try {
+        console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+        console.log("🔐 Sign-in callback triggered");
+        console.log("User:", JSON.stringify(user, null, 2));
+        console.log("Account:", JSON.stringify(account, null, 2));
+        console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
 
-      const email = user.email;
+        const email = user.email;
 
-      // Check if email is on the authorized list
-      if (!isAuthorizedEmail(email)) {
-        console.warn(
-          `❌ Unauthorized sign-in attempt by ${email}. Not on whitelist.`
-        );
-        return false; // Deny access
+        // Check if email is on the authorized list
+        if (!isAuthorizedEmail(email)) {
+          console.warn(
+            `❌ Unauthorized sign-in attempt by ${email}. Not on whitelist.`
+          );
+          return false; // Deny access
+        }
+
+        console.log(`✅ Authorized sign-in: ${email}`);
+        return true; // Allow access
+      } catch (error) {
+        console.error("❌ ERROR in signIn callback:", error);
+        console.error("Stack:", error instanceof Error ? error.stack : "N/A");
+        return false;
       }
-
-      console.log(`✅ Authorized sign-in: ${email}`);
-      return true; // Allow access
     },
 
     /**
      * Add user info to session
      */
     async session({ session }) {
-      if (!session.user?.email) {
+      try {
+        console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+        console.log("📝 Session callback triggered");
+        console.log("Session user:", session.user?.email);
+
+        if (!session.user?.email) {
+          console.log("⚠️ No email in session, returning as-is");
+          return session;
+        }
+
+        // Get user data from the database
+        console.log("Fetching user from database...");
+        const userInfo = await getUser(session.user.email);
+
+        if (userInfo) {
+          console.log("✅ User found in database");
+          session.user.info = userInfo;
+        } else {
+          console.log("⚠️ User not in database, using fallback info");
+          // Create basic user object for authorized users not in database
+          session.user.info = {
+            id: session.user.email,
+            name: session.user.name || "Board Member",
+            avatar:
+              session.user.image ||
+              "https://liveblocks.io/avatars/avatar-0.png",
+            color: "#4F46E5",
+            groupIds: [],
+          };
+        }
+
+        console.log("✅ Session callback complete");
+        console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+        return session;
+      } catch (error) {
+        console.error("❌ ERROR in session callback:", error);
+        console.error("Stack:", error instanceof Error ? error.stack : "N/A");
+
+        // Provide fallback user info to prevent total failure
+        if (session.user?.email) {
+          console.log("⚠️ Using emergency fallback user info");
+          session.user.info = {
+            id: session.user.email,
+            name: session.user.name || "Board Member",
+            avatar:
+              session.user.image ||
+              "https://liveblocks.io/avatars/avatar-0.png",
+            color: "#4F46E5",
+            groupIds: [],
+          };
+        }
+
         return session;
       }
-
-      // Get user data from the database
-      const userInfo = await getUser(session.user.email);
-
-      if (userInfo) {
-        session.user.info = userInfo;
-      } else {
-        // Create basic user object for authorized users not in database
-        session.user.info = {
-          id: session.user.email,
-          name: session.user.name || "Board Member",
-          avatar:
-            session.user.image || "https://liveblocks.io/avatars/avatar-0.png",
-          color: "#4F46E5",
-          groupIds: [],
-        };
-      }
-
-      return session;
     },
   },
 
