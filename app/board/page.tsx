@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { MarketingLayout } from "@/layouts/Marketing";
 import styles from "./page.module.css";
 
@@ -129,12 +131,37 @@ const boardDocuments = [
 ];
 
 export default function BoardPage() {
+  const { data: session, status } = useSession();
+  const router = useRouter();
   const [currentTime, setCurrentTime] = useState("");
   const [nextMeeting, setNextMeeting] = useState<Date | null>(null);
   const [timeToMeeting, setTimeToMeeting] = useState("");
   const [isMeetingActive, setIsMeetingActive] = useState(false);
   const [selectedMember, setSelectedMember] = useState<string | null>(null);
   const [tickerPosition, setTickerPosition] = useState(0);
+
+  // Redirect to sign-in if not authenticated
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.push("/signin?callbackUrl=/board");
+    }
+  }, [status, router]);
+
+  // Show loading while checking authentication
+  if (status === "loading") {
+    return (
+      <MarketingLayout>
+        <div style={{ padding: "4rem", textAlign: "center" }}>
+          <p>Loading...</p>
+        </div>
+      </MarketingLayout>
+    );
+  }
+
+  // Don't render board content if not authenticated
+  if (!session) {
+    return null;
+  }
 
   // Calculate next board meeting (last Thursday of month at 5 PM ET)
   const getNextMeeting = () => {

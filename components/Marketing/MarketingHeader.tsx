@@ -64,9 +64,6 @@ export function MarketingHeader({
               <Link href="/events" className={styles.navLink}>
                 Events
               </Link>
-              <Link href="/board" className={styles.navLink}>
-                Board Room
-              </Link>
               <Link
                 href="/signin?callbackUrl=/board"
                 className={styles.navLink}
