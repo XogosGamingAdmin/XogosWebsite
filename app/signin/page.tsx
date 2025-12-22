@@ -8,7 +8,14 @@ export default async function SignInPage({
 }: {
   searchParams: { callbackUrl?: string; error?: string };
 }) {
-  const session = await auth();
+  let session = null;
+
+  try {
+    session = await auth();
+  } catch (error) {
+    console.error("Error getting session:", error);
+    // Continue to render sign-in page even if auth check fails
+  }
 
   // If already signed in, redirect to dashboard
   if (session) {

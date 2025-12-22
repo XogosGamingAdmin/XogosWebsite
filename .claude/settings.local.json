@@ -15,7 +15,10 @@
       "WebFetch(domain:www.histronics.com)",
       "WebFetch(domain:www.xogosgaming.com)",
       "Bash(npm run dev:*)",
-      "WebFetch(domain:xogosboard.vercel.app)"
+      "WebFetch(domain:xogosboard.vercel.app)",
+      "Bash(npm run lint:*)",
+      "Bash(in the exact same order in every component render.\"\n\n🤖 Generated with [Claude Code]\\(https://claude.com/claude-code\\)\n\nCo-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(curl:*)"
     ],
     "deny": [],
     "ask": []
