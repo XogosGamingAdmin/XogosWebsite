@@ -1,26 +1,13 @@
-import { redirect } from "next/navigation";
-import { auth } from "@/auth";
 import { NextAuthLogin } from "./NextAuthLogin";
 import styles from "./signin.module.css";
 
-export default async function SignInPage({
+export default function SignInPage({
   searchParams,
 }: {
   searchParams: { callbackUrl?: string; error?: string };
 }) {
-  let session = null;
-
-  try {
-    session = await auth();
-  } catch (error) {
-    console.error("Error getting session:", error);
-    // Continue to render sign-in page even if auth check fails
-  }
-
-  // If already signed in, redirect to dashboard
-  if (session) {
-    redirect(searchParams.callbackUrl || "/dashboard");
-  }
+  // Note: Removed auth check to prevent server-side errors
+  // Client-side redirect will handle already-signed-in users
 
   // Map NextAuth error codes to user-friendly messages
   const errorMessages: Record<string, { title: string; details: string }> = {
