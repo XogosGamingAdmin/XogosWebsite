@@ -34,13 +34,13 @@ XogosBoard is a Next.js 14.2.3 application deployed on AWS Amplify at https://ww
 
 **Current Authentication Flow:**
 1. User clicks "Board Sign-in" in header
-2. Redirects to `/signin?callbackUrl=/board`
+2. Redirects to `/signin?callbackUrl=/dashboard`
 3. Sign-in page shows "Sign in with Google" button
 4. NextAuth initiates proper Google OAuth with state/CSRF protection
 5. User authenticates with Google (authorized emails only)
 6. Google redirects to `/api/auth/callback/google`
 7. NextAuth processes callback, creates session
-8. User redirected to `/board` (secured page)
+8. User redirected to `/dashboard` (secured board dashboard)
 
 #### 2. Email Whitelist Authorization System
 **Location:** `lib/auth/authorized-emails.ts`
@@ -85,7 +85,9 @@ NEXTAUTH_URL=https://www.histronics.com
 - `app/signin/NextAuthLogin.tsx` - Google sign-in button component
 
 ### Board Portal
-- `app/board/page.tsx` - Main board page (NOW SECURED with useSession)
+- `app/dashboard/page.tsx` - Main dashboard page (SECURED with server-side auth)
+- `app/dashboard/layout.tsx` - Dashboard layout with authentication protection
+- `app/board/page.tsx` - Board room visualization page
 - `app/board/members/page.tsx` - Board members page
 - `app/board/initiatives/page.tsx` - Board initiatives
 - `app/board/risk/page.tsx` - Risk management
@@ -137,10 +139,10 @@ NEXTAUTH_URL=https://www.histronics.com
 **Cause:** Manual OAuth URL construction bypassed NextAuth state management
 **Solution:** Use proper NextAuth flow via `/signin` page
 
-### Issue: Board Page Publicly Accessible
-**Status:** FIXED (Dec 19, 2025)
-**Cause:** No authentication check on `/board` page
-**Solution:** Added `useSession()` hook with redirect logic
+### Issue: Board Dashboard Authentication
+**Status:** FIXED (Dec 22, 2025)
+**Cause:** Dashboard needs proper authentication flow
+**Solution:** Updated flow to redirect to `/dashboard` after Google sign-in, with server-side authentication check in dashboard layout
 
 ---
 
@@ -174,7 +176,7 @@ NEXTAUTH_URL=https://www.histronics.com
 3. Should see sign-in page with "Sign in with Google" button
 4. Click button → Google OAuth page
 5. Sign in with authorized email (e.g., zack@xogosgaming.com)
-6. Should redirect to Board page successfully
+6. Should redirect to Dashboard page (/dashboard) successfully
 
 ### If Sign-In Fails:
 1. Check AWS Amplify deployment logs for errors

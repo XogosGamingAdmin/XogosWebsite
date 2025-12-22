@@ -32,7 +32,7 @@ Click "Save" at the bottom of the page
 ### Local Development (http://localhost:3000)
 1. Go to http://localhost:3000
 2. Click "Board Sign-in" in the header
-3. Should redirect to http://localhost:3000/signin?callbackUrl=/board
+3. Should redirect to http://localhost:3000/signin?callbackUrl=/dashboard
 4. Click "Sign in with Google" button
 5. Google OAuth page should appear
 6. Sign in with an authorized email:
@@ -41,7 +41,7 @@ Click "Save" at the bottom of the page
    - enjoyweaver@gmail.com
    - mckaylaareece@gmail.com
    - sturs49@gmail.com
-7. Should redirect back to http://localhost:3000/board (the secured board room)
+7. Should redirect back to http://localhost:3000/dashboard (the secured board dashboard)
 
 ### Production (https://www.histronics.com)
 The production flow should work as-is with the existing redirect URI.

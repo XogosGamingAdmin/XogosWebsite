@@ -65,7 +65,7 @@ export function MarketingHeader({
                 Events
               </Link>
               <Link
-                href="/signin?callbackUrl=/board"
+                href="/signin?callbackUrl=/dashboard"
                 className={styles.navLink}
               >
                 <div className={styles.signInContainer}>

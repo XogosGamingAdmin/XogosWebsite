@@ -17,7 +17,7 @@ export async function GET() {
 
   // Build the state parameter with callback URL
   const state = Buffer.from(
-    JSON.stringify({ callbackUrl: `${baseUrl}/board` })
+    JSON.stringify({ callbackUrl: `${baseUrl}/dashboard` })
   ).toString("base64");
 
   // Construct Google OAuth URL with NextAuth callback

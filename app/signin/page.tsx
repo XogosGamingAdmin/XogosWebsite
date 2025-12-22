@@ -10,9 +10,9 @@ export default async function SignInPage({
 }) {
   const session = await auth();
 
-  // If already signed in, redirect to board
+  // If already signed in, redirect to dashboard
   if (session) {
-    redirect(searchParams.callbackUrl || "/board");
+    redirect(searchParams.callbackUrl || "/dashboard");
   }
 
   // Map NextAuth error codes to user-friendly messages

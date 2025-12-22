@@ -14,7 +14,7 @@ export function NextAuthLogin({ callbackUrl }: Props) {
     <div className={styles.actions}>
       <Button
         onClick={() =>
-          signIn("google", { callbackUrl: callbackUrl || "/board" })
+          signIn("google", { callbackUrl: callbackUrl || "/dashboard" })
         }
       >
         Sign in with Google

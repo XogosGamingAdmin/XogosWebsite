@@ -14,7 +14,8 @@
       "Bash(git fetch:*)",
       "WebFetch(domain:www.histronics.com)",
       "WebFetch(domain:www.xogosgaming.com)",
-      "Bash(npm run dev:*)"
+      "Bash(npm run dev:*)",
+      "WebFetch(domain:xogosboard.vercel.app)"
     ],
     "deny": [],
     "ask": []
