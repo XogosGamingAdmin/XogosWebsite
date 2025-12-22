@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
+import React, { useEffect, useState } from "react";
 import { MarketingLayout } from "@/layouts/Marketing";
 import styles from "./page.module.css";
 
@@ -140,29 +140,6 @@ export default function BoardPage() {
   const [selectedMember, setSelectedMember] = useState<string | null>(null);
   const [tickerPosition, setTickerPosition] = useState(0);
 
-  // Redirect to sign-in if not authenticated
-  useEffect(() => {
-    if (status === "unauthenticated") {
-      router.push("/signin?callbackUrl=/board");
-    }
-  }, [status, router]);
-
-  // Show loading while checking authentication
-  if (status === "loading") {
-    return (
-      <MarketingLayout>
-        <div style={{ padding: "4rem", textAlign: "center" }}>
-          <p>Loading...</p>
-        </div>
-      </MarketingLayout>
-    );
-  }
-
-  // Don't render board content if not authenticated
-  if (!session) {
-    return null;
-  }
-
   // Calculate next board meeting (last Thursday of month at 5 PM ET)
   const getNextMeeting = () => {
     const now = new Date();
@@ -193,6 +170,14 @@ export default function BoardPage() {
     return lastThursday;
   };
 
+  // Redirect to sign-in if not authenticated
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.push("/signin?callbackUrl=/board");
+    }
+  }, [status, router]);
+
+  // Main effect for time and ticker updates
   useEffect(() => {
     const updateTime = () => {
       const now = new Date();
@@ -249,6 +234,22 @@ export default function BoardPage() {
       clearInterval(tickerInterval);
     };
   }, []);
+
+  // Show loading while checking authentication
+  if (status === "loading") {
+    return (
+      <MarketingLayout>
+        <div style={{ padding: "4rem", textAlign: "center" }}>
+          <p>Loading...</p>
+        </div>
+      </MarketingLayout>
+    );
+  }
+
+  // Don't render board content if not authenticated
+  if (!session) {
+    return null;
+  }
 
   return (
     <MarketingLayout>
