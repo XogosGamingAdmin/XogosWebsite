@@ -24,7 +24,9 @@ export default function SignInPage() {
           Configuration: "Server configuration error. Please contact support.",
           Verification: "Sign-in link expired. Please try again.",
         };
-        setError(errorMessages[errorParam] || "Authentication error. Please try again.");
+        setError(
+          errorMessages[errorParam] || "Authentication error. Please try again."
+        );
       }
     }
   }, []);
