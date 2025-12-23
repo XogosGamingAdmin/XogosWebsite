@@ -9,23 +9,16 @@ import GoogleProvider from "next-auth/providers/google";
  * - GOOGLE_CLIENT_SECRET
  */
 
-const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || "dummy-client-id";
-const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET || "dummy-secret";
-
-// Validate credentials
+// Get credentials - these MUST be set in environment variables
 if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
-  console.error(
-    "\n" +
-    "❌ ERROR: Google OAuth credentials are missing!\n" +
-    "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" +
-    "GOOGLE_CLIENT_ID: " + (process.env.GOOGLE_CLIENT_ID ? "✓ Set" : "✗ Missing") + "\n" +
-    "GOOGLE_CLIENT_SECRET: " + (process.env.GOOGLE_CLIENT_SECRET ? "✓ Set" : "✗ Missing") + "\n" +
-    "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" +
-    "Add these to AWS Amplify Environment Variables:\n" +
-    "App Settings → Environment variables → Manage variables\n" +
-    "Then redeploy the application.\n"
+  throw new Error(
+    "Missing required environment variables: GOOGLE_CLIENT_ID and/or GOOGLE_CLIENT_SECRET. " +
+    "Please set these in AWS Amplify Environment Variables."
   );
 }
+
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
+const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
 
 export const authConfig: NextAuthConfig = {
   providers: [
