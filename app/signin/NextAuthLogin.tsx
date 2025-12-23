@@ -1,8 +1,8 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { signIn, useSession } from "next-auth/react";
 import { ComponentProps, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { Button } from "@/primitives/Button";
 import styles from "./signin.module.css";
 

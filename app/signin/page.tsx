@@ -1,7 +1,7 @@
 "use client";
 
-import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 import { NextAuthLogin } from "./NextAuthLogin";
 import styles from "./signin.module.css";
 
@@ -68,14 +68,16 @@ function SignInContent() {
 
 export default function SignInPage() {
   return (
-    <Suspense fallback={
-      <div className={styles.container}>
-        <main className={styles.main}>
-          <h2 className={styles.title}>Loading...</h2>
-        </main>
-        <aside className={styles.aside} />
-      </div>
-    }>
+    <Suspense
+      fallback={
+        <div className={styles.container}>
+          <main className={styles.main}>
+            <h2 className={styles.title}>Loading...</h2>
+          </main>
+          <aside className={styles.aside} />
+        </div>
+      }
+    >
       <SignInContent />
     </Suspense>
   );
