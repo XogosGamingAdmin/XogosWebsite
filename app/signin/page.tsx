@@ -1,3 +1,5 @@
+"use client";
+
 import { NextAuthLogin } from "./NextAuthLogin";
 import styles from "./signin.module.css";
 
