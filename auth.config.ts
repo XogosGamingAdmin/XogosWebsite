@@ -34,7 +34,9 @@ export const authConfig: NextAuthConfig = {
       clientSecret: GOOGLE_CLIENT_SECRET,
       authorization: {
         params: {
-          prompt: "select_account",
+          prompt: "consent",
+          access_type: "offline",
+          response_type: "code",
         },
       },
     }),
@@ -45,4 +47,8 @@ export const authConfig: NextAuthConfig = {
     signIn: "/signin",
     error: "/signin", // Redirect errors back to sign-in page
   },
+
+  // Add these to ensure proper redirects
+  basePath: "/api/auth",
+  trustHost: true,
 };
