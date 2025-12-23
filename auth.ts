@@ -133,15 +133,3 @@ export const {
     },
   },
 });
-
-export function getProviders() {
-  const providers: Record<string, string> = {};
-
-  for (const provider of authConfig.providers) {
-    if ("id" in provider) {
-      providers[provider.id] = provider.name;
-    }
-  }
-
-  return providers;
-}
