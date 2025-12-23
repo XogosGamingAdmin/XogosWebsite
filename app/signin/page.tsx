@@ -1,15 +1,14 @@
 "use client";
 
+import { useSearchParams } from "next/navigation";
 import { NextAuthLogin } from "./NextAuthLogin";
 import styles from "./signin.module.css";
 
-export default function SignInPage({
-  searchParams,
-}: {
-  searchParams: { callbackUrl?: string; error?: string };
-}) {
-  // Note: Removed auth check to prevent server-side errors
-  // Client-side redirect will handle already-signed-in users
+export default function SignInPage() {
+  // Use client-side hook to access URL search params
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl") || undefined;
+  const error = searchParams.get("error") || undefined;
 
   // Map NextAuth error codes to user-friendly messages
   const errorMessages: Record<string, { title: string; details: string }> = {
@@ -34,8 +33,7 @@ export default function SignInPage({
     },
   };
 
-  const errorInfo =
-    errorMessages[searchParams.error || ""] || errorMessages.Default;
+  const errorInfo = errorMessages[error || ""] || errorMessages.Default;
 
   return (
     <div className={styles.container}>
@@ -46,11 +44,11 @@ export default function SignInPage({
           Directors portal
         </p>
 
-        {searchParams.error && (
+        {error && (
           <div className={styles.error}>
             <p>❌ {errorInfo.title}</p>
             <p className={styles.errorDetails}>{errorInfo.details}</p>
-            {searchParams.error === "AccessDenied" && (
+            {error === "AccessDenied" && (
               <p className={styles.errorDetails} style={{ marginTop: "1rem" }}>
                 <strong>Authorized emails only:</strong> If you are a board
                 member, make sure you're signing in with the email address that
@@ -60,7 +58,7 @@ export default function SignInPage({
           </div>
         )}
 
-        <NextAuthLogin callbackUrl={searchParams.callbackUrl} />
+        <NextAuthLogin callbackUrl={callbackUrl} />
       </main>
       <aside className={styles.aside} />
     </div>
