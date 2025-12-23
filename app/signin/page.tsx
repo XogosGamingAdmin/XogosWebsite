@@ -1,15 +1,21 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
-import { Suspense } from "react";
+import { useEffect, useState } from "react";
 import { NextAuthLogin } from "./NextAuthLogin";
 import styles from "./signin.module.css";
 
-function SignInContent() {
-  // Use client-side hook to access URL search params
-  const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") || undefined;
-  const error = searchParams.get("error") || undefined;
+export default function SignInPage() {
+  const [callbackUrl, setCallbackUrl] = useState<string | undefined>(undefined);
+  const [error, setError] = useState<string | undefined>(undefined);
+
+  // Extract URL parameters on client-side after mount
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      setCallbackUrl(params.get("callbackUrl") || undefined);
+      setError(params.get("error") || undefined);
+    }
+  }, []);
 
   // Map NextAuth error codes to user-friendly messages
   const errorMessages: Record<string, { title: string; details: string }> = {
@@ -63,22 +69,5 @@ function SignInContent() {
       </main>
       <aside className={styles.aside} />
     </div>
-  );
-}
-
-export default function SignInPage() {
-  return (
-    <Suspense
-      fallback={
-        <div className={styles.container}>
-          <main className={styles.main}>
-            <h2 className={styles.title}>Loading...</h2>
-          </main>
-          <aside className={styles.aside} />
-        </div>
-      }
-    >
-      <SignInContent />
-    </Suspense>
   );
 }
