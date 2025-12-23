@@ -1,46 +1,50 @@
 "use client";
 
+import { signIn } from "next-auth/react";
 import { useEffect, useState } from "react";
-import { NextAuthLogin } from "./NextAuthLogin";
 import styles from "./signin.module.css";
 
 export default function SignInPage() {
-  const [callbackUrl, setCallbackUrl] = useState<string | undefined>(undefined);
-  const [error, setError] = useState<string | undefined>(undefined);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [callbackUrl, setCallbackUrl] = useState("/dashboard");
 
-  // Extract URL parameters on client-side after mount
   useEffect(() => {
+    // Get callback URL from query params
     if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search);
-      setCallbackUrl(params.get("callbackUrl") || undefined);
-      setError(params.get("error") || undefined);
+      const callback = params.get("callbackUrl");
+      const errorParam = params.get("error");
+
+      if (callback) setCallbackUrl(callback);
+      if (errorParam) {
+        // Map error codes to messages
+        const errorMessages: Record<string, string> = {
+          AccessDenied: "Your email is not authorized for board access.",
+          Configuration: "Server configuration error. Please contact support.",
+          Verification: "Sign-in link expired. Please try again.",
+        };
+        setError(errorMessages[errorParam] || "Authentication error. Please try again.");
+      }
     }
   }, []);
 
-  // Map NextAuth error codes to user-friendly messages
-  const errorMessages: Record<string, { title: string; details: string }> = {
-    AccessDenied: {
-      title: "Access Denied",
-      details:
-        "Your email address is not authorized for Board access. Only specific board members can sign in. Please contact the administrator if you believe this is an error.",
-    },
-    Configuration: {
-      title: "Configuration Error",
-      details:
-        "There is a problem with the authentication configuration. Please contact the administrator.",
-    },
-    Verification: {
-      title: "Verification Error",
-      details: "The sign in link is no longer valid. Please try again.",
-    },
-    Default: {
-      title: "Authentication Error",
-      details:
-        "An error occurred during sign-in. Please try again or contact the administrator.",
-    },
-  };
+  const handleGoogleSignIn = async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
 
-  const errorInfo = errorMessages[error || ""] || errorMessages.Default;
+      // Trigger Google OAuth sign-in
+      await signIn("google", {
+        callbackUrl: callbackUrl,
+        redirect: true,
+      });
+    } catch (err) {
+      console.error("Sign-in error:", err);
+      setError("Failed to initiate sign-in. Please try again.");
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className={styles.container}>
@@ -53,19 +57,45 @@ export default function SignInPage() {
 
         {error && (
           <div className={styles.error}>
-            <p>❌ {errorInfo.title}</p>
-            <p className={styles.errorDetails}>{errorInfo.details}</p>
-            {error === "AccessDenied" && (
-              <p className={styles.errorDetails} style={{ marginTop: "1rem" }}>
-                <strong>Authorized emails only:</strong> If you are a board
-                member, make sure you're signing in with the email address that
-                was registered with the administrator.
-              </p>
-            )}
+            <p>❌ {error}</p>
+            <p className={styles.errorDetails}>
+              Only authorized board members can access this area. If you believe
+              this is an error, please contact the administrator.
+            </p>
           </div>
         )}
 
-        <NextAuthLogin callbackUrl={callbackUrl} />
+        <div className={styles.actions}>
+          <button
+            onClick={handleGoogleSignIn}
+            disabled={isLoading}
+            className={styles.googleButton}
+            style={{
+              padding: "12px 24px",
+              fontSize: "16px",
+              backgroundColor: "#4285f4",
+              color: "white",
+              border: "none",
+              borderRadius: "4px",
+              cursor: isLoading ? "not-allowed" : "pointer",
+              opacity: isLoading ? 0.6 : 1,
+              fontWeight: 500,
+            }}
+          >
+            {isLoading ? "Signing in..." : "Sign in with Google"}
+          </button>
+        </div>
+
+        <div style={{ marginTop: "2rem", fontSize: "14px", color: "#666" }}>
+          <p>Authorized board members:</p>
+          <ul style={{ textAlign: "left", marginTop: "0.5rem" }}>
+            <li>zack@xogosgaming.com</li>
+            <li>braden@kennyhertzperry.com</li>
+            <li>enjoyweaver@gmail.com</li>
+            <li>mckaylaareece@gmail.com</li>
+            <li>sturs49@gmail.com</li>
+          </ul>
+        </div>
       </main>
       <aside className={styles.aside} />
     </div>
