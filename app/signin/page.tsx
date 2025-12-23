@@ -1,10 +1,11 @@
 "use client";
 
+import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { NextAuthLogin } from "./NextAuthLogin";
 import styles from "./signin.module.css";
 
-export default function SignInPage() {
+function SignInContent() {
   // Use client-side hook to access URL search params
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || undefined;
@@ -62,5 +63,20 @@ export default function SignInPage() {
       </main>
       <aside className={styles.aside} />
     </div>
+  );
+}
+
+export default function SignInPage() {
+  return (
+    <Suspense fallback={
+      <div className={styles.container}>
+        <main className={styles.main}>
+          <h2 className={styles.title}>Loading...</h2>
+        </main>
+        <aside className={styles.aside} />
+      </div>
+    }>
+      <SignInContent />
+    </Suspense>
   );
 }
