@@ -3,6 +3,21 @@ import GoogleProvider from "next-auth/providers/google";
 import { getUser } from "@/lib/database/getUser";
 import { isAuthorizedEmail } from "@/lib/auth/authorized-emails";
 
+// Read environment variables FIRST
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || "";
+const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET || "";
+
+// Log for debugging
+console.log("🔧 Auth initialization:");
+console.log("  GOOGLE_CLIENT_ID:", GOOGLE_CLIENT_ID ? `${GOOGLE_CLIENT_ID.substring(0, 10)}...` : "❌ MISSING");
+console.log("  GOOGLE_CLIENT_SECRET:", GOOGLE_CLIENT_SECRET ? "✓ Set" : "❌ MISSING");
+
+// Validate credentials
+if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET) {
+  console.error("❌ CRITICAL: Missing Google OAuth credentials!");
+  console.error("  Set GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET in AWS Amplify Environment Variables");
+}
+
 export const NEXTAUTH_SECRET =
   process.env.NEXTAUTH_SECRET || "p49RDzU36fidumaF7imGnzyhRSPWoffNjDOleU77SM4=";
 
@@ -18,8 +33,8 @@ export const {
   // Configure providers directly here with runtime env vars
   providers: [
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      clientId: GOOGLE_CLIENT_ID,
+      clientSecret: GOOGLE_CLIENT_SECRET,
       authorization: {
         params: {
           prompt: "consent",
