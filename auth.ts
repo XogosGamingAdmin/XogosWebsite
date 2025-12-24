@@ -43,7 +43,6 @@ export const {
           prompt: "consent",
           access_type: "offline",
           response_type: "code",
-          redirect_uri: `${NEXTAUTH_URL}/api/auth/callback/google`,
         },
       },
     }),
