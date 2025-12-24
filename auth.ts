@@ -6,11 +6,14 @@ import { isAuthorizedEmail } from "@/lib/auth/authorized-emails";
 // Read environment variables FIRST
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || "";
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET || "";
+const NEXTAUTH_URL = process.env.NEXTAUTH_URL || "https://www.histronics.com";
 
 // Log for debugging
 console.log("🔧 Auth initialization:");
 console.log("  GOOGLE_CLIENT_ID:", GOOGLE_CLIENT_ID ? `${GOOGLE_CLIENT_ID.substring(0, 10)}...` : "❌ MISSING");
 console.log("  GOOGLE_CLIENT_SECRET:", GOOGLE_CLIENT_SECRET ? "✓ Set" : "❌ MISSING");
+console.log("  NEXTAUTH_URL:", NEXTAUTH_URL);
+console.log("  Expected callback:", `${NEXTAUTH_URL}/api/auth/callback/google`);
 
 // Validate credentials
 if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET) {
@@ -40,6 +43,7 @@ export const {
           prompt: "consent",
           access_type: "offline",
           response_type: "code",
+          redirect_uri: `${NEXTAUTH_URL}/api/auth/callback/google`,
         },
       },
     }),
