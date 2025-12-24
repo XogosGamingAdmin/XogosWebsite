@@ -41,11 +41,9 @@ export const {
   secret: AUTH_SECRET,
   debug: true, // Enable debug logging
 
-  // Configure providers directly here with runtime env vars
+  // Configure providers - NextAuth v5 auto-detects AUTH_GOOGLE_ID and AUTH_GOOGLE_SECRET
   providers: [
     GoogleProvider({
-      clientId: GOOGLE_CLIENT_ID,
-      clientSecret: GOOGLE_CLIENT_SECRET,
       authorization: {
         params: {
           prompt: "consent",
