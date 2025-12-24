@@ -16,9 +16,11 @@ const AUTH_URL =
 // Log for debugging
 console.log("🔧 Auth initialization (v5):");
 console.log("  NODE_ENV:", process.env.NODE_ENV);
+console.log("  process.env.AUTH_URL:", process.env.AUTH_URL);
+console.log("  process.env.NEXTAUTH_URL:", process.env.NEXTAUTH_URL);
 console.log("  AUTH_GOOGLE_ID:", GOOGLE_CLIENT_ID ? `${GOOGLE_CLIENT_ID.substring(0, 10)}...` : "❌ MISSING");
 console.log("  AUTH_GOOGLE_SECRET:", GOOGLE_CLIENT_SECRET ? "✓ Set" : "❌ MISSING");
-console.log("  AUTH_URL:", AUTH_URL);
+console.log("  Computed AUTH_URL:", AUTH_URL);
 console.log("  Expected callback:", `${AUTH_URL}/api/auth/callback/google`);
 
 // Validate credentials
