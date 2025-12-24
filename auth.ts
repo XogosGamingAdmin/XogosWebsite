@@ -3,26 +3,26 @@ import GoogleProvider from "next-auth/providers/google";
 import { getUser } from "@/lib/database/getUser";
 import { isAuthorizedEmail } from "@/lib/auth/authorized-emails";
 
-// Read environment variables FIRST
-const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || "";
-const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET || "";
-const NEXTAUTH_URL = process.env.NEXTAUTH_URL || "https://www.histronics.com";
+// NextAuth v5 uses AUTH_ prefix for environment variables
+const GOOGLE_CLIENT_ID = process.env.AUTH_GOOGLE_ID || process.env.GOOGLE_CLIENT_ID || "";
+const GOOGLE_CLIENT_SECRET = process.env.AUTH_GOOGLE_SECRET || process.env.GOOGLE_CLIENT_SECRET || "";
+const AUTH_URL = process.env.AUTH_URL || process.env.NEXTAUTH_URL || "https://www.histronics.com";
 
 // Log for debugging
-console.log("🔧 Auth initialization:");
-console.log("  GOOGLE_CLIENT_ID:", GOOGLE_CLIENT_ID ? `${GOOGLE_CLIENT_ID.substring(0, 10)}...` : "❌ MISSING");
-console.log("  GOOGLE_CLIENT_SECRET:", GOOGLE_CLIENT_SECRET ? "✓ Set" : "❌ MISSING");
-console.log("  NEXTAUTH_URL:", NEXTAUTH_URL);
-console.log("  Expected callback:", `${NEXTAUTH_URL}/api/auth/callback/google`);
+console.log("🔧 Auth initialization (v5):");
+console.log("  AUTH_GOOGLE_ID:", GOOGLE_CLIENT_ID ? `${GOOGLE_CLIENT_ID.substring(0, 10)}...` : "❌ MISSING");
+console.log("  AUTH_GOOGLE_SECRET:", GOOGLE_CLIENT_SECRET ? "✓ Set" : "❌ MISSING");
+console.log("  AUTH_URL:", AUTH_URL);
+console.log("  Expected callback:", `${AUTH_URL}/api/auth/callback/google`);
 
 // Validate credentials
 if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET) {
   console.error("❌ CRITICAL: Missing Google OAuth credentials!");
-  console.error("  Set GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET in AWS Amplify Environment Variables");
+  console.error("  Set AUTH_GOOGLE_ID and AUTH_GOOGLE_SECRET in AWS Amplify Environment Variables");
 }
 
-export const NEXTAUTH_SECRET =
-  process.env.NEXTAUTH_SECRET || "p49RDzU36fidumaF7imGnzyhRSPWoffNjDOleU77SM4=";
+export const AUTH_SECRET =
+  process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET || "p49RDzU36fidumaF7imGnzyhRSPWoffNjDOleU77SM4=";
 
 export const {
   handlers: { GET, POST },
@@ -30,7 +30,7 @@ export const {
   signIn,
   signOut,
 } = NextAuth({
-  secret: NEXTAUTH_SECRET,
+  secret: AUTH_SECRET,
   debug: true, // Enable debug logging
 
   // Configure providers directly here with runtime env vars
