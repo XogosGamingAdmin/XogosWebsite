@@ -6,10 +6,16 @@ import { isAuthorizedEmail } from "@/lib/auth/authorized-emails";
 // NextAuth v5 uses AUTH_ prefix for environment variables
 const GOOGLE_CLIENT_ID = process.env.AUTH_GOOGLE_ID || process.env.GOOGLE_CLIENT_ID || "";
 const GOOGLE_CLIENT_SECRET = process.env.AUTH_GOOGLE_SECRET || process.env.GOOGLE_CLIENT_SECRET || "";
-const AUTH_URL = process.env.AUTH_URL || process.env.NEXTAUTH_URL || "https://www.histronics.com";
+
+// IMPORTANT: Force production URL in production environment
+const AUTH_URL =
+  process.env.NODE_ENV === "production"
+    ? "https://www.histronics.com"
+    : (process.env.AUTH_URL || process.env.NEXTAUTH_URL || "http://localhost:3000");
 
 // Log for debugging
 console.log("🔧 Auth initialization (v5):");
+console.log("  NODE_ENV:", process.env.NODE_ENV);
 console.log("  AUTH_GOOGLE_ID:", GOOGLE_CLIENT_ID ? `${GOOGLE_CLIENT_ID.substring(0, 10)}...` : "❌ MISSING");
 console.log("  AUTH_GOOGLE_SECRET:", GOOGLE_CLIENT_SECRET ? "✓ Set" : "❌ MISSING");
 console.log("  AUTH_URL:", AUTH_URL);
