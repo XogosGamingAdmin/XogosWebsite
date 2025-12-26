@@ -1,4 +1,5 @@
 import { ClientSideSuspense } from "@liveblocks/react";
+import { useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
 import { ComponentProps, useEffect, useState } from "react";
 import { InboxIcon } from "@/icons";
@@ -9,6 +10,7 @@ import { Inbox } from "./Inbox";
 import styles from "./InboxPopover.module.css";
 
 function InboxPopoverUnreadCount() {
+  // Parent component ensures session.user.info exists before rendering this
   const { count } = useUnreadInboxNotificationsCount();
 
   return count ? (
@@ -21,10 +23,16 @@ export function InboxPopover(
 ) {
   const pathname = usePathname();
   const [isOpen, setOpen] = useState(false);
+  const { data: session } = useSession();
 
   useEffect(() => {
     setOpen(false);
   }, [pathname]);
+
+  // Don't render inbox if no session
+  if (!session?.user?.info) {
+    return null;
+  }
 
   return (
     <Popover

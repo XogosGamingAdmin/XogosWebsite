@@ -9,23 +9,26 @@ export async function authorizeLiveblocks() {
   // Get current session from NextAuth
   const session = await auth();
 
-  // Anonymous user info
-  const anonymousUser: User = {
-    id: "anonymous",
-    name: "Anonymous",
-    color: "#ff0000",
-    groupIds: [],
-  };
+  // If no session or no user info, deny access
+  if (!session || !session.user?.info) {
+    console.error("Liveblocks auth failed: No session or user info");
+    return {
+      error: {
+        code: 401,
+        message: "Not authenticated",
+        suggestion: "Please sign in to access Liveblocks",
+      },
+    };
+  }
 
-  // Get current user info from session (defined in /auth.config.ts)
-  // If no session found, this is a logged out/anonymous user
+  // Get current user info from session
   const {
     name,
     avatar,
     color,
     id,
     groupIds = [],
-  } = session?.user.info ?? anonymousUser;
+  } = session.user.info;
 
   const groupIdsWithDraftsGroup = [...groupIds, getDraftsGroupName(id)];
 
