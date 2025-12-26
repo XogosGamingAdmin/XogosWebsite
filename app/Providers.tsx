@@ -6,7 +6,6 @@ import { SessionProvider } from "next-auth/react";
 import { ReactNode } from "react";
 import { WagmiConfig } from "wagmi";
 import { config } from "@/config/config";
-import { LiveblocksProvider } from "@/liveblocks.config";
 
 export function Providers({
   children,
@@ -18,9 +17,7 @@ export function Providers({
   return (
     <WagmiConfig config={config}>
       <SessionProvider session={session}>
-        <LiveblocksProvider>
-          <TooltipProvider>{children}</TooltipProvider>
-        </LiveblocksProvider>
+        <TooltipProvider>{children}</TooltipProvider>
       </SessionProvider>
     </WagmiConfig>
   );

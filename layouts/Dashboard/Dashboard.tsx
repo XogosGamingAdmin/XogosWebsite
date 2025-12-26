@@ -3,6 +3,7 @@
 import clsx from "clsx";
 import { ComponentProps, useCallback, useState } from "react";
 import { DashboardHeader, DashboardSidebar } from "@/components/Dashboard";
+import { LiveblocksProvider } from "@/liveblocks.config";
 import { Group } from "@/types";
 import styles from "./Dashboard.module.css";
 
@@ -23,14 +24,16 @@ export function DashboardLayout({
   }, []);
 
   return (
-    <div className={clsx(className, styles.container)} {...props}>
-      <header className={styles.header}>
-        <DashboardHeader isOpen={isMenuOpen} onMenuClick={handleMenuClick} />
-      </header>
-      <aside className={styles.aside} data-open={isMenuOpen || undefined}>
-        <DashboardSidebar groups={groups} />
-      </aside>
-      <main className={styles.main}>{children}</main>
-    </div>
+    <LiveblocksProvider>
+      <div className={clsx(className, styles.container)} {...props}>
+        <header className={styles.header}>
+          <DashboardHeader isOpen={isMenuOpen} onMenuClick={handleMenuClick} />
+        </header>
+        <aside className={styles.aside} data-open={isMenuOpen || undefined}>
+          <DashboardSidebar groups={groups} />
+        </aside>
+        <main className={styles.main}>{children}</main>
+      </div>
+    </LiveblocksProvider>
   );
 }
