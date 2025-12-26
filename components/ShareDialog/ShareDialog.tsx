@@ -68,14 +68,14 @@ export function ShareDialog({ children, ...props }: Props) {
 
   // Refresh the current user's access level
   const revalidateCurrentUserAccess = useCallback(() => {
-    if (!document) {
+    if (!document || !session?.user?.info) {
       return;
     }
 
     const accessLevel = getDocumentAccess({
       documentAccesses: document.accesses,
-      userId: session?.user?.info.id ?? "",
-      groupIds: session?.user?.info.groupIds ?? [],
+      userId: session.user.info.id,
+      groupIds: session.user.info.groupIds,
     });
 
     // Reload if current user has no access (will show error page)
