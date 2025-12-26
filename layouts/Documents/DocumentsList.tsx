@@ -38,7 +38,7 @@ export function DocumentsList({
 
   // Return `getDocuments` params for the current filters/group
   const getDocumentsOptions: GetDocumentsProps | null = useMemo(() => {
-    if (!session) {
+    if (!session || !session.user?.info) {
       return null;
     }
 
@@ -92,7 +92,7 @@ export function DocumentsList({
 
   const documentsPages = data ?? [];
 
-  if (!session) {
+  if (!session || !session.user?.info) {
     return (
       <Container
         size="small"
@@ -101,7 +101,7 @@ export function DocumentsList({
       >
         <div className={styles.container}>
           <div className={styles.emptyState}>
-            <p>You don’t have access to these documents.</p>
+            <p>You don't have access to these documents.</p>
           </div>
         </div>
       </Container>
