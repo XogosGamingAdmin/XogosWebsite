@@ -6,9 +6,11 @@ declare module "next-auth" {
    */
   interface Session {
     user: {
+      name?: string | null;
+      email?: string | null;
+      image?: string | null;
       // The type of extra info taken from your database and sent to front end from auth endpoint
-      // See /pages/api/auth/[...nextauth].ts
-      info: User;
+      info?: User;
     };
   }
 }

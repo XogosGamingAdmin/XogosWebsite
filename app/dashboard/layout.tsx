@@ -11,7 +11,6 @@ export default async function Dashboard({ children }: { children: ReactNode }) {
     session = await auth();
   } catch (error) {
     console.error("Error getting session in dashboard:", error);
-    // Redirect to sign-in if auth fails
     redirect("/signin?callbackUrl=/dashboard");
   }
 
@@ -20,7 +19,13 @@ export default async function Dashboard({ children }: { children: ReactNode }) {
     redirect("/signin?callbackUrl=/dashboard");
   }
 
-  const groups = await getGroups(session?.user.info.groupIds ?? []);
+  // If session.user.info is not set, redirect to sign-in to refresh session
+  if (!session.user?.info) {
+    console.error("Session user info missing, redirecting to sign-in");
+    redirect("/signin?callbackUrl=/dashboard");
+  }
+
+  const groups = await getGroups(session.user.info.groupIds ?? []);
 
   return <DashboardLayout groups={groups}>{children}</DashboardLayout>;
 }
