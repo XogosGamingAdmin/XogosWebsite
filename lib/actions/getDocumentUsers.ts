@@ -49,7 +49,7 @@ export async function getDocumentUsers({ documentId }: Props) {
   // If successful, convert room to a list of groups and send
   const result: DocumentUser[] = await buildDocumentUsers(
     room,
-    session?.user.info.id ?? ""
+    session?.user?.info?.id ?? ""
   );
   return { data: result };
 }

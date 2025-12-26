@@ -48,8 +48,8 @@ export async function getDocument({ documentId }: Props) {
   if (
     !userAllowedInRoom({
       accessAllowed: "read",
-      userId: session?.user.info.id ?? "",
-      groupIds: session?.user.info.groupIds ?? [],
+      userId: session?.user?.info?.id ?? "",
+      groupIds: session?.user?.info?.groupIds ?? [],
       room,
     })
   ) {

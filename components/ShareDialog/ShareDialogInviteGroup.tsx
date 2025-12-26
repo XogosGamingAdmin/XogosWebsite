@@ -51,7 +51,7 @@ export function ShareDialogInviteGroup({
     onSetGroups();
   }
 
-  const invitableGroupIds = (session?.user.info.groupIds ?? []).filter(
+  const invitableGroupIds = (session?.user?.info?.groupIds ?? []).filter(
     (groupId) => currentGroups.every((group) => group.id !== groupId)
   );
 
