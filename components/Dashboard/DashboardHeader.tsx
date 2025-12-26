@@ -74,11 +74,7 @@ export function DashboardHeader({
             </button>
           </Popover>
         )}
-        {session?.user?.info && (
-          <div className={styles.profileInbox}>
-            <InboxPopover align="end" sideOffset={4} />
-          </div>
-        )}
+        {/* Temporarily removed InboxPopover - causing Liveblocks auth errors */}
       </div>
     </header>
   );
