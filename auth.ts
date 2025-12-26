@@ -3,33 +3,27 @@ import GoogleProvider from "next-auth/providers/google";
 import { getUser } from "@/lib/database/getUser";
 import { isAuthorizedEmail } from "@/lib/auth/authorized-emails";
 
-// NextAuth v5 uses AUTH_ prefix for environment variables
-const GOOGLE_CLIENT_ID = process.env.AUTH_GOOGLE_ID || process.env.GOOGLE_CLIENT_ID || "";
-const GOOGLE_CLIENT_SECRET = process.env.AUTH_GOOGLE_SECRET || process.env.GOOGLE_CLIENT_SECRET || "";
+// Force production URL in production environment
+const getAuthUrl = () => {
+  if (process.env.NODE_ENV === "production") {
+    return "https://www.histronics.com";
+  }
+  return process.env.AUTH_URL || process.env.NEXTAUTH_URL || "http://localhost:3000";
+};
 
-// IMPORTANT: Force production URL in production environment
-const AUTH_URL =
-  process.env.NODE_ENV === "production"
-    ? "https://www.histronics.com"
-    : (process.env.AUTH_URL || process.env.NEXTAUTH_URL || "http://localhost:3000");
+// Get credentials with runtime evaluation
+const getGoogleCredentials = () => {
+  const clientId = process.env.AUTH_GOOGLE_ID || process.env.GOOGLE_CLIENT_ID || "";
+  const clientSecret = process.env.AUTH_GOOGLE_SECRET || process.env.GOOGLE_CLIENT_SECRET || "";
 
-// Log for debugging
-console.log("🔧 Auth initialization (v5):");
-console.log("  NODE_ENV:", process.env.NODE_ENV);
-console.log("  process.env.AUTH_URL:", process.env.AUTH_URL);
-console.log("  process.env.NEXTAUTH_URL:", process.env.NEXTAUTH_URL);
-console.log("  AUTH_GOOGLE_ID:", GOOGLE_CLIENT_ID ? `${GOOGLE_CLIENT_ID.substring(0, 10)}...` : "❌ MISSING");
-console.log("  AUTH_GOOGLE_SECRET:", GOOGLE_CLIENT_SECRET ? "✓ Set" : "❌ MISSING");
-console.log("  Computed AUTH_URL:", AUTH_URL);
-console.log("  Expected callback:", `${AUTH_URL}/api/auth/callback/google`);
+  console.log("🔧 Runtime credentials check:");
+  console.log("  AUTH_GOOGLE_ID:", clientId ? `${clientId.substring(0, 10)}...` : "❌ MISSING");
+  console.log("  AUTH_GOOGLE_SECRET:", clientSecret ? "✓ Set" : "❌ MISSING");
 
-// Validate credentials
-if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET) {
-  console.error("❌ CRITICAL: Missing Google OAuth credentials!");
-  console.error("  Set AUTH_GOOGLE_ID and AUTH_GOOGLE_SECRET in AWS Amplify Environment Variables");
-}
+  return { clientId, clientSecret };
+};
 
-export const AUTH_SECRET =
+const AUTH_SECRET =
   process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET || "p49RDzU36fidumaF7imGnzyhRSPWoffNjDOleU77SM4=";
 
 export const {
@@ -39,11 +33,12 @@ export const {
   signOut,
 } = NextAuth({
   secret: AUTH_SECRET,
-  debug: true, // Enable debug logging
+  debug: true,
 
-  // Configure providers - NextAuth v5 auto-detects AUTH_GOOGLE_ID and AUTH_GOOGLE_SECRET
   providers: [
     GoogleProvider({
+      clientId: process.env.AUTH_GOOGLE_ID || process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.AUTH_GOOGLE_SECRET || process.env.GOOGLE_CLIENT_SECRET!,
       authorization: {
         params: {
           prompt: "consent",
