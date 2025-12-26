@@ -36,7 +36,7 @@ export function DashboardHeader({
         </Link>
       </div>
       <div className={styles.profile}>
-        {session && (
+        {session?.user?.info && (
           <Popover
             align="end"
             alignOffset={-6}
@@ -74,9 +74,11 @@ export function DashboardHeader({
             </button>
           </Popover>
         )}
-        <div className={styles.profileInbox}>
-          <InboxPopover align="end" sideOffset={4} />
-        </div>
+        {session?.user?.info && (
+          <div className={styles.profileInbox}>
+            <InboxPopover align="end" sideOffset={4} />
+          </div>
+        )}
       </div>
     </header>
   );
