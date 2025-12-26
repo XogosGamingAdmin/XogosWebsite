@@ -53,7 +53,7 @@ export async function updateUserAccess({ userId, documentId, access }: Props) {
   }
 
   // Check user is logged in
-  if (!session) {
+  if (!session || !session.user?.info) {
     return {
       error: {
         code: 401,

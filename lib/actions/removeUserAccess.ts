@@ -50,7 +50,7 @@ export async function removeUserAccess({ userId, documentId }: Props) {
   }
 
   // Check user is logged in
-  if (!session) {
+  if (!session || !session.user?.info) {
     return {
       error: {
         code: 401,
