@@ -50,7 +50,7 @@ export function DocumentRow({
 
   // Check if current user has access to edit the room
   useEffect(() => {
-    if (!session) {
+    if (!session || !session.user?.info) {
       return;
     }
 
