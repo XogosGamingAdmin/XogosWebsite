@@ -3,20 +3,15 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { getProfile } from "@/lib/actions/getProfile";
+import { getRssFeed, RSSFeedItem } from "@/lib/actions/getRssFeed";
 import { DASHBOARD_PROFILE_URL } from "@/constants";
 import styles from "./RSSFeedCard.module.css";
 
-type RSSItem = {
-  title: string;
-  link: string;
-  pubDate: string;
-  contentSnippet?: string;
-};
-
 export function RSSFeedCard() {
   const [rssTopic, setRssTopic] = useState<string>("");
-  const [feedItems, setFeedItems] = useState<RSSItem[]>([]);
+  const [feedItems, setFeedItems] = useState<RSSFeedItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string>("");
 
   useEffect(() => {
     async function loadProfile() {
@@ -25,22 +20,34 @@ export function RSSFeedCard() {
         setRssTopic(result.data.rssTopic);
         if (result.data.rssTopic) {
           await loadRSSFeed(result.data.rssTopic);
+        } else {
+          setLoading(false);
         }
+      } else {
+        setLoading(false);
       }
-      setLoading(false);
     }
     loadProfile();
   }, []);
 
   async function loadRSSFeed(topic: string) {
     try {
-      // NOTE: In a production environment, this would call a server action
-      // that fetches the RSS feed server-side to avoid CORS issues
-      // For now, using a placeholder
+      setLoading(true);
+      setError("");
+      const result = await getRssFeed(topic, 5);
+
+      if (result.error) {
+        setError(result.error.message);
+        setFeedItems([]);
+      } else if (result.data) {
+        setFeedItems(result.data);
+      }
+    } catch (err) {
+      console.error("Failed to load RSS feed:", err);
+      setError("Failed to load news feed");
       setFeedItems([]);
-    } catch (error) {
-      console.error("Failed to load RSS feed:", error);
-      setFeedItems([]);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -52,6 +59,11 @@ export function RSSFeedCard() {
       <div className={styles.content}>
         {loading ? (
           <p className={styles.loading}>Loading...</p>
+        ) : error ? (
+          <div className={styles.emptyState}>
+            <p className={styles.emptyText}>{error}</p>
+            <p className={styles.emptyHint}>Please try again later.</p>
+          </div>
         ) : !rssTopic ? (
           <div className={styles.emptyState}>
             <p className={styles.emptyText}>
