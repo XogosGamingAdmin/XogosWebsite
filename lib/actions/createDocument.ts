@@ -59,6 +59,7 @@ export async function createDocument(
     type: type,
     owner: userId,
     draft: draft ? "yes" : "no",
+    published: "no", // New documents are not published by default
   };
 
   // Give creator of document full access

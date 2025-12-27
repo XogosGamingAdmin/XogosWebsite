@@ -19,7 +19,10 @@
       "Bash(npm run lint:*)",
       "Bash(in the exact same order in every component render.\"\n\n🤖 Generated with [Claude Code]\\(https://claude.com/claude-code\\)\n\nCo-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
       "Bash(curl:*)",
-      "Bash(npm run build:*)"
+      "Bash(npm run build:*)",
+      "Bash(for file in getNextDocuments.ts removeGroupAccess.ts removeUserAccess.ts updateDefaultAccess.ts updateGroupAccess.ts updateUserAccess.ts)",
+      "Bash(do sed -i 's/if \\(!session\\)/if \\(!session || !session.user?.info\\)/g' \"$file\")",
+      "Bash(done)"
     ],
     "deny": [],
     "ask": []

@@ -32,7 +32,7 @@ export const users: Omit<User, "color">[] = [
   {
     id: "zack@xogosgaming.com",
     name: "Zack Edwards",
-    avatar: "Zack.jpg",
+    avatar: "/Zack.jpg",
     groupIds: [
       "board_member",
       "zacks_notes",

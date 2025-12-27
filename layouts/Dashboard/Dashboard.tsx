@@ -1,6 +1,7 @@
 "use client";
 
 import clsx from "clsx";
+import { useSession } from "next-auth/react";
 import { ComponentProps, useCallback, useState } from "react";
 import { DashboardHeader, DashboardSidebar } from "@/components/Dashboard";
 import { LiveblocksProvider } from "@/liveblocks.config";
@@ -18,12 +19,30 @@ export function DashboardLayout({
   ...props
 }: Props) {
   const [isMenuOpen, setMenuOpen] = useState(false);
+  const { data: session, status } = useSession();
 
   const handleMenuClick = useCallback(() => {
     setMenuOpen((isOpen) => !isOpen);
   }, []);
 
-  // Re-enabled LiveblocksProvider - session.user.info is guaranteed by server-side check
+  // Wait for session to be ready before rendering LiveblocksProvider
+  if (status === "loading") {
+    return (
+      <div className={clsx(className, styles.container)} {...props}>
+        <div className={styles.loading}>Loading...</div>
+      </div>
+    );
+  }
+
+  // Only render LiveblocksProvider when session.user.info is available
+  if (!session?.user?.info) {
+    return (
+      <div className={clsx(className, styles.container)} {...props}>
+        <div className={styles.loading}>Initializing...</div>
+      </div>
+    );
+  }
+
   return (
     <LiveblocksProvider>
       <div className={clsx(className, styles.container)} {...props}>

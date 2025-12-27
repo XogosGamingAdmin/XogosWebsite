@@ -43,6 +43,15 @@
   grid-area: main;
 }
 
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  font-size: 16px;
+  color: var(--color-text-secondary);
+}
+
 @media (min-width: 1024px) {
   .container {
     grid-template-areas:

@@ -69,6 +69,7 @@ export interface DocumentRoomMetadata
   type: DocumentType;
   owner: User["id"];
   draft: "yes" | "no";
+  published: "yes" | "no";
 }
 
 export type ErrorData = {
