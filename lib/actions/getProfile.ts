@@ -22,16 +22,19 @@ export async function getProfile() {
     };
   }
 
+  // Get user ID for profile lookup (TypeScript narrowing)
+  const userId = session.user.info.id;
+
   // Find user's profile
   const userProfile = profiles.find(
-    (profile) => profile.userId === session.user.info.id
+    (profile) => profile.userId === userId
   );
 
   if (!userProfile) {
     // Return default empty profile
     return {
       data: {
-        userId: session.user.info.id,
+        userId: userId,
         rssTopic: "",
       },
     };

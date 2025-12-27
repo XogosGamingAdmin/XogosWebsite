@@ -22,9 +22,12 @@ export async function getChecklists() {
     };
   }
 
+  // Get user ID for filtering (TypeScript narrowing)
+  const userId = session.user.info.id;
+
   // Filter checklists for current user
   const userChecklists = checklists.filter(
-    (item) => item.userId === session.user.info.id
+    (item) => item.userId === userId
   );
 
   return { data: userChecklists };
