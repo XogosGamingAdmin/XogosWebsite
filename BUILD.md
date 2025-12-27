@@ -9,7 +9,192 @@ XogosBoard is a Next.js 14.2.3 application deployed on AWS Amplify at https://ww
 
 ---
 
-## Latest Session: December 19, 2025
+## Latest Session: December 27, 2025
+
+### Major Work Completed
+
+#### 1. Dashboard Personalization & UI Improvements
+**Problem:** Board Member Profile card was generic and didn't show personalized welcome message or correct board member photos.
+
+**Solution Implemented:**
+- Updated Board Member Profile card to display "Welcome [User Name]" instead of generic header
+- Updated all board member avatar paths in `data/users.ts` to point to actual images in `/public/images/board/`
+- Each board member now sees their correct photo from the public board page on their dashboard
+
+**Files Modified:**
+- `components/Dashboard/Cards/BoardMemberProfileCard.tsx` - Changed header to personalized welcome
+- `data/users.ts` - Updated all 6 board members' avatar paths to use `/images/board/` directory
+
+**Board Member Photos Located:**
+- `/public/images/board/zack.png`
+- `/public/images/board/michael.png`
+- `/public/images/board/braden.png`
+- `/public/images/board/terrence.png`
+- `/public/images/board/sean.png`
+- `/public/images/board/mckayla.png`
+
+#### 2. Admin Access Enhancement
+**Problem:** Admin users (Zack and Michael) had no easy way to access admin pages from the dashboard.
+
+**Solution Implemented:**
+- Added "Admin" link to dashboard sidebar that's only visible to admin users
+- Admin access check uses `isAdmin()` function from `lib/auth/admin.ts`
+- Link appears for emails: zack@xogosgaming.com and enjoyweaver@gmail.com
+
+**Files Modified:**
+- `components/Dashboard/DashboardSidebar.tsx` - Added admin link with conditional rendering
+
+**Admin Pages Available:**
+- `/admin` - Admin dashboard
+- `/admin/statistics` - Edit Xogos statistics (accounts, active users, total hours)
+- `/admin/financials` - Edit Xogos financials (revenue, expenses, payments, lifetime members)
+- `/admin/checklists` - Create and manage checklist items for all board members
+
+#### 3. Live RSS Feed Implementation
+**Problem:** RSS feed card on dashboard was not working - couldn't fetch live news feeds.
+
+**Solution Implemented:**
+- Installed `rss-parser` package for RSS feed parsing
+- Created `lib/actions/getRssFeed.ts` server action using Google News RSS
+- Updated `RSSFeedCard.tsx` to call server action and display live news
+- Added proper User-Agent headers to avoid being blocked
+- Set 10-second timeout for feed fetching
+- Enhanced error handling and loading states
+
+**Files Modified:**
+- `lib/actions/getRssFeed.ts` - NEW server action for fetching RSS feeds
+- `components/Dashboard/Cards/RSSFeedCard.tsx` - Updated to use live RSS feed
+- `data/profiles.ts` - Added default RSS topics for all board members
+
+**Default RSS Topics:**
+- Michael Weaver: "blockchain technology"
+- Zack Edwards: "education technology"
+- Braden Perry: "legal technology"
+- Terrence Gatsby: "gaming industry"
+- Sean Sturtevant: "business news"
+- Mckayla Reece: "educational games"
+
+**RSS Feed URL Format:**
+```
+https://news.google.com/rss/search?q={topic}&hl=en-US&gl=US&ceid=US:en
+```
+
+#### 4. Database Migration: Supabase → AWS RDS PostgreSQL
+**Problem:** Checklist items created in admin panel were not persisting - they disappeared on page refresh because data was stored in static TypeScript files.
+
+**Solution Implemented:**
+- **Uninstalled Supabase**: Removed `@supabase/supabase-js` package and `lib/supabase.ts`
+- **Installed PostgreSQL**: Added `pg` and `@types/pg` packages
+- **Created Database Layer**: Built `lib/database.ts` with connection pool and helper functions
+- **Updated All Actions**: Modified all checklist server actions to use AWS RDS
+- **Created Admin Action**: New `getAllChecklists` server action for admin page
+- **Fixed Build Errors**: Updated import paths to avoid webpack issues with pg library
+- **Comprehensive Guide**: Created `database/AWS_RDS_SETUP.md` with step-by-step setup instructions
+
+**Files Created:**
+- `lib/database.ts` - PostgreSQL connection pool and database helper functions
+- `lib/actions/getAllChecklists.ts` - Server action to fetch all checklists (admin only)
+- `database/schema.sql` - Complete database schema with 4 tables
+- `database/AWS_RDS_SETUP.md` - Comprehensive setup guide for AWS RDS
+
+**Files Modified:**
+- `lib/actions/createChecklistItem.ts` - Uses `db.createChecklistItem()`
+- `lib/actions/getChecklists.ts` - Uses `db.getChecklistItems()`
+- `lib/actions/updateChecklistItem.ts` - Uses `db.updateChecklistItem()` and `db.getChecklistItem()`
+- `lib/actions/deleteChecklistItem.ts` - Uses `db.deleteChecklistItem()`
+- `app/admin/checklists/page.tsx` - Calls `getAllChecklists()` server action
+- `liveblocks.config.ts` - Fixed import path for `getUsers`
+- `lib/utils/buildDocumentGroups.ts` - Fixed import path for `getGroup`
+- `app/dashboard/layout.tsx` - Fixed import path for `getGroups`
+- `lib/actions/getGroups.ts` - Fixed import path for `getGroup`
+- `lib/actions/removeUserAccess.ts` - Fixed import path for `getUser`
+- `layouts/Documents/Documents.tsx` - Fixed import path for `getGroup`
+
+**Database Schema (4 Tables):**
+
+1. **checklist_items** - Monthly meeting checklists
+   - id (UUID primary key)
+   - user_id (TEXT) - Board member email
+   - task (TEXT) - Task description
+   - completed (BOOLEAN) - Completion status
+   - created_at (TIMESTAMP)
+   - created_by (TEXT) - Creator email
+
+2. **board_member_profiles** - Board member preferences
+   - user_id (TEXT primary key) - Board member email
+   - rss_topic (TEXT) - RSS feed topic preference
+   - created_at (TIMESTAMP)
+   - updated_at (TIMESTAMP)
+
+3. **xogos_statistics** - Company statistics
+   - id (SERIAL primary key)
+   - accounts (INTEGER)
+   - active_users (INTEGER)
+   - total_hours (INTEGER)
+   - last_updated (TIMESTAMP)
+   - updated_by (TEXT)
+
+4. **xogos_financials** - Company financials
+   - id (SERIAL primary key)
+   - revenue (NUMERIC)
+   - expenses (NUMERIC)
+   - monthly_payments (NUMERIC)
+   - yearly_payments (NUMERIC)
+   - lifetime_members (INTEGER)
+   - last_updated (TIMESTAMP)
+   - updated_by (TEXT)
+
+**Database Helper Functions in lib/database.ts:**
+```javascript
+db.getChecklistItems(userId)       // Get user's checklists
+db.getAllChecklistItems()          // Get all checklists (admin)
+db.createChecklistItem(...)        // Create new checklist item
+db.updateChecklistItem(id, bool)   // Toggle completion
+db.deleteChecklistItem(id)         // Delete item
+db.getChecklistItem(id)            // Get single item
+db.getProfile(userId)              // Get board member profile
+db.updateRssTopic(userId, topic)   // Update RSS topic
+db.getStatistics()                 // Get latest statistics
+db.updateStatistics(...)           // Insert new statistics
+db.getFinancials()                 // Get latest financials
+db.updateFinancials(...)           // Insert new financials
+```
+
+**Environment Variables Required (AWS Amplify):**
+```
+DATABASE_HOST=xogos-board-db.xxxxxx.us-east-1.rds.amazonaws.com
+DATABASE_PORT=5432
+DATABASE_NAME=xogosboard
+DATABASE_USER=postgres
+DATABASE_PASSWORD=your_master_password
+DATABASE_SSL=true
+```
+
+**Build Fix:**
+- Issue: `pg` library requires Node.js modules (dns, net, tls) not available in browser bundles
+- Solution: Changed imports from `@/lib/database` to specific files like `@/lib/database/getUser`
+- This ensures pg library is only imported in server-side code, not client components
+- Build now completes successfully: 380 pages generated
+
+#### 5. Webpack Build Errors Resolved
+**Problem:** Build failing with "Module not found: Can't resolve 'dns'" error when using pg library.
+
+**Root Cause:** Client components were directly importing from `lib/database.ts` which includes the pg library. The pg library uses Node.js-specific modules that can't be bundled for the browser.
+
+**Solution:**
+- Created server action `getAllChecklists.ts` to wrap database calls
+- Updated all imports to use specific database helper files (e.g., `lib/database/getUser.ts`)
+- Ensured database calls only happen in server actions marked with "use server"
+- Installed `@types/pg` for TypeScript support
+
+**Build Result:** ✅ Successful
+- 380 pages generated
+- No webpack errors
+- Dynamic server usage warnings are expected and correct for authenticated routes
+
+---
+
+## Previous Session: December 19, 2025
 
 ### Major Work Completed
 
@@ -194,14 +379,25 @@ NEXTAUTH_URL=https://www.histronics.com
 ## Next Steps / TODO
 
 ### High Priority
-1. **Newsletter/Registration System**
+1. **AWS RDS Database Setup** ⚠️ CRITICAL - REQUIRED FOR CHECKLIST PERSISTENCE
+   - Follow guide: `database/AWS_RDS_SETUP.md`
+   - Create RDS PostgreSQL instance (db.t3.micro for free tier)
+   - Configure security group to allow connections (port 5432)
+   - Run database schema: `psql -h YOUR_ENDPOINT -U postgres -d xogosboard -f database/schema.sql`
+   - Add 6 environment variables to AWS Amplify (see AWS_RDS_SETUP.md)
+   - Redeploy application to apply environment variables
+   - Test checklist persistence after deployment
+   - **Status:** Code ready and deployed, database setup pending
+   - **Estimated Time:** 15-20 minutes following the guide
+
+2. **Newsletter/Registration System**
    - Decide on storage method (database, sheets, email service)
    - Create API endpoint for form submissions
    - Add form validation and error handling
    - Store student registrations properly
    - Prevent duplicate email registrations
 
-2. **Board Authentication Testing**
+3. **Board Authentication Testing**
    - Test full sign-in flow with all authorized emails
    - Verify unauthorized emails are properly blocked
    - Check session persistence across page refreshes
@@ -230,15 +426,15 @@ NEXTAUTH_URL=https://www.histronics.com
 
 ---
 
-## Recent Commits (Dec 19, 2025)
+## Recent Commits (Dec 27, 2025)
 
 ```
+a5c14a6 - Migrate from Supabase to AWS RDS PostgreSQL
+cd84f9e - (previous commit from this session)
+d4aa236 - Add comprehensive BUILD.md documentation
 1e17731 - Remove public Board Room link and add authentication protection
 a02eff2 - Fix Prettier formatting for Board Sign-In link
 f14469a - Fix Board Sign-In to use proper NextAuth flow
-5dde2ab - Restore direct Google OAuth redirect and fix edge runtime issue
-eae0573 - Fix Google OAuth authentication flow
-896961f - (previous work)
 ```
 
 ---
@@ -281,12 +477,25 @@ eae0573 - Fix Google OAuth authentication flow
 
 ---
 
-## Session End Status: ✅ WORKING
+## Session End Status: ✅ CODE COMPLETE - DATABASE SETUP PENDING
 
-**Last tested:** December 19, 2025
-**Board Sign-In Status:** Functional - awaiting deployment verification
-**Known Blockers:** None
-**Pending User Input:** Student registration storage method
+**Last tested:** December 27, 2025
+**Dashboard Status:** Personalized with live RSS feeds - Functional ✅
+**Admin Access:** Working - visible to Zack and Michael ✅
+**Database Migration:** Code complete and deployed - AWS RDS setup required ⚠️
+**Build Status:** Successful (380 pages generated) ✅
+**Known Blockers:** AWS RDS database must be created and configured for checklist persistence
+**Pending User Action:**
+1. Follow `database/AWS_RDS_SETUP.md` to create RDS instance
+2. Add database environment variables to AWS Amplify
+3. Redeploy application
+
+**Next Developer Notes:**
+- All code for AWS RDS PostgreSQL is ready and deployed
+- Database helper functions are in `lib/database.ts`
+- Schema file is `database/schema.sql`
+- Setup guide is comprehensive - just follow the steps
+- After database setup, checklists will persist correctly
 
 ---
 
