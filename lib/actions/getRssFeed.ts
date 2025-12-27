@@ -1,7 +1,5 @@
 "use server";
 
-import Parser from "rss-parser";
-
 export type RSSFeedItem = {
   title: string;
   link: string;
@@ -31,25 +29,40 @@ export async function getRssFeed(
   }
 
   try {
-    const parser = new Parser({
-      customFields: {
-        item: ["source"],
-      },
+    // Use rss2json API service to convert Google News RSS to JSON
+    // This bypasses CORS issues and parsing problems
+    const feedUrl = `https://news.google.com/rss/search?q=${encodeURIComponent(topic)}&hl=en-US&gl=US&ceid=US:en`;
+    const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feedUrl)}&api_key=public&count=${limit}`;
+
+    const response = await fetch(apiUrl, {
+      next: { revalidate: 300 }, // Cache for 5 minutes
     });
 
-    // Use Google News RSS feed with search query
-    const feedUrl = `https://news.google.com/rss/search?q=${encodeURIComponent(topic)}&hl=en-US&gl=US&ceid=US:en`;
+    if (!response.ok) {
+      throw new Error(`Failed to fetch RSS feed: ${response.statusText}`);
+    }
 
-    const feed = await parser.parseURL(feedUrl);
+    const data = await response.json();
 
-    // Map and limit results
-    const items: RSSFeedItem[] = feed.items.slice(0, limit).map((item) => ({
-      title: item.title || "",
-      link: item.link || "",
-      pubDate: item.pubDate || new Date().toISOString(),
-      contentSnippet: item.contentSnippet || item.content?.substring(0, 200),
-      source: item.source || "Google News",
-    }));
+    if (data.status !== "ok") {
+      throw new Error(data.message || "RSS feed error");
+    }
+
+    // Map the response to our format
+    const items: RSSFeedItem[] = data.items.slice(0, limit).map((item: any) => {
+      // Clean up the description by removing HTML tags
+      const cleanDescription = item.description
+        ? item.description.replace(/<[^>]*>/g, "").substring(0, 150)
+        : "";
+
+      return {
+        title: item.title || "",
+        link: item.link || "",
+        pubDate: item.pubDate || new Date().toISOString(),
+        contentSnippet: cleanDescription,
+        source: item.source || "Google News",
+      };
+    });
 
     return { data: items };
   } catch (error) {
