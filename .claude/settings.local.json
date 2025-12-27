@@ -23,7 +23,8 @@
       "Bash(for file in getNextDocuments.ts removeGroupAccess.ts removeUserAccess.ts updateDefaultAccess.ts updateGroupAccess.ts updateUserAccess.ts)",
       "Bash(do sed -i 's/if \\(!session\\)/if \\(!session || !session.user?.info\\)/g' \"$file\")",
       "Bash(done)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(npm install:*)"
     ],
     "deny": [],
     "ask": []

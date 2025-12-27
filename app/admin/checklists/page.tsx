@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { createChecklistItem } from "@/lib/actions/createChecklistItem";
 import { deleteChecklistItem } from "@/lib/actions/deleteChecklistItem";
-import { checklists } from "@/data/checklists";
+import { supabase } from "@/lib/supabase";
 import { users } from "@/data/users";
 import {
   ADMIN_STATISTICS_URL,
@@ -23,7 +23,26 @@ export default function ChecklistsPage() {
   const [message, setMessage] = useState("");
 
   useEffect(() => {
-    setItems(checklists);
+    async function loadChecklists() {
+      const { data, error } = await supabase
+        .from("checklist_items")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (!error && data) {
+        const mappedItems = data.map((item) => ({
+          id: item.id,
+          userId: item.user_id,
+          task: item.task,
+          completed: item.completed,
+          createdAt: item.created_at,
+          createdBy: item.created_by,
+        }));
+        setItems(mappedItems);
+      }
+    }
+
+    loadChecklists();
     if (users.length > 0) {
       setSelectedUserId(users[0].id);
     }

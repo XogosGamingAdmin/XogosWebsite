@@ -2,6 +2,7 @@
 
 import { auth } from "@/auth";
 import { isAdmin } from "@/lib/auth/admin";
+import { supabase } from "@/lib/supabase";
 import { ChecklistItem } from "@/types/dashboard";
 
 type Props = {
@@ -13,7 +14,6 @@ type Props = {
  * Create Checklist Item
  *
  * Creates a new checklist item for a board member (admin only)
- * In a production environment, this would update a database
  *
  * @param userId - The board member's user ID (email)
  * @param task - The task description
@@ -43,16 +43,37 @@ export async function createChecklistItem({ userId, task }: Props) {
     };
   }
 
-  // NOTE: In a production environment, this would update a database
-  // For now, we're using static files, so this would need to be
-  // manually updated or use a different storage mechanism
+  // Insert into Supabase
+  const { data, error } = await supabase
+    .from("checklist_items")
+    .insert({
+      user_id: userId,
+      task,
+      completed: false,
+      created_by: session.user.email,
+    })
+    .select()
+    .single();
+
+  if (error) {
+    console.error("Error creating checklist item:", error);
+    return {
+      error: {
+        code: 500,
+        message: "Failed to create checklist item",
+        suggestion: "Please try again or contact support",
+      },
+    };
+  }
+
+  // Map database row to ChecklistItem type
   const newItem: ChecklistItem = {
-    id: `checklist_${Date.now()}`,
-    userId,
-    task,
-    completed: false,
-    createdAt: new Date().toISOString(),
-    createdBy: session.user.email,
+    id: data.id,
+    userId: data.user_id,
+    task: data.task,
+    completed: data.completed,
+    createdAt: data.created_at,
+    createdBy: data.created_by,
   };
 
   return { data: newItem };

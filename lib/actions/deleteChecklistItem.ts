@@ -2,7 +2,7 @@
 
 import { auth } from "@/auth";
 import { isAdmin } from "@/lib/auth/admin";
-import { checklists } from "@/data/checklists";
+import { supabase } from "@/lib/supabase";
 
 type Props = {
   itemId: string;
@@ -12,7 +12,6 @@ type Props = {
  * Delete Checklist Item
  *
  * Deletes a checklist item (admin only)
- * In a production environment, this would update a database
  *
  * @param itemId - The checklist item ID
  */
@@ -41,22 +40,22 @@ export async function deleteChecklistItem({ itemId }: Props) {
     };
   }
 
-  // Find the checklist item
-  const item = checklists.find((i) => i.id === itemId);
+  // Delete from Supabase
+  const { error } = await supabase
+    .from("checklist_items")
+    .delete()
+    .eq("id", itemId);
 
-  if (!item) {
+  if (error) {
+    console.error("Error deleting checklist item:", error);
     return {
       error: {
-        code: 404,
-        message: "Checklist item not found",
-        suggestion: "Refresh the page and try again",
+        code: 500,
+        message: "Failed to delete checklist item",
+        suggestion: "Please try again or contact support",
       },
     };
   }
-
-  // NOTE: In a production environment, this would update a database
-  // For now, we're using static files, so this would need to be
-  // manually updated or use a different storage mechanism
 
   return { data: { success: true } };
 }
