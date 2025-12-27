@@ -2,10 +2,10 @@
   background: var(--color-background);
   border: 1px solid var(--color-border);
   border-radius: 8px;
-  padding: 24px;
+  padding: 18px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 14px;
 }
 
 .header {
@@ -15,7 +15,7 @@
 }
 
 .title {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 600;
   color: var(--color-text);
   margin: 0;
@@ -24,20 +24,20 @@
 .content {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 12px;
 }
 
 .documentList {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
 }
 
 .documentItem {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px;
+  gap: 10px;
+  padding: 10px;
   border-radius: 6px;
   text-decoration: none;
   color: inherit;
@@ -53,8 +53,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
   color: var(--color-text-secondary);
 }
 
@@ -64,7 +64,7 @@
 }
 
 .documentName {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
   color: var(--color-text);
   white-space: nowrap;
@@ -73,7 +73,7 @@
 }
 
 .documentMeta {
-  font-size: 12px;
+  font-size: 11px;
   color: var(--color-text-secondary);
 }
 

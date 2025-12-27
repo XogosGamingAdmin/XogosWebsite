@@ -2,10 +2,10 @@
   background: var(--color-background);
   border: 1px solid var(--color-border);
   border-radius: 8px;
-  padding: 24px;
+  padding: 18px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 14px;
 }
 
 .header {
@@ -15,7 +15,7 @@
 }
 
 .title {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 600;
   color: var(--color-text);
   margin: 0;
@@ -24,20 +24,20 @@
 .content {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 12px;
 }
 
 .feedList {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 8px;
 }
 
 .feedItem {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  padding: 12px;
+  gap: 5px;
+  padding: 10px;
   border-radius: 6px;
   text-decoration: none;
   color: inherit;
@@ -49,16 +49,16 @@
 }
 
 .feedTitle {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
   color: var(--color-text);
   line-height: 1.4;
 }
 
 .feedSnippet {
-  font-size: 13px;
+  font-size: 12px;
   color: var(--color-text-secondary);
-  line-height: 1.5;
+  line-height: 1.4;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -66,7 +66,7 @@
 }
 
 .feedDate {
-  font-size: 12px;
+  font-size: 11px;
   color: var(--color-text-secondary);
 }
 
