@@ -19,9 +19,6 @@ export function BoardMemberProfileCard() {
 
   return (
     <div className={styles.card}>
-      <div className={styles.header}>
-        <h2 className={styles.title}>Board Member Profile</h2>
-      </div>
       <div className={styles.content}>
         <div className={styles.profileInfo}>
           <Avatar
@@ -31,7 +28,7 @@ export function BoardMemberProfileCard() {
             src={session.user.info.avatar}
           />
           <div className={styles.details}>
-            <h3 className={styles.name}>{session.user.info.name}</h3>
+            <h3 className={styles.welcome}>Welcome {session.user.info.name}</h3>
             <p className={styles.email}>{session.user.info.id}</p>
           </div>
         </div>

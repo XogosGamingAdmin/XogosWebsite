@@ -20,7 +20,7 @@ export const users: Omit<User, "color">[] = [
   {
     id: "enjoyweaver@gmail.com",
     name: "Michael Weaver",
-    avatar: "/weaver.jpg",
+    avatar: "/images/board/weaver.jpg",
     groupIds: [
       "board_member",
       "audit_committee",
@@ -32,7 +32,7 @@ export const users: Omit<User, "color">[] = [
   {
     id: "zack@xogosgaming.com",
     name: "Zack Edwards",
-    avatar: "/Zack.jpg",
+    avatar: "/images/board/zack.png",
     groupIds: [
       "board_member",
       "zacks_notes",
@@ -43,13 +43,13 @@ export const users: Omit<User, "color">[] = [
   {
     id: "braden@kennyhertzperry.com",
     name: "Braden Perry",
-    avatar: "https://liveblocks.io/avatars/avatar-5.png",
+    avatar: "/images/board/braden.jpg",
     groupIds: ["board_member", "bradens_notes", "historical_agendas"],
   },
   {
     id: "terrence@terrencegatsby.com",
     name: "Terrance Gatsby",
-    avatar: "https://liveblocks.io/avatars/avatar-6.png",
+    avatar: "/images/board/terrance.jpg",
     groupIds: [
       "board_member",
       "compliance_&_regulations_committee",
@@ -60,13 +60,13 @@ export const users: Omit<User, "color">[] = [
   {
     id: "sturs49@gmail.com",
     name: "Kevin Stursberg",
-    avatar: "https://liveblocks.io/avatars/avatar-6.png",
+    avatar: "/images/board/kevin.jpg",
     groupIds: ["board_member", "kevins_notes", "historical_agendas"],
   },
   {
     id: "mckaylaareece@gmail.com",
     name: "McKayla",
-    avatar: "https://liveblocks.io/avatars/avatar-6.png",
+    avatar: "/images/board/mckayla.jpg",
     groupIds: [
       "board_member",
       "education_committee",
