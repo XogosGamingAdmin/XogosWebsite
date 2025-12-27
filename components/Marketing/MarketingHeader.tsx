@@ -65,6 +65,14 @@ export function MarketingHeader({
                 Events
               </Link>
               <Link
+                href="https://www.histronics.com/board"
+                className={styles.navLink}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Board Room
+              </Link>
+              <Link
                 href="/signin?callbackUrl=/dashboard"
                 className={styles.navLink}
               >
