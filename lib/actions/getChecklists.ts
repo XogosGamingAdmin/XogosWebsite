@@ -1,7 +1,7 @@
 "use server";
 
 import { auth } from "@/auth";
-import { supabase } from "@/lib/supabase";
+import { db } from "@/lib/database";
 import { ChecklistItem } from "@/types/dashboard";
 
 /**
@@ -26,14 +26,22 @@ export async function getChecklists() {
   // Get user ID for filtering (TypeScript narrowing)
   const userId = session.user.info.id;
 
-  // Fetch checklists from Supabase
-  const { data, error } = await supabase
-    .from("checklist_items")
-    .select("*")
-    .eq("user_id", userId)
-    .order("created_at", { ascending: false });
+  try {
+    // Fetch checklists from database
+    const data = await db.getChecklistItems(userId);
 
-  if (error) {
+    // Map database rows to ChecklistItem type
+    const userChecklists: ChecklistItem[] = data.map((item: any) => ({
+      id: item.id,
+      userId: item.user_id,
+      task: item.task,
+      completed: item.completed,
+      createdAt: item.created_at,
+      createdBy: item.created_by,
+    }));
+
+    return { data: userChecklists };
+  } catch (error) {
     console.error("Error fetching checklists:", error);
     return {
       error: {
@@ -43,16 +51,4 @@ export async function getChecklists() {
       },
     };
   }
-
-  // Map database rows to ChecklistItem type
-  const userChecklists: ChecklistItem[] = (data || []).map((item) => ({
-    id: item.id,
-    userId: item.user_id,
-    task: item.task,
-    completed: item.completed,
-    createdAt: item.created_at,
-    createdBy: item.created_by,
-  }));
-
-  return { data: userChecklists };
 }

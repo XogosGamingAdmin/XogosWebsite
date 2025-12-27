@@ -1,7 +1,7 @@
 "use server";
 
 import { auth } from "@/auth";
-import { supabase } from "@/lib/supabase";
+import { db } from "@/lib/database";
 import { ChecklistItem } from "@/types/dashboard";
 
 type Props = {
@@ -31,44 +31,46 @@ export async function updateChecklistItem({ itemId, completed }: Props) {
     };
   }
 
-  // First, fetch the item to verify ownership
-  const { data: item, error: fetchError } = await supabase
-    .from("checklist_items")
-    .select("*")
-    .eq("id", itemId)
-    .single();
+  try {
+    // First, fetch the item to verify ownership
+    const item = await db.getChecklistItem(itemId);
 
-  if (fetchError || !item) {
-    console.error("Error fetching checklist item:", fetchError);
-    return {
-      error: {
-        code: 404,
-        message: "Checklist item not found",
-        suggestion: "Refresh the page and try again",
-      },
+    if (!item) {
+      return {
+        error: {
+          code: 404,
+          message: "Checklist item not found",
+          suggestion: "Refresh the page and try again",
+        },
+      };
+    }
+
+    // Check user owns this checklist item
+    if (item.user_id !== session.user.info.id) {
+      return {
+        error: {
+          code: 403,
+          message: "Not allowed",
+          suggestion: "You can only update your own checklist items",
+        },
+      };
+    }
+
+    // Update in database
+    const data = await db.updateChecklistItem(itemId, completed);
+
+    // Map database row to ChecklistItem type
+    const updatedItem: ChecklistItem = {
+      id: data.id,
+      userId: data.user_id,
+      task: data.task,
+      completed: data.completed,
+      createdAt: data.created_at,
+      createdBy: data.created_by,
     };
-  }
 
-  // Check user owns this checklist item
-  if (item.user_id !== session.user.info.id) {
-    return {
-      error: {
-        code: 403,
-        message: "Not allowed",
-        suggestion: "You can only update your own checklist items",
-      },
-    };
-  }
-
-  // Update in Supabase
-  const { data, error } = await supabase
-    .from("checklist_items")
-    .update({ completed })
-    .eq("id", itemId)
-    .select()
-    .single();
-
-  if (error) {
+    return { data: updatedItem };
+  } catch (error) {
     console.error("Error updating checklist item:", error);
     return {
       error: {
@@ -78,16 +80,4 @@ export async function updateChecklistItem({ itemId, completed }: Props) {
       },
     };
   }
-
-  // Map database row to ChecklistItem type
-  const updatedItem: ChecklistItem = {
-    id: data.id,
-    userId: data.user_id,
-    task: data.task,
-    completed: data.completed,
-    createdAt: data.created_at,
-    createdBy: data.created_by,
-  };
-
-  return { data: updatedItem };
 }

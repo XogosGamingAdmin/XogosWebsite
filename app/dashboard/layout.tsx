@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { ReactNode } from "react";
 import { auth } from "@/auth";
 import { DashboardLayout } from "@/layouts/Dashboard";
-import { getGroups } from "@/lib/database";
+import { getGroups } from "@/lib/database/getGroups";
 
 export default async function Dashboard({ children }: { children: ReactNode }) {
   let session = null;

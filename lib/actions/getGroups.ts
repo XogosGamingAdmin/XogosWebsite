@@ -1,6 +1,6 @@
 "use server";
 
-import { getGroup } from "@/lib/database";
+import { getGroup } from "@/lib/database/getGroup";
 import { DocumentGroup, Group } from "@/types";
 
 /**

@@ -24,7 +24,8 @@
       "Bash(do sed -i 's/if \\(!session\\)/if \\(!session || !session.user?.info\\)/g' \"$file\")",
       "Bash(done)",
       "Bash(ls:*)",
-      "Bash(npm install:*)"
+      "Bash(npm install:*)",
+      "Bash(npm uninstall:*)"
     ],
     "deny": [],
     "ask": []

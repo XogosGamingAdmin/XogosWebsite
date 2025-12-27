@@ -1,6 +1,6 @@
 import { RoomData } from "@liveblocks/node";
 import { DocumentGroup } from "@/types";
-import { getGroup } from "../database";
+import { getGroup } from "../database/getGroup";
 import { roomAccessesToDocumentAccess } from "./convertAccessType";
 
 /**

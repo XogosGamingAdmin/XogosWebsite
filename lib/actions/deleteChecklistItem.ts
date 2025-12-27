@@ -2,7 +2,7 @@
 
 import { auth } from "@/auth";
 import { isAdmin } from "@/lib/auth/admin";
-import { supabase } from "@/lib/supabase";
+import { db } from "@/lib/database";
 
 type Props = {
   itemId: string;
@@ -40,13 +40,11 @@ export async function deleteChecklistItem({ itemId }: Props) {
     };
   }
 
-  // Delete from Supabase
-  const { error } = await supabase
-    .from("checklist_items")
-    .delete()
-    .eq("id", itemId);
-
-  if (error) {
+  try {
+    // Delete from database
+    await db.deleteChecklistItem(itemId);
+    return { data: { success: true } };
+  } catch (error) {
     console.error("Error deleting checklist item:", error);
     return {
       error: {
@@ -56,6 +54,4 @@ export async function deleteChecklistItem({ itemId }: Props) {
       },
     };
   }
-
-  return { data: { success: true } };
 }

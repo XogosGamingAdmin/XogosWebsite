@@ -1,5 +1,5 @@
 import { ErrorLayout } from "@/layouts/Error";
-import { getGroup } from "@/lib/database";
+import { getGroup } from "@/lib/database/getGroup";
 import { Group } from "@/types";
 import { DocumentsList } from "./DocumentsList";
 

@@ -8,7 +8,7 @@ import {
 import { createLiveblocksContext, createRoomContext } from "@liveblocks/react";
 import { DOCUMENT_URL } from "@/constants";
 import { authorizeLiveblocks, getSpecificDocuments } from "@/lib/actions";
-import { getUsers } from "./lib/database";
+import { getUsers } from "./lib/database/getUsers";
 import { User } from "./types";
 
 // Creating client with a custom callback that calls our API

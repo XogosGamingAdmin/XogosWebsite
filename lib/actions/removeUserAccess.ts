@@ -1,7 +1,7 @@
 "use server";
 
 import { auth } from "@/auth";
-import { getUser } from "@/lib/database";
+import { getUser } from "@/lib/database/getUser";
 import {
   buildDocumentUsers,
   isUserDocumentOwner,

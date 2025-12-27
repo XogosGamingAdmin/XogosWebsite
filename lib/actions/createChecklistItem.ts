@@ -2,7 +2,7 @@
 
 import { auth } from "@/auth";
 import { isAdmin } from "@/lib/auth/admin";
-import { supabase } from "@/lib/supabase";
+import { db } from "@/lib/database";
 import { ChecklistItem } from "@/types/dashboard";
 
 type Props = {
@@ -43,19 +43,22 @@ export async function createChecklistItem({ userId, task }: Props) {
     };
   }
 
-  // Insert into Supabase
-  const { data, error } = await supabase
-    .from("checklist_items")
-    .insert({
-      user_id: userId,
-      task,
-      completed: false,
-      created_by: session.user.email,
-    })
-    .select()
-    .single();
+  try {
+    // Insert into database
+    const data = await db.createChecklistItem(userId, task, session.user.email);
 
-  if (error) {
+    // Map database row to ChecklistItem type
+    const newItem: ChecklistItem = {
+      id: data.id,
+      userId: data.user_id,
+      task: data.task,
+      completed: data.completed,
+      createdAt: data.created_at,
+      createdBy: data.created_by,
+    };
+
+    return { data: newItem };
+  } catch (error) {
     console.error("Error creating checklist item:", error);
     return {
       error: {
@@ -65,16 +68,4 @@ export async function createChecklistItem({ userId, task }: Props) {
       },
     };
   }
-
-  // Map database row to ChecklistItem type
-  const newItem: ChecklistItem = {
-    id: data.id,
-    userId: data.user_id,
-    task: data.task,
-    completed: data.completed,
-    createdAt: data.created_at,
-    createdBy: data.created_by,
-  };
-
-  return { data: newItem };
 }
