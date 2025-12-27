@@ -11,6 +11,7 @@ import { DocumentRowGroup } from "@/components/Documents/DocumentRowGroup";
 import { PlusIcon } from "@/icons";
 import { GetDocumentsProps } from "@/lib/actions";
 import { usePaginatedDocumentsSWR } from "@/lib/hooks";
+import { LiveblocksProvider } from "@/liveblocks.config";
 import { Button } from "@/primitives/Button";
 import { Container } from "@/primitives/Container";
 import { Select } from "@/primitives/Select";
@@ -123,71 +124,73 @@ export function DocumentsList({
   );
 
   return (
-    <Container
-      size="small"
-      className={clsx(className, styles.documents)}
-      {...props}
-    >
-      <div className={styles.header}>
-        <h1 className={styles.headerTitle}>
-          {group?.name ?? capitalize(filter)}
-        </h1>
-        <div className={styles.headerActions}>
-          <Select
-            initialValue="all"
-            items={[
-              { value: "all", title: "All" },
-              { value: "text", title: "Text" },
-              { value: "whiteboard", title: "Whiteboard" },
-              { value: "spreadsheet", title: "Spreadsheet", disabled: true },
-            ]}
-            onChange={(value: "all" | DocumentType) => {
-              setDocumentType(value);
-              revalidateDocuments();
-            }}
-            className={styles.headerSelect}
-          />
-          {createDocumentButton}
+    <LiveblocksProvider>
+      <Container
+        size="small"
+        className={clsx(className, styles.documents)}
+        {...props}
+      >
+        <div className={styles.header}>
+          <h1 className={styles.headerTitle}>
+            {group?.name ?? capitalize(filter)}
+          </h1>
+          <div className={styles.headerActions}>
+            <Select
+              initialValue="all"
+              items={[
+                { value: "all", title: "All" },
+                { value: "text", title: "Text" },
+                { value: "whiteboard", title: "Whiteboard" },
+                { value: "spreadsheet", title: "Spreadsheet", disabled: true },
+              ]}
+              onChange={(value: "all" | DocumentType) => {
+                setDocumentType(value);
+                revalidateDocuments();
+              }}
+              className={styles.headerSelect}
+            />
+            {createDocumentButton}
+          </div>
         </div>
-      </div>
 
-      <div className={styles.container}>
-        {!isLoadingInitialData ? (
-          !isEmpty ? (
-            <>
-              {documentsPages.map((documentPage) => (
-                <DocumentRowGroup
-                  key={documentPage.nextCursor}
-                  documents={documentPage.documents}
-                  revalidateDocuments={revalidateDocuments}
-                />
-              ))}
-              {!isReachingEnd ? (
-                <div className={styles.actions}>
-                  <Button
-                    disabled={isLoadingMore}
-                    onClick={() => setSize(size + 1)}
-                    icon={isLoadingMore ? <Spinner /> : null}
-                  >
-                    {isLoadingMore ? "Loading…" : "Show more"}
-                  </Button>
-                </div>
-              ) : null}
-            </>
+        <div className={styles.container}>
+          {!isLoadingInitialData ? (
+            !isEmpty ? (
+              <>
+                {documentsPages.map((documentPage) => (
+                  <DocumentRowGroup
+                    key={documentPage.nextCursor}
+                    documents={documentPage.documents}
+                    revalidateDocuments={revalidateDocuments}
+                  />
+                ))}
+                {!isReachingEnd ? (
+                  <div className={styles.actions}>
+                    <Button
+                      disabled={isLoadingMore}
+                      onClick={() => setSize(size + 1)}
+                      icon={isLoadingMore ? <Spinner /> : null}
+                    >
+                      {isLoadingMore ? "Loading…" : "Show more"}
+                    </Button>
+                  </div>
+                ) : null}
+              </>
+            ) : (
+              <div className={styles.emptyState}>
+                <p>No documents yet.</p>
+                {createDocumentButton}
+              </div>
+            )
           ) : (
-            <div className={styles.emptyState}>
-              <p>No documents yet.</p>
-              {createDocumentButton}
-            </div>
-          )
-        ) : (
-          <>
-            <DocumentRowSkeleton className={styles.row} />
-            <DocumentRowSkeleton className={styles.row} />
-            <DocumentRowSkeleton className={styles.row} />
-          </>
-        )}
-      </div>
-    </Container>
+            <>
+              <DocumentRowSkeleton className={styles.row} />
+              <DocumentRowSkeleton className={styles.row} />
+              <DocumentRowSkeleton className={styles.row} />
+            </>
+          )}
+        </div>
+      </Container>
+    </LiveblocksProvider>
   );
 }
