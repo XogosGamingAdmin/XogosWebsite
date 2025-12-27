@@ -1,5 +1,7 @@
 "use server";
 
+import Parser from "rss-parser";
+
 export type RSSFeedItem = {
   title: string;
   link: string;
@@ -29,47 +31,65 @@ export async function getRssFeed(
   }
 
   try {
-    // Use rss2json API service to convert Google News RSS to JSON
-    // This bypasses CORS issues and parsing problems
-    const feedUrl = `https://news.google.com/rss/search?q=${encodeURIComponent(topic)}&hl=en-US&gl=US&ceid=US:en`;
-    const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feedUrl)}&api_key=public&count=${limit}`;
-
-    const response = await fetch(apiUrl, {
-      next: { revalidate: 300 }, // Cache for 5 minutes
+    const parser = new Parser({
+      timeout: 10000,
+      headers: {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+        Accept: "application/rss+xml, application/xml, text/xml",
+      },
+      customFields: {
+        item: [
+          ["media:content", "media"],
+          ["content:encoded", "contentEncoded"],
+        ],
+      },
     });
 
-    if (!response.ok) {
-      throw new Error(`Failed to fetch RSS feed: ${response.statusText}`);
+    // Use Google News RSS feed with search query
+    const feedUrl = `https://news.google.com/rss/search?q=${encodeURIComponent(topic)}&hl=en-US&gl=US&ceid=US:en`;
+
+    console.log("Fetching RSS feed for topic:", topic);
+    const feed = await parser.parseURL(feedUrl);
+    console.log("RSS feed fetched successfully, items:", feed.items.length);
+
+    if (!feed.items || feed.items.length === 0) {
+      return {
+        data: [],
+      };
     }
 
-    const data = await response.json();
-
-    if (data.status !== "ok") {
-      throw new Error(data.message || "RSS feed error");
-    }
-
-    // Map the response to our format
-    const items: RSSFeedItem[] = data.items.slice(0, limit).map((item: any) => {
-      // Clean up the description by removing HTML tags
-      const cleanDescription = item.description
-        ? item.description.replace(/<[^>]*>/g, "").substring(0, 150)
-        : "";
+    // Map and limit results
+    const items: RSSFeedItem[] = feed.items.slice(0, limit).map((item) => {
+      // Extract clean description
+      let description = "";
+      if (item.contentSnippet) {
+        description = item.contentSnippet.substring(0, 150);
+      } else if (item.content) {
+        description = item.content.replace(/<[^>]*>/g, "").substring(0, 150);
+      }
 
       return {
-        title: item.title || "",
+        title: item.title || "No title",
         link: item.link || "",
-        pubDate: item.pubDate || new Date().toISOString(),
-        contentSnippet: cleanDescription,
-        source: item.source || "Google News",
+        pubDate: item.pubDate || item.isoDate || new Date().toISOString(),
+        contentSnippet: description,
+        source: "Google News",
       };
     });
 
+    console.log("Returning", items.length, "RSS items");
     return { data: items };
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error fetching RSS feed:", error);
+    console.error("Error details:", {
+      message: error.message,
+      stack: error.stack,
+      topic,
+    });
+
     return {
       error: {
-        message: "Failed to fetch news feed. Please try again later.",
+        message: `Failed to load news for "${topic}". Try a different topic.`,
       },
     };
   }
