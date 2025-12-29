@@ -1,0 +1,86 @@
+.trendsContainer {
+  width: 100%;
+  margin: 2rem 0;
+  background: var(--color-white);
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: var(--color-dark-100);
+}
+
+.loading,
+.error,
+.noData {
+  padding: 2rem;
+  text-align: center;
+  color: var(--color-dark-60);
+}
+
+.error {
+  color: var(--color-red);
+}
+
+.tableContainer {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.table thead {
+  background: var(--color-dark-5);
+}
+
+.table th {
+  padding: 0.75rem;
+  text-align: left;
+  font-weight: 600;
+  color: var(--color-dark-100);
+  border-bottom: 2px solid var(--color-dark-10);
+}
+
+.table td {
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--color-dark-5);
+}
+
+.table tbody tr:hover {
+  background: var(--color-dark-2);
+}
+
+.numberCell {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.moneyCell {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-green-dark);
+  font-weight: 500;
+}
+
+.emailCell {
+  font-size: 0.8rem;
+  color: var(--color-dark-60);
+}
+
+@media (max-width: 768px) {
+  .table {
+    font-size: 0.75rem;
+  }
+
+  .table th,
+  .table td {
+    padding: 0.5rem;
+  }
+}

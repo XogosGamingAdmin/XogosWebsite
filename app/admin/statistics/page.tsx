@@ -10,6 +10,7 @@ import {
   DASHBOARD_HOME_URL,
 } from "@/constants";
 import { Button } from "@/primitives/Button";
+import { TrendsDisplay } from "@/components/TrendsDisplay";
 import styles from "./page.module.css";
 
 export default function StatisticsPage() {
@@ -136,12 +137,16 @@ export default function StatisticsPage() {
             )}
 
             <p className={styles.note}>
-              NOTE: These changes update the in-memory data. For persistent
-              storage, you'll need to manually update the file at
-              /data/statistics.ts or implement a database.
+              ✅ Changes are saved to AWS RDS PostgreSQL database with timestamp.
+              Each update creates a new historical record for trending/analytics.
             </p>
           </form>
         )}
+
+        {/* Historical Data Display */}
+        <div className={styles.trendsSection}>
+          <TrendsDisplay type="statistics" limit={10} />
+        </div>
       </div>
     </div>
   );

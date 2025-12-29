@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
 import { MarketingLayout } from "@/layouts/Marketing";
+import { getStatistics } from "@/lib/actions/getStatistics";
+import { getFinancials } from "@/lib/actions/getFinancials";
 import styles from "./page.module.css";
 
 // Real board members with proper seating positions
@@ -67,8 +69,8 @@ const boardMembers = [
   },
 ];
 
-// Factual platform metrics from whitepaper
-const platformMetrics = [
+// Static platform metrics from whitepaper
+const staticMetrics = [
   { label: "iServ Max Supply", value: "106,000,000 Tokens", trend: "fixed" },
   { label: "Daily iPlay Cap", value: "4 Tokens Per Student", trend: "stable" },
   {
@@ -139,6 +141,13 @@ export default function BoardPage() {
   const [isMeetingActive, setIsMeetingActive] = useState(false);
   const [selectedMember, setSelectedMember] = useState<string | null>(null);
   const [tickerPosition, setTickerPosition] = useState(0);
+  const [liveStats, setLiveStats] = useState({
+    accounts: 0,
+    activeUsers: 0,
+    totalHours: 0,
+    revenue: 0,
+    expenses: 0,
+  });
 
   // Calculate next board meeting (last Thursday of month at 5 PM ET)
   const getNextMeeting = () => {
@@ -169,6 +178,44 @@ export default function BoardPage() {
 
     return lastThursday;
   };
+
+  // Load live statistics from database
+  useEffect(() => {
+    async function loadLiveData() {
+      try {
+        const [statsResult, financialsResult] = await Promise.all([
+          getStatistics(),
+          getFinancials(),
+        ]);
+
+        if (statsResult.data) {
+          setLiveStats((prev) => ({
+            ...prev,
+            accounts: statsResult.data.accounts,
+            activeUsers: statsResult.data.activeUsers,
+            totalHours: statsResult.data.totalHours,
+          }));
+        }
+
+        if (financialsResult.data) {
+          setLiveStats((prev) => ({
+            ...prev,
+            revenue: financialsResult.data.revenue,
+            expenses: financialsResult.data.expenses,
+          }));
+        }
+      } catch (error) {
+        console.error("Error loading live stats:", error);
+      }
+    }
+
+    if (session) {
+      loadLiveData();
+      // Refresh every 30 seconds
+      const interval = setInterval(loadLiveData, 30000);
+      return () => clearInterval(interval);
+    }
+  }, [session]);
 
   // Redirect to sign-in if not authenticated
   useEffect(() => {
@@ -250,6 +297,17 @@ export default function BoardPage() {
   if (!session) {
     return null;
   }
+
+  // Combine live database stats with static metrics for ticker
+  const liveMetrics = [
+    { label: "Total Accounts", value: liveStats.accounts.toLocaleString(), trend: "active" },
+    { label: "Active Users", value: liveStats.activeUsers.toLocaleString(), trend: "active" },
+    { label: "Total Hours", value: liveStats.totalHours.toLocaleString(), trend: "active" },
+    { label: "Revenue", value: `$${liveStats.revenue.toLocaleString()}`, trend: "active" },
+    { label: "Expenses", value: `$${liveStats.expenses.toLocaleString()}`, trend: "active" },
+  ];
+
+  const platformMetrics = [...liveMetrics, ...staticMetrics];
 
   return (
     <MarketingLayout>

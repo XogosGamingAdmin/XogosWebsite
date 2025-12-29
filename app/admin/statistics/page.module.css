@@ -121,3 +121,7 @@
   border-radius: 6px;
   border-left: 3px solid var(--color-accent);
 }
+
+.trendsSection {
+  margin-top: 40px;
+}
