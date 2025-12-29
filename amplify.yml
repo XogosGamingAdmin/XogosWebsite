@@ -3,10 +3,21 @@ frontend:
   phases:
     preBuild:
       commands:
-        - npm ci
+        - echo "Starting dependency installation..."
+        - node --version
+        - npm --version
+        - npm config set fetch-retry-mintimeout 20000
+        - npm config set fetch-retry-maxtimeout 120000
+        - npm config set fetch-retries 5
+        - npm config set network-timeout 300000
+        - echo "Running npm ci with retry logic..."
+        - npm ci --prefer-offline --no-audit --legacy-peer-deps || npm install --legacy-peer-deps
+        - echo "Dependencies installed successfully"
     build:
       commands:
+        - echo "Starting Next.js build..."
         - npm run build
+        - echo "Build completed successfully"
   artifacts:
     baseDirectory: .next
     files:

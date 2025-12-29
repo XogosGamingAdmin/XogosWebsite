@@ -1,8 +1,9 @@
 # Xogos Gaming - Build Documentation
 
-**Last Updated:** 2025-12-16
+**Last Updated:** 2025-12-29
 **Status:** Complete
 **Platform:** XogosBoard (Next.js 14)
+**Deployment:** AWS Amplify
 
 ---
 
@@ -591,6 +592,40 @@ npm install
 npm run typecheck
 ```
 
+#### 9. AWS Amplify Network Timeout (ECONNRESET)
+
+**Error:**
+```
+npm error code ECONNRESET
+npm error network aborted
+```
+
+**Solution (Implemented December 2025):**
+
+This has been fixed with the following configuration files:
+
+**`.npmrc` (created):**
+```ini
+fetch-retries=5
+fetch-retry-mintimeout=20000
+fetch-retry-maxtimeout=120000
+network-timeout=300000
+prefer-offline=true
+audit=false
+legacy-peer-deps=true
+```
+
+**`amplify.yml` (updated):**
+- Added npm configuration commands before install
+- Implemented fallback from `npm ci` to `npm install`
+- Added logging for better debugging
+
+**If issue persists:**
+1. Check Amplify Console build logs for specific package causing timeout
+2. Verify environment variables are set correctly
+3. Try manual redeploy (network issues are often transient)
+4. Contact AWS Support if issue continues
+
 ### Build Performance Issues
 
 #### Slow Development Server
@@ -834,7 +869,42 @@ jobs:
           GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
 ```
 
-### Vercel Deployment (Recommended Platform)
+### AWS Amplify Deployment (Current Platform)
+
+**Status:** Active deployment platform
+
+**Build Configuration:**
+- Configured via `amplify.yml` in project root
+- Uses `.npmrc` for npm retry and timeout settings
+- Automatic deployment on push to main branch
+
+**Key Amplify Features:**
+- **Framework:** Auto-detected Next.js SSR
+- **Build Command:** `npm run build`
+- **Output Directory:** `.next`
+- **Install Command:** `npm ci` with fallback to `npm install`
+
+**Network Reliability Fixes (December 2025):**
+- Extended npm timeout: 300 seconds
+- Retry attempts: 5 (up from 2)
+- Fallback mechanism if npm ci fails
+- Persistent settings via `.npmrc` file
+
+**Common Amplify Build Issues:**
+
+1. **Network timeout during npm install**
+   - **Fixed by:** `.npmrc` configuration with extended timeouts
+   - **Retry logic:** Automatic fallback from `npm ci` to `npm install`
+
+2. **Environment variables**
+   - Configure in Amplify Console → App Settings → Environment Variables
+   - Required: `LIVEBLOCKS_SECRET_KEY`, `NEXTAUTH_SECRET`, etc.
+
+3. **Build image**
+   - Default: Amazon Linux 2 with Node.js
+   - Can specify custom image in amplify.yml if needed
+
+### Vercel Deployment (Alternative Platform)
 
 **Automatic build configuration:**
 
@@ -936,6 +1006,13 @@ When modifying build configuration:
 ---
 
 ## Changelog
+
+### 2025-12-29
+- Fixed AWS Amplify network timeout issues (ECONNRESET)
+- Created `.npmrc` with extended retry and timeout settings
+- Updated `amplify.yml` with fallback mechanism and logging
+- Added AWS Amplify deployment documentation
+- Added troubleshooting entry for network timeouts
 
 ### 2025-12-16
 - Initial BUILD.md documentation created
