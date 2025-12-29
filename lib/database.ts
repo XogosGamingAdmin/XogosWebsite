@@ -87,6 +87,50 @@ export const db = {
   },
 
   /**
+   * Get checklist history with filters
+   * @param userId Optional user filter
+   * @param startDate Optional start date filter
+   * @param endDate Optional end date filter
+   * @param limit Number of records to retrieve (default: 50)
+   */
+  async getChecklistHistory(
+    userId?: string,
+    startDate?: Date,
+    endDate?: Date,
+    limit: number = 50
+  ) {
+    let queryText = `SELECT id, user_id, task, completed, created_at, created_by
+                     FROM checklist_items
+                     WHERE 1=1`;
+    const params: any[] = [];
+    let paramCount = 1;
+
+    if (userId) {
+      queryText += ` AND user_id = $${paramCount}`;
+      params.push(userId);
+      paramCount++;
+    }
+
+    if (startDate) {
+      queryText += ` AND created_at >= $${paramCount}`;
+      params.push(startDate);
+      paramCount++;
+    }
+
+    if (endDate) {
+      queryText += ` AND created_at <= $${paramCount}`;
+      params.push(endDate);
+      paramCount++;
+    }
+
+    queryText += ` ORDER BY created_at DESC LIMIT $${paramCount}`;
+    params.push(limit);
+
+    const result = await query(queryText, params);
+    return result.rows;
+  },
+
+  /**
    * Create a checklist item
    */
   async createChecklistItem(
@@ -166,7 +210,7 @@ export const db = {
   },
 
   /**
-   * Get Xogos statistics
+   * Get latest Xogos statistics
    */
   async getStatistics() {
     const result = await query(
@@ -176,6 +220,42 @@ export const db = {
        LIMIT 1`
     );
     return result.rows[0];
+  },
+
+  /**
+   * Get historical Xogos statistics (for trending/graphs)
+   * @param limit Number of records to retrieve (default: 30)
+   * @param startDate Optional start date filter
+   * @param endDate Optional end date filter
+   */
+  async getStatisticsHistory(
+    limit: number = 30,
+    startDate?: Date,
+    endDate?: Date
+  ) {
+    let queryText = `SELECT id, accounts, active_users, total_hours, last_updated, updated_by
+                     FROM xogos_statistics
+                     WHERE 1=1`;
+    const params: any[] = [];
+    let paramCount = 1;
+
+    if (startDate) {
+      queryText += ` AND last_updated >= $${paramCount}`;
+      params.push(startDate);
+      paramCount++;
+    }
+
+    if (endDate) {
+      queryText += ` AND last_updated <= $${paramCount}`;
+      params.push(endDate);
+      paramCount++;
+    }
+
+    queryText += ` ORDER BY last_updated DESC LIMIT $${paramCount}`;
+    params.push(limit);
+
+    const result = await query(queryText, params);
+    return result.rows;
   },
 
   /**
@@ -197,7 +277,7 @@ export const db = {
   },
 
   /**
-   * Get Xogos financials
+   * Get latest Xogos financials
    */
   async getFinancials() {
     const result = await query(
@@ -207,6 +287,42 @@ export const db = {
        LIMIT 1`
     );
     return result.rows[0];
+  },
+
+  /**
+   * Get historical Xogos financials (for trending/graphs)
+   * @param limit Number of records to retrieve (default: 30)
+   * @param startDate Optional start date filter
+   * @param endDate Optional end date filter
+   */
+  async getFinancialsHistory(
+    limit: number = 30,
+    startDate?: Date,
+    endDate?: Date
+  ) {
+    let queryText = `SELECT id, revenue, expenses, monthly_payments, yearly_payments, lifetime_members, last_updated, updated_by
+                     FROM xogos_financials
+                     WHERE 1=1`;
+    const params: any[] = [];
+    let paramCount = 1;
+
+    if (startDate) {
+      queryText += ` AND last_updated >= $${paramCount}`;
+      params.push(startDate);
+      paramCount++;
+    }
+
+    if (endDate) {
+      queryText += ` AND last_updated <= $${paramCount}`;
+      params.push(endDate);
+      paramCount++;
+    }
+
+    queryText += ` ORDER BY last_updated DESC LIMIT $${paramCount}`;
+    params.push(limit);
+
+    const result = await query(queryText, params);
+    return result.rows;
   },
 
   /**

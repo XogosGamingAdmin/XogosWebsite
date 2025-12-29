@@ -61,6 +61,8 @@ ON CONFLICT DO NOTHING;
 -- Create indexes for better performance
 CREATE INDEX IF NOT EXISTS idx_checklist_user_id ON checklist_items(user_id);
 CREATE INDEX IF NOT EXISTS idx_checklist_created_at ON checklist_items(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_statistics_last_updated ON xogos_statistics(last_updated DESC);
+CREATE INDEX IF NOT EXISTS idx_financials_last_updated ON xogos_financials(last_updated DESC);
 
 -- Enable Row Level Security (RLS)
 ALTER TABLE board_member_profiles ENABLE ROW LEVEL SECURITY;

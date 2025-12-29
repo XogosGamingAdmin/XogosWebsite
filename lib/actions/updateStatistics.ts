@@ -2,7 +2,7 @@
 
 import { auth } from "@/auth";
 import { isAdmin } from "@/lib/auth/admin";
-import { XogosStatistics } from "@/types/dashboard";
+import { db } from "@/lib/database";
 
 type Props = {
   accounts: number;
@@ -14,7 +14,7 @@ type Props = {
  * Update Statistics
  *
  * Updates the Xogos statistics (admin only)
- * In a production environment, this would update a database
+ * Creates a new historical record in the database with timestamp
  *
  * @param data - The updated statistics values
  */
@@ -43,16 +43,32 @@ export async function updateStatistics({ accounts, activeUsers, totalHours }: Pr
     };
   }
 
-  // NOTE: In a production environment, this would update a database
-  // For now, we're using static files, so this would need to be
-  // manually updated or use a different storage mechanism
-  const updatedStatistics: XogosStatistics = {
-    accounts,
-    activeUsers,
-    totalHours,
-    lastUpdated: new Date().toISOString(),
-    updatedBy: session.user.email,
-  };
+  try {
+    // Save to database - creates a new row with current timestamp
+    const updatedStats = await db.updateStatistics(
+      accounts,
+      activeUsers,
+      totalHours,
+      session.user.email
+    );
 
-  return { data: updatedStatistics };
+    return {
+      data: {
+        accounts: updatedStats.accounts,
+        activeUsers: updatedStats.active_users,
+        totalHours: updatedStats.total_hours,
+        lastUpdated: updatedStats.last_updated.toISOString(),
+        updatedBy: updatedStats.updated_by,
+      },
+    };
+  } catch (error) {
+    console.error("Error updating statistics:", error);
+    return {
+      error: {
+        code: 500,
+        message: "Failed to update statistics",
+        suggestion: "Check database connection and try again",
+      },
+    };
+  }
 }
