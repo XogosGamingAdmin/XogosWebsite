@@ -609,7 +609,7 @@ This has been fixed with the following configuration files:
 fetch-retries=5
 fetch-retry-mintimeout=20000
 fetch-retry-maxtimeout=120000
-network-timeout=300000
+timeout=300000
 prefer-offline=true
 audit=false
 legacy-peer-deps=true
