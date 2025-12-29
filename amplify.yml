@@ -9,7 +9,7 @@ frontend:
         - npm config set fetch-retry-mintimeout 20000
         - npm config set fetch-retry-maxtimeout 120000
         - npm config set fetch-retries 5
-        - npm config set network-timeout 300000
+        - npm config set timeout 300000
         - echo "Running npm ci with retry logic..."
         - npm ci --prefer-offline --no-audit --legacy-peer-deps || npm install --legacy-peer-deps
         - echo "Dependencies installed successfully"
