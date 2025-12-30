@@ -36,13 +36,17 @@ const client = createClient({
   // Resolve user IDs into name/avatar/etc for Comments/Notifications
   async resolveUsers({ userIds }) {
     const users = await getUsers({ userIds });
-    return users.map((user) => user || {});
+    return users.map((user) =>
+      user
+        ? { name: user.name, avatar: user.avatar, color: user.color }
+        : { name: "Unknown User", avatar: undefined, color: "#888888" }
+    );
   },
 
   // Resolve a mention suggestion into a userId e.g. `@tat` → `tatum.paolo@example.com`
   async resolveMentionSuggestions({ text }) {
     const users = await getUsers({ search: text });
-    return users.map((user) => user?.id || "");
+    return users.filter((user) => user !== null).map((user) => user!.id);
   },
 
   // Resolve a room ID into room information for Notifications

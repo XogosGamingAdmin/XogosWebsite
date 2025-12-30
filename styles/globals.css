@@ -43,6 +43,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap");
 
 /* Bank Gothic font via @font-face since it's not freely available on Google Fonts */
+/* Commented out - font file not available
 @font-face {
   font-family: "Bank Gothic";
   src: url("/fonts/bankgothic-md-bt-medium.ttf") format("truetype");
@@ -50,6 +51,7 @@
   font-style: normal;
   font-display: swap;
 }
+*/
 
 html,
 body {
@@ -84,7 +86,7 @@ h4,
 h5,
 h6,
 .subtitle {
-  font-family: "Bank Gothic", sans-serif;
+  font-family: "Russo One", sans-serif;
   letter-spacing: 0.05em;
   text-transform: uppercase;
 }
@@ -100,7 +102,7 @@ a:hover {
 
 button,
 .button {
-  font-family: "Bank Gothic", sans-serif;
+  font-family: "Russo One", sans-serif;
   letter-spacing: 0.05em;
   text-transform: uppercase;
 }

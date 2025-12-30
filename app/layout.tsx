@@ -108,7 +108,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="icon" href="/app/icon.jpg" type="image/jpeg" />
+        <link rel="icon" href="/images/fullLogo.jpeg" type="image/jpeg" />
         <link rel="canonical" href="https://xogosgaming.com" />
       </head>
       <body className={inter.className}>
