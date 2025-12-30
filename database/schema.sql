@@ -58,15 +58,8 @@ INSERT INTO board_member_profiles (user_id, rss_topic) VALUES
   ('mckaylaareece@gmail.com', 'educational games')
 ON CONFLICT (user_id) DO NOTHING;
 
--- Insert default statistics (single row)
-INSERT INTO xogos_statistics (accounts, active_users, total_hours, updated_by) VALUES
-  (0, 0, 0, 'system')
-ON CONFLICT DO NOTHING;
-
--- Insert default financials (single row)
-INSERT INTO xogos_financials (revenue, expenses, monthly_payments, yearly_payments, lifetime_members, updated_by) VALUES
-  (0, 0, 0, 0, 0, 'system')
-ON CONFLICT DO NOTHING;
+-- NOTE: Default statistics and financials rows are NOT inserted automatically
+-- They should only be created manually by authorized admins via the admin panel
 
 -- Create indexes for better performance
 CREATE INDEX IF NOT EXISTS idx_rss_subscriptions_user_id ON rss_subscriptions(user_id);

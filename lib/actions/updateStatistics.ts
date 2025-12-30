@@ -1,7 +1,7 @@
 "use server";
 
 import { auth } from "@/auth";
-import { isAdmin } from "@/lib/auth/admin";
+import { canUpdateStatistics } from "@/lib/auth/admin";
 import { db } from "@/lib/database";
 
 type Props = {
@@ -32,13 +32,13 @@ export async function updateStatistics({ accounts, activeUsers, totalHours }: Pr
     };
   }
 
-  // Check user is admin
-  if (!isAdmin(session.user.email)) {
+  // Check user can update statistics (only Zack)
+  if (!canUpdateStatistics(session.user.email)) {
     return {
       error: {
         code: 403,
-        message: "Admin access required",
-        suggestion: "Only administrators can update statistics",
+        message: "Unauthorized",
+        suggestion: "Only zack@xogosgaming.com can update statistics",
       },
     };
   }
