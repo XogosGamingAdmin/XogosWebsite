@@ -37,3 +37,8 @@ export * from "./getChecklistHistory";
 export * from "./getProfile";
 export * from "./updateRssTopic";
 export * from "./getRssFeed";
+
+// RSS Subscriptions actions
+export * from "./getRssSubscriptions";
+export * from "./addRssSubscription";
+export * from "./removeRssSubscription";

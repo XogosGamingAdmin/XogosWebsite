@@ -114,3 +114,20 @@
   padding: 40px 20px;
   margin: 0;
 }
+
+.removeButton {
+  background: transparent;
+  border: none;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  font-size: 18px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  line-height: 1;
+}
+
+.removeButton:hover {
+  background: var(--color-background-tertiary);
+  color: var(--color-error);
+}

@@ -210,6 +210,45 @@ export const db = {
   },
 
   /**
+   * Get all RSS subscriptions for a user
+   */
+  async getRssSubscriptions(userId: string) {
+    const result = await query(
+      `SELECT id, user_id, topic, display_name, created_at
+       FROM rss_subscriptions
+       WHERE user_id = $1
+       ORDER BY created_at ASC`,
+      [userId]
+    );
+    return result.rows;
+  },
+
+  /**
+   * Add a new RSS subscription
+   */
+  async addRssSubscription(userId: string, topic: string, displayName?: string) {
+    const result = await query(
+      `INSERT INTO rss_subscriptions (user_id, topic, display_name)
+       VALUES ($1, $2, $3)
+       ON CONFLICT (user_id, topic) DO UPDATE
+       SET display_name = $3
+       RETURNING id, user_id, topic, display_name, created_at`,
+      [userId, topic, displayName || topic]
+    );
+    return result.rows[0];
+  },
+
+  /**
+   * Remove an RSS subscription
+   */
+  async removeRssSubscription(id: string, userId: string) {
+    await query(
+      `DELETE FROM rss_subscriptions WHERE id = $1 AND user_id = $2`,
+      [id, userId]
+    );
+  },
+
+  /**
    * Get latest Xogos statistics
    */
   async getStatistics() {

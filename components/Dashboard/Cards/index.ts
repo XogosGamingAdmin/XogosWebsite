@@ -4,3 +4,5 @@ export { XogosFinancialsCard } from "./XogosFinancialsCard";
 export { RecentBoardInsightsCard } from "./RecentBoardInsightsCard";
 export { MonthlyMeetingChecklistCard } from "./MonthlyMeetingChecklistCard";
 export { RSSFeedCard } from "./RSSFeedCard";
+export { MultiRSSFeedCard } from "./MultiRSSFeedCard";
+export { AddRSSFeedCard } from "./AddRSSFeedCard";

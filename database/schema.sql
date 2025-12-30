@@ -6,6 +6,16 @@ CREATE TABLE IF NOT EXISTS board_member_profiles (
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
+-- RSS Feed Subscriptions Table (supports multiple feeds per user)
+CREATE TABLE IF NOT EXISTS rss_subscriptions (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id TEXT NOT NULL,
+  topic TEXT NOT NULL,
+  display_name TEXT,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  UNIQUE(user_id, topic)
+);
+
 -- Checklist Items Table
 CREATE TABLE IF NOT EXISTS checklist_items (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -59,6 +69,7 @@ INSERT INTO xogos_financials (revenue, expenses, monthly_payments, yearly_paymen
 ON CONFLICT DO NOTHING;
 
 -- Create indexes for better performance
+CREATE INDEX IF NOT EXISTS idx_rss_subscriptions_user_id ON rss_subscriptions(user_id);
 CREATE INDEX IF NOT EXISTS idx_checklist_user_id ON checklist_items(user_id);
 CREATE INDEX IF NOT EXISTS idx_checklist_created_at ON checklist_items(created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_statistics_last_updated ON xogos_statistics(last_updated DESC);
@@ -66,12 +77,23 @@ CREATE INDEX IF NOT EXISTS idx_financials_last_updated ON xogos_financials(last_
 
 -- Enable Row Level Security (RLS)
 ALTER TABLE board_member_profiles ENABLE ROW LEVEL SECURITY;
+ALTER TABLE rss_subscriptions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE checklist_items ENABLE ROW LEVEL SECURITY;
 ALTER TABLE xogos_statistics ENABLE ROW LEVEL SECURITY;
 ALTER TABLE xogos_financials ENABLE ROW LEVEL SECURITY;
 
 -- Create policies (allow all operations for now - you can restrict later)
+DROP POLICY IF EXISTS "Allow all for authenticated users" ON board_member_profiles;
 CREATE POLICY "Allow all for authenticated users" ON board_member_profiles FOR ALL USING (true);
+
+DROP POLICY IF EXISTS "Allow all for authenticated users" ON rss_subscriptions;
+CREATE POLICY "Allow all for authenticated users" ON rss_subscriptions FOR ALL USING (true);
+
+DROP POLICY IF EXISTS "Allow all for authenticated users" ON checklist_items;
 CREATE POLICY "Allow all for authenticated users" ON checklist_items FOR ALL USING (true);
+
+DROP POLICY IF EXISTS "Allow all for authenticated users" ON xogos_statistics;
 CREATE POLICY "Allow all for authenticated users" ON xogos_statistics FOR ALL USING (true);
+
+DROP POLICY IF EXISTS "Allow all for authenticated users" ON xogos_financials;
 CREATE POLICY "Allow all for authenticated users" ON xogos_financials FOR ALL USING (true);
