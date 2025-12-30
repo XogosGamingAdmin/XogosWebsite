@@ -10,7 +10,7 @@ interface ChecklistItem {
   userId: string;
   task: string;
   completed: boolean;
-  createdAt: Date;
+  createdAt: string;
   createdBy: string;
 }
 
