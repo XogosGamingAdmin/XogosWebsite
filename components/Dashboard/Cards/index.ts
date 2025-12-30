@@ -6,3 +6,4 @@ export { MonthlyMeetingChecklistCard } from "./MonthlyMeetingChecklistCard";
 export { RSSFeedCard } from "./RSSFeedCard";
 export { MultiRSSFeedCard } from "./MultiRSSFeedCard";
 export { AddRSSFeedCard } from "./AddRSSFeedCard";
+export { AllBoardMemberTasksCard } from "./AllBoardMemberTasksCard";

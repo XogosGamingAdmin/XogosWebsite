@@ -1,6 +1,7 @@
 "use client";
 
 import { ComponentProps, useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
 import {
   BoardMemberProfileCard,
   XogosStatisticsCard,
@@ -9,8 +10,10 @@ import {
   MonthlyMeetingChecklistCard,
   MultiRSSFeedCard,
   AddRSSFeedCard,
+  AllBoardMemberTasksCard,
 } from "./Cards";
 import { getRssSubscriptions } from "@/lib/actions";
+import { isAdmin } from "@/lib/auth/admin";
 import styles from "./DashboardGrid.module.css";
 
 interface Props extends ComponentProps<"div"> {}
@@ -24,8 +27,11 @@ interface RSSSubscription {
 }
 
 export function DashboardGrid({ ...props }: Props) {
+  const { data: session } = useSession();
   const [subscriptions, setSubscriptions] = useState<RSSSubscription[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const userIsAdmin = session?.user?.email ? isAdmin(session.user.email) : false;
 
   useEffect(() => {
     loadSubscriptions();
@@ -47,6 +53,9 @@ export function DashboardGrid({ ...props }: Props) {
       <XogosFinancialsCard />
       <RecentBoardInsightsCard />
       <MonthlyMeetingChecklistCard />
+
+      {/* Admin-only: All Board Member Tasks */}
+      {userIsAdmin && <AllBoardMemberTasksCard />}
 
       {/* Display all RSS feed subscriptions */}
       {!loading && subscriptions.map((sub) => (
