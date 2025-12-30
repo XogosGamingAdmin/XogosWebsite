@@ -23,6 +23,8 @@ module.exports = {
     DATABASE_USER: process.env.DATABASE_USER,
     DATABASE_PASSWORD: process.env.DATABASE_PASSWORD,
     DATABASE_SSL: process.env.DATABASE_SSL,
+    // Liveblocks
+    LIVEBLOCKS_SECRET_KEY: process.env.LIVEBLOCKS_SECRET_KEY,
   },
   images: {
     domains: ["liveblocks.io"],
