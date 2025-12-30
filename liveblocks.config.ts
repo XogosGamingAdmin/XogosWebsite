@@ -18,19 +18,31 @@ import { User } from "./types";
 // This is using a Next.js server action called `authorizeLiveblocks`
 const client = createClient({
   authEndpoint: async () => {
-    const { data, error } = await authorizeLiveblocks();
+    try {
+      const result = await authorizeLiveblocks();
 
-    if (error) {
-      console.error("Liveblocks authentication error:", error);
-      throw new Error(`Authentication failed: ${error.message}`);
+      if (!result) {
+        console.error("Liveblocks authentication returned undefined");
+        throw new Error("Authentication failed: No result returned");
+      }
+
+      const { data, error } = result;
+
+      if (error) {
+        console.error("Liveblocks authentication error:", error);
+        throw new Error(`Authentication failed: ${error.message}`);
+      }
+
+      if (!data) {
+        console.error("Liveblocks authentication returned no data");
+        throw new Error("Authentication failed: No data returned");
+      }
+
+      return data;
+    } catch (err) {
+      console.error("Exception in Liveblocks authEndpoint:", err);
+      throw err;
     }
-
-    if (!data) {
-      console.error("Liveblocks authentication returned no data");
-      throw new Error("Authentication failed: No data returned");
-    }
-
-    return data;
   },
 
   // Resolve user IDs into name/avatar/etc for Comments/Notifications
