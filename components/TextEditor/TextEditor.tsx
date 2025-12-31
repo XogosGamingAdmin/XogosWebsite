@@ -68,7 +68,14 @@ type EditorProps = {
 
 function TiptapEditor({ doc, provider }: EditorProps) {
   // Get user info from Liveblocks authentication endpoint
-  const { name, color, avatar: picture } = useSelf((me) => me.info);
+  const userInfo = useSelf((me) => me.info);
+
+  // If user info is not available, show loading state
+  if (!userInfo) {
+    return <DocumentSpinner />;
+  }
+
+  const { name, color, avatar: picture } = userInfo;
 
   // Check if user has write access in current room
   const canWrite = useSelf((me) => me.canWrite);
