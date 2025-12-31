@@ -47,6 +47,15 @@ node_modules
 # Hardhat Ignition default folder for deployments against a local node
 ignition/deployments/chain-31337
 
+# Documentation - keep local only, don't push to GitHub
+docs/*.md
+BUILD.md
+GOOGLE_OAUTH_SETUP.md
+RDS_SETUP_WALKTHROUGH.md
+SETUP_GUIDE.md
+WHAT_I_BUILT.md
+database/AWS_RDS_SETUP.md
+
 node_modules
 .env
 
@@ -65,3 +74,13 @@ node_modules
 # Hardhat Ignition default folder for deployments against a local node
 ignition/deployments/chain-31337
 
+# Documentation - keep local only, don't push to GitHub
+docs/*.md
+BUILD.md
+GOOGLE_OAUTH_SETUP.md
+RDS_SETUP_WALKTHROUGH.md
+SETUP_GUIDE.md
+WHAT_I_BUILT.md
+database/AWS_RDS_SETUP.md
+
+Gaming/**/*.md
