@@ -40,7 +40,10 @@ const client = createClient({
         throw new Error("Authentication failed: No data returned");
       }
 
-      console.log("✅ [CLIENT] Returning auth data:", typeof data, data);
+      console.log("✅ [CLIENT] Auth data received, type:", typeof data);
+      console.log("✅ [CLIENT] Auth data structure:", Object.keys(data));
+
+      // The data is already parsed JSON from identifyUser, return it directly
       return data;
     } catch (err) {
       console.error("❌ [CLIENT] Exception in Liveblocks authEndpoint:", err);

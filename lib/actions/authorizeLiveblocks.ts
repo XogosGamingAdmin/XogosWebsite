@@ -91,5 +91,11 @@ export async function authorizeLiveblocks() {
   }
 
   console.log("✅ Liveblocks authentication successful");
-  return { data: JSON.parse(body) };
+  console.log("📦 Raw body (first 200 chars):", body.substring(0, 200));
+
+  const parsedData = JSON.parse(body);
+  console.log("📦 Parsed data keys:", Object.keys(parsedData));
+  console.log("📦 Parsed data:", JSON.stringify(parsedData, null, 2));
+
+  return { data: parsedData };
 }
