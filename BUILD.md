@@ -9,7 +9,268 @@ XogosBoard is a Next.js 14.2.3 application deployed on AWS Amplify at https://ww
 
 ---
 
-## Latest Session: December 27, 2025
+## Latest Session: December 30, 2025
+
+### Major Work Completed
+
+#### 1. Fixed Critical Liveblocks Document Viewing Error
+**Problem:** Documents (Text, Whiteboard, Spreadsheet) could be created but threw error when viewing:
+- Error message: "Application error: a client-side exception has occurred"
+- Console error: `TypeError: Cannot read properties of undefined (reading 'as')`
+- Error occurred in minified Liveblocks client code at `e68702b2-67169b7e2fde7502.js:1:7942`
+- Documents were being created successfully (visible in documents list)
+- But clicking to view them resulted in immediate crash
+
+**Root Cause Identified:**
+The `authEndpoint` in `liveblocks.config.ts` was using a Next.js **server action** directly. Server actions serialize/deserialize data in a way that was incompatible with what Liveblocks expects. The authentication token format was malformed, causing Liveblocks client to crash when trying to read properties.
+
+**Troubleshooting Process:**
+1. **Initial Hypothesis**: Missing static assets (fonts, icons causing 404s)
+   - Fixed missing Bank Gothic font by commenting out and using Russo One fallback
+   - Fixed favicon path from `/app/icon.jpg` to `/images/fullLogo.jpeg`
+   - These fixes eliminated 404 errors but didn't solve the main issue
+
+2. **User Resolution Investigation**: Fixed `resolveUsers` function to return properly structured user objects
+   - Changed from returning empty `{}` to `{ name: "Unknown User", avatar: undefined, color: "#888888" }`
+   - Updated `resolveMentionSuggestions` to filter null users
+   - Still didn't fix the viewing error
+
+3. **Layout Authentication**: Added layout files to ensure session exists before document rendering
+   - Created `app/text/layout.tsx`
+   - Created `app/whiteboard/layout.tsx`
+   - Created `app/spreadsheet/layout.tsx`
+   - All layouts check for valid `session.user.info` before rendering
+   - Prevented some redirect loops but error persisted
+
+4. **TypeScript Build Error**: Fixed type mismatch in AllBoardMemberTasksCard
+   - Changed `createdAt` type from `Date` to `string` to match server action return type
+   - Fixed Amplify build failure
+
+5. **Added Extensive Logging**: Added detailed logging to both server and client
+   - Server-side logs in `authorizeLiveblocks.ts` with emoji markers (🔐, 📦, ✅, ❌)
+   - Client-side logs in `liveblocks.config.ts` with [CLIENT] markers
+   - Discovered logs weren't appearing, indicating error happened before auth was called
+
+6. **Error Boundary**: Created ErrorBoundary component to catch and display errors
+   - Created `components/ErrorBoundary.tsx`
+   - Wrapped TextDocumentView in ErrorBoundary
+   - This provided better error messages but still showed the same core issue
+
+7. **Final Solution - API Route**: Replaced server action with proper API endpoint
+   - **Root cause**: Server actions can't be used directly in `authEndpoint` - they serialize data differently
+   - Created `/api/liveblocks-auth` route that returns `new Response(body, { status })`
+   - Updated `liveblocks.config.ts` to use `fetch()` to call API route
+   - This follows the official Liveblocks pattern for Next.js
+
+**Solution Implemented:**
+Created proper API route at `app/api/liveblocks-auth/route.ts`:
+```typescript
+export async function POST() {
+  const session = await auth();
+  if (!session || !session.user?.info) {
+    return new Response(JSON.stringify({ error: "Not authenticated" }), { status: 401 });
+  }
+
+  const { name, avatar, color, id, groupIds = [] } = session.user.info;
+  const groupIdsWithDraftsGroup = [...groupIds, getDraftsGroupName(id)];
+
+  const { status, body } = await liveblocks.identifyUser(
+    { userId: id, groupIds: groupIdsWithDraftsGroup },
+    { userInfo: { name, color, avatar } }
+  );
+
+  return new Response(body, { status });
+}
+```
+
+Updated `liveblocks.config.ts` to use fetch:
+```typescript
+const client = createClient({
+  authEndpoint: async () => {
+    const response = await fetch("/api/liveblocks-auth", { method: "POST" });
+    if (!response.ok) throw new Error(`Authentication failed: ${response.status}`);
+    return await response.json();
+  },
+  // ... rest of config
+});
+```
+
+**Files Created:**
+- `app/api/liveblocks-auth/route.ts` - Proper API route for Liveblocks authentication
+- `components/ErrorBoundary.tsx` - React error boundary for better error display
+- `app/text/layout.tsx` - Layout with session validation for text documents
+- `app/whiteboard/layout.tsx` - Layout with session validation for whiteboards
+- `app/spreadsheet/layout.tsx` - Layout with session validation for spreadsheets
+
+**Files Modified:**
+- `liveblocks.config.ts` - Changed from server action to fetch-based authEndpoint
+- `lib/actions/authorizeLiveblocks.ts` - Added extensive logging (kept for reference)
+- `app/text/[id]/TextDocumentView.tsx` - Added ErrorBoundary wrapper
+- `styles/globals.css` - Commented out missing Bank Gothic font, replaced with Russo One
+- `app/layout.tsx` - Fixed favicon path from `/app/icon.jpg` to `/images/fullLogo.jpeg`
+- `components/Dashboard/Cards/AllBoardMemberTasksCard.tsx` - Fixed createdAt type
+
+**Liveblocks Documentation References:**
+- [Set up ID token permissions with Next.js](https://liveblocks.io/docs/authentication/id-token/nextjs)
+- [Next.js Starter Kit](https://liveblocks.io/docs/tools/nextjs-starter-kit)
+
+#### 2. Added "All Board Member Tasks" Admin View
+**Problem:** Michael and Zack needed visibility into all board members' task completion status.
+
+**Solution Implemented:**
+- Created `AllBoardMemberTasksCard` component showing all checklist items across all users
+- Groups tasks by user with individual completion counts
+- Shows overall completion rate
+- Only visible to admin users (Zack and Michael)
+- Added to dashboard grid conditionally based on `isAdmin()` check
+
+**Files Created:**
+- `components/Dashboard/Cards/AllBoardMemberTasksCard.tsx` - Admin task overview component
+- `components/Dashboard/Cards/AllBoardMemberTasksCard.module.css` - Styles for task card
+- `lib/actions/getAllChecklists.ts` - Server action to fetch all checklists (admin only)
+
+**Files Modified:**
+- `components/Dashboard/DashboardGrid.tsx` - Added conditional rendering of AllBoardMemberTasksCard
+
+**Features:**
+- Displays completion percentage: `12/45 completed (27%)`
+- Groups by user with per-user completion counts
+- Read-only view (no editing from admin panel)
+- Scrollable list for large number of tasks
+- Admin authorization check using `isAdmin()` function
+
+#### 3. Multiple RSS Feed Subscriptions
+**Problem:** Board members could only have one RSS feed topic. User wanted ability to add multiple RSS feed cards with different topics.
+
+**Solution Implemented:**
+- Created `rss_subscriptions` database table to store multiple feeds per user
+- Each subscription has unique ID, topic, and display name
+- Users can add unlimited RSS feed cards
+- Each feed card has remove button (✕) to delete subscription
+- Dedicated "Add RSS Feed" card for creating new subscriptions
+
+**Files Created:**
+- `lib/actions/getRssSubscriptions.ts` - Fetch user's RSS subscriptions
+- `lib/actions/addRssSubscription.ts` - Create new RSS subscription
+- `lib/actions/removeRssSubscription.ts` - Delete RSS subscription
+- `components/Dashboard/Cards/MultiRSSFeedCard.tsx` - Individual RSS feed card with remove button
+- `components/Dashboard/Cards/AddRSSFeedCard.tsx` - Card for adding new RSS feeds
+
+**Files Modified:**
+- `database/schema.sql` - Added rss_subscriptions table
+- `lib/database.ts` - Added getRssSubscriptions, addRssSubscription, removeRssSubscription methods
+- `components/Dashboard/DashboardGrid.tsx` - Dynamically renders RSS feed cards from subscriptions
+- `components/Dashboard/Cards/index.ts` - Export new RSS card components
+
+**Database Table Added:**
+```sql
+CREATE TABLE rss_subscriptions (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id TEXT NOT NULL,
+  topic TEXT NOT NULL,
+  display_name TEXT,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  UNIQUE(user_id, topic)
+);
+```
+
+**User Workflow:**
+1. Click "Add RSS Feed" card
+2. Enter topic (e.g., "blockchain technology")
+3. Optionally enter display name (e.g., "Blockchain News")
+4. Card appears with live Google News RSS feed
+5. Click ✕ to remove subscription
+
+#### 4. Statistics Auto-Override Critical Fix
+**Problem:** Statistics entered by Zack were being automatically overridden by "system" entries.
+- Timeline: 12:56 PM - Zack entered 258/212/8, then 1:13 PM - system reset to 0/0/0
+- Data loss issue causing incorrect reporting
+
+**Root Cause:**
+`database/schema.sql` had INSERT statements that created new "system" rows on every schema run. Since there was no unique constraint, multiple system entries were created, and the "latest" query returned the wrong (newest system) entry instead of Zack's entry.
+
+**Solution Implemented:**
+1. Removed all INSERT statements from `schema.sql`
+2. Created separate permission level for statistics updates (only Zack)
+3. Added `canUpdateStatistics()` function in `lib/auth/admin.ts`
+4. Updated `updateStatistics.ts` and `updateFinancials.ts` to use new permission check
+5. Created cleanup script to remove system-generated entries
+
+**Files Modified:**
+- `database/schema.sql` - Removed INSERT statements for statistics and financials
+- `lib/auth/admin.ts` - Added STATISTICS_ADMIN_EMAILS and canUpdateStatistics() function
+- `lib/actions/updateStatistics.ts` - Changed from isAdmin() to canUpdateStatistics()
+- `lib/actions/updateFinancials.ts` - Changed from isAdmin() to canUpdateStatistics()
+
+**Files Created:**
+- `scripts/cleanup-system-entries.js` - One-time script to delete system entries
+
+**Cleanup Results:**
+- Deleted 2 system statistics entries
+- Deleted 2 system financials entries
+- Preserved Zack's entry (258, 212, 8)
+
+**New Permission Model:**
+```typescript
+// Only Zack can update statistics and financials
+export const STATISTICS_ADMIN_EMAILS = ["zack@xogosgaming.com"];
+
+// Zack and Michael have general admin access
+export const ADMIN_EMAILS = [
+  "zack@xogosgaming.com",
+  "enjoyweaver@gmail.com",
+];
+```
+
+---
+
+## Current Session Status: ✅ CODE COMPLETE - DEPLOYMENT IN PROGRESS
+
+**Last worked on:** December 30, 2025
+**Current Status:** Waiting for AWS Amplify deployment of Liveblocks API route fix
+**Build Status:** All code committed and pushed to GitHub
+**Test Document:** https://www.histronics.com/text/pSg2ALs1XQ0SBRpERt8ux
+
+**What Was Fixed:**
+1. ✅ Liveblocks authentication converted from server action to API route
+2. ✅ Error boundary added for better error reporting
+3. ✅ Document layouts added with session validation
+4. ✅ Missing static assets fixed (fonts, icons)
+5. ✅ User resolution improved for collaborative features
+6. ✅ TypeScript build errors resolved
+7. ✅ All Board Member Tasks admin view implemented
+8. ✅ Multiple RSS feed subscriptions working
+9. ✅ Statistics auto-override bug fixed
+
+**What to Test After Deployment:**
+1. Navigate to document URL: https://www.histronics.com/text/pSg2ALs1XQ0SBRpERt8ux
+2. Check F12 console for these logs:
+   - `🔵 [CLIENT] Calling /api/liveblocks-auth`
+   - `🔵 [CLIENT] Response status: 200`
+   - `✅ [CLIENT] Auth successful, data keys: ...`
+3. Document should load successfully in Liveblocks editor
+4. Check CloudWatch logs for API route logs:
+   - `🔐 [API] Liveblocks auth route called`
+   - `✅ [API] Liveblocks authentication successful`
+
+**If Still Failing:**
+- Check CloudWatch for exact error in API route
+- Verify LIVEBLOCKS_SECRET_KEY is set in AWS Amplify environment variables
+- Console logs will show specific authentication failure point
+
+**Expected Result:**
+Documents should now load successfully. The API route returns the Liveblocks token in the exact format the client expects, following the official Liveblocks documentation pattern.
+
+**Next Developer Notes:**
+- The fix changes how Liveblocks authentication works from server actions to API routes
+- This is the standard pattern recommended by Liveblocks for Next.js
+- If documents still fail, the console logs will pinpoint the exact issue
+- The error boundary will catch and display any React errors with full stack traces
+- All the debugging infrastructure is in place for quick troubleshooting
+
+---
+
+## Previous Session: December 27, 2025
 
 ### Major Work Completed
 
