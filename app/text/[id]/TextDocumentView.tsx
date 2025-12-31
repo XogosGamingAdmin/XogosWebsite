@@ -7,6 +7,7 @@ import { DocumentHeader, DocumentHeaderSkeleton } from "@/components/Document";
 import { TextEditor } from "@/components/TextEditor";
 import { DocumentLayout } from "@/layouts/Document";
 import { ErrorLayout } from "@/layouts/Error";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { InitialDocumentProvider } from "@/lib/hooks";
 import { RoomProvider } from "@/liveblocks.config";
 import { Document, ErrorData } from "@/types";
@@ -36,18 +37,20 @@ export function TextDocumentView({ initialDocument, initialError }: Props) {
   }
 
   return (
-    <RoomProvider
-      id={id as string}
-      initialPresence={{ cursor: null }}
-      initialStorage={{ notes: new LiveMap() }}
-    >
-      <InitialDocumentProvider initialDocument={initialDocument}>
-        <DocumentLayout
-          header={<DocumentHeader documentId={initialDocument.id} />}
-        >
-          <TextEditor />
-        </DocumentLayout>
-      </InitialDocumentProvider>
-    </RoomProvider>
+    <ErrorBoundary>
+      <RoomProvider
+        id={id as string}
+        initialPresence={{ cursor: null }}
+        initialStorage={{ notes: new LiveMap() }}
+      >
+        <InitialDocumentProvider initialDocument={initialDocument}>
+          <DocumentLayout
+            header={<DocumentHeader documentId={initialDocument.id} />}
+          >
+            <TextEditor />
+          </DocumentLayout>
+        </InitialDocumentProvider>
+      </RoomProvider>
+    </ErrorBoundary>
   );
 }

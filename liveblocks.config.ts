@@ -18,29 +18,32 @@ import { User } from "./types";
 // This is using a Next.js server action called `authorizeLiveblocks`
 const client = createClient({
   authEndpoint: async () => {
+    console.log("🔵 [CLIENT] authEndpoint called");
     try {
       const result = await authorizeLiveblocks();
+      console.log("🔵 [CLIENT] authorizeLiveblocks result:", result);
 
       if (!result) {
-        console.error("Liveblocks authentication returned undefined");
+        console.error("❌ [CLIENT] Liveblocks authentication returned undefined");
         throw new Error("Authentication failed: No result returned");
       }
 
       const { data, error } = result;
 
       if (error) {
-        console.error("Liveblocks authentication error:", error);
+        console.error("❌ [CLIENT] Liveblocks authentication error:", error);
         throw new Error(`Authentication failed: ${error.message}`);
       }
 
       if (!data) {
-        console.error("Liveblocks authentication returned no data");
+        console.error("❌ [CLIENT] Liveblocks authentication returned no data");
         throw new Error("Authentication failed: No data returned");
       }
 
+      console.log("✅ [CLIENT] Returning auth data:", typeof data, data);
       return data;
     } catch (err) {
-      console.error("Exception in Liveblocks authEndpoint:", err);
+      console.error("❌ [CLIENT] Exception in Liveblocks authEndpoint:", err);
       throw err;
     }
   },
