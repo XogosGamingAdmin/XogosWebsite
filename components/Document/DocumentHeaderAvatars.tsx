@@ -12,11 +12,13 @@ export function DocumentHeaderAvatars() {
 
   return (
     <AvatarStack
-      avatars={users.map((user) => ({
-        name: user.info.name,
-        src: user.info.avatar,
-        color: user.info.color,
-      }))}
+      avatars={users
+        .filter((user) => user.info !== undefined)
+        .map((user) => ({
+          name: user.info.name,
+          src: user.info.avatar,
+          color: user.info.color,
+        }))}
       max={5}
       size={20}
       tooltip
