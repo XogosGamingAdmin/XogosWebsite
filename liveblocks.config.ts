@@ -7,46 +7,34 @@ import {
 } from "@liveblocks/client";
 import { createLiveblocksContext, createRoomContext } from "@liveblocks/react";
 import { DOCUMENT_URL } from "@/constants";
-import { authorizeLiveblocks, getSpecificDocuments } from "@/lib/actions";
+import { getSpecificDocuments } from "@/lib/actions";
 import { getUsers } from "./lib/database/getUsers";
 import { User } from "./types";
 
-// Creating client with a custom callback that calls our API
-// In this API we'll assign each user custom data, such as names, avatars
-// If any client side data is needed to get user info from your system,
-// (e.g. auth token, user id) send it in the body alongside `room`.
-// This is using a Next.js server action called `authorizeLiveblocks`
+// Creating client with Liveblocks authentication API endpoint
+// The endpoint handles authentication and returns the Liveblocks token
 const client = createClient({
   authEndpoint: async () => {
-    console.log("🔵 [CLIENT] authEndpoint called");
+    console.log("🔵 [CLIENT] Calling /api/liveblocks-auth");
     try {
-      const result = await authorizeLiveblocks();
-      console.log("🔵 [CLIENT] authorizeLiveblocks result:", result);
+      const response = await fetch("/api/liveblocks-auth", {
+        method: "POST",
+      });
 
-      if (!result) {
-        console.error("❌ [CLIENT] Liveblocks authentication returned undefined");
-        throw new Error("Authentication failed: No result returned");
+      console.log("🔵 [CLIENT] Response status:", response.status);
+
+      if (!response.ok) {
+        const error = await response.text();
+        console.error("❌ [CLIENT] Auth failed:", error);
+        throw new Error(`Authentication failed: ${response.status}`);
       }
 
-      const { data, error } = result;
+      const data = await response.json();
+      console.log("✅ [CLIENT] Auth successful, data keys:", Object.keys(data));
 
-      if (error) {
-        console.error("❌ [CLIENT] Liveblocks authentication error:", error);
-        throw new Error(`Authentication failed: ${error.message}`);
-      }
-
-      if (!data) {
-        console.error("❌ [CLIENT] Liveblocks authentication returned no data");
-        throw new Error("Authentication failed: No data returned");
-      }
-
-      console.log("✅ [CLIENT] Auth data received, type:", typeof data);
-      console.log("✅ [CLIENT] Auth data structure:", Object.keys(data));
-
-      // The data is already parsed JSON from identifyUser, return it directly
       return data;
     } catch (err) {
-      console.error("❌ [CLIENT] Exception in Liveblocks authEndpoint:", err);
+      console.error("❌ [CLIENT] Exception in authEndpoint:", err);
       throw err;
     }
   },
