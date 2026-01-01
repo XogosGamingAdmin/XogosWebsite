@@ -1,9 +1,11 @@
 /** @type {import('next').NextConfig} */
+const buildTime = Date.now();
+
 module.exports = {
   reactStrictMode: true,
-  // Force new build ID to bust cache
+  // Force new build ID to bust cache every deployment
   generateBuildId: async () => {
-    return `build-${Date.now()}`;
+    return `build-${buildTime}`;
   },
   eslint: {
     // Warning: This allows production builds to successfully complete even if
@@ -41,6 +43,13 @@ module.exports = {
         net: false,
         tls: false,
       };
+
+      // Force completely new chunk filenames every build
+      const originalFilename = config.output.filename;
+      const originalChunkFilename = config.output.chunkFilename;
+
+      config.output.filename = originalFilename.replace('[name]', `[name]-${buildTime}`);
+      config.output.chunkFilename = originalChunkFilename.replace('[name]', `[name]-${buildTime}`);
     }
     return config;
   },

@@ -3,24 +3,24 @@ frontend:
   phases:
     preBuild:
       commands:
-        - echo "Starting dependency installation..."
+        - echo "Starting CLEAN dependency installation (no cache)..."
         - node --version
         - npm --version
+        - echo "Removing any cached node_modules..."
+        - rm -rf node_modules
+        - rm -rf .next
         - npm config set fetch-retry-mintimeout 20000
         - npm config set fetch-retry-maxtimeout 120000
         - npm config set fetch-retries 5
-        - echo "Running npm ci with retry logic..."
-        - npm ci --prefer-offline --no-audit --legacy-peer-deps || npm install --legacy-peer-deps
+        - echo "Running fresh npm install..."
+        - npm install --legacy-peer-deps
         - echo "Dependencies installed successfully"
     build:
       commands:
-        - echo "Starting Next.js build..."
+        - echo "Starting CLEAN Next.js build (no cache)..."
         - npm run build
         - echo "Build completed successfully"
   artifacts:
     baseDirectory: .next
     files:
       - '**/*'
-  cache:
-    paths:
-      - node_modules/**/*
