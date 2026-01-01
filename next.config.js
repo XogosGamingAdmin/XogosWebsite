@@ -1,6 +1,10 @@
 /** @type {import('next').NextConfig} */
 module.exports = {
   reactStrictMode: true,
+  // Force new build ID to bust cache
+  generateBuildId: async () => {
+    return `build-${Date.now()}`;
+  },
   eslint: {
     // Warning: This allows production builds to successfully complete even if
     // your project has ESLint errors.
