@@ -147,26 +147,29 @@
   display: none;
   flex-direction: column;
   justify-content: space-around;
-  width: 40px;
-  height: 36px;
-  background: rgba(230, 39, 57, 0.3);
-  border: 2px solid #e62739;
-  border-radius: 4px;
+  align-items: center;
+  width: 50px;
+  height: 50px;
+  background: rgba(230, 39, 57, 0.8);
+  border: 3px solid #e62739;
+  border-radius: 6px;
   cursor: pointer;
-  padding: 18px;
-  margin: -18px;
+  padding: 8px;
   z-index: 999;
   position: relative;
   -webkit-tap-highlight-color: transparent;
 }
 
 .hamburgerLine {
-  width: 100%;
-  height: 5px;
-  background-color: #ffffff;
+  display: block !important;
+  width: 30px;
+  height: 4px;
+  background-color: #ffffff !important;
   transition: all 0.3s ease;
-  border-radius: 2px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  border-radius: 1px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+  opacity: 1 !important;
+  visibility: visible !important;
 }
 
 /* Mobile menu styles */
@@ -198,18 +201,18 @@
     height: 100vh;
     background: rgba(13, 13, 26, 0.98);
     backdrop-filter: blur(10px);
-    z-index: 100;
+    z-index: 998;
     transition: right 0.3s ease;
     flex-direction: column;
     align-items: flex-start;
     padding: 100px 2rem 2rem;
-    box-shadow: -10px 0 30px rgba(0, 0, 0, 0.2);
+    box-shadow: -10px 0 30px rgba(0, 0, 0, 0.5);
     overflow-y: auto;
   }
 
   .nav.mobileOpen {
-    right: 0;
-    display: flex;
+    right: 0 !important;
+    display: flex !important;
   }
 
   .navLinkContainer {
@@ -249,16 +252,16 @@
     display: flex;
   }
 
-  .mobileOpen .hamburgerLine:nth-child(1) {
-    transform: translateY(12px) rotate(45deg);
+  .mobileMenuToggle.mobileOpen .hamburgerLine:nth-child(1) {
+    transform: translateY(8px) rotate(45deg);
   }
 
-  .mobileOpen .hamburgerLine:nth-child(2) {
-    opacity: 0;
+  .mobileMenuToggle.mobileOpen .hamburgerLine:nth-child(2) {
+    opacity: 0 !important;
   }
 
-  .mobileOpen .hamburgerLine:nth-child(3) {
-    transform: translateY(-12px) rotate(-45deg);
+  .mobileMenuToggle.mobileOpen .hamburgerLine:nth-child(3) {
+    transform: translateY(-8px) rotate(-45deg);
   }
 
   body.mobileOpen {
