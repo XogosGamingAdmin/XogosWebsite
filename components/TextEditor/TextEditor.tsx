@@ -68,7 +68,8 @@ type EditorProps = {
 
 function TiptapEditor({ doc, provider }: EditorProps) {
   // Get user info from Liveblocks authentication endpoint
-  const userInfo = useSelf((me) => me.info);
+  // Added null check for me to prevent "Cannot read properties of undefined" errors
+  const userInfo = useSelf((me) => me?.info);
 
   // If user info is not available, show loading state
   if (!userInfo) {
@@ -78,7 +79,7 @@ function TiptapEditor({ doc, provider }: EditorProps) {
   const { name, color, avatar: picture } = userInfo;
 
   // Check if user has write access in current room
-  const canWrite = useSelf((me) => me.canWrite);
+  const canWrite = useSelf((me) => me?.canWrite ?? false);
 
   // Set up editor with plugins, and place user info into Yjs awareness and cursors
   const editor = useEditor({
