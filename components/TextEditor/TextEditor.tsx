@@ -16,7 +16,7 @@ import Youtube from "@tiptap/extension-youtube";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { EditorView } from "prosemirror-view";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import * as Y from "yjs";
 import { useRoom, useSelf } from "@/liveblocks.config";
 import { DocumentSpinner } from "@/primitives/Spinner";
@@ -67,26 +67,23 @@ type EditorProps = {
 };
 
 function TiptapEditor({ doc, provider }: EditorProps) {
-  // Get user info from Liveblocks authentication endpoint
-  // Added null check for me to prevent "Cannot read properties of undefined" errors
-  const userInfo = useSelf((me) => me?.info);
+  // Get complete self object to ensure Liveblocks is fully initialized
+  const self = useSelf();
 
-  // If user info is not available, show loading state
-  if (!userInfo) {
+  // Extract user data with safe defaults
+  const userName = self?.info?.name ?? "Anonymous User";
+  const userColor = self?.info?.color ?? "#808080";
+  const userAvatar = self?.info?.avatar;
+  const canWrite = self?.canWrite ?? false;
+
+  // Wait until Liveblocks connection is fully established with user info
+  // Only initialize editor when we have confirmed user data
+  if (!self || !self.info || !self.info.name) {
     return <DocumentSpinner />;
   }
 
-  // Destructure with fallback defaults to prevent undefined errors in CollaborationCursor
-  const {
-    name = "Anonymous User",
-    color = "#808080",
-    avatar: picture = undefined
-  } = userInfo || {};
-
-  // Check if user has write access in current room
-  const canWrite = useSelf((me) => me?.canWrite ?? false);
-
   // Set up editor with plugins, and place user info into Yjs awareness and cursors
+  // Using extracted variables to ensure they never change to undefined mid-render
   const editor = useEditor({
     editable: canWrite,
     editorProps: {
@@ -189,13 +186,13 @@ function TiptapEditor({ doc, provider }: EditorProps) {
       Collaboration.configure({
         document: doc,
       }),
-      // Attach provider and user info with safe defaults
+      // Attach provider and user info with safe defaults from extracted variables
       CollaborationCursor.configure({
         provider: provider,
         user: {
-          name: name || "Anonymous User",
-          color: color || "#808080",
-          picture: picture || undefined,
+          name: userName,
+          color: userColor,
+          picture: userAvatar,
         },
       }),
     ],
