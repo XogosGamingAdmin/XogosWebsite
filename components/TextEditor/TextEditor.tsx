@@ -70,20 +70,26 @@ function TiptapEditor({ doc, provider }: EditorProps) {
   // Get complete self object to ensure Liveblocks is fully initialized
   const self = useSelf();
 
-  // Extract user data with safe defaults
-  const userName = self?.info?.name ?? "Anonymous User";
-  const userColor = self?.info?.color ?? "#808080";
-  const userAvatar = self?.info?.avatar;
-  const canWrite = self?.canWrite ?? false;
-
   // Wait until Liveblocks connection is fully established with user info
-  // Only initialize editor when we have confirmed user data
+  // Only render editor component when we have confirmed user data
   if (!self || !self.info || !self.info.name) {
     return <DocumentSpinner />;
   }
 
+  // Once we have data, render the actual editor component
+  return <TiptapEditorWithData doc={doc} provider={provider} self={self} />;
+}
+
+// Separate component that only renders when we have valid user data
+// This ensures useEditor is never called with undefined data
+function TiptapEditorWithData({ doc, provider, self }: EditorProps & { self: any }) {
+  // Extract user data with safe defaults
+  const userName = self.info.name;
+  const userColor = self.info.color || "#808080";
+  const userAvatar = self.info.avatar;
+  const canWrite = self.canWrite ?? false;
+
   // Set up editor with plugins, and place user info into Yjs awareness and cursors
-  // Using extracted variables to ensure they never change to undefined mid-render
   const editor = useEditor({
     editable: canWrite,
     editorProps: {
