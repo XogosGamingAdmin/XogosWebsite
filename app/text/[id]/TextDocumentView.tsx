@@ -1,6 +1,7 @@
 "use client";
 
 import { LiveMap } from "@liveblocks/client";
+import { ClientSideSuspense } from "@liveblocks/react";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { DocumentHeader, DocumentHeaderSkeleton } from "@/components/Document";
@@ -9,8 +10,9 @@ import { DocumentLayout } from "@/layouts/Document";
 import { ErrorLayout } from "@/layouts/Error";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { InitialDocumentProvider } from "@/lib/hooks";
-import { RoomProvider } from "@/liveblocks.config";
+import { RoomProvider, useSelf } from "@/liveblocks.config";
 import { Document, ErrorData } from "@/types";
+import { DocumentSpinner } from "@/primitives/Spinner";
 
 type Props = {
   initialDocument: Document | null;
@@ -43,14 +45,31 @@ export function TextDocumentView({ initialDocument, initialError }: Props) {
         initialPresence={{ cursor: null }}
         initialStorage={{ notes: new LiveMap() }}
       >
-        <InitialDocumentProvider initialDocument={initialDocument}>
-          <DocumentLayout
-            header={<DocumentHeader documentId={initialDocument.id} />}
-          >
-            <TextEditor />
-          </DocumentLayout>
-        </InitialDocumentProvider>
+        <ClientSideSuspense fallback={<DocumentLayout header={<DocumentHeaderSkeleton />}><DocumentSpinner /></DocumentLayout>}>
+          {() => <RoomContent initialDocument={initialDocument} />}
+        </ClientSideSuspense>
       </RoomProvider>
     </ErrorBoundary>
+  );
+}
+
+// Component that only renders after Liveblocks authentication is complete
+function RoomContent({ initialDocument }: { initialDocument: Document }) {
+  // This will cause the component to suspend until authentication is complete
+  const self = useSelf();
+
+  // Wait until we have confirmed user data from Liveblocks
+  if (!self || !self.info) {
+    return <DocumentLayout header={<DocumentHeaderSkeleton />}><DocumentSpinner /></DocumentLayout>;
+  }
+
+  return (
+    <InitialDocumentProvider initialDocument={initialDocument}>
+      <DocumentLayout
+        header={<DocumentHeader documentId={initialDocument.id} />}
+      >
+        <TextEditor />
+      </DocumentLayout>
+    </InitialDocumentProvider>
   );
 }
