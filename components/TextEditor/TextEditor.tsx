@@ -76,7 +76,12 @@ function TiptapEditor({ doc, provider }: EditorProps) {
     return <DocumentSpinner />;
   }
 
-  const { name, color, avatar: picture } = userInfo;
+  // Destructure with fallback defaults to prevent undefined errors in CollaborationCursor
+  const {
+    name = "Anonymous User",
+    color = "#808080",
+    avatar: picture = undefined
+  } = userInfo || {};
 
   // Check if user has write access in current room
   const canWrite = useSelf((me) => me?.canWrite ?? false);
@@ -184,13 +189,13 @@ function TiptapEditor({ doc, provider }: EditorProps) {
       Collaboration.configure({
         document: doc,
       }),
-      // Attach provider and user info
+      // Attach provider and user info with safe defaults
       CollaborationCursor.configure({
         provider: provider,
         user: {
-          name,
-          color,
-          picture,
+          name: name || "Anonymous User",
+          color: color || "#808080",
+          picture: picture || undefined,
         },
       }),
     ],
