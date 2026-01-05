@@ -16,7 +16,7 @@ import Youtube from "@tiptap/extension-youtube";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { EditorView } from "prosemirror-view";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import * as Y from "yjs";
 import { useRoom, useSelf } from "@/liveblocks.config";
 import { DocumentSpinner } from "@/primitives/Spinner";
@@ -41,21 +41,64 @@ export function Editor() {
   const room = useRoom();
   const [doc, setDoc] = useState<Y.Doc>();
   const [provider, setProvider] = useState<any>();
+  const [error, setError] = useState<string | null>(null);
 
   // Set up Liveblocks Yjs provider with modern pattern
   useEffect(() => {
-    const yProvider = getYjsProviderForRoom(room);
-    const yDoc = yProvider.getYDoc();
-    setDoc(yDoc);
-    setProvider(yProvider);
+    let yProvider: any;
+    let mounted = true;
+
+    try {
+      console.log("🔵 [EDITOR] Getting Yjs provider for room...");
+      yProvider = getYjsProviderForRoom(room);
+
+      if (!yProvider) {
+        throw new Error("Failed to create Yjs provider");
+      }
+
+      console.log("🔵 [EDITOR] Getting Y.Doc...");
+      const yDoc = yProvider.getYDoc();
+
+      if (!yDoc) {
+        throw new Error("Failed to get Y.Doc from provider");
+      }
+
+      if (mounted) {
+        console.log("✅ [EDITOR] Yjs provider initialized successfully");
+        setDoc(yDoc);
+        setProvider(yProvider);
+        setError(null);
+      }
+    } catch (err) {
+      console.error("❌ [EDITOR] Error initializing Yjs provider:", err);
+      if (mounted) {
+        setError(
+          err instanceof Error ? err.message : "Failed to initialize editor"
+        );
+      }
+    }
 
     return () => {
-      yProvider?.destroy();
+      mounted = false;
+      try {
+        yProvider?.destroy();
+      } catch (destroyErr) {
+        console.warn("Warning destroying Yjs provider:", destroyErr);
+      }
     };
   }, [room]);
 
+  if (error) {
+    return (
+      <div style={{ padding: "20px", color: "red", textAlign: "center" }}>
+        <p>Error loading editor: {error}</p>
+        <p>Please try refreshing the page.</p>
+      </div>
+    );
+  }
+
   if (!doc || !provider) {
-    return null;
+    return <DocumentSpinner />;
   }
 
   return <TiptapEditor doc={doc} provider={provider} />;
@@ -82,7 +125,11 @@ function TiptapEditor({ doc, provider }: EditorProps) {
 
 // Separate component that only renders when we have valid user data
 // This ensures useEditor is never called with undefined data
-function TiptapEditorWithData({ doc, provider, self }: EditorProps & { self: any }) {
+function TiptapEditorWithData({
+  doc,
+  provider,
+  self,
+}: EditorProps & { self: any }) {
   // Extract user data with safe defaults
   const userName = self.info.name;
   const userColor = self.info.color || "#808080";
