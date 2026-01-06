@@ -2,6 +2,7 @@
 export * from "./authorizeLiveblocks";
 export * from "./createDocument";
 export * from "./deleteDocument";
+export * from "./deleteDocuments";
 export * from "./getDocument";
 export * from "./getDocumentGroups";
 export * from "./getDocuments";

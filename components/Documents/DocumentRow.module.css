@@ -91,3 +91,21 @@
   flex-direction: column;
   padding: var(--space-3);
 }
+
+.checkbox {
+  display: flex;
+  padding-left: var(--space-8);
+  place-items: center;
+  cursor: pointer;
+}
+
+.checkbox input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: var(--color-accent);
+}
+
+.selected {
+  background: var(--color-surface-hover);
+}

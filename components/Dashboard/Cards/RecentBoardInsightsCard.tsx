@@ -2,9 +2,9 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { getPublishedDocuments } from "@/lib/actions/getPublishedDocuments";
 import { DOCUMENT_URL } from "@/constants";
 import { FileIcon, SpreadsheetIcon, WhiteboardIcon } from "@/icons";
+import { getPublishedDocuments } from "@/lib/actions/getPublishedDocuments";
 import { Document } from "@/types";
 import styles from "./RecentBoardInsightsCard.module.css";
 
@@ -58,7 +58,8 @@ export function RecentBoardInsightsCard() {
                 <div className={styles.documentInfo}>
                   <div className={styles.documentName}>{document.name}</div>
                   <div className={styles.documentMeta}>
-                    Updated {new Date(document.lastConnection).toLocaleDateString()}
+                    Updated{" "}
+                    {new Date(document.lastConnection).toLocaleDateString()}
                   </div>
                 </div>
               </Link>
@@ -66,7 +67,8 @@ export function RecentBoardInsightsCard() {
           </div>
         ) : (
           <p className={styles.emptyState}>
-            No published insights yet. Documents marked as published will appear here.
+            No published insights yet. Documents marked as published will appear
+            here.
           </p>
         )}
       </div>

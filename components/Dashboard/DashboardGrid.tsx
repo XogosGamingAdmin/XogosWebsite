@@ -1,19 +1,19 @@
 "use client";
 
-import { ComponentProps, useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
-import {
-  BoardMemberProfileCard,
-  XogosStatisticsCard,
-  XogosFinancialsCard,
-  RecentBoardInsightsCard,
-  MonthlyMeetingChecklistCard,
-  MultiRSSFeedCard,
-  AddRSSFeedCard,
-  AllBoardMemberTasksCard,
-} from "./Cards";
+import { ComponentProps, useEffect, useState } from "react";
 import { getRssSubscriptions } from "@/lib/actions";
 import { isAdmin } from "@/lib/auth/admin";
+import {
+  AddRSSFeedCard,
+  AllBoardMemberTasksCard,
+  BoardMemberProfileCard,
+  MonthlyMeetingChecklistCard,
+  MultiRSSFeedCard,
+  RecentBoardInsightsCard,
+  XogosFinancialsCard,
+  XogosStatisticsCard,
+} from "./Cards";
 import styles from "./DashboardGrid.module.css";
 
 interface Props extends ComponentProps<"div"> {}
@@ -31,7 +31,9 @@ export function DashboardGrid({ ...props }: Props) {
   const [subscriptions, setSubscriptions] = useState<RSSSubscription[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const userIsAdmin = session?.user?.email ? isAdmin(session.user.email) : false;
+  const userIsAdmin = session?.user?.email
+    ? isAdmin(session.user.email)
+    : false;
 
   useEffect(() => {
     loadSubscriptions();
@@ -58,15 +60,16 @@ export function DashboardGrid({ ...props }: Props) {
       {userIsAdmin && <AllBoardMemberTasksCard />}
 
       {/* Display all RSS feed subscriptions */}
-      {!loading && subscriptions.map((sub) => (
-        <MultiRSSFeedCard
-          key={sub.id}
-          id={sub.id}
-          topic={sub.topic}
-          displayName={sub.displayName}
-          onRemove={loadSubscriptions}
-        />
-      ))}
+      {!loading &&
+        subscriptions.map((sub) => (
+          <MultiRSSFeedCard
+            key={sub.id}
+            id={sub.id}
+            topic={sub.topic}
+            displayName={sub.displayName}
+            onRemove={loadSubscriptions}
+          />
+        ))}
 
       {/* Add new RSS feed card */}
       {!loading && <AddRSSFeedCard onAdd={loadSubscriptions} />}

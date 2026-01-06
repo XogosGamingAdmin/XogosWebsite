@@ -1,7 +1,6 @@
 "use server";
 
 import { auth } from "@/auth";
-import { profiles } from "@/data/profiles";
 import { BoardMemberProfile } from "@/types/dashboard";
 
 type Props = {

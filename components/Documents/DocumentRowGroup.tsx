@@ -8,10 +8,19 @@ import styles from "@/layouts/Documents/DocumentsList.module.css";
 type Props = {
   documents: Document[];
   revalidateDocuments: () => void;
+  selectedIds?: Set<string>;
+  onSelectionChange?: (documentId: string, selected: boolean) => void;
+  selectionMode?: boolean;
 };
 
 export const DocumentRowGroup = memo(
-  ({ documents, revalidateDocuments }: Props) => {
+  ({
+    documents,
+    revalidateDocuments,
+    selectedIds,
+    onSelectionChange,
+    selectionMode = false,
+  }: Props) => {
     const documentIds = documents.map((doc) => doc.id);
 
     // If documents ids passed, get live users in rooms, refresh every 10s
@@ -39,6 +48,9 @@ export const DocumentRowGroup = memo(
               others={others}
               className={styles.row}
               revalidateDocuments={revalidateDocuments}
+              isSelected={selectedIds?.has(document.id) ?? false}
+              onSelectionChange={onSelectionChange}
+              selectionMode={selectionMode}
             />
           );
         })}

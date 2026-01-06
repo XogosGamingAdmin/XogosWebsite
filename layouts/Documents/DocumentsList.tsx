@@ -2,14 +2,14 @@
 
 import clsx from "clsx";
 import { useSession } from "next-auth/react";
-import { ComponentProps, useMemo, useState } from "react";
+import { ComponentProps, useCallback, useMemo, useState } from "react";
 import {
   DocumentCreatePopover,
   DocumentRowSkeleton,
 } from "@/components/Documents";
 import { DocumentRowGroup } from "@/components/Documents/DocumentRowGroup";
-import { PlusIcon } from "@/icons";
-import { GetDocumentsProps } from "@/lib/actions";
+import { DeleteIcon, PlusIcon } from "@/icons";
+import { deleteDocuments, GetDocumentsProps } from "@/lib/actions";
 import { usePaginatedDocumentsSWR } from "@/lib/hooks";
 import { LiveblocksProvider } from "@/liveblocks.config";
 import { Button } from "@/primitives/Button";
@@ -36,6 +36,37 @@ export function DocumentsList({
 }: Props) {
   const { data: session } = useSession();
   const [documentType, setDocumentType] = useState<DocumentType | "all">("all");
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [selectionMode, setSelectionMode] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const handleSelectionChange = useCallback(
+    (documentId: string, selected: boolean) => {
+      setSelectedIds((prev) => {
+        const next = new Set(prev);
+        if (selected) {
+          next.add(documentId);
+        } else {
+          next.delete(documentId);
+        }
+        return next;
+      });
+    },
+    []
+  );
+
+  const toggleSelectionMode = useCallback(() => {
+    setSelectionMode((prev) => {
+      if (prev) {
+        setSelectedIds(new Set());
+      }
+      return !prev;
+    });
+  }, []);
+
+  const clearSelection = useCallback(() => {
+    setSelectedIds(new Set());
+  }, []);
 
   // Return `getDocuments` params for the current filters/group
   const getDocumentsOptions: GetDocumentsProps | null = useMemo(() => {
@@ -93,6 +124,41 @@ export function DocumentsList({
 
   const documentsPages = data ?? [];
 
+  const handleBulkDelete = useCallback(async () => {
+    if (selectedIds.size === 0) return;
+
+    const confirmed = window.confirm(
+      `Are you sure you want to delete ${selectedIds.size} document${selectedIds.size > 1 ? "s" : ""}?`
+    );
+
+    if (!confirmed) return;
+
+    setIsDeleting(true);
+    try {
+      const result = await deleteDocuments({
+        documentIds: Array.from(selectedIds),
+      });
+
+      if (result.error) {
+        alert(result.error.message);
+      } else if (result.data) {
+        if (result.data.failCount > 0) {
+          alert(
+            `Deleted ${result.data.successCount} document(s). ${result.data.failCount} failed.`
+          );
+        }
+        revalidateDocuments();
+        setSelectedIds(new Set());
+        setSelectionMode(false);
+      }
+    } catch (err) {
+      console.error("Bulk delete error:", err);
+      alert("An error occurred while deleting documents");
+    } finally {
+      setIsDeleting(false);
+    }
+  }, [selectedIds, revalidateDocuments]);
+
   if (!session || !session.user?.info) {
     return (
       <Container
@@ -149,9 +215,34 @@ export function DocumentsList({
               }}
               className={styles.headerSelect}
             />
+            <Button
+              variant={selectionMode ? "primary" : "secondary"}
+              onClick={toggleSelectionMode}
+            >
+              {selectionMode ? "Cancel" : "Select"}
+            </Button>
             {createDocumentButton}
           </div>
         </div>
+
+        {selectionMode && selectedIds.size > 0 && (
+          <div className={styles.bulkActions}>
+            <span className={styles.selectedCount}>
+              {selectedIds.size} selected
+            </span>
+            <Button
+              icon={isDeleting ? <Spinner /> : <DeleteIcon />}
+              variant="secondary"
+              onClick={handleBulkDelete}
+              disabled={isDeleting}
+            >
+              {isDeleting ? "Deleting..." : "Delete"}
+            </Button>
+            <Button variant="subtle" onClick={clearSelection}>
+              Clear
+            </Button>
+          </div>
+        )}
 
         <div className={styles.container}>
           {!isLoadingInitialData ? (
@@ -162,6 +253,9 @@ export function DocumentsList({
                     key={documentPage.nextCursor}
                     documents={documentPage.documents}
                     revalidateDocuments={revalidateDocuments}
+                    selectedIds={selectedIds}
+                    onSelectionChange={handleSelectionChange}
+                    selectionMode={selectionMode}
                   />
                 ))}
                 {!isReachingEnd ? (

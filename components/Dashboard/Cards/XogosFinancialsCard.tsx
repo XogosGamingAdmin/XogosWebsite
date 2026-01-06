@@ -39,29 +39,40 @@ export function XogosFinancialsCard() {
           <>
             <div className={styles.stats}>
               <div className={styles.stat}>
-                <div className={styles.statValue}>{formatCurrency(financials.revenue)}</div>
+                <div className={styles.statValue}>
+                  {formatCurrency(financials.revenue)}
+                </div>
                 <div className={styles.statLabel}>Revenue</div>
               </div>
               <div className={styles.stat}>
-                <div className={styles.statValue}>{formatCurrency(financials.expenses)}</div>
+                <div className={styles.statValue}>
+                  {formatCurrency(financials.expenses)}
+                </div>
                 <div className={styles.statLabel}>Expenses</div>
               </div>
               <div className={styles.stat}>
-                <div className={styles.statValue}>{formatCurrency(financials.monthlyPayments)}</div>
+                <div className={styles.statValue}>
+                  {formatCurrency(financials.monthlyPayments)}
+                </div>
                 <div className={styles.statLabel}>Monthly Payments</div>
               </div>
               <div className={styles.stat}>
-                <div className={styles.statValue}>{formatCurrency(financials.yearlyPayments)}</div>
+                <div className={styles.statValue}>
+                  {formatCurrency(financials.yearlyPayments)}
+                </div>
                 <div className={styles.statLabel}>Yearly Payments</div>
               </div>
               <div className={styles.stat}>
-                <div className={styles.statValue}>{financials.lifetimeMembers}</div>
+                <div className={styles.statValue}>
+                  {financials.lifetimeMembers}
+                </div>
                 <div className={styles.statLabel}>Lifetime Members</div>
               </div>
             </div>
             <div className={styles.footer}>
               <span className={styles.lastUpdated}>
-                Last updated: {new Date(financials.lastUpdated).toLocaleDateString()}
+                Last updated:{" "}
+                {new Date(financials.lastUpdated).toLocaleDateString()}
               </span>
             </div>
           </>

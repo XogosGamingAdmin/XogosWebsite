@@ -28,6 +28,9 @@ interface Props extends ComponentProps<"div"> {
   document: Document;
   others?: RoomUser<UserMeta>[];
   revalidateDocuments: () => void;
+  isSelected?: boolean;
+  onSelectionChange?: (documentId: string, selected: boolean) => void;
+  selectionMode?: boolean;
 }
 
 export function DocumentRow({
@@ -35,6 +38,9 @@ export function DocumentRow({
   document,
   others,
   revalidateDocuments,
+  isSelected = false,
+  onSelectionChange,
+  selectionMode = false,
   ...props
 }: Props) {
   const groupIds = useMemo(
@@ -73,8 +79,30 @@ export function DocumentRow({
     }
   }, []);
 
+  const handleCheckboxChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      e.stopPropagation();
+      onSelectionChange?.(document.id, e.target.checked);
+    },
+    [document.id, onSelectionChange]
+  );
+
+  const canSelect = currentUserAccess === DocumentAccess.FULL;
+
   return (
-    <div className={clsx(className, styles.row)} {...props}>
+    <div
+      className={clsx(className, styles.row, isSelected && styles.selected)}
+      {...props}
+    >
+      {selectionMode && canSelect && (
+        <label className={styles.checkbox} onClick={(e) => e.stopPropagation()}>
+          <input
+            type="checkbox"
+            checked={isSelected}
+            onChange={handleCheckboxChange}
+          />
+        </label>
+      )}
       <Link className={clsx(styles.container, styles.link)} href={url}>
         <div className={styles.icon}>
           <DocumentIcon type={document.type} />

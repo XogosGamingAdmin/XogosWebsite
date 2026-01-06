@@ -1,7 +1,7 @@
 "use server";
 
-import { liveblocks } from "@/liveblocks.server.config";
 import { buildDocument } from "@/lib/utils";
+import { liveblocks } from "@/liveblocks.server.config";
 import { Document } from "@/types";
 
 type Props = {

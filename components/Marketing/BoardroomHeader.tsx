@@ -51,41 +51,61 @@ export function BoardroomHeader() {
           <Link href="/" className={styles.logoLink}>
             <span className={styles.logoText}>Xogos Gaming</span>
           </Link>
-          <nav className={clsx(styles.nav, mobileMenuOpen && styles.mobileOpen)}>
+          <nav
+            className={clsx(styles.nav, mobileMenuOpen && styles.mobileOpen)}
+          >
             <div className={styles.navLinkContainer}>
               <Link
                 href="/board"
-                className={clsx(styles.navLink, isActive("/board") && styles.active)}
+                className={clsx(
+                  styles.navLink,
+                  isActive("/board") && styles.active
+                )}
               >
                 Board Room
               </Link>
               <Link
                 href="/board/members"
-                className={clsx(styles.navLink, isActive("/board/members") && styles.active)}
+                className={clsx(
+                  styles.navLink,
+                  isActive("/board/members") && styles.active
+                )}
               >
                 Members
               </Link>
               <Link
                 href="/board/initiatives"
-                className={clsx(styles.navLink, isActive("/board/initiatives") && styles.active)}
+                className={clsx(
+                  styles.navLink,
+                  isActive("/board/initiatives") && styles.active
+                )}
               >
                 Initiatives
               </Link>
               <Link
                 href="/board/risk"
-                className={clsx(styles.navLink, isActive("/board/risk") && styles.active)}
+                className={clsx(
+                  styles.navLink,
+                  isActive("/board/risk") && styles.active
+                )}
               >
                 Risk
               </Link>
               <Link
                 href="/board/tokenomics"
-                className={clsx(styles.navLink, isActive("/board/tokenomics") && styles.active)}
+                className={clsx(
+                  styles.navLink,
+                  isActive("/board/tokenomics") && styles.active
+                )}
               >
                 Tokenomics
               </Link>
               <Link
                 href="/board/insights"
-                className={clsx(styles.navLink, isActive("/board/insights") && styles.active)}
+                className={clsx(
+                  styles.navLink,
+                  isActive("/board/insights") && styles.active
+                )}
               >
                 Insights
               </Link>
@@ -94,7 +114,10 @@ export function BoardroomHeader() {
         </div>
         <div className={styles.actionButtons}>
           <button
-            className={clsx(styles.mobileMenuToggle, mobileMenuOpen && styles.mobileOpen)}
+            className={clsx(
+              styles.mobileMenuToggle,
+              mobileMenuOpen && styles.mobileOpen
+            )}
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="Toggle mobile menu"
           >

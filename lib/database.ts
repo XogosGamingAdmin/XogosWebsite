@@ -8,7 +8,8 @@ const pool = new Pool({
   database: process.env.DATABASE_NAME,
   user: process.env.DATABASE_USER,
   password: process.env.DATABASE_PASSWORD,
-  ssl: process.env.DATABASE_SSL === "true" ? { rejectUnauthorized: false } : false,
+  ssl:
+    process.env.DATABASE_SSL === "true" ? { rejectUnauthorized: false } : false,
   max: 20, // Maximum number of clients in the pool
   idleTimeoutMillis: 30000,
   connectionTimeoutMillis: 2000,
@@ -133,11 +134,7 @@ export const db = {
   /**
    * Create a checklist item
    */
-  async createChecklistItem(
-    userId: string,
-    task: string,
-    createdBy: string
-  ) {
+  async createChecklistItem(userId: string, task: string, createdBy: string) {
     const result = await query(
       `INSERT INTO checklist_items (user_id, task, completed, created_by)
        VALUES ($1, $2, false, $3)
@@ -226,7 +223,11 @@ export const db = {
   /**
    * Add a new RSS subscription
    */
-  async addRssSubscription(userId: string, topic: string, displayName?: string) {
+  async addRssSubscription(
+    userId: string,
+    topic: string,
+    displayName?: string
+  ) {
     const result = await query(
       `INSERT INTO rss_subscriptions (user_id, topic, display_name)
        VALUES ($1, $2, $3)
@@ -379,7 +380,14 @@ export const db = {
       `INSERT INTO xogos_financials (revenue, expenses, monthly_payments, yearly_payments, lifetime_members, updated_by)
        VALUES ($1, $2, $3, $4, $5, $6)
        RETURNING id, revenue, expenses, monthly_payments, yearly_payments, lifetime_members, last_updated, updated_by`,
-      [revenue, expenses, monthlyPayments, yearlyPayments, lifetimeMembers, updatedBy]
+      [
+        revenue,
+        expenses,
+        monthlyPayments,
+        yearlyPayments,
+        lifetimeMembers,
+        updatedBy,
+      ]
     );
     return result.rows[0];
   },

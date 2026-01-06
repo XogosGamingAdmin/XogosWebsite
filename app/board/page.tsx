@@ -5,8 +5,8 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
 import { MarketingLayout } from "@/layouts/Marketing";
-import { getStatistics } from "@/lib/actions/getStatistics";
 import { getFinancials } from "@/lib/actions/getFinancials";
+import { getStatistics } from "@/lib/actions/getStatistics";
 import styles from "./page.module.css";
 
 // Real board members with proper seating positions
@@ -300,11 +300,31 @@ export default function BoardPage() {
 
   // Combine live database stats with static metrics for ticker
   const liveMetrics = [
-    { label: "Total Accounts", value: liveStats.accounts.toLocaleString(), trend: "active" },
-    { label: "Active Users", value: liveStats.activeUsers.toLocaleString(), trend: "active" },
-    { label: "Total Hours", value: liveStats.totalHours.toLocaleString(), trend: "active" },
-    { label: "Revenue", value: `$${liveStats.revenue.toLocaleString()}`, trend: "active" },
-    { label: "Expenses", value: `$${liveStats.expenses.toLocaleString()}`, trend: "active" },
+    {
+      label: "Total Accounts",
+      value: liveStats.accounts.toLocaleString(),
+      trend: "active",
+    },
+    {
+      label: "Active Users",
+      value: liveStats.activeUsers.toLocaleString(),
+      trend: "active",
+    },
+    {
+      label: "Total Hours",
+      value: liveStats.totalHours.toLocaleString(),
+      trend: "active",
+    },
+    {
+      label: "Revenue",
+      value: `$${liveStats.revenue.toLocaleString()}`,
+      trend: "active",
+    },
+    {
+      label: "Expenses",
+      value: `$${liveStats.expenses.toLocaleString()}`,
+      trend: "active",
+    },
   ];
 
   const platformMetrics = [...liveMetrics, ...staticMetrics];

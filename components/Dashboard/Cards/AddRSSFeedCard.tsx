@@ -101,11 +101,7 @@ export function AddRSSFeedCard({ onAdd }: Props) {
         {error && <p className={styles.error}>{error}</p>}
 
         <div className={styles.buttons}>
-          <button
-            type="submit"
-            disabled={saving}
-            className={styles.saveButton}
-          >
+          <button type="submit" disabled={saving} className={styles.saveButton}>
             {saving ? "Adding..." : "Add Feed"}
           </button>
           <button

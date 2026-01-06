@@ -18,7 +18,11 @@ type Props = {
  *
  * @param data - The updated statistics values
  */
-export async function updateStatistics({ accounts, activeUsers, totalHours }: Props) {
+export async function updateStatistics({
+  accounts,
+  activeUsers,
+  totalHours,
+}: Props) {
   const session = await auth();
 
   // Check user is logged in

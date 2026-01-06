@@ -26,9 +26,7 @@ export async function getProfile() {
   const userId = session.user.info.id;
 
   // Find user's profile
-  const userProfile = profiles.find(
-    (profile) => profile.userId === userId
-  );
+  const userProfile = profiles.find((profile) => profile.userId === userId);
 
   if (!userProfile) {
     // Return default empty profile

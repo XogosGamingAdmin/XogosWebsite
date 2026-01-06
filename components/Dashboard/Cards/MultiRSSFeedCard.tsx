@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getRssFeed, RSSFeedItem } from "@/lib/actions/getRssFeed";
+import { RSSFeedItem, getRssFeed } from "@/lib/actions/getRssFeed";
 import { removeRssSubscription } from "@/lib/actions/removeRssSubscription";
 import styles from "./RSSFeedCard.module.css";
 
@@ -86,7 +86,9 @@ export function MultiRSSFeedCard({ id, topic, displayName, onRemove }: Props) {
               >
                 <div className={styles.feedTitle}>{item.title}</div>
                 {item.contentSnippet && (
-                  <div className={styles.feedSnippet}>{item.contentSnippet}</div>
+                  <div className={styles.feedSnippet}>
+                    {item.contentSnippet}
+                  </div>
                 )}
                 <div className={styles.feedDate}>
                   {new Date(item.pubDate).toLocaleDateString()}

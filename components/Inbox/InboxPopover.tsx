@@ -1,6 +1,6 @@
 import { ClientSideSuspense } from "@liveblocks/react";
-import { useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { ComponentProps, useEffect, useState } from "react";
 import { InboxIcon } from "@/icons";
 import { useUnreadInboxNotificationsCount } from "@/liveblocks.config";

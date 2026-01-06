@@ -12,9 +12,7 @@ export const ADMIN_EMAILS = [
 /**
  * Only Zack can update Xogos statistics and financials
  */
-export const STATISTICS_ADMIN_EMAILS = [
-  "zack@xogosgaming.com",
-];
+export const STATISTICS_ADMIN_EMAILS = ["zack@xogosgaming.com"];
 
 /**
  * Check if a user email has admin access

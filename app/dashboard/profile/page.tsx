@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
+import { getChecklists } from "@/lib/actions/getChecklists";
 import { getProfile } from "@/lib/actions/getProfile";
 import { updateRssTopic } from "@/lib/actions/updateRssTopic";
-import { getChecklists } from "@/lib/actions/getChecklists";
 import { Avatar } from "@/primitives/Avatar";
 import { Button } from "@/primitives/Button";
 import { ChecklistItem } from "@/types/dashboard";

@@ -25,10 +25,26 @@
       "Bash(done)",
       "Bash(ls:*)",
       "Bash(npm install:*)",
-      "Bash(npm uninstall:*)"
+      "Bash(npm uninstall:*)",
+      "Bash(npm run typecheck:*)",
+      "Bash(psql:*)",
+      "Bash(winget install:*)",
+      "Bash(node scripts/setup-database.js:*)",
+      "Bash(git ls-tree:*)",
+      "Bash(node -e:*)",
+      "Bash(netstat:*)",
+      "Bash(findstr:*)",
+      "Bash(taskkill:*)",
+      "Bash(git restore:*)",
+      "Bash(node scripts/cleanup-system-entries.js:*)",
+      "Bash(dir:*)",
+      "Bash(git rm:*)",
+      "Bash(del nul)",
+      "Bash(git check-ignore:*)",
+      "Bash(npm view:*)"
     ],
     "deny": [],
     "ask": []
   },
-  "model": "claude-sonnet-4-5-20250929"
+  "model": "claude-opus-4-5-20251101"
 }

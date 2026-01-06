@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getStatisticsHistory } from "@/lib/actions/getStatisticsHistory";
 import { getFinancialsHistory } from "@/lib/actions/getFinancialsHistory";
+import { getStatisticsHistory } from "@/lib/actions/getStatisticsHistory";
 import styles from "./TrendsDisplay.module.css";
 
 interface StatRecord {
@@ -32,7 +32,9 @@ interface TrendsDisplayProps {
 
 export function TrendsDisplay({ type, limit = 10 }: TrendsDisplayProps) {
   const [statsHistory, setStatsHistory] = useState<StatRecord[]>([]);
-  const [financialsHistory, setFinancialsHistory] = useState<FinancialRecord[]>([]);
+  const [financialsHistory, setFinancialsHistory] = useState<FinancialRecord[]>(
+    []
+  );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -78,11 +80,15 @@ export function TrendsDisplay({ type, limit = 10 }: TrendsDisplayProps) {
   }
 
   if (type === "statistics" && statsHistory.length === 0) {
-    return <div className={styles.noData}>No statistics history available yet.</div>;
+    return (
+      <div className={styles.noData}>No statistics history available yet.</div>
+    );
   }
 
   if (type === "financials" && financialsHistory.length === 0) {
-    return <div className={styles.noData}>No financials history available yet.</div>;
+    return (
+      <div className={styles.noData}>No financials history available yet.</div>
+    );
   }
 
   return (
@@ -107,9 +113,15 @@ export function TrendsDisplay({ type, limit = 10 }: TrendsDisplayProps) {
               {statsHistory.map((record) => (
                 <tr key={record.id}>
                   <td>{new Date(record.lastUpdated).toLocaleString()}</td>
-                  <td className={styles.numberCell}>{record.accounts.toLocaleString()}</td>
-                  <td className={styles.numberCell}>{record.activeUsers.toLocaleString()}</td>
-                  <td className={styles.numberCell}>{record.totalHours.toLocaleString()}</td>
+                  <td className={styles.numberCell}>
+                    {record.accounts.toLocaleString()}
+                  </td>
+                  <td className={styles.numberCell}>
+                    {record.activeUsers.toLocaleString()}
+                  </td>
+                  <td className={styles.numberCell}>
+                    {record.totalHours.toLocaleString()}
+                  </td>
                   <td className={styles.emailCell}>{record.updatedBy}</td>
                 </tr>
               ))}
@@ -134,11 +146,21 @@ export function TrendsDisplay({ type, limit = 10 }: TrendsDisplayProps) {
               {financialsHistory.map((record) => (
                 <tr key={record.id}>
                   <td>{new Date(record.lastUpdated).toLocaleString()}</td>
-                  <td className={styles.moneyCell}>${record.revenue.toLocaleString()}</td>
-                  <td className={styles.moneyCell}>${record.expenses.toLocaleString()}</td>
-                  <td className={styles.moneyCell}>${record.monthlyPayments.toLocaleString()}</td>
-                  <td className={styles.moneyCell}>${record.yearlyPayments.toLocaleString()}</td>
-                  <td className={styles.numberCell}>{record.lifetimeMembers}</td>
+                  <td className={styles.moneyCell}>
+                    ${record.revenue.toLocaleString()}
+                  </td>
+                  <td className={styles.moneyCell}>
+                    ${record.expenses.toLocaleString()}
+                  </td>
+                  <td className={styles.moneyCell}>
+                    ${record.monthlyPayments.toLocaleString()}
+                  </td>
+                  <td className={styles.moneyCell}>
+                    ${record.yearlyPayments.toLocaleString()}
+                  </td>
+                  <td className={styles.numberCell}>
+                    {record.lifetimeMembers}
+                  </td>
                   <td className={styles.emailCell}>{record.updatedBy}</td>
                 </tr>
               ))}

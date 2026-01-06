@@ -87,17 +87,6 @@ export default function SignInPage() {
             {isLoading ? "Signing in..." : "Sign in with Google"}
           </button>
         </div>
-
-        <div style={{ marginTop: "2rem", fontSize: "14px", color: "#666" }}>
-          <p>Authorized board members:</p>
-          <ul style={{ textAlign: "left", marginTop: "0.5rem" }}>
-            <li>zack@xogosgaming.com</li>
-            <li>braden@kennyhertzperry.com</li>
-            <li>enjoyweaver@gmail.com</li>
-            <li>mckaylaareece@gmail.com</li>
-            <li>sturs49@gmail.com</li>
-          </ul>
-        </div>
       </main>
       <aside className={styles.aside} />
     </div>

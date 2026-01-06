@@ -3,7 +3,6 @@ import clsx from "clsx";
 import Image from "next/image";
 import Link from "next/link";
 import { ComponentProps, useEffect, useState } from "react";
-import { SignInIcon } from "@/icons";
 import { Container } from "@/primitives/Container";
 import styles from "./MarketingHeader.module.css";
 
@@ -64,34 +63,8 @@ export function MarketingHeader({
               <Link href="/about" className={styles.navLink}>
                 About Us
               </Link>
-              <Link href="/docs" className={styles.navLink}>
-                Docs
-              </Link>
               <Link href="/blog" className={styles.navLink}>
                 Blog
-              </Link>
-              <Link href="/forum" className={styles.navLink}>
-                Forum
-              </Link>
-              <Link href="/events" className={styles.navLink}>
-                Events
-              </Link>
-              <Link
-                href="https://www.histronics.com/board"
-                className={styles.navLink}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Board Room
-              </Link>
-              <Link
-                href="/signin?callbackUrl=/dashboard"
-                className={styles.navLink}
-              >
-                <div className={styles.signInContainer}>
-                  <SignInIcon className={styles.signInIcon} />
-                  <span>Board Sign-in</span>
-                </div>
               </Link>
             </div>
           </nav>

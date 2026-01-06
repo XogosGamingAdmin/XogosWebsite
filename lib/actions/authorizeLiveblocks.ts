@@ -3,7 +3,6 @@
 import { auth } from "@/auth";
 import { getDraftsGroupName } from "@/lib/utils";
 import { liveblocks } from "@/liveblocks.server.config";
-import { User } from "@/types";
 
 export async function authorizeLiveblocks() {
   console.log("🔐 authorizeLiveblocks called");
@@ -29,17 +28,15 @@ export async function authorizeLiveblocks() {
   }
 
   // Get current user info from session
-  const {
-    name,
-    avatar,
-    color,
-    id,
-    groupIds = [],
-  } = session.user.info;
+  const { name, avatar, color, id, groupIds = [] } = session.user.info;
 
   const groupIdsWithDraftsGroup = [...groupIds, getDraftsGroupName(id)];
 
-  console.log("👤 User info:", { name, id, groupIds: groupIdsWithDraftsGroup.length });
+  console.log("👤 User info:", {
+    name,
+    id,
+    groupIds: groupIdsWithDraftsGroup.length,
+  });
 
   // Get Liveblocks ID token
   let liveblocksResponse;

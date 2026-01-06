@@ -3,11 +3,11 @@ import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { ComponentProps, useMemo } from "react";
 import {
-  DASHBOARD_HOME_URL,
-  DASHBOARD_DOCUMENTS_URL,
-  DASHBOARD_PROFILE_URL,
-  DASHBOARD_DOCUMENTS_GROUP_URL,
   ADMIN_URL,
+  DASHBOARD_DOCUMENTS_GROUP_URL,
+  DASHBOARD_DOCUMENTS_URL,
+  DASHBOARD_HOME_URL,
+  DASHBOARD_PROFILE_URL,
 } from "@/constants";
 import { FileIcon, FolderIcon, HomeIcon, UserIcon } from "@/icons";
 import { isAdmin } from "@/lib/auth/admin";
@@ -52,7 +52,9 @@ function SidebarLink({
 
 export function DashboardSidebar({ className, groups, ...props }: Props) {
   const { data: session } = useSession();
-  const userIsAdmin = session?.user?.email ? isAdmin(session.user.email) : false;
+  const userIsAdmin = session?.user?.email
+    ? isAdmin(session.user.email)
+    : false;
 
   return (
     <div className={clsx(className, styles.sidebar)} {...props}>
@@ -76,9 +78,7 @@ export function DashboardSidebar({ className, groups, ...props }: Props) {
             </li>
             {userIsAdmin && (
               <li>
-                <SidebarLink href={ADMIN_URL}>
-                  Admin
-                </SidebarLink>
+                <SidebarLink href={ADMIN_URL}>Admin</SidebarLink>
               </li>
             )}
           </ul>

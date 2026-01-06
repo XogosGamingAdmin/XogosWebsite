@@ -51,6 +51,12 @@ export function MarketingFooter({
               <Link href="/scholarships" className={styles.footerLink}>
                 Scholarships
               </Link>
+              <Link href="/forum" className={styles.footerLink}>
+                Forum
+              </Link>
+              <Link href="/events" className={styles.footerLink}>
+                Events
+              </Link>
             </div>
 
             <div className={styles.footerLinkColumn}>
@@ -59,7 +65,13 @@ export function MarketingFooter({
                 About Us
               </Link>
               <Link href="/board" className={styles.footerLink}>
-                Board
+                Board Room
+              </Link>
+              <Link
+                href="/signin?callbackUrl=/dashboard"
+                className={styles.footerLink}
+              >
+                Board Sign-In
               </Link>
               <Link href="/contact" className={styles.footerLink}>
                 Contact

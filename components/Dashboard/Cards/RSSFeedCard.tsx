@@ -2,9 +2,9 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { getProfile } from "@/lib/actions/getProfile";
-import { getRssFeed, RSSFeedItem } from "@/lib/actions/getRssFeed";
 import { DASHBOARD_PROFILE_URL } from "@/constants";
+import { getProfile } from "@/lib/actions/getProfile";
+import { RSSFeedItem, getRssFeed } from "@/lib/actions/getRssFeed";
 import styles from "./RSSFeedCard.module.css";
 
 export function RSSFeedCard() {
@@ -66,9 +66,7 @@ export function RSSFeedCard() {
           </div>
         ) : !rssTopic ? (
           <div className={styles.emptyState}>
-            <p className={styles.emptyText}>
-              No RSS topic configured yet.
-            </p>
+            <p className={styles.emptyText}>No RSS topic configured yet.</p>
             <Link href={DASHBOARD_PROFILE_URL} className={styles.configureLink}>
               Configure in Profile
             </Link>
@@ -85,7 +83,9 @@ export function RSSFeedCard() {
               >
                 <div className={styles.feedTitle}>{item.title}</div>
                 {item.contentSnippet && (
-                  <div className={styles.feedSnippet}>{item.contentSnippet}</div>
+                  <div className={styles.feedSnippet}>
+                    {item.contentSnippet}
+                  </div>
                 )}
                 <div className={styles.feedDate}>
                   {new Date(item.pubDate).toLocaleDateString()}

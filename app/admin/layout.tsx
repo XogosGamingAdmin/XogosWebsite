@@ -1,5 +1,5 @@
-import { ReactNode } from "react";
 import { redirect } from "next/navigation";
+import { ReactNode } from "react";
 import { auth } from "@/auth";
 import { isAdmin } from "@/lib/auth/admin";
 

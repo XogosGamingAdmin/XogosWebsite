@@ -39,8 +39,12 @@ export class ErrorBoundary extends Component<Props, State> {
           <h1>Something went wrong</h1>
           <details style={{ whiteSpace: "pre-wrap" }}>
             <summary>Error details</summary>
-            <p><strong>Error:</strong> {this.state.error?.message}</p>
-            <p><strong>Stack:</strong></p>
+            <p>
+              <strong>Error:</strong> {this.state.error?.message}
+            </p>
+            <p>
+              <strong>Stack:</strong>
+            </p>
             <pre>{this.state.error?.stack}</pre>
           </details>
         </div>

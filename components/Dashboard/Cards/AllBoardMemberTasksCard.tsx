@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getAllChecklists } from "@/lib/actions/getAllChecklists";
 import { users } from "@/data/users";
+import { getAllChecklists } from "@/lib/actions/getAllChecklists";
 import styles from "./AllBoardMemberTasksCard.module.css";
 
 interface ChecklistItem {
@@ -59,7 +59,8 @@ export function AllBoardMemberTasksCard() {
   const groupedTasks = groupTasksByUser();
   const totalTasks = tasks.length;
   const completedTasks = tasks.filter((t) => t.completed).length;
-  const completionRate = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+  const completionRate =
+    totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
 
   return (
     <div className={styles.card}>
@@ -88,7 +89,8 @@ export function AllBoardMemberTasksCard() {
                 <h3 className={styles.userName}>
                   {getUserName(userId)}
                   <span className={styles.userTaskCount}>
-                    ({userTasks.filter(t => t.completed).length}/{userTasks.length})
+                    ({userTasks.filter((t) => t.completed).length}/
+                    {userTasks.length})
                   </span>
                 </h3>
                 <ul className={styles.tasks}>
@@ -100,7 +102,13 @@ export function AllBoardMemberTasksCard() {
                         readOnly
                         className={styles.checkbox}
                       />
-                      <span className={task.completed ? styles.taskCompleted : styles.taskText}>
+                      <span
+                        className={
+                          task.completed
+                            ? styles.taskCompleted
+                            : styles.taskText
+                        }
+                      >
                         {task.task}
                       </span>
                       {task.completed && (

@@ -554,65 +554,63 @@
   dependencies:
     "@lit-labs/ssr-dom-shim" "^1.0.0"
 
-"@liveblocks/client@^3.0.0", "@liveblocks/client@3.11.0":
-  version "3.11.0"
-  resolved "https://registry.npmjs.org/@liveblocks/client/-/client-3.11.0.tgz"
-  integrity sha512-89PnIxYkDAwlGRMlALBo1NsAAUD15Ti2c9NVgnEUpqMpUdFCejwcnyc6jBLSXnS92wsu2lPXeLcQtT6ze7nKMg==
+"@liveblocks/client@2.24.4":
+  version "2.24.4"
+  resolved "https://registry.npmjs.org/@liveblocks/client/-/client-2.24.4.tgz"
+  integrity sha512-jT6kpapuSWuQlg8m/r3N5R/i7XlQAG2UkeaQi1DkyCc2+U4PWgKNVVXVWUUKM+OcbG3yKoJJ93Pw4AZE0hHWDg==
   dependencies:
-    "@liveblocks/core" "3.11.0"
+    "@liveblocks/core" "2.24.4"
 
-"@liveblocks/core@3.11.0":
-  version "3.11.0"
-  resolved "https://registry.npmjs.org/@liveblocks/core/-/core-3.11.0.tgz"
-  integrity sha512-XWULxi0zdBOXH8UOdQHMA50ayhHLgvDOhLcCrP0VzA5Gn6Oa5tDXms5ekDZ9SBv4y+fxs9ckYaXRDlOYggnwTg==
+"@liveblocks/core@2.24.4":
+  version "2.24.4"
+  resolved "https://registry.npmjs.org/@liveblocks/core/-/core-2.24.4.tgz"
+  integrity sha512-Os2Fs/RgggyrISpqHIefWo864auKIkpw48BG5fvPubcXkLU9i8wUcK5oczWEqJ0JvtyTfqREl/tkEhGf124DCw==
 
-"@liveblocks/node@^3.0.0":
-  version "3.11.0"
-  resolved "https://registry.npmjs.org/@liveblocks/node/-/node-3.11.0.tgz"
-  integrity sha512-3IyH3KEIJNqzEOE/8M0Ig7MGCeLQOQ+akICjf65mstFpgc1MS5JIhtRnCQ8l9M1/2hNbUY6UClO8NjioSjHAHA==
+"@liveblocks/node@2.24.4":
+  version "2.24.4"
+  resolved "https://registry.npmjs.org/@liveblocks/node/-/node-2.24.4.tgz"
+  integrity sha512-2dKJxZUXbtL26DsqT8NEF3GthDIpK5sbEsRYMv7rCdhZaXWPBTrWE4Dh2ZcE6eWAfYA+dSNZaQB8K7GenSKagg==
   dependencies:
-    "@liveblocks/core" "3.11.0"
+    "@liveblocks/core" "2.24.4"
     "@stablelib/base64" "^1.0.1"
     fast-sha256 "^1.3.0"
     node-fetch "^2.6.1"
 
-"@liveblocks/react-ui@^3.11.0":
-  version "3.11.0"
-  resolved "https://registry.npmjs.org/@liveblocks/react-ui/-/react-ui-3.11.0.tgz"
-  integrity sha512-CwJofb+jYLpTtMNkDSBoW+jHleDPeB8g8pt+gUBoTyXjXfHKU26sQQOQfW2pN4ux3ENNJxqAOlAS8tFEIY68BQ==
+"@liveblocks/react-ui@2.24.4":
+  version "2.24.4"
+  resolved "https://registry.npmjs.org/@liveblocks/react-ui/-/react-ui-2.24.4.tgz"
+  integrity sha512-Vnpra7YFxLdZGiggqkmVdLJxLsCTtLfCXLaMntTQal7TmPT49HQM+O1E3Kf+iFk2ADmOL59TW1tLaLVRIKZ+bw==
   dependencies:
     "@floating-ui/react-dom" "^2.1.2"
-    "@liveblocks/client" "3.11.0"
-    "@liveblocks/core" "3.11.0"
-    "@liveblocks/react" "3.11.0"
+    "@liveblocks/client" "2.24.4"
+    "@liveblocks/core" "2.24.4"
+    "@liveblocks/react" "2.24.4"
     "@radix-ui/react-dropdown-menu" "^2.1.2"
     "@radix-ui/react-popover" "^1.1.2"
     "@radix-ui/react-slot" "^1.1.0"
     "@radix-ui/react-toggle" "^1.1.0"
     "@radix-ui/react-tooltip" "^1.1.3"
     frimousse "^0.2.0"
-    marked "^15.0.11"
     slate "^0.110.2"
     slate-history "^0.110.3"
     slate-hyperscript "^0.100.0"
     slate-react "^0.110.3"
 
-"@liveblocks/react@^3.0.0", "@liveblocks/react@3.11.0":
-  version "3.11.0"
-  resolved "https://registry.npmjs.org/@liveblocks/react/-/react-3.11.0.tgz"
-  integrity sha512-IgviF3NlXe6a5nxILWZDD4dXaEWyx9zUcqx1+9CPyr2jQY0lD0o+CaO19l0UCEdKWlsJKEV0eV9489IvPd2fDg==
+"@liveblocks/react@2.24.4":
+  version "2.24.4"
+  resolved "https://registry.npmjs.org/@liveblocks/react/-/react-2.24.4.tgz"
+  integrity sha512-p6t7HVGkQ34MLtiDp2L1qXmae4MH8MyOTaJfP2USfimOrMp1vIKendxuIoaR71XvtShvhihkwvdHa3ogCmm+2A==
   dependencies:
-    "@liveblocks/client" "3.11.0"
-    "@liveblocks/core" "3.11.0"
+    "@liveblocks/client" "2.24.4"
+    "@liveblocks/core" "2.24.4"
 
-"@liveblocks/yjs@^3.0.0":
-  version "3.11.0"
-  resolved "https://registry.npmjs.org/@liveblocks/yjs/-/yjs-3.11.0.tgz"
-  integrity sha512-7p9YNfFZXQriPtDMA9h2VmZ0qWDCCbAZE1C4YwBmmLs3WDYGUyP7EDLqqcVELik3tHLxSaA7Ed0gCva4TPO8FA==
+"@liveblocks/yjs@2.24.4":
+  version "2.24.4"
+  resolved "https://registry.npmjs.org/@liveblocks/yjs/-/yjs-2.24.4.tgz"
+  integrity sha512-SFot0cULt42lznwMsE4ANLgDdSqicBES7lMQCJO2/Ljbg4Ex1FyRJMqOAUCOoFlp4EWHHI3hUUHezjh3zFmtmw==
   dependencies:
-    "@liveblocks/client" "3.11.0"
-    "@liveblocks/core" "3.11.0"
-    "@noble/hashes" "^1.8.0"
+    "@liveblocks/client" "2.24.4"
+    "@liveblocks/core" "2.24.4"
     js-base64 "^3.7.7"
     y-indexeddb "^9.0.12"
 
@@ -5355,11 +5353,6 @@ markdown-it@^14.0.0:
     mdurl "^2.0.0"
     punycode.js "^2.3.1"
     uc.micro "^2.1.0"
-
-marked@^15.0.11:
-  version "15.0.12"
-  resolved "https://registry.npmjs.org/marked/-/marked-15.0.12.tgz"
-  integrity sha512-8dD6FusOQSrpv9Z1rdNMdlSgQOIP880DHqnohobOmYLElGEqAL/JvxvuxZO16r4HtjTlfPRDC1hbvxC9dPN2nA==
 
 math-intrinsics@^1.1.0:
   version "1.1.0"

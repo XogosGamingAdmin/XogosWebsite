@@ -46,7 +46,8 @@ export function XogosStatisticsCard() {
             </div>
             <div className={styles.footer}>
               <span className={styles.lastUpdated}>
-                Last updated: {new Date(statistics.lastUpdated).toLocaleDateString()}
+                Last updated:{" "}
+                {new Date(statistics.lastUpdated).toLocaleDateString()}
               </span>
             </div>
           </>

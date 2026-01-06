@@ -64,3 +64,20 @@
   place-items: center;
   text-align: center;
 }
+
+.bulkActions {
+  display: flex;
+  padding: var(--space-6);
+  margin-bottom: var(--space-6);
+  background: var(--color-surface-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  gap: var(--space-6);
+  place-items: center;
+}
+
+.selectedCount {
+  font-size: var(--size-sm);
+  font-weight: 500;
+  color: var(--color-text);
+}

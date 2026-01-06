@@ -2,15 +2,15 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { getFinancials } from "@/lib/actions/getFinancials";
-import { updateFinancials } from "@/lib/actions/updateFinancials";
+import { TrendsDisplay } from "@/components/TrendsDisplay";
 import {
-  ADMIN_STATISTICS_URL,
   ADMIN_CHECKLISTS_URL,
+  ADMIN_STATISTICS_URL,
   DASHBOARD_HOME_URL,
 } from "@/constants";
+import { getFinancials } from "@/lib/actions/getFinancials";
+import { updateFinancials } from "@/lib/actions/updateFinancials";
 import { Button } from "@/primitives/Button";
-import { TrendsDisplay } from "@/components/TrendsDisplay";
 import styles from "../statistics/page.module.css";
 
 export default function FinancialsPage() {
@@ -175,8 +175,9 @@ export default function FinancialsPage() {
             )}
 
             <p className={styles.note}>
-              ✅ Changes are saved to AWS RDS PostgreSQL database with timestamp.
-              Each update creates a new historical record for trending/analytics.
+              ✅ Changes are saved to AWS RDS PostgreSQL database with
+              timestamp. Each update creates a new historical record for
+              trending/analytics.
             </p>
           </form>
         )}

@@ -1,8 +1,8 @@
 "use server";
 
 import { auth } from "@/auth";
-import { liveblocks } from "@/liveblocks.server.config";
 import { buildDocument } from "@/lib/utils";
+import { liveblocks } from "@/liveblocks.server.config";
 import { Document } from "@/types";
 
 type Props = {
@@ -24,10 +24,7 @@ export async function publishDocument({ documentId, published }: Props) {
   let room;
 
   try {
-    const result = await Promise.all([
-      auth(),
-      liveblocks.getRoom(documentId),
-    ]);
+    const result = await Promise.all([auth(), liveblocks.getRoom(documentId)]);
     session = result[0];
     room = result[1];
   } catch (err) {
