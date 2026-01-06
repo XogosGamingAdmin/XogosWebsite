@@ -12,68 +12,9 @@ import { getUsers } from "./lib/database/getUsers";
 import { User } from "./types";
 
 // Creating client with Liveblocks authentication API endpoint
-// The endpoint handles authentication and returns the Liveblocks token
+// Using simple string authEndpoint - Liveblocks handles the fetch internally
 const client = createClient({
-  // authEndpoint receives a room parameter in Liveblocks 3.x
-  // For ID token auth, room permissions are managed on Liveblocks dashboard
-  authEndpoint: async (room?: string) => {
-    console.log("🔵 [CLIENT] Calling /api/liveblocks-auth");
-    console.log("🔵 [CLIENT] Room:", room || "(no room specified)");
-
-    try {
-      const response = await fetch("/api/liveblocks-auth", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        // Pass room if provided (for future access token support)
-        body: room ? JSON.stringify({ room }) : undefined,
-      });
-
-      console.log("🔵 [CLIENT] Response status:", response.status);
-      console.log(
-        "🔵 [CLIENT] Response Content-Type:",
-        response.headers.get("content-type")
-      );
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error("❌ [CLIENT] Auth failed:", errorText);
-        try {
-          const errorJson = JSON.parse(errorText);
-          throw new Error(
-            errorJson.error || `Authentication failed: ${response.status}`
-          );
-        } catch {
-          throw new Error(`Authentication failed: ${response.status}`);
-        }
-      }
-
-      const data = await response.json();
-
-      // Validate the response has a token
-      if (!data || typeof data !== "object") {
-        console.error("❌ [CLIENT] Invalid response: not an object");
-        throw new Error("Invalid authentication response format");
-      }
-
-      if (!data.token) {
-        console.error(
-          "❌ [CLIENT] Invalid response: missing token, keys:",
-          Object.keys(data)
-        );
-        throw new Error("Authentication response missing token");
-      }
-
-      console.log("✅ [CLIENT] Auth successful, token length:", data.token.length);
-      console.log("✅ [CLIENT] Auth data keys:", Object.keys(data));
-
-      return data;
-    } catch (err) {
-      console.error("❌ [CLIENT] Exception in authEndpoint:", err);
-      throw err;
-    }
-  },
+  authEndpoint: "/api/liveblocks-auth",
 
   // Resolve user IDs into name/avatar/etc for Comments/Notifications
   async resolveUsers({ userIds }) {

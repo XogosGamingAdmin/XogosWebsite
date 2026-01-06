@@ -5,14 +5,14 @@ import { ClientSideSuspense } from "@liveblocks/react";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { DocumentHeader, DocumentHeaderSkeleton } from "@/components/Document";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { TextEditor } from "@/components/TextEditor";
 import { DocumentLayout } from "@/layouts/Document";
 import { ErrorLayout } from "@/layouts/Error";
-import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { InitialDocumentProvider } from "@/lib/hooks";
 import { RoomProvider, useSelf } from "@/liveblocks.config";
-import { Document, ErrorData } from "@/types";
 import { DocumentSpinner } from "@/primitives/Spinner";
+import { Document, ErrorData } from "@/types";
 
 type Props = {
   initialDocument: Document | null;
@@ -45,7 +45,13 @@ export function TextDocumentView({ initialDocument, initialError }: Props) {
         initialPresence={{ cursor: null }}
         initialStorage={{ notes: new LiveMap() }}
       >
-        <ClientSideSuspense fallback={<DocumentLayout header={<DocumentHeaderSkeleton />}><DocumentSpinner /></DocumentLayout>}>
+        <ClientSideSuspense
+          fallback={
+            <DocumentLayout header={<DocumentHeaderSkeleton />}>
+              <DocumentSpinner />
+            </DocumentLayout>
+          }
+        >
           {() => <RoomContent initialDocument={initialDocument} />}
         </ClientSideSuspense>
       </RoomProvider>
@@ -60,7 +66,11 @@ function RoomContent({ initialDocument }: { initialDocument: Document }) {
 
   // Wait until we have confirmed user data from Liveblocks
   if (!self || !self.info) {
-    return <DocumentLayout header={<DocumentHeaderSkeleton />}><DocumentSpinner /></DocumentLayout>;
+    return (
+      <DocumentLayout header={<DocumentHeaderSkeleton />}>
+        <DocumentSpinner />
+      </DocumentLayout>
+    );
   }
 
   return (
