@@ -1,23 +1,60 @@
 "use client";
 
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { MarketingLayout } from "@/layouts/Marketing";
+import { DOCUMENT_CATEGORIES, PublishedDocument } from "@/types/published-document";
 import styles from "./docs.module.css";
+
+// Document type for internal use
+interface DocumentItem {
+  id: string;
+  title: string;
+  category: string;
+  description: string;
+  lastUpdated: string;
+  link: string;
+  chapters: { id: string; title: string; description?: string }[];
+  isPublished?: boolean;
+}
 
 export default function DocsPage() {
   const [activeCategory, setActiveCategory] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
+  const [publishedDocs, setPublishedDocs] = useState<DocumentItem[]>([]);
 
-  // Document categories
+  // Fetch published documents on mount
+  useEffect(() => {
+    async function fetchPublishedDocs() {
+      try {
+        const response = await fetch("/api/public-documents");
+        const data = await response.json();
+        const formatted: DocumentItem[] = (data.documents || []).map((doc: PublishedDocument) => ({
+          id: doc.id,
+          title: doc.title,
+          category: doc.category,
+          description: doc.description,
+          lastUpdated: new Date(doc.lastUpdated).toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          }),
+          link: `/docs/${doc.id}`,
+          chapters: doc.chapters,
+          isPublished: true,
+        }));
+        setPublishedDocs(formatted);
+      } catch (error) {
+        console.error("Error fetching published documents:", error);
+      }
+    }
+    fetchPublishedDocs();
+  }, []);
+
+  // Document categories - includes all possible categories
   const categories = [
     { id: "all", name: "All Documents" },
-    { id: "whitepaper", name: "Whitepaper" },
-    { id: "education", name: "Educational Framework" },
-    { id: "blockchain", name: "Blockchain Integration" },
-    { id: "legal", name: "Legal & Compliance" },
-    { id: "tokenomics", name: "Tokenomics" },
-    { id: "technical", name: "Technical Documentation" },
+    ...DOCUMENT_CATEGORIES,
   ];
 
   // Document data
@@ -315,8 +352,11 @@ export default function DocsPage() {
     },
   ];
 
+  // Merge static and published documents (published first, then static)
+  const allDocuments: DocumentItem[] = [...publishedDocs, ...documents];
+
   // Filter documents based on active category and search query
-  const filteredDocuments = documents.filter((doc) => {
+  const filteredDocuments = allDocuments.filter((doc) => {
     const matchesCategory =
       activeCategory === "all" || doc.category === activeCategory;
     const matchesSearch =
@@ -325,7 +365,7 @@ export default function DocsPage() {
       doc.chapters.some(
         (chapter) =>
           chapter.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          chapter.description.toLowerCase().includes(searchQuery.toLowerCase())
+          (chapter.description?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false)
       );
     return matchesCategory && matchesSearch;
   });

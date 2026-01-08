@@ -13,6 +13,7 @@ export * from "./getNextDocuments";
 export * from "./getSpecificDocuments";
 export * from "./publishDocument";
 export * from "./getPublishedDocuments";
+export * from "./publishDocumentToPublic";
 export * from "./removeGroupAccess";
 export * from "./removeUserAccess";
 export * from "./renameDocument";

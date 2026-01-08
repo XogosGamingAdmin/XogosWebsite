@@ -6,6 +6,7 @@ import { ToolbarCommands } from "./ToolbarCommands";
 import { ToolbarHeadings } from "./ToolbarHeadings";
 import { ToolbarInline } from "./ToolbarInline";
 import { ToolbarMedia } from "./ToolbarMedia";
+import { ToolbarPublish } from "./ToolbarPublish";
 import { ToolbarThread } from "./ToolbarThread";
 import styles from "./Toolbar.module.css";
 
@@ -31,6 +32,8 @@ export function Toolbar({ editor }: Props) {
       <ToolbarMedia editor={editor} />
       <div className={styles.toolbarSeparator} />
       <ToolbarThread editor={editor} />
+      <div className={styles.toolbarSpacer} />
+      <ToolbarPublish editor={editor} />
     </div>
   );
 }

@@ -50,3 +50,11 @@
 .headingsSelect {
   width: 130px;
 }
+
+.toolbarSpacer {
+  flex: 1;
+}
+
+.publishButton {
+  margin-left: var(--space-4);
+}

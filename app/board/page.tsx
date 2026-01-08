@@ -7,7 +7,18 @@ import React, { useEffect, useState } from "react";
 import { MarketingLayout } from "@/layouts/Marketing";
 import { getFinancials } from "@/lib/actions/getFinancials";
 import { getStatistics } from "@/lib/actions/getStatistics";
+import { DOCUMENT_CATEGORIES, PublishedDocument } from "@/types/published-document";
 import styles from "./page.module.css";
+
+// Type for board document display
+interface BoardDocument {
+  name: string;
+  type: string;
+  status: string;
+  date: string;
+  link: string;
+  icon: string;
+}
 
 // Real board members with proper seating positions
 const boardMembers = [
@@ -96,24 +107,8 @@ const staticMetrics = [
   },
 ];
 
-// Real documents from the system
-const boardDocuments = [
-  {
-    name: "Xogos Dual-Token Economy Whitepaper",
-    type: "Strategic",
-    status: "Published",
-    date: "December 2024",
-    link: "/docs/tokenomics",
-    icon: "📊",
-  },
-  {
-    name: "Technical Architecture Specification",
-    type: "Technical",
-    status: "Final",
-    date: "December 2024",
-    link: "/docs/technical",
-    icon: "⚙️",
-  },
+// Static documents (sorted by date, most recent first)
+const staticBoardDocuments: BoardDocument[] = [
   {
     name: "Enterprise Risk Management",
     type: "Risk",
@@ -130,7 +125,38 @@ const boardDocuments = [
     link: "/initiatives",
     icon: "📋",
   },
+  {
+    name: "Xogos Dual-Token Economy Whitepaper",
+    type: "Strategic",
+    status: "Published",
+    date: "December 2024",
+    link: "/docs/tokenomics",
+    icon: "📊",
+  },
+  {
+    name: "Technical Architecture Specification",
+    type: "Technical",
+    status: "Final",
+    date: "December 2024",
+    link: "/docs/technical",
+    icon: "⚙️",
+  },
 ];
+
+// Helper to get category icon
+function getCategoryIcon(category: string): string {
+  const iconMap: Record<string, string> = {
+    whitepaper: "📄",
+    education: "🎓",
+    blockchain: "⛓️",
+    legal: "⚖️",
+    tokenomics: "📊",
+    technical: "⚙️",
+    governance: "📋",
+    strategic: "🎯",
+  };
+  return iconMap[category] || "📄";
+}
 
 export default function BoardPage() {
   const { data: session, status } = useSession();
@@ -148,6 +174,40 @@ export default function BoardPage() {
     revenue: 0,
     expenses: 0,
   });
+  const [publishedDocs, setPublishedDocs] = useState<BoardDocument[]>([]);
+
+  // Fetch published documents for board display
+  useEffect(() => {
+    async function fetchPublishedDocs() {
+      try {
+        const response = await fetch("/api/public-documents");
+        const data = await response.json();
+        const formatted: BoardDocument[] = (data.documents || [])
+          .filter((doc: PublishedDocument) => doc.showOnBoard)
+          .map((doc: PublishedDocument) => {
+            const categoryName = DOCUMENT_CATEGORIES.find(c => c.id === doc.category)?.name || doc.category;
+            return {
+              name: doc.title,
+              type: categoryName,
+              status: "Published",
+              date: new Date(doc.publishedAt).toLocaleDateString("en-US", {
+                month: "long",
+                year: "numeric",
+              }),
+              link: `/docs/${doc.id}`,
+              icon: getCategoryIcon(doc.category),
+            };
+          });
+        setPublishedDocs(formatted);
+      } catch (error) {
+        console.error("Error fetching published documents:", error);
+      }
+    }
+    fetchPublishedDocs();
+  }, []);
+
+  // Merge published docs with static docs (published first)
+  const boardDocuments = [...publishedDocs, ...staticBoardDocuments];
 
   // Calculate next board meeting (last Thursday of month at 5 PM ET)
   const getNextMeeting = () => {
