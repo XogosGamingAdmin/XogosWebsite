@@ -66,10 +66,20 @@ export function MarketingHeader({
               <Link href="/blog" className={styles.navLink}>
                 Blog
               </Link>
+              <Link
+                href="/signin"
+                className={styles.mobileSignInButton}
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Board Sign In
+              </Link>
             </div>
           </nav>
         </div>
         <div className={styles.actionButtons}>
+          <Link href="/signin" className={styles.signInButton}>
+            Board Sign In
+          </Link>
           <button
             className={clsx(
               styles.mobileMenuToggle,

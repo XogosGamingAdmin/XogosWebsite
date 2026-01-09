@@ -249,3 +249,65 @@
   width: 16px;
   height: 16px;
 }
+
+.signInButton {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.6rem 1.25rem;
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #ffffff;
+  background: linear-gradient(135deg, #e62739 0%, #c41e30 100%);
+  border: none;
+  border-radius: 6px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(230, 39, 57, 0.3);
+}
+
+.signInButton:hover {
+  background: linear-gradient(135deg, #ff3347 0%, #e62739 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(230, 39, 57, 0.4);
+}
+
+/* Hide sign-in button on mobile - show in mobile menu instead */
+@media (max-width: 1024px) {
+  .signInButton {
+    display: none;
+  }
+}
+
+/* Mobile sign-in button - only visible in mobile menu */
+.mobileSignInButton {
+  display: none;
+}
+
+@media (max-width: 1024px) {
+  .mobileSignInButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 0.8rem 1.5rem;
+    margin-top: 1rem;
+    font-family: "Montserrat", sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #ffffff;
+    background: linear-gradient(135deg, #e62739 0%, #c41e30 100%);
+    border: none;
+    border-radius: 8px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(230, 39, 57, 0.3);
+  }
+
+  .mobileSignInButton:hover {
+    background: linear-gradient(135deg, #ff3347 0%, #e62739 100%);
+    box-shadow: 0 4px 12px rgba(230, 39, 57, 0.4);
+  }
+}
