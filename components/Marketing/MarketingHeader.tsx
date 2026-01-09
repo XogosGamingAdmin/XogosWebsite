@@ -71,14 +71,14 @@ export function MarketingHeader({
                 className={styles.mobileSignInButton}
                 onClick={() => setMobileMenuOpen(false)}
               >
-                Board Sign In
+                Sign In
               </Link>
             </div>
           </nav>
         </div>
         <div className={styles.actionButtons}>
           <Link href="/signin" className={styles.signInButton}>
-            Board Sign In
+            Sign In
           </Link>
           <button
             className={clsx(
