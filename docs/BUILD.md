@@ -1,7 +1,7 @@
 # Xogos Gaming - Build Documentation
 
-**Last Updated:** 2025-12-29
-**Status:** Complete
+**Last Updated:** 2026-01-08
+**Status:** In Progress - Document Publishing System
 **Platform:** XogosBoard (Next.js 14)
 **Deployment:** AWS Amplify
 
@@ -1005,6 +1005,119 @@ When modifying build configuration:
 ---
 
 ## Changelog
+
+### 2026-01-08 - Document Publishing System Implementation
+**Status:** In Progress - Deployed, awaiting Publish button visibility fix
+
+#### Document Publishing Feature (⏳ IN PROGRESS)
+**Goal:** Allow users to create documents in `/dashboard/documents` and publish them to the public website on `/docs` and `/board` pages.
+
+**Features Implemented:**
+
+1. ✅ **Board Documents Reordering**
+   - Reorganized Board Documents card on `/board` page
+   - Now sorted by date with most recent first (January 2025 → December 2024)
+
+2. ✅ **Published Documents Type System**
+   - Created `types/published-document.ts` with full type definitions
+   - Categories: Whitepaper, Education, Blockchain, Legal, Tokenomics, Technical, Governance, Strategic
+   - Includes chapter auto-extraction from H1/H2 headings
+
+3. ✅ **JSON Storage for Published Documents**
+   - Created `data/published-docs.json` for storing published document data
+   - Stores: title, category, description (SEO), HTML content, chapters, author info, timestamps
+
+4. ✅ **Publish Document Modal**
+   - Created `components/Documents/DocumentPublishDialog.tsx`
+   - Category dropdown selector
+   - Description textarea for SEO metadata
+   - Publish/Cancel buttons with loading state
+
+5. ✅ **Server Actions for Publishing**
+   - Created `lib/actions/publishDocumentToPublic.ts`
+   - `publishDocumentToPublic()` - Extracts HTML, generates chapters, saves to JSON
+   - `unpublishDocumentFromPublic()` - Removes document from public pages
+   - `getPublicDocuments()` - Retrieves all published documents
+   - `getPublicDocumentBySlug()` - Retrieves single document by URL slug
+
+6. ✅ **Publish Button in Text Editor**
+   - Created `components/TextEditor/ToolbarPublish.tsx`
+   - Added to toolbar in `components/TextEditor/Toolbar.tsx`
+   - Uses `flex: 1` spacer to position on right side of toolbar
+
+7. ✅ **Public API Endpoint**
+   - Created `app/api/public-documents/route.ts`
+   - Returns published documents for client-side fetching
+   - 60-second revalidation for caching
+
+8. ✅ **Dynamic Document View Page**
+   - Created `app/docs/[slug]/page.tsx`
+   - SEO metadata generation from document description
+   - Table of contents from chapters
+   - Styled article content with proper typography
+   - Back navigation to /docs
+
+9. ✅ **Updated /docs Page**
+   - Fetches published documents from API
+   - Merges with existing static documents
+   - Published docs appear first in the list
+
+10. ✅ **Updated /board Page**
+    - Fetches published documents marked `showOnBoard: true`
+    - Merges with static Board Documents
+    - Published docs appear first with category icons
+
+#### Files Created
+| File | Purpose |
+|------|---------|
+| `types/published-document.ts` | Type definitions and category constants |
+| `data/published-docs.json` | JSON storage for published documents |
+| `components/Documents/DocumentPublishDialog.tsx` | Publish modal component |
+| `components/Documents/DocumentPublishDialog.module.css` | Modal styles |
+| `components/TextEditor/ToolbarPublish.tsx` | Publish button for editor |
+| `lib/actions/publishDocumentToPublic.ts` | Server actions for publishing |
+| `app/api/public-documents/route.ts` | API endpoint for fetching docs |
+| `app/docs/[slug]/page.tsx` | Dynamic published document page |
+| `app/docs/[slug]/document.module.css` | Published document page styles |
+
+#### Files Modified
+| File | Changes |
+|------|---------|
+| `app/board/page.tsx` | Reordered docs, added published docs fetching |
+| `app/docs/page.tsx` | Added published docs fetching and merging |
+| `components/TextEditor/Toolbar.tsx` | Added ToolbarPublish component |
+| `components/TextEditor/Toolbar.module.css` | Added width/flex and publish button styles |
+| `components/Documents/index.ts` | Export DocumentPublishDialog |
+| `lib/actions/index.ts` | Export publishDocumentToPublic actions |
+| `types/index.ts` | Export published-document types |
+
+#### Key Commits
+- `ddee9b1` - Add document publishing system for public docs pages
+- `068b152` - Fix toolbar width so Publish button displays correctly
+
+#### Known Issue - Awaiting Fix
+**Problem:** Publish button not visible in text editor toolbar on live site
+**Potential Cause:** Toolbar CSS width not set, causing spacer to not push button into view
+**Fix Deployed:** Commit `068b152` adds `width: 100%` and `flex: 1` to toolbar
+**Testing Required:** After AWS Amplify deploys, verify Publish button appears on right side of text editor toolbar
+
+#### Publishing Workflow (After Fix)
+```
+1. User creates/edits document at /dashboard/documents
+2. Opens text document in editor
+3. Clicks "Publish" button (right side of toolbar)
+4. Modal appears with:
+   - Category dropdown
+   - Description field (for SEO)
+5. User clicks "Publish to Public"
+6. Document saved to data/published-docs.json
+7. Document appears on:
+   - /docs page (in documents grid)
+   - /board page (in Board Documents card)
+   - /docs/[slug] (individual document page)
+```
+
+---
 
 ### 2026-01-01 - Text Editor Bug Fix & Mobile Menu Implementation
 **Status:** In Progress - Final fix deployed, awaiting testing
