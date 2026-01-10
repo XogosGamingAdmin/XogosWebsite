@@ -1,7 +1,7 @@
 # Xogos Gaming - Build Documentation
 
-**Last Updated:** 2026-01-08
-**Status:** In Progress - Document Publishing System
+**Last Updated:** 2026-01-10
+**Status:** Active Development
 **Platform:** XogosBoard (Next.js 14)
 **Deployment:** AWS Amplify
 
@@ -19,6 +19,75 @@ This document defines the complete build process for the Xogos platform. I am re
 - All team members can successfully build the project
 
 **Any build failures are my responsibility to fix.**
+
+---
+
+## Quick Start for New Sessions
+
+**Production URL:** https://www.histronics.com
+
+### Project Structure Overview
+```
+XogosBoard/
+├── app/                    # Next.js App Router pages
+│   ├── api/               # API routes
+│   ├── board/             # Board portal pages (/board, /board/*)
+│   ├── dashboard/         # Authenticated dashboard (/dashboard/*)
+│   ├── docs/              # Public documentation pages
+│   ├── text/[id]/         # Collaborative text editor
+│   ├── whiteboard/[id]/   # Collaborative whiteboard
+│   └── signin/            # Authentication page
+├── components/            # React components
+│   ├── Documents/         # Document management components
+│   ├── Marketing/         # Public site header/footer
+│   └── TextEditor/        # Tiptap collaborative editor
+├── layouts/               # Page layouts (Marketing, Document, etc.)
+├── lib/actions/           # Server actions for data operations
+├── data/                  # Static data and JSON storage
+│   └── published-docs.json # Published documents storage
+├── types/                 # TypeScript type definitions
+└── docs/                  # Project documentation
+```
+
+### Key Technologies
+- **Framework:** Next.js 14 (App Router)
+- **Real-time Collaboration:** Liveblocks + Yjs
+- **Rich Text Editor:** Tiptap
+- **Authentication:** NextAuth.js v5 with Google OAuth
+- **Styling:** CSS Modules
+- **Deployment:** AWS Amplify with CloudFront CDN
+
+### Current State (as of 2026-01-10)
+
+**Working Features:**
+- Homepage with Sign In button (top right)
+- Google OAuth authentication at `/signin`
+- Dashboard for authenticated users at `/dashboard`
+- Collaborative text editor at `/text/[id]`
+- Collaborative whiteboard at `/whiteboard/[id]`
+- Board portal at `/board` with live statistics
+- Public documentation at `/docs`
+
+**In Progress:**
+- Document Publishing System - Publish button may not be visible in text editor toolbar (CSS fix deployed, awaiting verification)
+
+**Known Issues:**
+- Verify Publish button appears on right side of text editor toolbar after deployment
+
+### Authentication Flow
+```
+/signin → Google OAuth → /dashboard/documents
+                      → Can create text/whiteboard documents
+                      → Documents stored in Liveblocks
+```
+
+### Document Publishing Flow (When Working)
+```
+/dashboard/documents → Create/Edit document → /text/[id]
+                    → Click "Publish" button in toolbar
+                    → Select category + add description
+                    → Document appears on /docs and /board
+```
 
 ---
 
@@ -1006,8 +1075,27 @@ When modifying build configuration:
 
 ## Changelog
 
+### 2026-01-10 - Sign-In Button & Documentation Update
+**Status:** Complete
+
+#### Sign-In Button Added to Homepage Header
+- Added "Sign In" button to top right corner of homepage header
+- Desktop: Red gradient button with hover effects
+- Mobile: Full-width button in hamburger menu
+- Links to `/signin` for Google OAuth authentication
+
+**Files Modified:**
+- `components/Marketing/MarketingHeader.tsx` - Added Sign In links
+- `components/Marketing/MarketingHeader.module.css` - Added button styles
+
+**Commits:**
+- `da7348f` - Add Board Sign In button to homepage header
+- `9be4b71` - Simplify Sign In button text
+
+---
+
 ### 2026-01-08 - Document Publishing System Implementation
-**Status:** In Progress - Deployed, awaiting Publish button visibility fix
+**Status:** In Progress - Awaiting Publish button visibility testing
 
 #### Document Publishing Feature (⏳ IN PROGRESS)
 **Goal:** Allow users to create documents in `/dashboard/documents` and publish them to the public website on `/docs` and `/board` pages.
