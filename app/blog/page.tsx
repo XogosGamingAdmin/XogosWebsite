@@ -5,7 +5,6 @@ import Link from "next/link";
 import React, { useState, useEffect } from "react";
 import { MarketingLayout } from "@/layouts/Marketing/Marketing";
 import { NewsletterForm } from "@/components/Newsletter";
-import { getBlogPosts } from "@/lib/actions/getBlogPosts";
 import styles from "./page.module.css";
 
 // Blog post preview interface (without full content for listing)
@@ -230,15 +229,17 @@ export default function BlogPage() {
   const [categories, setCategories] = useState<string[]>(baseCategories);
   const [loading, setLoading] = useState(true);
 
-  // Load posts from markdown files on mount
+  // Load posts from API on mount
   useEffect(() => {
     async function loadPosts() {
       try {
-        const result = await getBlogPosts();
+        const response = await fetch("/api/blog");
+        const result = await response.json();
+
         if (result.data && result.data.length > 0) {
-          // Merge static posts with markdown posts, avoiding duplicates by ID
+          // Merge static posts with API posts, avoiding duplicates by ID
           const staticIds = new Set(staticBlogPostPreviews.map((p) => p.id));
-          const newPosts = result.data.filter((p) => !staticIds.has(p.id));
+          const newPosts = result.data.filter((p: BlogPostPreview) => !staticIds.has(p.id));
           const mergedPosts = [...staticBlogPostPreviews, ...newPosts];
 
           // Sort by date (newest first)

@@ -5,8 +5,25 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import React, { useState, useEffect } from "react";
 import { MarketingLayout } from "@/layouts/Marketing/Marketing";
-import { getBlogPosts, BlogPost } from "@/lib/actions/getBlogPosts";
 import styles from "./page.module.css";
+
+// Blog post interface
+interface BlogPost {
+  id: string;
+  title: string;
+  excerpt: string;
+  content: string;
+  author: {
+    name: string;
+    avatar: string;
+    role: string;
+  };
+  category: string;
+  publishedAt: string;
+  readTime: string;
+  imageUrl: string;
+  featured?: boolean;
+}
 
 // Static blog posts with full content (for featured articles)
 const staticBlogPosts: BlogPost[] = [
@@ -310,17 +327,21 @@ export default function BlogPostPage() {
         return;
       }
 
-      // Load from generated posts
+      // Load from API
       try {
-        const result = await getBlogPosts();
+        const response = await fetch(`/api/blog/${slug}`);
+        const result = await response.json();
+
         if (result.data) {
-          setAllPosts(result.data);
-          const foundPost = result.data.find((p) => p.id === slug);
-          if (foundPost) {
-            setPost(foundPost);
-            // Get related posts from same category
-            const related = result.data
-              .filter((p) => p.id !== slug && p.category === foundPost.category)
+          setPost(result.data);
+
+          // Fetch related posts
+          const allResponse = await fetch("/api/blog");
+          const allResult = await allResponse.json();
+          if (allResult.data) {
+            setAllPosts(allResult.data);
+            const related = allResult.data
+              .filter((p: BlogPost) => p.id !== slug && p.category === result.data.category)
               .slice(0, 2);
             setRelatedPosts(related);
           }
