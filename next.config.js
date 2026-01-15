@@ -33,7 +33,7 @@ module.exports = {
     LIVEBLOCKS_SECRET_KEY: process.env.LIVEBLOCKS_SECRET_KEY,
   },
   images: {
-    domains: ["liveblocks.io"],
+    domains: ["liveblocks.io", "static.wixstatic.com"],
   },
   webpack: (config, { isServer }) => {
     if (!isServer) {
