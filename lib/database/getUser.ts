@@ -1,6 +1,5 @@
 import { colors } from "@/data/colors";
 import { users } from "@/data/users";
-import { db } from "@/lib/database";
 
 /**
  * Get User
@@ -10,22 +9,26 @@ import { db } from "@/lib/database";
  * @param userId - The user's id (email)
  */
 export async function getUser(userId: string) {
-  // Try to get user from database first
-  try {
-    const dbUser = await db.getUserById(userId);
-    if (dbUser) {
-      const color = getRandom(colors, userId);
-      return {
-        id: dbUser.id,
-        name: dbUser.name,
-        avatar: dbUser.avatar,
-        groupIds: dbUser.group_ids || [],
-        color,
-      };
+  // Try to get user from database first (server-side only)
+  if (typeof window === "undefined") {
+    try {
+      // Dynamic import to avoid bundling pg for client
+      const { db } = await import("@/lib/database");
+      const dbUser = await db.getUserById(userId);
+      if (dbUser) {
+        const color = getRandom(colors, userId);
+        return {
+          id: dbUser.id,
+          name: dbUser.name,
+          avatar: dbUser.avatar,
+          groupIds: dbUser.group_ids || [],
+          color,
+        };
+      }
+    } catch (error) {
+      // Database not available, fall back to static data
+      console.warn("Database not available, using static user data");
     }
-  } catch (error) {
-    // Database not available, fall back to static data
-    console.warn("Database not available, using static user data");
   }
 
   // Fallback to static data

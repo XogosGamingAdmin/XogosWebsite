@@ -1,5 +1,4 @@
 import { users } from "@/data/users";
-import { db } from "@/lib/database";
 import { Document, User } from "@/types";
 import { getUser, getRandom } from "./getUser";
 import { colors } from "@/data/colors";
@@ -40,31 +39,35 @@ export async function getUsers({ userIds, search }: Props) {
     return userList;
   }
 
-  // Get all users - try database first
-  try {
-    const dbUsers = await db.getAllUsers();
-    if (dbUsers && dbUsers.length > 0) {
-      let userList = dbUsers.map((dbUser) => ({
-        id: dbUser.id,
-        name: dbUser.name,
-        avatar: dbUser.avatar,
-        groupIds: dbUser.group_ids || [],
-        color: getRandom(colors, dbUser.id),
-      }));
+  // Get all users - try database first (server-side only)
+  if (typeof window === "undefined") {
+    try {
+      // Dynamic import to avoid bundling pg for client
+      const { db } = await import("@/lib/database");
+      const dbUsers = await db.getAllUsers();
+      if (dbUsers && dbUsers.length > 0) {
+        let userList = dbUsers.map((dbUser) => ({
+          id: dbUser.id,
+          name: dbUser.name,
+          avatar: dbUser.avatar,
+          groupIds: dbUser.group_ids || [],
+          color: getRandom(colors, dbUser.id),
+        }));
 
-      if (search) {
-        const term = search.toLowerCase();
-        userList = userList.filter(
-          (user) =>
-            user.name.toLowerCase().includes(term) ||
-            user.id.toLowerCase().includes(term)
-        );
+        if (search) {
+          const term = search.toLowerCase();
+          userList = userList.filter(
+            (user) =>
+              user.name.toLowerCase().includes(term) ||
+              user.id.toLowerCase().includes(term)
+          );
+        }
+
+        return userList;
       }
-
-      return userList;
+    } catch (error) {
+      console.warn("Database not available, using static user data");
     }
-  } catch (error) {
-    console.warn("Database not available, using static user data");
   }
 
   // Fallback to static data
