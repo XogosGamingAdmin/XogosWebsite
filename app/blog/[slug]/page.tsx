@@ -3,30 +3,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { MarketingLayout } from "@/layouts/Marketing/Marketing";
+import { getBlogPosts, BlogPost } from "@/lib/actions/getBlogPosts";
 import styles from "./page.module.css";
 
-// Blog post interface
-interface BlogPost {
-  id: string;
-  title: string;
-  excerpt: string;
-  content: string;
-  author: {
-    name: string;
-    avatar: string;
-    role: string;
-  };
-  category: string;
-  publishedAt: string;
-  readTime: string;
-  imageUrl: string;
-  featured?: boolean;
-}
-
-// Sample blog posts data (same as main blog page - in production this would be fetched from a CMS/database)
-const blogPosts: BlogPost[] = [
+// Static blog posts with full content (for featured articles)
+const staticBlogPosts: BlogPost[] = [
   {
     id: "transforming-education-through-gaming",
     title: "Transforming Education Through Gaming: The Xogos Vision",
@@ -304,22 +287,69 @@ const blogPosts: BlogPost[] = [
   },
 ];
 
-// Get related posts based on category
-const getRelatedPosts = (currentPost: BlogPost) => {
-  return blogPosts
-    .filter(
-      (post) =>
-        post.id !== currentPost.id && post.category === currentPost.category
-    )
-    .slice(0, 2);
-};
-
 export default function BlogPostPage() {
   const params = useParams();
   const slug = params?.slug as string;
+  const [post, setPost] = useState<BlogPost | null>(null);
+  const [relatedPosts, setRelatedPosts] = useState<BlogPost[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [allPosts, setAllPosts] = useState<BlogPost[]>([]);
 
-  // Find the current post
-  const post = blogPosts.find((p) => p.id === slug);
+  useEffect(() => {
+    async function loadPost() {
+      // First check static posts (they have full content)
+      const staticPost = staticBlogPosts.find((p) => p.id === slug);
+      if (staticPost) {
+        setPost(staticPost);
+        setRelatedPosts(
+          staticBlogPosts
+            .filter((p) => p.id !== slug && p.category === staticPost.category)
+            .slice(0, 2)
+        );
+        setLoading(false);
+        return;
+      }
+
+      // Load from generated posts
+      try {
+        const result = await getBlogPosts();
+        if (result.data) {
+          setAllPosts(result.data);
+          const foundPost = result.data.find((p) => p.id === slug);
+          if (foundPost) {
+            setPost(foundPost);
+            // Get related posts from same category
+            const related = result.data
+              .filter((p) => p.id !== slug && p.category === foundPost.category)
+              .slice(0, 2);
+            setRelatedPosts(related);
+          }
+        }
+      } catch (error) {
+        console.error("Error loading post:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    if (slug) {
+      loadPost();
+    }
+  }, [slug]);
+
+  if (loading) {
+    return (
+      <MarketingLayout>
+        <main className={styles.main}>
+          <section className={styles.notFoundSection}>
+            <div className={styles.notFoundContent}>
+              <p>Loading article...</p>
+            </div>
+          </section>
+        </main>
+      </MarketingLayout>
+    );
+  }
 
   if (!post) {
     return (
@@ -342,7 +372,8 @@ export default function BlogPostPage() {
     );
   }
 
-  const relatedPosts = getRelatedPosts(post);
+  // Format excerpt as content if no content available
+  const displayContent = post.content || `<p>${post.excerpt}</p>`;
 
   return (
     <MarketingLayout>
@@ -359,6 +390,7 @@ export default function BlogPostPage() {
               fill
               className={styles.heroImage}
               priority
+              unoptimized={post.imageUrl.startsWith("http")}
             />
             <div className={styles.heroOverlay}></div>
           </div>
@@ -407,7 +439,7 @@ export default function BlogPostPage() {
           <div className={styles.articleContainer}>
             <div
               className={styles.articleContent}
-              dangerouslySetInnerHTML={{ __html: post.content }}
+              dangerouslySetInnerHTML={{ __html: displayContent }}
             />
           </div>
         </article>
@@ -478,6 +510,7 @@ export default function BlogPostPage() {
                         alt={relatedPost.title}
                         fill
                         className={styles.relatedImage}
+                        unoptimized={relatedPost.imageUrl.startsWith("http")}
                       />
                     </div>
                     <div className={styles.relatedContent}>
