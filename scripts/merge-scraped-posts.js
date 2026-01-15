@@ -8,7 +8,6 @@ const path = require("path");
 const matter = require("gray-matter");
 
 const SCRAPED_FILE = path.join(process.cwd(), "data/scraped-posts.json");
-const SCRAPED_FULL_FILE = path.join(process.cwd(), "data/scraped-posts-full.json");
 const POSTS_DIR = path.join(process.cwd(), "content/posts");
 const OUTPUT_FILE = path.join(process.cwd(), "data/generated-posts.json");
 
@@ -35,7 +34,8 @@ function cleanTitle(title) {
   return title
     .replace(/^Chapter \d+ - Chapter \d+:\s*/i, "")
     .replace(/^Chapter \d+:\s*/i, "")
-    .replace(/^\d+\s*[-–]\s*/i, "")
+    .replace(/^Chapter #?\d+\s*[-–:]\s*/i, "")
+    .replace(/^\d+\.\s*/i, "")
     .trim();
 }
 
@@ -60,7 +60,6 @@ function formatDate(dateStr) {
     });
   }
 
-  // Already formatted date
   return dateStr;
 }
 
@@ -85,19 +84,100 @@ function slugify(str) {
     .replace(/^-|-$/g, "");
 }
 
+/**
+ * Convert markdown content to HTML with proper formatting
+ */
+function markdownToHtml(content) {
+  if (!content) return "";
+
+  // Split into paragraphs
+  const blocks = content.split(/\n\n+/);
+  let html = "";
+
+  for (const block of blocks) {
+    const trimmed = block.trim();
+    if (!trimmed) continue;
+
+    // Check for headings
+    if (trimmed.startsWith("# ")) {
+      html += `<h1>${trimmed.slice(2).trim()}</h1>\n\n`;
+    } else if (trimmed.startsWith("## ")) {
+      html += `<h2>${trimmed.slice(3).trim()}</h2>\n\n`;
+    } else if (trimmed.startsWith("### ")) {
+      html += `<h3>${trimmed.slice(4).trim()}</h3>\n\n`;
+    } else if (trimmed.startsWith("#### ")) {
+      html += `<h4>${trimmed.slice(5).trim()}</h4>\n\n`;
+    }
+    // Bold text as heading (** text **)
+    else if (trimmed.startsWith("**") && trimmed.endsWith("**") && !trimmed.slice(2, -2).includes("**")) {
+      const headingText = trimmed.slice(2, -2).trim();
+      if (headingText && headingText !== " ") {
+        html += `<h3>${headingText}</h3>\n\n`;
+      }
+    }
+    // Empty bold markers (** **)
+    else if (trimmed === "** **" || trimmed === "**  **") {
+      // Skip empty markers
+      continue;
+    }
+    // List items
+    else if (trimmed.startsWith("- ") || trimmed.startsWith("* ")) {
+      const items = trimmed.split("\n").filter(line => line.trim().startsWith("- ") || line.trim().startsWith("* "));
+      html += "<ul>\n";
+      for (const item of items) {
+        const itemText = item.replace(/^[\s\-\*]+/, "").trim();
+        html += `  <li>${formatInlineMarkdown(itemText)}</li>\n`;
+      }
+      html += "</ul>\n\n";
+    }
+    // Numbered list
+    else if (/^\d+\.\s/.test(trimmed)) {
+      const items = trimmed.split("\n").filter(line => /^\d+\.\s/.test(line.trim()));
+      html += "<ol>\n";
+      for (const item of items) {
+        const itemText = item.replace(/^\d+\.\s*/, "").trim();
+        html += `  <li>${formatInlineMarkdown(itemText)}</li>\n`;
+      }
+      html += "</ol>\n\n";
+    }
+    // Regular paragraph
+    else {
+      const formatted = formatInlineMarkdown(trimmed);
+      if (formatted && formatted.trim()) {
+        html += `<p>${formatted}</p>\n\n`;
+      }
+    }
+  }
+
+  return html.trim();
+}
+
+/**
+ * Format inline markdown (bold, italic, links)
+ */
+function formatInlineMarkdown(text) {
+  return text
+    // Bold text
+    .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
+    // Italic text
+    .replace(/\*([^*]+)\*/g, "<em>$1</em>")
+    // Links
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>')
+    // Clean up newlines within paragraphs
+    .replace(/\n/g, " ")
+    .trim();
+}
+
 async function main() {
   console.log("Merging scraped posts with existing data...\n");
 
-  // Load scraped posts - prefer full content version if available
+  // Load scraped posts for dates and images
   let scrapedPosts = [];
-  if (fs.existsSync(SCRAPED_FULL_FILE)) {
-    scrapedPosts = JSON.parse(fs.readFileSync(SCRAPED_FULL_FILE, "utf8"));
-    console.log(`Loaded ${scrapedPosts.length} scraped posts (with full content)`);
-  } else if (fs.existsSync(SCRAPED_FILE)) {
+  if (fs.existsSync(SCRAPED_FILE)) {
     scrapedPosts = JSON.parse(fs.readFileSync(SCRAPED_FILE, "utf8"));
-    console.log(`Loaded ${scrapedPosts.length} scraped posts (excerpts only)`);
+    console.log(`Loaded ${scrapedPosts.length} scraped posts for dates/images`);
   } else {
-    console.log("No scraped posts file found. Will use existing markdown files only.");
+    console.log("No scraped posts file found.");
   }
 
   // Create a map of scraped posts by slug for quick lookup
@@ -110,7 +190,7 @@ async function main() {
 
   // Process existing markdown files
   const markdownFiles = findMarkdownFiles(POSTS_DIR);
-  console.log(`Found ${markdownFiles.length} markdown files`);
+  console.log(`Found ${markdownFiles.length} markdown files with full content`);
 
   const postsFromMarkdown = [];
 
@@ -138,7 +218,7 @@ async function main() {
         publishedAt = scraped.publishDate;
       }
       if (!publishedAt || publishedAt === "December 2, 2025") {
-        publishedAt = "January 1, 2025"; // Default fallback
+        publishedAt = "January 1, 2025";
       }
 
       // Determine the best image to use
@@ -147,31 +227,14 @@ async function main() {
         imageUrl = scraped.imageUrl;
       }
 
-      // Use full content from scraping if available, otherwise use markdown content
-      let postContent = "";
-      if (scraped?.fullContent) {
-        postContent = scraped.fullContent;
-      } else if (content) {
-        // Convert markdown content to basic HTML
-        postContent = content
-          .split('\n\n')
-          .filter(p => p.trim())
-          .map(p => {
-            const trimmed = p.trim();
-            if (trimmed.startsWith('# ')) return `<h1>${trimmed.slice(2)}</h1>`;
-            if (trimmed.startsWith('## ')) return `<h2>${trimmed.slice(3)}</h2>`;
-            if (trimmed.startsWith('### ')) return `<h3>${trimmed.slice(4)}</h3>`;
-            if (trimmed.startsWith('**') && trimmed.endsWith('**')) return `<h3>${trimmed.slice(2, -2)}</h3>`;
-            return `<p>${trimmed.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')}</p>`;
-          })
-          .join('\n\n');
-      }
+      // Convert markdown content to HTML
+      const htmlContent = markdownToHtml(content);
 
       postsFromMarkdown.push({
         id: slug,
         title: cleanTitle(scraped?.title || data.title || fileName),
         excerpt: scraped?.excerpt || (data.excerpt && data.excerpt !== "Home" ? data.excerpt : getExcerpt(content)),
-        content: postContent,
+        content: htmlContent,
         author: {
           name: data.author || "Zack Edwards",
           avatar: "/images/board/zack.png",
@@ -192,31 +255,34 @@ async function main() {
   }
 
   // Add any scraped posts that don't have corresponding markdown files
-  // These are the "new" posts that need to be added
   const newPosts = [];
   for (const [slug, scraped] of scrapedMap) {
     if (!scraped.error && scraped.title) {
+      // For posts without markdown, use the excerpt as content
+      const excerptContent = scraped.excerpt ? `<p>${scraped.excerpt}</p>` : "";
+
       newPosts.push({
         id: slug,
         title: cleanTitle(scraped.title),
         excerpt: scraped.excerpt || "",
-        content: scraped.fullContent || `<p>${scraped.excerpt || ""}</p>`,
+        content: excerptContent,
         author: {
           name: "Zack Edwards",
           avatar: "/images/board/zack.png",
           role: "Content Creator",
         },
-        category: "Education", // Default category for new posts
+        category: "Education",
         publishedAt: formatDate(scraped.lastmod) || "January 1, 2025",
-        readTime: scraped.fullContent ? `${Math.ceil(scraped.fullContent.split(/\s+/).length / 200)} min read` : "5 min read",
+        readTime: "5 min read",
         imageUrl: scraped.imageUrl || "/images/fullLogo.jpeg",
         featured: false,
-        isNew: true, // Mark as new for reference
+        isNew: true,
       });
     }
   }
 
-  console.log(`\nNew posts from scraping: ${newPosts.length}`);
+  console.log(`\nPosts from markdown (with full content): ${postsFromMarkdown.length}`);
+  console.log(`New posts from scraping (excerpts only): ${newPosts.length}`);
 
   // Combine all posts
   const allPosts = [...postsFromMarkdown, ...newPosts];
@@ -251,15 +317,10 @@ async function main() {
       console.log(`  ${cat}: ${count}`);
     });
 
-  // Print date range
-  const dates = allPosts
-    .map((p) => new Date(p.publishedAt))
-    .filter((d) => !isNaN(d.getTime()))
-    .sort((a, b) => a - b);
-
-  if (dates.length > 0) {
-    console.log(`\nDate range: ${dates[0].toDateString()} - ${dates[dates.length - 1].toDateString()}`);
-  }
+  // Count posts with full content
+  const withContent = allPosts.filter(p => p.content && p.content.length > 200).length;
+  console.log(`\nPosts with full content: ${withContent}`);
+  console.log(`Posts with excerpts only: ${allPosts.length - withContent}`);
 }
 
 main().catch(console.error);
