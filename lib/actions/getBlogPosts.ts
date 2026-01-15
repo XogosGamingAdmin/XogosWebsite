@@ -1,6 +1,6 @@
 "use server";
 
-// Import generated posts (created at build time by scripts/generate-posts.js)
+// Import generated posts (created at build time by scripts/merge-scraped-posts.js)
 import generatedPosts from "@/data/generated-posts.json";
 
 export interface BlogPost {
@@ -8,6 +8,23 @@ export interface BlogPost {
   title: string;
   excerpt: string;
   content: string;
+  author: {
+    name: string;
+    avatar: string;
+    role: string;
+  };
+  category: string;
+  publishedAt: string;
+  readTime: string;
+  imageUrl: string;
+  featured?: boolean;
+}
+
+// Type for listing (without full content)
+export interface BlogPostPreview {
+  id: string;
+  title: string;
+  excerpt: string;
   author: {
     name: string;
     avatar: string;
@@ -44,16 +61,26 @@ function getCategories(): string[] {
 }
 
 /**
- * Get all blog posts from pre-generated JSON
+ * Get all blog posts for listing (without full content to reduce payload size)
  */
 export async function getBlogPosts(): Promise<{
-  data?: BlogPost[];
+  data?: BlogPostPreview[];
   error?: { message: string };
 }> {
   try {
-    // Use the pre-generated posts from JSON file
-    const posts = generatedPosts as BlogPost[];
-    return { data: posts };
+    // Return posts without the full content field to keep response small
+    const previews: BlogPostPreview[] = posts.map((post) => ({
+      id: post.id,
+      title: post.title,
+      excerpt: post.excerpt,
+      author: post.author,
+      category: post.category,
+      publishedAt: post.publishedAt,
+      readTime: post.readTime,
+      imageUrl: post.imageUrl,
+      featured: post.featured,
+    }));
+    return { data: previews };
   } catch (error) {
     console.error("Error getting blog posts:", error);
     return { error: { message: "Failed to load blog posts" } };

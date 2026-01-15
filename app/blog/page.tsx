@@ -8,12 +8,11 @@ import { NewsletterForm } from "@/components/Newsletter";
 import { getBlogPosts } from "@/lib/actions/getBlogPosts";
 import styles from "./page.module.css";
 
-// Blog post interface
-interface BlogPost {
+// Blog post preview interface (without full content for listing)
+interface BlogPostPreview {
   id: string;
   title: string;
   excerpt: string;
-  content: string;
   author: {
     name: string;
     avatar: string;
@@ -27,13 +26,12 @@ interface BlogPost {
 }
 
 // Static/featured blog posts (always shown)
-const staticBlogPosts: BlogPost[] = [
+const staticBlogPostPreviews: BlogPostPreview[] = [
   {
     id: "transforming-education-through-gaming",
     title: "Transforming Education Through Gaming: The Xogos Vision",
     excerpt:
       "Discover how Xogos is revolutionizing the educational landscape by combining engaging gameplay with meaningful learning experiences that reward students for their achievements.",
-    content: "",
     author: {
       name: "Xogos Team",
       avatar: "/images/fullLogo.jpeg",
@@ -50,7 +48,6 @@ const staticBlogPosts: BlogPost[] = [
     title: "Understanding the Dual-Token Economy: iPlay and iServ",
     excerpt:
       "Learn about our innovative dual-token system that powers the Xogos ecosystem, enabling students to earn rewards while learning and contributing to governance.",
-    content: "",
     author: {
       name: "Xogos Team",
       avatar: "/images/fullLogo.jpeg",
@@ -66,7 +63,6 @@ const staticBlogPosts: BlogPost[] = [
     title: "Bug and Seek: Exploring Nature Through Interactive Gaming",
     excerpt:
       "Our latest science-focused game takes students on an adventure to restore a broken-down insectarium, discovering 220 real-life bugs along the way.",
-    content: "",
     author: {
       name: "Xogos Team",
       avatar: "/images/fullLogo.jpeg",
@@ -82,7 +78,6 @@ const staticBlogPosts: BlogPost[] = [
     title: "From Gameplay to Scholarships: How Token Conversion Works",
     excerpt:
       "A deep dive into how students can convert their earned tokens into real scholarship funds, creating tangible value from educational achievements.",
-    content: "",
     author: {
       name: "Xogos Team",
       avatar: "/images/fullLogo.jpeg",
@@ -98,7 +93,6 @@ const staticBlogPosts: BlogPost[] = [
     title: "Debt-Free Millionaire: Teaching Financial Literacy Through Play",
     excerpt:
       "Preview our upcoming financial literacy game that teaches students essential money management skills through engaging career simulation gameplay.",
-    content: "",
     author: {
       name: "Xogos Team",
       avatar: "/images/fullLogo.jpeg",
@@ -114,7 +108,6 @@ const staticBlogPosts: BlogPost[] = [
     title: "Beyond Digital: Active Incentive Programs for Real-World Learning",
     excerpt:
       "Explore how Xogos extends beyond digital gaming to reward real-world activities like volunteering, physical education, and peer tutoring.",
-    content: "",
     author: {
       name: "Xogos Team",
       avatar: "/images/fullLogo.jpeg",
@@ -141,7 +134,7 @@ const baseCategories = [
 ];
 
 // Blog card component
-const BlogCard = ({ post }: { post: BlogPost }) => {
+const BlogCard = ({ post }: { post: BlogPostPreview }) => {
   return (
     <article className={styles.blogCard}>
       <Link href={`/blog/${post.id}`} className={styles.blogCardLink}>
@@ -184,7 +177,7 @@ const BlogCard = ({ post }: { post: BlogPost }) => {
 };
 
 // Featured blog card component
-const FeaturedBlogCard = ({ post }: { post: BlogPost }) => {
+const FeaturedBlogCard = ({ post }: { post: BlogPostPreview }) => {
   return (
     <article className={styles.featuredCard}>
       <Link href={`/blog/${post.id}`} className={styles.featuredCardLink}>
@@ -233,7 +226,7 @@ const FeaturedBlogCard = ({ post }: { post: BlogPost }) => {
 export default function BlogPage() {
   const [activeCategory, setActiveCategory] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
-  const [allPosts, setAllPosts] = useState<BlogPost[]>(staticBlogPosts);
+  const [allPosts, setAllPosts] = useState<BlogPostPreview[]>(staticBlogPostPreviews);
   const [categories, setCategories] = useState<string[]>(baseCategories);
   const [loading, setLoading] = useState(true);
 
@@ -244,9 +237,9 @@ export default function BlogPage() {
         const result = await getBlogPosts();
         if (result.data && result.data.length > 0) {
           // Merge static posts with markdown posts, avoiding duplicates by ID
-          const staticIds = new Set(staticBlogPosts.map((p) => p.id));
+          const staticIds = new Set(staticBlogPostPreviews.map((p) => p.id));
           const newPosts = result.data.filter((p) => !staticIds.has(p.id));
-          const mergedPosts = [...staticBlogPosts, ...newPosts];
+          const mergedPosts = [...staticBlogPostPreviews, ...newPosts];
 
           // Sort by date (newest first)
           mergedPosts.sort((a, b) => {
