@@ -8,6 +8,7 @@ const path = require("path");
 const matter = require("gray-matter");
 
 const SCRAPED_FILE = path.join(process.cwd(), "data/scraped-posts.json");
+const SCRAPED_FULL_FILE = path.join(process.cwd(), "data/scraped-posts-full.json");
 const POSTS_DIR = path.join(process.cwd(), "content/posts");
 const OUTPUT_FILE = path.join(process.cwd(), "data/generated-posts.json");
 
@@ -87,11 +88,14 @@ function slugify(str) {
 async function main() {
   console.log("Merging scraped posts with existing data...\n");
 
-  // Load scraped posts
+  // Load scraped posts - prefer full content version if available
   let scrapedPosts = [];
-  if (fs.existsSync(SCRAPED_FILE)) {
+  if (fs.existsSync(SCRAPED_FULL_FILE)) {
+    scrapedPosts = JSON.parse(fs.readFileSync(SCRAPED_FULL_FILE, "utf8"));
+    console.log(`Loaded ${scrapedPosts.length} scraped posts (with full content)`);
+  } else if (fs.existsSync(SCRAPED_FILE)) {
     scrapedPosts = JSON.parse(fs.readFileSync(SCRAPED_FILE, "utf8"));
-    console.log(`Loaded ${scrapedPosts.length} scraped posts`);
+    console.log(`Loaded ${scrapedPosts.length} scraped posts (excerpts only)`);
   } else {
     console.log("No scraped posts file found. Will use existing markdown files only.");
   }
@@ -143,11 +147,31 @@ async function main() {
         imageUrl = scraped.imageUrl;
       }
 
+      // Use full content from scraping if available, otherwise use markdown content
+      let postContent = "";
+      if (scraped?.fullContent) {
+        postContent = scraped.fullContent;
+      } else if (content) {
+        // Convert markdown content to basic HTML
+        postContent = content
+          .split('\n\n')
+          .filter(p => p.trim())
+          .map(p => {
+            const trimmed = p.trim();
+            if (trimmed.startsWith('# ')) return `<h1>${trimmed.slice(2)}</h1>`;
+            if (trimmed.startsWith('## ')) return `<h2>${trimmed.slice(3)}</h2>`;
+            if (trimmed.startsWith('### ')) return `<h3>${trimmed.slice(4)}</h3>`;
+            if (trimmed.startsWith('**') && trimmed.endsWith('**')) return `<h3>${trimmed.slice(2, -2)}</h3>`;
+            return `<p>${trimmed.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')}</p>`;
+          })
+          .join('\n\n');
+      }
+
       postsFromMarkdown.push({
         id: slug,
         title: cleanTitle(scraped?.title || data.title || fileName),
         excerpt: scraped?.excerpt || (data.excerpt && data.excerpt !== "Home" ? data.excerpt : getExcerpt(content)),
-        content: "", // Don't include full content in JSON
+        content: postContent,
         author: {
           name: data.author || "Zack Edwards",
           avatar: "/images/board/zack.png",
@@ -176,7 +200,7 @@ async function main() {
         id: slug,
         title: cleanTitle(scraped.title),
         excerpt: scraped.excerpt || "",
-        content: "",
+        content: scraped.fullContent || `<p>${scraped.excerpt || ""}</p>`,
         author: {
           name: "Zack Edwards",
           avatar: "/images/board/zack.png",
@@ -184,7 +208,7 @@ async function main() {
         },
         category: "Education", // Default category for new posts
         publishedAt: formatDate(scraped.lastmod) || "January 1, 2025",
-        readTime: "5 min read",
+        readTime: scraped.fullContent ? `${Math.ceil(scraped.fullContent.split(/\s+/).length / 200)} min read` : "5 min read",
         imageUrl: scraped.imageUrl || "/images/fullLogo.jpeg",
         featured: false,
         isNew: true, // Mark as new for reference
