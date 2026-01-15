@@ -6,7 +6,7 @@
     "scrape-posts": "node scripts/scrape-blog-posts.js",
     "merge-posts": "node scripts/merge-scraped-posts.js",
     "generate-posts": "node scripts/generate-posts.js",
-    "prebuild": "node scripts/generate-posts.js",
+    "prebuild": "node scripts/merge-scraped-posts.js",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
