@@ -151,6 +151,7 @@ const BlogCard = ({ post }: { post: BlogPost }) => {
             alt={post.title}
             fill
             className={styles.blogImage}
+            unoptimized={post.imageUrl.startsWith("http")}
           />
           <div className={styles.blogCategory}>{post.category}</div>
         </div>
@@ -193,6 +194,7 @@ const FeaturedBlogCard = ({ post }: { post: BlogPost }) => {
             alt={post.title}
             fill
             className={styles.featuredImage}
+            unoptimized={post.imageUrl.startsWith("http")}
           />
           <div className={styles.featuredOverlay}></div>
           <div className={styles.featuredBadge}>Featured</div>
