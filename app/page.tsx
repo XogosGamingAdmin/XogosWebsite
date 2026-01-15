@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { MarketingLayout } from "@/layouts/Marketing/Marketing";
+import { NewsletterForm } from "@/components/Newsletter";
 import styles from "./page.module.css";
 
 // SVG Icons for features and ecosystem
@@ -600,17 +601,12 @@ export default function HomePage() {
               </p>
             </div>
 
-            <form className={styles.newsletterForm}>
-              <input
-                type="email"
-                placeholder="Your email address"
-                className={styles.newsletterInput}
-                required
-              />
-              <button type="submit" className={styles.newsletterButton}>
-                Subscribe
-              </button>
-            </form>
+            <NewsletterForm
+              source="homepage"
+              className={styles.newsletterForm}
+              inputClassName={styles.newsletterInput}
+              buttonClassName={styles.newsletterButton}
+            />
 
             <p className={styles.newsletterDisclaimer}>
               We respect your privacy and will never share your information.
@@ -622,7 +618,7 @@ export default function HomePage() {
               </p>
               <div className={styles.socialIconsRow}>
                 <Link
-                  href="https://x.com/XogosEducation"
+                  href="https://x.com/XogosGamingInc"
                   target="_blank"
                   rel="noopener noreferrer"
                   className={styles.socialIconLink}
@@ -637,7 +633,7 @@ export default function HomePage() {
                   </svg>
                 </Link>
                 <Link
-                  href="https://facebook.com/xogosgames"
+                  href="https://facebook.com/xogosgaminginc"
                   target="_blank"
                   rel="noopener noreferrer"
                   className={styles.socialIconLink}
@@ -652,7 +648,7 @@ export default function HomePage() {
                   </svg>
                 </Link>
                 <Link
-                  href="https://www.instagram.com/historicalconquest/"
+                  href="https://www.instagram.com/xogosgaminginc/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className={styles.socialIconLink}
@@ -667,7 +663,7 @@ export default function HomePage() {
                   </svg>
                 </Link>
                 <Link
-                  href="https://www.pinterest.com/xogos_education"
+                  href="https://www.pinterest.com/xogosgaminginc/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className={styles.socialIconLink}
@@ -682,7 +678,7 @@ export default function HomePage() {
                   </svg>
                 </Link>
                 <Link
-                  href="https://www.youtube.com/@historicalconquest1473"
+                  href="https://www.youtube.com/@XogosGamingInc"
                   target="_blank"
                   rel="noopener noreferrer"
                   className={styles.socialIconLink}

@@ -3,6 +3,8 @@
   "license": "Apache-2.0",
   "private": true,
   "scripts": {
+    "generate-posts": "node scripts/generate-posts.js",
+    "prebuild": "node scripts/generate-posts.js",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",

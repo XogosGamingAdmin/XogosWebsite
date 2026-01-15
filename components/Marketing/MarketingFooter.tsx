@@ -94,7 +94,7 @@ export function MarketingFooter({
             <div className={styles.footerLinkColumn}>
               <h4 className={styles.footerLinkTitle}>Connect</h4>
               <Link
-                href="https://x.com/XogosEducation"
+                href="https://x.com/XogosGamingInc"
                 className={styles.footerLink}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -102,7 +102,7 @@ export function MarketingFooter({
                 Twitter / X
               </Link>
               <Link
-                href="https://facebook.com/xogosgames"
+                href="https://facebook.com/xogosgaminginc"
                 className={styles.footerLink}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -110,7 +110,7 @@ export function MarketingFooter({
                 Facebook
               </Link>
               <Link
-                href="https://www.instagram.com/historicalconquest/"
+                href="https://www.instagram.com/xogosgaminginc/"
                 className={styles.footerLink}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -118,7 +118,7 @@ export function MarketingFooter({
                 Instagram
               </Link>
               <Link
-                href="https://www.pinterest.com/xogos_education"
+                href="https://www.pinterest.com/xogosgaminginc/"
                 className={styles.footerLink}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -126,7 +126,7 @@ export function MarketingFooter({
                 Pinterest
               </Link>
               <Link
-                href="https://www.youtube.com/@historicalconquest1473"
+                href="https://www.youtube.com/@XogosGamingInc"
                 className={styles.footerLink}
                 target="_blank"
                 rel="noopener noreferrer"

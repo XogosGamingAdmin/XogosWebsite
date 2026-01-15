@@ -2,8 +2,10 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { MarketingLayout } from "@/layouts/Marketing/Marketing";
+import { NewsletterForm } from "@/components/Newsletter";
+import { getBlogPosts } from "@/lib/actions/getBlogPosts";
 import styles from "./page.module.css";
 
 // Blog post interface
@@ -24,8 +26,8 @@ interface BlogPost {
   featured?: boolean;
 }
 
-// Sample blog posts data
-const blogPosts: BlogPost[] = [
+// Static/featured blog posts (always shown)
+const staticBlogPosts: BlogPost[] = [
   {
     id: "transforming-education-through-gaming",
     title: "Transforming Education Through Gaming: The Xogos Vision",
@@ -125,14 +127,17 @@ const blogPosts: BlogPost[] = [
   },
 ];
 
-// Category filter options
-const categories = [
+// Base category filter options (more will be added dynamically)
+const baseCategories = [
   "All",
   "Education",
   "Games",
   "Tokenomics",
   "Scholarships",
   "Programs",
+  "AI Education",
+  "Financial Literacy",
+  "History",
 ];
 
 // Blog card component
@@ -226,12 +231,49 @@ const FeaturedBlogCard = ({ post }: { post: BlogPost }) => {
 export default function BlogPage() {
   const [activeCategory, setActiveCategory] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
+  const [allPosts, setAllPosts] = useState<BlogPost[]>(staticBlogPosts);
+  const [categories, setCategories] = useState<string[]>(baseCategories);
+  const [loading, setLoading] = useState(true);
+
+  // Load posts from markdown files on mount
+  useEffect(() => {
+    async function loadPosts() {
+      try {
+        const result = await getBlogPosts();
+        if (result.data && result.data.length > 0) {
+          // Merge static posts with markdown posts, avoiding duplicates by ID
+          const staticIds = new Set(staticBlogPosts.map((p) => p.id));
+          const newPosts = result.data.filter((p) => !staticIds.has(p.id));
+          const mergedPosts = [...staticBlogPosts, ...newPosts];
+
+          // Sort by date (newest first)
+          mergedPosts.sort((a, b) => {
+            const dateA = new Date(a.publishedAt);
+            const dateB = new Date(b.publishedAt);
+            return dateB.getTime() - dateA.getTime();
+          });
+
+          setAllPosts(mergedPosts);
+
+          // Update categories based on all posts
+          const allCategories = new Set(mergedPosts.map((p) => p.category));
+          const sortedCategories = ["All", ...Array.from(allCategories).sort()];
+          setCategories(sortedCategories);
+        }
+      } catch (error) {
+        console.error("Error loading blog posts:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadPosts();
+  }, []);
 
   // Get featured post
-  const featuredPost = blogPosts.find((post) => post.featured);
+  const featuredPost = allPosts.find((post) => post.featured);
 
   // Filter posts based on category and search
-  const filteredPosts = blogPosts.filter((post) => {
+  const filteredPosts = allPosts.filter((post) => {
     const matchesCategory =
       activeCategory === "All" || post.category === activeCategory;
     const matchesSearch =
@@ -346,17 +388,12 @@ export default function BlogPage() {
                 educational resources, and platform updates delivered straight
                 to your inbox.
               </p>
-              <form className={styles.newsletterForm}>
-                <input
-                  type="email"
-                  placeholder="Your email address"
-                  className={styles.newsletterInput}
-                  required
-                />
-                <button type="submit" className={styles.newsletterButton}>
-                  Subscribe
-                </button>
-              </form>
+              <NewsletterForm
+                source="blog"
+                className={styles.newsletterForm}
+                inputClassName={styles.newsletterInput}
+                buttonClassName={styles.newsletterButton}
+              />
             </div>
           </div>
         </section>

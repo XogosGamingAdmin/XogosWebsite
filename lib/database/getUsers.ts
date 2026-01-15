@@ -1,6 +1,8 @@
 import { users } from "@/data/users";
+import { db } from "@/lib/database";
 import { Document, User } from "@/types";
-import { getUser } from "./getUser";
+import { getUser, getRandom } from "./getUser";
+import { colors } from "@/data/colors";
 
 type Props = {
   userIds?: Document["id"][];
@@ -10,37 +12,74 @@ type Props = {
 /**
  * Get Users
  *
- * Simulates calling your database and returning a list of user with seeded random colours
+ * Fetches users from database, with fallback to static data
  *
  * @param userIds - The user's ids to get
  * @param searchTerm - The term to filter your users by, checks users' ids and names
  */
 export async function getUsers({ userIds, search }: Props) {
-  const usersPromises: Promise<User | null>[] = [];
-
-  // Filter by userIds or get all users
+  // If specific userIds provided, get them individually
   if (userIds) {
+    const usersPromises: Promise<User | null>[] = [];
     for (const userId of userIds) {
       usersPromises.push(getUser(userId));
     }
-  } else {
-    const allUserIds = users.map((user) => user.id);
-    for (const userId of allUserIds) {
-      usersPromises.push(getUser(userId));
+    const userList = await Promise.all(usersPromises);
+
+    if (search) {
+      const term = search.toLowerCase();
+      return userList.filter((user) => {
+        if (!user) return false;
+        return (
+          user.name.toLowerCase().includes(term) ||
+          user.id.toLowerCase().includes(term)
+        );
+      });
     }
+
+    return userList;
+  }
+
+  // Get all users - try database first
+  try {
+    const dbUsers = await db.getAllUsers();
+    if (dbUsers && dbUsers.length > 0) {
+      let userList = dbUsers.map((dbUser) => ({
+        id: dbUser.id,
+        name: dbUser.name,
+        avatar: dbUser.avatar,
+        groupIds: dbUser.group_ids || [],
+        color: getRandom(colors, dbUser.id),
+      }));
+
+      if (search) {
+        const term = search.toLowerCase();
+        userList = userList.filter(
+          (user) =>
+            user.name.toLowerCase().includes(term) ||
+            user.id.toLowerCase().includes(term)
+        );
+      }
+
+      return userList;
+    }
+  } catch (error) {
+    console.warn("Database not available, using static user data");
+  }
+
+  // Fallback to static data
+  const usersPromises: Promise<User | null>[] = [];
+  const allUserIds = users.map((user) => user.id);
+  for (const userId of allUserIds) {
+    usersPromises.push(getUser(userId));
   }
 
   const userList = await Promise.all(usersPromises);
 
-  // If search term, check if term is included in name or id, and filter
   if (search) {
     const term = search.toLowerCase();
-
     return userList.filter((user) => {
-      if (!user) {
-        return false;
-      }
-
+      if (!user) return false;
       return (
         user.name.toLowerCase().includes(term) ||
         user.id.toLowerCase().includes(term)

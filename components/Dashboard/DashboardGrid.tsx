@@ -8,6 +8,7 @@ import {
   AddRSSFeedCard,
   AllBoardMemberTasksCard,
   BoardMemberProfileCard,
+  ErrorLoggingCard,
   MonthlyMeetingChecklistCard,
   MultiRSSFeedCard,
   RecentBoardInsightsCard,
@@ -58,6 +59,9 @@ export function DashboardGrid({ ...props }: Props) {
 
       {/* Admin-only: All Board Member Tasks */}
       {userIsAdmin && <AllBoardMemberTasksCard />}
+
+      {/* Admin-only: Error Logging & Monitoring */}
+      {userIsAdmin && <ErrorLoggingCard />}
 
       {/* Display all RSS feed subscriptions */}
       {!loading &&

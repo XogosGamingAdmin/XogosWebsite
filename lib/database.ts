@@ -391,6 +391,225 @@ export const db = {
     );
     return result.rows[0];
   },
+
+  // ============ USER FUNCTIONS ============
+
+  /**
+   * Get a user by ID (email)
+   */
+  async getUserById(userId: string) {
+    const result = await query(
+      `SELECT u.id, u.name, u.avatar, u.is_active, u.created_at, u.updated_at,
+              COALESCE(
+                json_agg(ug.group_id) FILTER (WHERE ug.group_id IS NOT NULL),
+                '[]'
+              ) as group_ids
+       FROM users u
+       LEFT JOIN user_groups ug ON u.id = ug.user_id
+       WHERE u.id = $1
+       GROUP BY u.id`,
+      [userId]
+    );
+    return result.rows[0];
+  },
+
+  /**
+   * Get all users
+   */
+  async getAllUsers() {
+    const result = await query(
+      `SELECT u.id, u.name, u.avatar, u.is_active, u.created_at, u.updated_at,
+              COALESCE(
+                json_agg(ug.group_id) FILTER (WHERE ug.group_id IS NOT NULL),
+                '[]'
+              ) as group_ids
+       FROM users u
+       LEFT JOIN user_groups ug ON u.id = ug.user_id
+       GROUP BY u.id
+       ORDER BY u.name`
+    );
+    return result.rows;
+  },
+
+  /**
+   * Create or update a user
+   */
+  async upsertUser(userId: string, name: string, avatar?: string) {
+    const result = await query(
+      `INSERT INTO users (id, name, avatar, updated_at)
+       VALUES ($1, $2, $3, NOW())
+       ON CONFLICT (id)
+       DO UPDATE SET name = $2, avatar = COALESCE($3, users.avatar), updated_at = NOW()
+       RETURNING id, name, avatar, is_active, created_at, updated_at`,
+      [userId, name, avatar]
+    );
+    return result.rows[0];
+  },
+
+  /**
+   * Add user to a group
+   */
+  async addUserToGroup(userId: string, groupId: string) {
+    await query(
+      `INSERT INTO user_groups (user_id, group_id)
+       VALUES ($1, $2)
+       ON CONFLICT (user_id, group_id) DO NOTHING`,
+      [userId, groupId]
+    );
+  },
+
+  /**
+   * Remove user from a group
+   */
+  async removeUserFromGroup(userId: string, groupId: string) {
+    await query(
+      `DELETE FROM user_groups WHERE user_id = $1 AND group_id = $2`,
+      [userId, groupId]
+    );
+  },
+
+  // ============ NEWSLETTER FUNCTIONS ============
+
+  /**
+   * Subscribe to newsletter
+   */
+  async subscribeToNewsletter(email: string, name?: string, source?: string) {
+    const result = await query(
+      `INSERT INTO newsletter_subscriptions (email, name, source)
+       VALUES ($1, $2, $3)
+       ON CONFLICT (email)
+       DO UPDATE SET
+         name = COALESCE($2, newsletter_subscriptions.name),
+         is_active = true,
+         unsubscribed_at = NULL
+       RETURNING id, email, name, source, subscribed_at, is_active`,
+      [email.toLowerCase(), name, source || "website"]
+    );
+    return result.rows[0];
+  },
+
+  /**
+   * Unsubscribe from newsletter
+   */
+  async unsubscribeFromNewsletter(email: string) {
+    const result = await query(
+      `UPDATE newsletter_subscriptions
+       SET is_active = false, unsubscribed_at = NOW()
+       WHERE email = $1
+       RETURNING id, email, is_active`,
+      [email.toLowerCase()]
+    );
+    return result.rows[0];
+  },
+
+  /**
+   * Get all newsletter subscriptions (admin)
+   */
+  async getNewsletterSubscriptions(activeOnly: boolean = true) {
+    const whereClause = activeOnly ? "WHERE is_active = true" : "";
+    const result = await query(
+      `SELECT id, email, name, source, subscribed_at, unsubscribed_at, is_active
+       FROM newsletter_subscriptions
+       ${whereClause}
+       ORDER BY subscribed_at DESC`
+    );
+    return result.rows;
+  },
+
+  /**
+   * Get newsletter subscription count
+   */
+  async getNewsletterCount() {
+    const result = await query(
+      `SELECT
+         COUNT(*) FILTER (WHERE is_active = true) as active_count,
+         COUNT(*) as total_count
+       FROM newsletter_subscriptions`
+    );
+    return result.rows[0];
+  },
+
+  // ============ ERROR LOG FUNCTIONS ============
+
+  /**
+   * Log an error
+   */
+  async logError(
+    errorType: string,
+    errorMessage: string,
+    errorStack?: string,
+    userId?: string,
+    url?: string,
+    userAgent?: string,
+    metadata?: object
+  ) {
+    const result = await query(
+      `INSERT INTO error_logs (error_type, error_message, error_stack, user_id, url, user_agent, metadata)
+       VALUES ($1, $2, $3, $4, $5, $6, $7)
+       RETURNING id, error_type, error_message, created_at`,
+      [
+        errorType,
+        errorMessage,
+        errorStack,
+        userId,
+        url,
+        userAgent,
+        metadata ? JSON.stringify(metadata) : null,
+      ]
+    );
+    return result.rows[0];
+  },
+
+  /**
+   * Get error logs (admin)
+   */
+  async getErrorLogs(limit: number = 50, errorType?: string) {
+    let queryText = `SELECT id, error_type, error_message, error_stack, user_id, url, user_agent, metadata, created_at
+                     FROM error_logs`;
+    const params: any[] = [];
+
+    if (errorType) {
+      queryText += ` WHERE error_type = $1`;
+      params.push(errorType);
+    }
+
+    queryText += ` ORDER BY created_at DESC LIMIT $${params.length + 1}`;
+    params.push(limit);
+
+    const result = await query(queryText, params);
+    return result.rows;
+  },
+
+  /**
+   * Get error log statistics
+   */
+  async getErrorStats(days: number = 7) {
+    const result = await query(
+      `SELECT
+         error_type,
+         COUNT(*) as count,
+         MAX(created_at) as last_occurrence
+       FROM error_logs
+       WHERE created_at >= NOW() - INTERVAL '1 day' * $1
+       GROUP BY error_type
+       ORDER BY count DESC`,
+      [days]
+    );
+    return result.rows;
+  },
+
+  /**
+   * Clear old error logs
+   */
+  async clearOldErrorLogs(daysOld: number = 30) {
+    const result = await query(
+      `DELETE FROM error_logs
+       WHERE created_at < NOW() - INTERVAL '1 day' * $1
+       RETURNING id`,
+      [daysOld]
+    );
+    return result.rowCount;
+  },
 };
 
 export default pool;

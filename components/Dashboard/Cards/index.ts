@@ -7,3 +7,4 @@ export { RSSFeedCard } from "./RSSFeedCard";
 export { MultiRSSFeedCard } from "./MultiRSSFeedCard";
 export { AddRSSFeedCard } from "./AddRSSFeedCard";
 export { AllBoardMemberTasksCard } from "./AllBoardMemberTasksCard";
+export { ErrorLoggingCard } from "./ErrorLoggingCard";
