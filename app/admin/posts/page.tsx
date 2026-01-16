@@ -9,33 +9,36 @@ import styles from "./page.module.css";
 const categories = [
   "AI Education",
   "Financial Literacy",
-  "Ancient Egypt",
-  "Colonial America",
-  "Age of Exploration",
-  "Ancient Africa",
-  "Indus Valley",
-  "Ancient America",
-  "Industrial Revolution",
-  "Ancient China",
-  "Ancient Rome",
-  "Civil War",
+  "History",
   "Lesson Plans",
+  "Education",
   "Creator's Notes",
 ];
 
-interface Post {
-  slug: string;
+interface BlogPost {
+  id: string;
   title: string;
+  excerpt: string;
+  content?: string;
   category: string;
   publishedAt: string;
+  readTime?: string;
+  imageUrl?: string;
+  author?: {
+    name: string;
+    avatar: string;
+    role: string;
+  };
 }
 
 export default function AdminPostsPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
-  const [posts, setPosts] = useState<Post[]>([]);
+  const [posts, setPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filterCategory, setFilterCategory] = useState("All");
   const [message, setMessage] = useState<{
     type: "success" | "error";
     text: string;
@@ -45,19 +48,20 @@ export default function AdminPostsPage() {
   const [title, setTitle] = useState("");
   const [excerpt, setExcerpt] = useState("");
   const [content, setContent] = useState("");
-  const [category, setCategory] = useState("AI Education");
-  const [topic, setTopic] = useState("");
-  const [author, setAuthor] = useState("Xogos Team");
+  const [category, setCategory] = useState("Education");
+  const [author, setAuthor] = useState("Zack Edwards");
   const [imageUrl, setImageUrl] = useState("/images/fullLogo.jpeg");
 
-  // Fetch existing posts
+  // Fetch existing posts from blog API
   useEffect(() => {
     async function fetchPosts() {
       try {
-        const res = await fetch("/api/posts");
+        const res = await fetch("/api/blog");
         if (res.ok) {
           const data = await res.json();
-          setPosts(data);
+          if (data.data) {
+            setPosts(data.data);
+          }
         }
       } catch (error) {
         console.error("Error fetching posts:", error);
@@ -81,7 +85,7 @@ export default function AdminPostsPage() {
     setMessage(null);
 
     try {
-      const res = await fetch("/api/posts", {
+      const res = await fetch("/api/blog/create", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -89,7 +93,6 @@ export default function AdminPostsPage() {
           excerpt,
           content,
           category,
-          topic: topic || category,
           author,
           imageUrl,
         }),
@@ -100,17 +103,19 @@ export default function AdminPostsPage() {
       if (res.ok) {
         setMessage({
           type: "success",
-          text: `Post created! View at ${data.path}`,
+          text: `Post created! View at /blog/${data.id}`,
         });
         // Reset form
         setTitle("");
         setExcerpt("");
         setContent("");
-        setTopic("");
         // Refresh posts list
-        const postsRes = await fetch("/api/posts");
+        const postsRes = await fetch("/api/blog");
         if (postsRes.ok) {
-          setPosts(await postsRes.json());
+          const postsData = await postsRes.json();
+          if (postsData.data) {
+            setPosts(postsData.data);
+          }
         }
       } else {
         setMessage({
@@ -125,25 +130,18 @@ export default function AdminPostsPage() {
     }
   };
 
-  const handleDelete = async (slug: string) => {
-    if (!confirm("Are you sure you want to delete this post?")) return;
+  // Filter posts based on search and category
+  const filteredPosts = posts.filter((post) => {
+    const matchesSearch =
+      post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      post.excerpt?.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesCategory =
+      filterCategory === "All" || post.category === filterCategory;
+    return matchesSearch && matchesCategory;
+  });
 
-    try {
-      const res = await fetch(`/api/posts?slug=${slug}`, { method: "DELETE" });
-      if (res.ok) {
-        setPosts(posts.filter((p) => p.slug !== slug));
-        setMessage({ type: "success", text: "Post deleted successfully" });
-      } else {
-        const data = await res.json();
-        setMessage({
-          type: "error",
-          text: data.error || "Failed to delete post",
-        });
-      }
-    } catch {
-      setMessage({ type: "error", text: "An error occurred while deleting" });
-    }
-  };
+  // Get unique categories from posts
+  const allCategories = ["All", ...new Set(posts.map((p) => p.category))].sort();
 
   if (status === "loading" || loading) {
     return (
@@ -207,79 +205,59 @@ export default function AdminPostsPage() {
               </div>
 
               <div className={styles.formGroup}>
-                <label htmlFor="topic">Topic</label>
-                <input
-                  id="topic"
-                  type="text"
-                  value={topic}
-                  onChange={(e) => setTopic(e.target.value)}
-                  placeholder="e.g., Machine Learning"
-                />
-              </div>
-            </div>
-
-            <div className={styles.formRow}>
-              <div className={styles.formGroup}>
                 <label htmlFor="author">Author</label>
                 <input
                   id="author"
                   type="text"
                   value={author}
                   onChange={(e) => setAuthor(e.target.value)}
-                  placeholder="Xogos Team"
-                />
-              </div>
-
-              <div className={styles.formGroup}>
-                <label htmlFor="imageUrl">Image URL</label>
-                <input
-                  id="imageUrl"
-                  type="text"
-                  value={imageUrl}
-                  onChange={(e) => setImageUrl(e.target.value)}
-                  placeholder="/images/fullLogo.jpeg"
+                  placeholder="Zack Edwards"
                 />
               </div>
             </div>
 
             <div className={styles.formGroup}>
-              <label htmlFor="excerpt">Excerpt</label>
-              <textarea
-                id="excerpt"
-                value={excerpt}
-                onChange={(e) => setExcerpt(e.target.value)}
-                rows={2}
-                placeholder="Brief summary of the post (optional)"
+              <label htmlFor="imageUrl">Featured Image URL</label>
+              <input
+                id="imageUrl"
+                type="text"
+                value={imageUrl}
+                onChange={(e) => setImageUrl(e.target.value)}
+                placeholder="/images/fullLogo.jpeg or https://..."
               />
             </div>
 
             <div className={styles.formGroup}>
-              <label htmlFor="content">Content * (Markdown supported)</label>
+              <label htmlFor="excerpt">Excerpt (Summary)</label>
+              <textarea
+                id="excerpt"
+                value={excerpt}
+                onChange={(e) => setExcerpt(e.target.value)}
+                rows={3}
+                placeholder="Brief summary of the post (shown on blog listing)"
+              />
+            </div>
+
+            <div className={styles.formGroup}>
+              <label htmlFor="content">Content * (HTML supported)</label>
               <textarea
                 id="content"
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
                 rows={15}
                 required
-                placeholder="Write your post content here. You can use Markdown formatting:
+                placeholder="Write your post content here. HTML is supported:
 
-# Heading 1
-## Heading 2
+<h3><strong>Section Title</strong></h3>
 
-**bold text**
-*italic text*
+<p>Your paragraph text goes here.</p>
 
-- bullet point
-- another point
+<p>Another paragraph with more content.</p>
 
-1. numbered list
-2. second item
-
-> blockquote
-
-[link text](https://example.com)
-
-![image alt](image-url)"
+<ul>
+  <li>Bullet point 1</li>
+  <li>Bullet point 2</li>
+</ul>"
               />
             </div>
 
@@ -288,7 +266,7 @@ export default function AdminPostsPage() {
               disabled={saving}
               className={styles.submitButton}
             >
-              {saving ? "Saving..." : "Create Post"}
+              {saving ? "Creating Post..." : "Create Post"}
             </button>
           </form>
         </section>
@@ -296,14 +274,39 @@ export default function AdminPostsPage() {
         {/* Existing Posts List */}
         <section className={styles.postsSection}>
           <h2>Existing Posts ({posts.length})</h2>
+
+          {/* Search and Filter */}
+          <div className={styles.filters}>
+            <input
+              type="text"
+              placeholder="Search posts..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className={styles.searchInput}
+            />
+            <select
+              value={filterCategory}
+              onChange={(e) => setFilterCategory(e.target.value)}
+              className={styles.filterSelect}
+            >
+              {allCategories.map((cat) => (
+                <option key={cat} value={cat}>
+                  {cat}
+                </option>
+              ))}
+            </select>
+          </div>
+
           <div className={styles.postsList}>
-            {posts.length === 0 ? (
+            {filteredPosts.length === 0 ? (
               <p className={styles.noPosts}>
-                No posts yet. Create your first one above!
+                {posts.length === 0
+                  ? "No posts yet. Create your first one above!"
+                  : "No posts match your search."}
               </p>
             ) : (
-              posts.map((post) => (
-                <div key={post.slug} className={styles.postItem}>
+              filteredPosts.slice(0, 50).map((post) => (
+                <div key={post.id} className={styles.postItem}>
                   <div className={styles.postInfo}>
                     <h3>{post.title}</h3>
                     <div className={styles.postMeta}>
@@ -313,21 +316,20 @@ export default function AdminPostsPage() {
                   </div>
                   <div className={styles.postActions}>
                     <Link
-                      href={`/post/${post.slug}`}
+                      href={`/blog/${post.id}`}
                       target="_blank"
                       className={styles.viewButton}
                     >
                       View
                     </Link>
-                    <button
-                      onClick={() => handleDelete(post.slug)}
-                      className={styles.deleteButton}
-                    >
-                      Delete
-                    </button>
                   </div>
                 </div>
               ))
+            )}
+            {filteredPosts.length > 50 && (
+              <p className={styles.moreResults}>
+                Showing 50 of {filteredPosts.length} posts. Use search to find specific posts.
+              </p>
             )}
           </div>
         </section>

@@ -18,7 +18,55 @@ interface BlogPost {
   featured?: boolean;
 }
 
-const posts = generatedPosts as BlogPost[];
+const staticPosts = generatedPosts as BlogPost[];
+
+// Helper to fetch a post from database by ID
+async function getDbPost(id: string): Promise<BlogPost | null> {
+  try {
+    const { db } = await import("@/lib/database");
+    const result = await db.query(
+      `SELECT id, title, excerpt, content, author_name, author_avatar, author_role,
+              category, published_at, read_time, image_url, featured
+       FROM blog_posts
+       WHERE id = $1`,
+      [id]
+    );
+    if (result.rows.length === 0) return null;
+    const row = result.rows[0] as {
+      id: string;
+      title: string;
+      excerpt: string;
+      content: string;
+      author_name: string;
+      author_avatar: string;
+      author_role: string;
+      category: string;
+      published_at: string;
+      read_time: string;
+      image_url: string;
+      featured: boolean;
+    };
+    return {
+      id: row.id,
+      title: row.title,
+      excerpt: row.excerpt,
+      content: row.content,
+      author: {
+        name: row.author_name,
+        avatar: row.author_avatar,
+        role: row.author_role,
+      },
+      category: row.category,
+      publishedAt: row.published_at,
+      readTime: row.read_time,
+      imageUrl: row.image_url,
+      featured: row.featured,
+    };
+  } catch (error) {
+    console.error("Error fetching DB post:", error);
+    return null;
+  }
+}
 
 // GET - Get a single blog post by slug
 export async function GET(
@@ -27,7 +75,15 @@ export async function GET(
 ) {
   try {
     const { slug } = await params;
-    const post = posts.find((p) => p.id === slug);
+
+    // First check database for admin-created posts
+    const dbPost = await getDbPost(slug);
+    if (dbPost) {
+      return NextResponse.json({ data: dbPost });
+    }
+
+    // Fall back to static posts
+    const post = staticPosts.find((p) => p.id === slug);
 
     if (!post) {
       return NextResponse.json(

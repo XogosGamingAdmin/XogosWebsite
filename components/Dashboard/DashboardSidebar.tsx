@@ -4,12 +4,13 @@ import { useSession } from "next-auth/react";
 import { ComponentProps, useMemo } from "react";
 import {
   ADMIN_URL,
+  ADMIN_BLOG_URL,
   DASHBOARD_DOCUMENTS_GROUP_URL,
   DASHBOARD_DOCUMENTS_URL,
   DASHBOARD_HOME_URL,
   DASHBOARD_PROFILE_URL,
 } from "@/constants";
-import { FileIcon, FolderIcon, HomeIcon, UserIcon } from "@/icons";
+import { EditIcon, FileIcon, FolderIcon, HomeIcon, UserIcon } from "@/icons";
 import { isAdmin } from "@/lib/auth/admin";
 import { LinkButton } from "@/primitives/Button";
 import { Group } from "@/types";
@@ -77,9 +78,16 @@ export function DashboardSidebar({ className, groups, ...props }: Props) {
               </SidebarLink>
             </li>
             {userIsAdmin && (
-              <li>
-                <SidebarLink href={ADMIN_URL}>Admin</SidebarLink>
-              </li>
+              <>
+                <li>
+                  <SidebarLink href={ADMIN_BLOG_URL} icon={<EditIcon />}>
+                    Blog Posts
+                  </SidebarLink>
+                </li>
+                <li>
+                  <SidebarLink href={ADMIN_URL}>Admin</SidebarLink>
+                </li>
+              </>
             )}
           </ul>
         </div>

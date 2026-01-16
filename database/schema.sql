@@ -90,6 +90,23 @@ CREATE TABLE IF NOT EXISTS xogos_financials (
   updated_by TEXT NOT NULL
 );
 
+-- Blog Posts Table (admin-created posts stored in database)
+CREATE TABLE IF NOT EXISTS blog_posts (
+  id TEXT PRIMARY KEY,  -- URL slug
+  title TEXT NOT NULL,
+  excerpt TEXT,
+  content TEXT NOT NULL,
+  author_name TEXT NOT NULL DEFAULT 'Zack Edwards',
+  author_avatar TEXT DEFAULT '/images/board/zack.png',
+  author_role TEXT DEFAULT 'Content Creator',
+  category TEXT NOT NULL DEFAULT 'Education',
+  published_at TEXT NOT NULL,  -- Formatted date string
+  read_time TEXT NOT NULL DEFAULT '1 min read',
+  image_url TEXT DEFAULT '/images/fullLogo.jpeg',
+  featured BOOLEAN DEFAULT false,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
 -- Insert default users (board members)
 INSERT INTO users (id, name, avatar) VALUES
   ('enjoyweaver@gmail.com', 'Michael Weaver', '/images/board/michael.png'),
@@ -135,6 +152,8 @@ CREATE INDEX IF NOT EXISTS idx_error_logs_created_at ON error_logs(created_at DE
 CREATE INDEX IF NOT EXISTS idx_error_logs_type ON error_logs(error_type);
 CREATE INDEX IF NOT EXISTS idx_user_groups_user_id ON user_groups(user_id);
 CREATE INDEX IF NOT EXISTS idx_user_groups_group_id ON user_groups(group_id);
+CREATE INDEX IF NOT EXISTS idx_blog_posts_created_at ON blog_posts(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_blog_posts_category ON blog_posts(category);
 
 -- Enable Row Level Security (RLS)
 ALTER TABLE users ENABLE ROW LEVEL SECURITY;
@@ -146,6 +165,7 @@ ALTER TABLE rss_subscriptions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE checklist_items ENABLE ROW LEVEL SECURITY;
 ALTER TABLE xogos_statistics ENABLE ROW LEVEL SECURITY;
 ALTER TABLE xogos_financials ENABLE ROW LEVEL SECURITY;
+ALTER TABLE blog_posts ENABLE ROW LEVEL SECURITY;
 
 -- Create policies (allow all operations for now - you can restrict later)
 DROP POLICY IF EXISTS "Allow all for authenticated users" ON users;
@@ -174,3 +194,6 @@ CREATE POLICY "Allow all for authenticated users" ON xogos_statistics FOR ALL US
 
 DROP POLICY IF EXISTS "Allow all for authenticated users" ON xogos_financials;
 CREATE POLICY "Allow all for authenticated users" ON xogos_financials FOR ALL USING (true);
+
+DROP POLICY IF EXISTS "Allow all for authenticated users" ON blog_posts;
+CREATE POLICY "Allow all for authenticated users" ON blog_posts FOR ALL USING (true);

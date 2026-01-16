@@ -20,6 +20,7 @@ export const ADMIN_URL = "/admin";
 export const ADMIN_STATISTICS_URL = `${ADMIN_URL}/statistics`;
 export const ADMIN_FINANCIALS_URL = `${ADMIN_URL}/financials`;
 export const ADMIN_CHECKLISTS_URL = `${ADMIN_URL}/checklists`;
+export const ADMIN_BLOG_URL = `${ADMIN_URL}/posts`;
 
 export const DOCUMENT_URL = (type: DocumentType, id: string) =>
   `/${type}/${id}`;
