@@ -11,6 +11,18 @@ const SCRAPED_FILE = path.join(process.cwd(), "data/scraped-posts.json");
 const POSTS_DIR = path.join(process.cwd(), "content/posts");
 const OUTPUT_FILE = path.join(process.cwd(), "data/generated-posts.json");
 
+// Load existing generated posts to preserve any scraped full content
+function loadExistingPosts() {
+  if (fs.existsSync(OUTPUT_FILE)) {
+    try {
+      return JSON.parse(fs.readFileSync(OUTPUT_FILE, "utf8"));
+    } catch (e) {
+      return [];
+    }
+  }
+  return [];
+}
+
 function findMarkdownFiles(dir) {
   const files = [];
   if (!fs.existsSync(dir)) return files;
@@ -254,18 +266,31 @@ async function main() {
     }
   }
 
+  // Load existing posts to preserve any previously scraped full content
+  const existingPosts = loadExistingPosts();
+  const existingPostsMap = new Map();
+  for (const post of existingPosts) {
+    existingPostsMap.set(post.id, post);
+  }
+
   // Add any scraped posts that don't have corresponding markdown files
   const newPosts = [];
   for (const [slug, scraped] of scrapedMap) {
     if (!scraped.error && scraped.title) {
-      // For posts without markdown, use the excerpt as content
-      const excerptContent = scraped.excerpt ? `<p>${scraped.excerpt}</p>` : "";
+      // Check if we have existing full content for this post (from previous scraping)
+      const existingPost = existingPostsMap.get(slug);
+      const hasExistingFullContent = existingPost?.content && existingPost.content.length > 1000;
+
+      // Use existing full content if available, otherwise fall back to excerpt
+      const content = hasExistingFullContent
+        ? existingPost.content
+        : (scraped.excerpt ? `<p>${scraped.excerpt}</p>` : "");
 
       newPosts.push({
         id: slug,
         title: cleanTitle(scraped.title),
         excerpt: scraped.excerpt || "",
-        content: excerptContent,
+        content: content,
         author: {
           name: "Zack Edwards",
           avatar: "/images/board/zack.png",
@@ -273,16 +298,18 @@ async function main() {
         },
         category: "Education",
         publishedAt: formatDate(scraped.lastmod) || "January 1, 2025",
-        readTime: "5 min read",
+        readTime: hasExistingFullContent ? existingPost.readTime : "5 min read",
         imageUrl: scraped.imageUrl || "/images/fullLogo.jpeg",
         featured: false,
-        isNew: true,
+        isNew: !hasExistingFullContent,
       });
     }
   }
 
+  const postsWithPreservedContent = newPosts.filter(p => p.content && p.content.length > 1000).length;
   console.log(`\nPosts from markdown (with full content): ${postsFromMarkdown.length}`);
-  console.log(`New posts from scraping (excerpts only): ${newPosts.length}`);
+  console.log(`Posts from scraping with preserved full content: ${postsWithPreservedContent}`);
+  console.log(`Posts from scraping (excerpts only): ${newPosts.length - postsWithPreservedContent}`);
 
   // Combine all posts
   const allPosts = [...postsFromMarkdown, ...newPosts];
