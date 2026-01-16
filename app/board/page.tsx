@@ -277,12 +277,8 @@ export default function BoardPage() {
     }
   }, [session]);
 
-  // Redirect to sign-in if not authenticated
-  useEffect(() => {
-    if (status === "unauthenticated") {
-      router.push("/signin?callbackUrl=/board");
-    }
-  }, [status, router]);
+  // No longer redirect - page is now public
+  // Sensitive financial data will only show for authenticated users
 
   // Main effect for time and ticker updates
   useEffect(() => {
@@ -342,7 +338,7 @@ export default function BoardPage() {
     };
   }, []);
 
-  // Show loading while checking authentication
+  // Show loading while checking authentication status
   if (status === "loading") {
     return (
       <MarketingLayout>
@@ -353,39 +349,39 @@ export default function BoardPage() {
     );
   }
 
-  // Don't render board content if not authenticated
-  if (!session) {
-    return null;
-  }
+  // Page is now public - no authentication check needed
 
   // Combine live database stats with static metrics for ticker
-  const liveMetrics = [
-    {
-      label: "Total Accounts",
-      value: liveStats.accounts.toLocaleString(),
-      trend: "active",
-    },
-    {
-      label: "Active Users",
-      value: liveStats.activeUsers.toLocaleString(),
-      trend: "active",
-    },
-    {
-      label: "Total Hours",
-      value: liveStats.totalHours.toLocaleString(),
-      trend: "active",
-    },
-    {
-      label: "Revenue",
-      value: `$${liveStats.revenue.toLocaleString()}`,
-      trend: "active",
-    },
-    {
-      label: "Expenses",
-      value: `$${liveStats.expenses.toLocaleString()}`,
-      trend: "active",
-    },
-  ];
+  // Only show sensitive financial data to authenticated users
+  const liveMetrics = session
+    ? [
+        {
+          label: "Total Accounts",
+          value: liveStats.accounts.toLocaleString(),
+          trend: "active",
+        },
+        {
+          label: "Active Users",
+          value: liveStats.activeUsers.toLocaleString(),
+          trend: "active",
+        },
+        {
+          label: "Total Hours",
+          value: liveStats.totalHours.toLocaleString(),
+          trend: "active",
+        },
+        {
+          label: "Revenue",
+          value: `$${liveStats.revenue.toLocaleString()}`,
+          trend: "active",
+        },
+        {
+          label: "Expenses",
+          value: `$${liveStats.expenses.toLocaleString()}`,
+          trend: "active",
+        },
+      ]
+    : [];
 
   const platformMetrics = [...liveMetrics, ...staticMetrics];
 

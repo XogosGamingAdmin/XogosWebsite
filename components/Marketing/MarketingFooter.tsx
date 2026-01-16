@@ -64,7 +64,7 @@ export function MarketingFooter({
               <Link href="/about" className={styles.footerLink}>
                 About Us
               </Link>
-              <Link href="/board/members" className={styles.footerLink}>
+              <Link href="/board" className={styles.footerLink}>
                 Board Room
               </Link>
               <Link
