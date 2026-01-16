@@ -23,8 +23,8 @@ const staticPosts = generatedPosts as BlogPost[];
 // Helper to fetch admin-created posts from database
 async function getDbPosts(): Promise<BlogPost[]> {
   try {
-    const { db } = await import("@/lib/database");
-    const result = await db.query(
+    const { query } = await import("@/lib/database");
+    const result = await query(
       `SELECT id, title, excerpt, content, author_name, author_avatar, author_role,
               category, published_at, read_time, image_url, featured
        FROM blog_posts

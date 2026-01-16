@@ -71,12 +71,10 @@ export async function POST(request: NextRequest) {
       featured: false,
     };
 
-    // For serverless, we'll use dynamic import to access the database
     // Store the post in the database
-    if (typeof window === "undefined") {
-      try {
-        const { db } = await import("@/lib/database");
-        await db.query(
+    try {
+      const { query } = await import("@/lib/database");
+      await query(
           `INSERT INTO blog_posts (id, title, excerpt, content, author_name, author_avatar, author_role, category, published_at, read_time, image_url, featured, created_at)
            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, NOW())
            ON CONFLICT (id) DO UPDATE SET
@@ -101,15 +99,14 @@ export async function POST(request: NextRequest) {
             newPost.featured,
           ]
         );
-      } catch (dbError) {
-        console.error("Database error:", dbError);
-        // If database fails, still return success but note it
-        return NextResponse.json({
-          id: newPost.id,
-          message: "Post created (database storage failed - post may not persist)",
-          post: newPost,
-        });
-      }
+    } catch (dbError) {
+      console.error("Database error:", dbError);
+      // If database fails, still return success but note it
+      return NextResponse.json({
+        id: newPost.id,
+        message: "Post created (database storage failed - post may not persist)",
+        post: newPost,
+      });
     }
 
     return NextResponse.json({
