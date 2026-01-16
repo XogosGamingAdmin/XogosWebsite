@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
+import { auth } from "@/auth";
+import { isAdmin } from "@/lib/auth/admin";
 import generatedPosts from "@/data/generated-posts.json";
 
 interface BlogPost {
@@ -97,6 +99,98 @@ export async function GET(
     console.error("Error getting blog post:", error);
     return NextResponse.json(
       { error: "Failed to get blog post" },
+      { status: 500 }
+    );
+  }
+}
+
+// Helper to calculate read time
+function calculateReadTime(content: string): string {
+  const wordsPerMinute = 200;
+  const words = content.replace(/<[^>]*>/g, "").split(/\s+/).length;
+  const minutes = Math.max(1, Math.ceil(words / wordsPerMinute));
+  return `${minutes} min read`;
+}
+
+// PUT - Update an existing blog post
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: Promise<{ slug: string }> }
+) {
+  try {
+    // Check authentication
+    const session = await auth();
+    if (!session?.user?.email) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    // Check if user is admin
+    if (!isAdmin(session.user.email)) {
+      return NextResponse.json({ error: "Admin access required" }, { status: 403 });
+    }
+
+    const { slug } = await params;
+    const body = await request.json();
+    const { title, excerpt, content, category, author, imageUrl } = body;
+
+    if (!title || !content) {
+      return NextResponse.json(
+        { error: "Title and content are required" },
+        { status: 400 }
+      );
+    }
+
+    const readTime = calculateReadTime(content);
+    const publishedAt = new Date().toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+
+    // Update or insert the post in the database
+    try {
+      const { query } = await import("@/lib/database");
+      await query(
+        `INSERT INTO blog_posts (id, title, excerpt, content, author_name, author_avatar, author_role, category, published_at, read_time, image_url, featured, created_at)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, false, NOW())
+         ON CONFLICT (id) DO UPDATE SET
+           title = EXCLUDED.title,
+           excerpt = EXCLUDED.excerpt,
+           content = EXCLUDED.content,
+           author_name = EXCLUDED.author_name,
+           category = EXCLUDED.category,
+           read_time = EXCLUDED.read_time,
+           image_url = EXCLUDED.image_url`,
+        [
+          slug,
+          title,
+          excerpt || content.replace(/<[^>]*>/g, "").substring(0, 200) + "...",
+          content,
+          author || "Zack Edwards",
+          "/images/board/zack.png",
+          "Content Creator",
+          category || "Education",
+          publishedAt,
+          readTime,
+          imageUrl || "/images/fullLogo.jpeg",
+        ]
+      );
+
+      return NextResponse.json({
+        id: slug,
+        message: "Post updated successfully",
+      });
+    } catch (dbError) {
+      console.error("Database error:", dbError);
+      return NextResponse.json(
+        { error: "Failed to update post in database" },
+        { status: 500 }
+      );
+    }
+  } catch (error) {
+    console.error("Error updating blog post:", error);
+    return NextResponse.json(
+      { error: "Failed to update blog post" },
       { status: 500 }
     );
   }

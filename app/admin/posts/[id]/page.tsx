@@ -1,10 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
-import styles from "./page.module.css";
+import styles from "../page.module.css";
 
 const categories = [
   "AI Education",
@@ -19,7 +19,7 @@ interface BlogPost {
   id: string;
   title: string;
   excerpt: string;
-  content?: string;
+  content: string;
   category: string;
   publishedAt: string;
   readTime?: string;
@@ -31,14 +31,12 @@ interface BlogPost {
   };
 }
 
-export default function AdminPostsPage() {
+export default function EditPostPage() {
+  const { id } = useParams();
   const { data: session, status } = useSession();
   const router = useRouter();
-  const [posts, setPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [filterCategory, setFilterCategory] = useState("All");
   const [message, setMessage] = useState<{
     type: "success" | "error";
     text: string;
@@ -51,26 +49,38 @@ export default function AdminPostsPage() {
   const [category, setCategory] = useState("Education");
   const [author, setAuthor] = useState("Zack Edwards");
   const [imageUrl, setImageUrl] = useState("/images/fullLogo.jpeg");
+  const [originalPost, setOriginalPost] = useState<BlogPost | null>(null);
 
-  // Fetch existing posts from blog API
+  // Fetch existing post data
   useEffect(() => {
-    async function fetchPosts() {
+    async function fetchPost() {
+      if (!id) return;
       try {
-        const res = await fetch("/api/blog");
+        const res = await fetch(`/api/blog/${id}`);
         if (res.ok) {
           const data = await res.json();
           if (data.data) {
-            setPosts(data.data);
+            const post = data.data;
+            setOriginalPost(post);
+            setTitle(post.title);
+            setExcerpt(post.excerpt || "");
+            setContent(post.content || "");
+            setCategory(post.category || "Education");
+            setAuthor(post.author?.name || "Zack Edwards");
+            setImageUrl(post.imageUrl || "/images/fullLogo.jpeg");
           }
+        } else {
+          setMessage({ type: "error", text: "Post not found" });
         }
       } catch (error) {
-        console.error("Error fetching posts:", error);
+        console.error("Error fetching post:", error);
+        setMessage({ type: "error", text: "Failed to load post" });
       } finally {
         setLoading(false);
       }
     }
-    fetchPosts();
-  }, []);
+    fetchPost();
+  }, [id]);
 
   // Redirect if not authenticated
   useEffect(() => {
@@ -85,8 +95,8 @@ export default function AdminPostsPage() {
     setMessage(null);
 
     try {
-      const res = await fetch("/api/blog/create", {
-        method: "POST",
+      const res = await fetch(`/api/blog/${id}`, {
+        method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           title,
@@ -103,24 +113,12 @@ export default function AdminPostsPage() {
       if (res.ok) {
         setMessage({
           type: "success",
-          text: `Post created! View at /blog/${data.id}`,
+          text: "Post updated successfully!",
         });
-        // Reset form
-        setTitle("");
-        setExcerpt("");
-        setContent("");
-        // Refresh posts list
-        const postsRes = await fetch("/api/blog");
-        if (postsRes.ok) {
-          const postsData = await postsRes.json();
-          if (postsData.data) {
-            setPosts(postsData.data);
-          }
-        }
       } else {
         setMessage({
           type: "error",
-          text: data.error || "Failed to create post",
+          text: data.error || "Failed to update post",
         });
       }
     } catch {
@@ -129,19 +127,6 @@ export default function AdminPostsPage() {
       setSaving(false);
     }
   };
-
-  // Filter posts based on search and category
-  const filteredPosts = posts.filter((post) => {
-    const matchesSearch =
-      post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      post.excerpt?.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory =
-      filterCategory === "All" || post.category === filterCategory;
-    return matchesSearch && matchesCategory;
-  });
-
-  // Get unique categories from posts
-  const allCategories = ["All", ...new Set(posts.map((p) => p.category))].sort();
 
   if (status === "loading" || loading) {
     return (
@@ -158,9 +143,9 @@ export default function AdminPostsPage() {
   return (
     <div className={styles.container}>
       <header className={styles.header}>
-        <h1>Blog Post Manager</h1>
-        <Link href="/dashboard" className={styles.backLink}>
-          Back to Dashboard
+        <h1>Edit Blog Post</h1>
+        <Link href="/admin/posts" className={styles.backLink}>
+          Back to Posts
         </Link>
       </header>
 
@@ -170,10 +155,10 @@ export default function AdminPostsPage() {
         </div>
       )}
 
-      <div className={styles.content}>
-        {/* Create New Post Form */}
+      <div className={styles.content} style={{ gridTemplateColumns: "1fr" }}>
+        {/* Edit Post Form */}
         <section className={styles.formSection}>
-          <h2>Create New Post</h2>
+          <h2>Edit Existing Post: {originalPost?.title}</h2>
           <form onSubmit={handleSubmit} className={styles.form}>
             <div className={styles.formGroup}>
               <label htmlFor="title">Title *</label>
@@ -244,100 +229,34 @@ export default function AdminPostsPage() {
                 id="content"
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
-                rows={15}
+                rows={20}
                 required
-                placeholder="Write your post content here. HTML is supported:
-
-<h3><strong>Section Title</strong></h3>
-
-<p>Your paragraph text goes here.</p>
-
-<p>Another paragraph with more content.</p>
-
-<ul>
-  <li>Bullet point 1</li>
-  <li>Bullet point 2</li>
-</ul>"
+                placeholder="Write your post content here. HTML is supported."
               />
             </div>
 
-            <button
-              type="submit"
-              disabled={saving}
-              className={styles.submitButton}
-            >
-              {saving ? "Creating Post..." : "Create Post"}
-            </button>
+            <div style={{ display: "flex", gap: "1rem" }}>
+              <button
+                type="submit"
+                disabled={saving}
+                className={styles.submitButton}
+              >
+                {saving ? "Saving Changes..." : "Save Changes"}
+              </button>
+              <Link
+                href={`/blog/${id}`}
+                target="_blank"
+                className={styles.submitButton}
+                style={{
+                  background: "rgba(255, 255, 255, 0.1)",
+                  textAlign: "center",
+                  textDecoration: "none"
+                }}
+              >
+                Preview Post
+              </Link>
+            </div>
           </form>
-        </section>
-
-        {/* Existing Posts List */}
-        <section className={styles.postsSection}>
-          <h2>Existing Posts ({posts.length})</h2>
-
-          {/* Search and Filter */}
-          <div className={styles.filters}>
-            <input
-              type="text"
-              placeholder="Search posts..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className={styles.searchInput}
-            />
-            <select
-              value={filterCategory}
-              onChange={(e) => setFilterCategory(e.target.value)}
-              className={styles.filterSelect}
-            >
-              {allCategories.map((cat) => (
-                <option key={cat} value={cat}>
-                  {cat}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className={styles.postsList}>
-            {filteredPosts.length === 0 ? (
-              <p className={styles.noPosts}>
-                {posts.length === 0
-                  ? "No posts yet. Create your first one above!"
-                  : "No posts match your search."}
-              </p>
-            ) : (
-              filteredPosts.slice(0, 50).map((post) => (
-                <div key={post.id} className={styles.postItem}>
-                  <div className={styles.postInfo}>
-                    <h3>{post.title}</h3>
-                    <div className={styles.postMeta}>
-                      <span className={styles.category}>{post.category}</span>
-                      <span className={styles.date}>{post.publishedAt}</span>
-                    </div>
-                  </div>
-                  <div className={styles.postActions}>
-                    <Link
-                      href={`/blog/${post.id}`}
-                      target="_blank"
-                      className={styles.viewButton}
-                    >
-                      View
-                    </Link>
-                    <Link
-                      href={`/admin/posts/${post.id}`}
-                      className={styles.editButton}
-                    >
-                      Edit
-                    </Link>
-                  </div>
-                </div>
-              ))
-            )}
-            {filteredPosts.length > 50 && (
-              <p className={styles.moreResults}>
-                Showing 50 of {filteredPosts.length} posts. Use search to find specific posts.
-              </p>
-            )}
-          </div>
         </section>
       </div>
     </div>

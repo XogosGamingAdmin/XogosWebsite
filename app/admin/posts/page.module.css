@@ -309,6 +309,7 @@
 }
 
 .viewButton,
+.editButton,
 .deleteButton {
   padding: 0.375rem 0.75rem;
   font-size: 0.75rem;
@@ -327,6 +328,16 @@
 
 .viewButton:hover {
   background: rgba(255, 255, 255, 0.2);
+}
+
+.editButton {
+  background: rgba(121, 40, 202, 0.2);
+  border: 1px solid rgba(121, 40, 202, 0.4);
+  color: #a855f7;
+}
+
+.editButton:hover {
+  background: rgba(121, 40, 202, 0.3);
 }
 
 .deleteButton {
