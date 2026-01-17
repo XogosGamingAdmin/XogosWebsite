@@ -92,6 +92,19 @@ export async function POST(request: NextRequest) {
 
     // Store in database
     const { query } = await import("@/lib/database");
+
+    // Ensure objectives is an array of strings
+    const objectivesArray = Array.isArray(objectives)
+      ? objectives.filter((obj: unknown) => typeof obj === 'string' && obj.trim() !== '')
+      : [];
+
+    if (objectivesArray.length === 0) {
+      return NextResponse.json(
+        { error: "At least one objective is required" },
+        { status: 400 }
+      );
+    }
+
     const result = await query(
       `INSERT INTO board_initiatives
         (member_id, member_email, member_name, member_title, member_role, member_image, title, description, objectives)
@@ -106,7 +119,7 @@ export async function POST(request: NextRequest) {
         memberInfo.imagePath,
         title,
         description,
-        objectives,
+        objectivesArray,
       ]
     );
 
@@ -116,8 +129,9 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error("Error creating initiative:", error);
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
-      { error: "Failed to create initiative" },
+      { error: `Failed to create initiative: ${errorMessage}` },
       { status: 500 }
     );
   }
