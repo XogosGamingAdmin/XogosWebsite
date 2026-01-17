@@ -1,0 +1,289 @@
+/* Member Initiatives Detail Page */
+
+.section {
+  padding: 4rem 2rem;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #0d0d1a 0%, #1a1a2e 100%);
+  color: #e5e5e5;
+  min-height: 100vh;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 50vh;
+  font-size: 1.25rem;
+  color: rgba(229, 229, 229, 0.7);
+}
+
+.notFound {
+  text-align: center;
+  padding: 4rem 2rem;
+}
+
+.notFound h1 {
+  font-family: "Russo One", sans-serif;
+  font-size: 2.5rem;
+  color: #ff3e3e;
+  margin-bottom: 1rem;
+}
+
+.notFound p {
+  color: rgba(229, 229, 229, 0.7);
+  margin-bottom: 2rem;
+}
+
+/* Back Link */
+.backLink {
+  display: inline-block;
+  color: rgba(229, 229, 229, 0.7);
+  text-decoration: none;
+  font-size: 0.9rem;
+  margin-bottom: 2rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+.backLink:hover {
+  color: #f97316;
+  border-color: #f97316;
+}
+
+/* Member Header */
+.memberHeader {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  padding: 2rem;
+  background: rgba(26, 26, 46, 0.4);
+  border-radius: 1rem;
+  margin-bottom: 3rem;
+}
+
+.memberImageContainer {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: linear-gradient(135deg, #ff3e3e, #ff7e3e);
+  padding: 4px;
+}
+
+.memberImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.memberPlaceholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 62, 62, 0.3),
+    rgba(255, 126, 62, 0.3)
+  );
+  border-radius: 50%;
+}
+
+.memberInfo {
+  flex: 1;
+}
+
+.memberName {
+  font-family: "Russo One", sans-serif;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem;
+  background: linear-gradient(90deg, #ff3e3e, #ff7e3e);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.memberTitle {
+  font-family: "Montserrat", sans-serif;
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: #e5e5e5;
+  margin: 0 0 0.5rem;
+}
+
+.memberRole {
+  font-size: 1rem;
+  color: rgba(229, 229, 229, 0.7);
+}
+
+/* Initiatives Container */
+.initiativesContainer {
+  max-width: 1200px;
+}
+
+.sectionTitle {
+  font-family: "Russo One", sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: #e5e5e5;
+}
+
+.initiativeCount {
+  color: rgba(229, 229, 229, 0.6);
+  font-size: 1rem;
+  margin-bottom: 2rem;
+}
+
+/* Initiatives Grid */
+.initiativesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 2rem;
+}
+
+/* Initiative Card */
+.initiativeCard {
+  position: relative;
+  background: rgba(13, 13, 26, 0.4);
+  border-radius: 1rem;
+  padding: 0;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.initiativeCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+}
+
+.initiativeCard::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(to right, #ff3e3e, #ff7e3e);
+}
+
+.initiativeTitle {
+  padding: 1.5rem 1.5rem 0.5rem;
+  font-family: "Montserrat", sans-serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #e5e5e5;
+  margin: 0;
+  line-height: 1.3;
+}
+
+.initiativeDate {
+  display: block;
+  padding: 0 1.5rem 1rem;
+  font-size: 0.8rem;
+  color: #f97316;
+}
+
+.initiativeDescription {
+  padding: 0 1.5rem 1rem;
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: rgba(229, 229, 229, 0.8);
+  margin: 0;
+}
+
+.objectivesLabel {
+  padding: 0.5rem 1.5rem;
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #e5e5e5;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(13, 13, 26, 0.3);
+}
+
+.initiativeList {
+  list-style: none;
+  padding: 0.5rem 1.5rem 1.5rem;
+  margin: 0;
+  background: rgba(13, 13, 26, 0.3);
+}
+
+.initiativeListItem {
+  position: relative;
+  padding-left: 1.5rem;
+  margin-bottom: 0.75rem;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: rgba(229, 229, 229, 0.8);
+}
+
+.initiativeListItem:last-child {
+  margin-bottom: 0;
+}
+
+.initiativeListItem::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.5rem;
+  width: 8px;
+  height: 8px;
+  transform: rotate(45deg);
+  background: #ff7e3e;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .section {
+    padding: 2rem 1rem;
+  }
+
+  .memberHeader {
+    flex-direction: column;
+    text-align: center;
+    padding: 1.5rem;
+  }
+
+  .memberImageContainer {
+    width: 100px;
+    height: 100px;
+  }
+
+  .memberName {
+    font-size: 2rem;
+  }
+
+  .memberTitle {
+    font-size: 1.1rem;
+  }
+
+  .sectionTitle {
+    font-size: 1.5rem;
+  }
+
+  .initiativesGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .section {
+    padding: 1.5rem 1rem;
+  }
+
+  .memberName {
+    font-size: 1.75rem;
+  }
+
+  .initiativeTitle {
+    font-size: 1.1rem;
+  }
+}

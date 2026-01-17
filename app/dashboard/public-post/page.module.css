@@ -1,0 +1,295 @@
+.container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0d0d1a 0%, #1a1a2e 100%);
+  color: #e5e5e5;
+  padding: 2rem;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.header h1 {
+  font-family: "Montserrat", sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  background: linear-gradient(45deg, #f97316, #ea580c);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.backLink {
+  color: rgba(229, 229, 229, 0.7);
+  text-decoration: none;
+  font-size: 0.875rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+.backLink:hover {
+  color: #f97316;
+  border-color: #f97316;
+}
+
+.memberInfo {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem;
+  background: rgba(249, 115, 22, 0.1);
+  border: 1px solid rgba(249, 115, 22, 0.3);
+  border-radius: 12px;
+  margin-bottom: 2rem;
+}
+
+.memberAvatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #f97316;
+}
+
+.memberName {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0;
+  color: #e5e5e5;
+}
+
+.memberTitle {
+  font-size: 0.875rem;
+  color: rgba(229, 229, 229, 0.6);
+  margin: 0.25rem 0 0;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 50vh;
+  font-size: 1.25rem;
+  color: rgba(229, 229, 229, 0.7);
+}
+
+.message {
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  font-size: 0.9375rem;
+}
+
+.message.success {
+  background: rgba(34, 197, 94, 0.2);
+  border: 1px solid rgba(34, 197, 94, 0.4);
+  color: #22c55e;
+}
+
+.message.error {
+  background: rgba(239, 68, 68, 0.2);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  color: #ef4444;
+}
+
+.content {
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  gap: 2rem;
+}
+
+@media (max-width: 1200px) {
+  .content {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Form Section */
+.formSection {
+  background: rgba(26, 26, 46, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 2rem;
+}
+
+.formSection h2 {
+  font-family: "Montserrat", sans-serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #e5e5e5;
+}
+
+.formDescription {
+  color: rgba(229, 229, 229, 0.6);
+  font-size: 0.875rem;
+  margin-bottom: 1.5rem;
+}
+
+.formDescription a {
+  color: #f97316;
+  text-decoration: none;
+}
+
+.formDescription a:hover {
+  text-decoration: underline;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.formGroup label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: rgba(229, 229, 229, 0.8);
+}
+
+.formGroup input,
+.formGroup textarea {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  font-size: 0.9375rem;
+  color: #e5e5e5;
+  font-family: inherit;
+  transition: all 0.3s ease;
+}
+
+.formGroup input:focus,
+.formGroup textarea:focus {
+  outline: none;
+  border-color: #f97316;
+  box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.2);
+}
+
+.formGroup textarea {
+  resize: vertical;
+  min-height: 100px;
+  line-height: 1.6;
+}
+
+.formGroup input::placeholder,
+.formGroup textarea::placeholder {
+  color: rgba(229, 229, 229, 0.4);
+}
+
+.submitButton {
+  background: linear-gradient(45deg, #f97316, #ea580c);
+  color: white;
+  font-family: "Montserrat", sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 0.5rem;
+}
+
+.submitButton:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(249, 115, 22, 0.4);
+}
+
+.submitButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Initiatives Section */
+.initiativesSection {
+  background: rgba(26, 26, 46, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 2rem;
+  max-height: calc(100vh - 300px);
+  overflow-y: auto;
+}
+
+.initiativesSection h2 {
+  font-family: "Montserrat", sans-serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #e5e5e5;
+}
+
+.initiativesList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.noInitiatives {
+  color: rgba(229, 229, 229, 0.5);
+  text-align: center;
+  padding: 2rem;
+}
+
+.initiativeItem {
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+}
+
+.initiativeItem h3 {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #f97316;
+  margin: 0 0 0.5rem;
+}
+
+.initiativeDescription {
+  font-size: 0.8125rem;
+  color: rgba(229, 229, 229, 0.7);
+  margin: 0 0 0.5rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.initiativeMeta {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.75rem;
+  color: rgba(229, 229, 229, 0.5);
+}
+
+/* Scrollbar styling */
+.initiativesSection::-webkit-scrollbar {
+  width: 6px;
+}
+
+.initiativesSection::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 3px;
+}
+
+.initiativesSection::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+}
+
+.initiativesSection::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}

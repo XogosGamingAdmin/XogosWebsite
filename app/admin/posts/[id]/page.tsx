@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
+import { canManageBlog } from "@/lib/auth/admin";
 import styles from "../page.module.css";
 
 const categories = [
@@ -82,12 +83,14 @@ export default function EditPostPage() {
     fetchPost();
   }, [id]);
 
-  // Redirect if not authenticated
+  // Redirect if not authenticated or not authorized
   useEffect(() => {
     if (status === "unauthenticated") {
       router.push("/signin");
+    } else if (status === "authenticated" && !canManageBlog(session?.user?.email)) {
+      router.push("/dashboard");
     }
-  }, [status, router]);
+  }, [status, session, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -136,7 +139,7 @@ export default function EditPostPage() {
     );
   }
 
-  if (!session) {
+  if (!session || !canManageBlog(session?.user?.email)) {
     return null;
   }
 

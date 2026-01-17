@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
 import { MarketingLayout } from "@/layouts/Marketing";
 import { Container } from "@/primitives/Container";
 import styles from "./page.module.css";
 
-// Static board member data with default initiatives
+// Static board member data with default initiatives (same as main page)
 const staticBoardMembers = [
   {
     id: "michael-weaver",
@@ -14,15 +15,6 @@ const staticBoardMembers = [
     title: "President",
     role: "Insurance & Risk",
     imagePath: "/images/board/weaver.jpg",
-    responsibilities: [
-      "Lead the board in strategic initiatives",
-      "Oversee insurance coverage and risk management",
-      "Develop crisis management protocols",
-    ],
-    contributions: [
-      "Establish guidelines for new educational game launches",
-      "Direct risk assessments for crypto-based activities",
-    ],
     staticInitiatives: [
       {
         title: "Enterprise Risk Register",
@@ -52,15 +44,6 @@ const staticBoardMembers = [
     title: "CEO",
     role: "Executive Oversight",
     imagePath: "/images/board/zack.png",
-    responsibilities: [
-      "Execute day-to-day company management",
-      "Implement the board's strategic vision",
-      "Oversee game development pipeline",
-    ],
-    contributions: [
-      "Link educational content to gameplay mechanics",
-      "Identify emerging educational technology trends",
-    ],
     staticInitiatives: [
       {
         title: "New Partnerships & Market Expansion",
@@ -90,15 +73,6 @@ const staticBoardMembers = [
     title: "Legal Director",
     role: "Legal & Regulatory",
     imagePath: "/images/board/braden.jpg",
-    responsibilities: [
-      "Oversee all legal aspects of operations",
-      "Ensure compliance with regulatory obligations",
-      "Monitor gaming regulations across jurisdictions",
-    ],
-    contributions: [
-      "Develop legal frameworks for educational blockchain",
-      "Review IP protections and scholarship distribution rules",
-    ],
     staticInitiatives: [
       {
         title: "Legal Aspects of Crypto Integration",
@@ -128,15 +102,6 @@ const staticBoardMembers = [
     title: "Crypto & Exchanges Director",
     role: "Cryptocurrency Integration",
     imagePath: "/images/board/terrance.jpg",
-    responsibilities: [
-      "Oversee digital currency integration",
-      "Ensure security of cryptocurrency transactions",
-      "Develop educational crypto content for students",
-    ],
-    contributions: [
-      "Create wallet systems suited for minors",
-      "Establish scholarship distribution protocols on-chain",
-    ],
     staticInitiatives: [
       {
         title: "Secure Student Wallet Systems",
@@ -166,15 +131,6 @@ const staticBoardMembers = [
     title: "Education Director",
     role: "Educational Strategy",
     imagePath: "/images/board/mckayla.jpg",
-    responsibilities: [
-      "Create educational content strategies",
-      "Align game content with curriculum standards",
-      "Evaluate real-world preparedness of the platform",
-    ],
-    contributions: [
-      "Define new educational topics for each grade level",
-      "Lead teacher/school pilot programs for Xogos",
-    ],
     staticInitiatives: [
       {
         title: "Educational Content Roadmap",
@@ -204,15 +160,6 @@ const staticBoardMembers = [
     title: "Accounting Director",
     role: "Financial Oversight",
     imagePath: "/images/board/kevin.jpg",
-    responsibilities: [
-      "Oversee financial reporting and operations",
-      "Ensure accuracy in financial statements",
-      "Manage audits & cryptocurrency accounting",
-    ],
-    contributions: [
-      "Create budgets for new game expansions",
-      "Develop financial literacy mechanics in games",
-    ],
     staticInitiatives: [
       {
         title: "Financial Reporting & Budget Projections",
@@ -254,83 +201,107 @@ interface DynamicInitiative {
   createdAt: string;
 }
 
-interface BoardMemberWithInitiatives {
+interface MemberData {
   id: string;
   name: string;
   title: string;
   role: string;
   imagePath: string;
-  responsibilities: string[];
-  contributions: string[];
   initiatives: Initiative[];
-  hasMoreInitiatives: boolean;
 }
 
-export default function BoardInitiativesPage() {
-  const [boardMembers, setBoardMembers] = useState<BoardMemberWithInitiatives[]>([]);
+export default function MemberInitiativesPage() {
+  const params = useParams();
+  const memberId = params.memberId as string;
+  const [memberData, setMemberData] = useState<MemberData | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function loadInitiatives() {
+    async function loadMemberInitiatives() {
       try {
+        // Find static member data
+        const staticMember = staticBoardMembers.find((m) => m.id === memberId);
+        if (!staticMember) {
+          setMemberData(null);
+          setLoading(false);
+          return;
+        }
+
         // Fetch dynamic initiatives from database
         const res = await fetch("/api/initiatives");
         const data = await res.json();
         const dynamicData = data.initiativesByMember || [];
 
-        // Merge static and dynamic data
-        const merged = staticBoardMembers.map((member) => {
-          // Find dynamic initiatives for this member
-          const dynamicMember = dynamicData.find(
-            (d: { memberId: string }) => d.memberId === member.id
-          );
-          const dynamicInitiatives: DynamicInitiative[] = dynamicMember?.initiatives || [];
-
-          // Combine: dynamic initiatives first (newest), then static as fallback
-          // Show max 2 on the card, rest go to detail page
-          const allInitiatives = [
-            ...dynamicInitiatives.map((i: DynamicInitiative) => ({
-              id: i.id,
-              title: i.title,
-              description: i.description,
-              objectives: i.objectives,
-              createdAt: i.createdAt,
-            })),
-            ...member.staticInitiatives,
-          ];
-
-          return {
-            ...member,
-            initiatives: allInitiatives.slice(0, 2), // Show only 2 on main page
-            hasMoreInitiatives: allInitiatives.length > 2,
-          };
-        });
-
-        setBoardMembers(merged);
-      } catch (error) {
-        console.error("Error loading initiatives:", error);
-        // Fallback to static data
-        setBoardMembers(
-          staticBoardMembers.map((m) => ({
-            ...m,
-            initiatives: m.staticInitiatives.slice(0, 2),
-            hasMoreInitiatives: m.staticInitiatives.length > 2,
-          }))
+        // Find dynamic initiatives for this member
+        const dynamicMember = dynamicData.find(
+          (d: { memberId: string }) => d.memberId === memberId
         );
+        const dynamicInitiatives: DynamicInitiative[] = dynamicMember?.initiatives || [];
+
+        // Combine: dynamic initiatives first (newest), then static
+        const allInitiatives: Initiative[] = [
+          ...dynamicInitiatives.map((i: DynamicInitiative) => ({
+            id: i.id,
+            title: i.title,
+            description: i.description,
+            objectives: i.objectives,
+            createdAt: i.createdAt,
+          })),
+          ...staticMember.staticInitiatives,
+        ];
+
+        setMemberData({
+          id: staticMember.id,
+          name: staticMember.name,
+          title: staticMember.title,
+          role: staticMember.role,
+          imagePath: staticMember.imagePath,
+          initiatives: allInitiatives,
+        });
+      } catch (error) {
+        console.error("Error loading member initiatives:", error);
+        // Fallback to static data
+        const staticMember = staticBoardMembers.find((m) => m.id === memberId);
+        if (staticMember) {
+          setMemberData({
+            id: staticMember.id,
+            name: staticMember.name,
+            title: staticMember.title,
+            role: staticMember.role,
+            imagePath: staticMember.imagePath,
+            initiatives: staticMember.staticInitiatives,
+          });
+        }
       } finally {
         setLoading(false);
       }
     }
 
-    loadInitiatives();
-  }, []);
+    loadMemberInitiatives();
+  }, [memberId]);
 
   if (loading) {
     return (
       <MarketingLayout>
         <Container className={styles.section}>
-          <div style={{ padding: "4rem", textAlign: "center" }}>
+          <div className={styles.loading}>
             <p>Loading initiatives...</p>
+          </div>
+        </Container>
+      </MarketingLayout>
+    );
+  }
+
+  if (!memberData) {
+    return (
+      <MarketingLayout>
+        <Container className={styles.section}>
+          <div className={styles.notFound}>
+            <h1>Member Not Found</h1>
+            <p>The board member you&apos;re looking for doesn&apos;t exist.</p>
+            <Link href="/board/initiatives" className={styles.backLink}>
+              Back to Board Initiatives
+            </Link>
           </div>
         </Container>
       </MarketingLayout>
@@ -340,103 +311,69 @@ export default function BoardInitiativesPage() {
   return (
     <MarketingLayout>
       <Container className={styles.section}>
-        {/* Hero Section */}
-        <div className={styles.heroInfo}>
-          <h1 className={styles.heroTitle}>Board Initiatives</h1>
-          <p className={styles.heroLead}>
-            Where each board member's role and responsibilities align with
-            initiatives guiding our next steps.
-          </p>
+        {/* Back Navigation */}
+        <Link href="/board/initiatives" className={styles.backLink}>
+          &larr; Back to All Board Initiatives
+        </Link>
+
+        {/* Member Header */}
+        <div className={styles.memberHeader}>
+          <div className={styles.memberImageContainer}>
+            {memberData.imagePath ? (
+              <img
+                src={memberData.imagePath}
+                alt={memberData.name}
+                className={styles.memberImage}
+              />
+            ) : (
+              <div className={styles.memberPlaceholder} />
+            )}
+          </div>
+          <div className={styles.memberInfo}>
+            <h1 className={styles.memberName}>{memberData.name}</h1>
+            <h2 className={styles.memberTitle}>{memberData.title}</h2>
+            <span className={styles.memberRole}>{memberData.role}</span>
+          </div>
         </div>
-      </Container>
 
-      <Container className={styles.section}>
-        <h2 className={styles.sectionTitle}>Board & Their Initiatives</h2>
-        <div className={styles.boardMembersGrid}>
-          {boardMembers.map((member) => (
-            <div key={member.id} className={styles.memberCard}>
-              {/* Sidebar-like portion */}
-              <div className={styles.memberSidebar}>
-                <div className={styles.memberImageContainer}>
-                  {member.imagePath ? (
-                    <img
-                      src={member.imagePath}
-                      alt={member.name}
-                      className={styles.memberImage}
-                    />
-                  ) : (
-                    <div className={styles.memberPlaceholder} />
-                  )}
-                </div>
-                <h3 className={styles.memberName}>{member.name}</h3>
-                <h4 className={styles.memberTitle}>{member.title}</h4>
-                <span className={styles.memberRole}>{member.role}</span>
+        {/* Initiatives Section */}
+        <div className={styles.initiativesContainer}>
+          <h2 className={styles.sectionTitle}>
+            All Initiatives by {memberData.name.split(" ")[0]}
+          </h2>
+          <p className={styles.initiativeCount}>
+            {memberData.initiatives.length} initiative
+            {memberData.initiatives.length !== 1 ? "s" : ""} total
+          </p>
+
+          <div className={styles.initiativesGrid}>
+            {memberData.initiatives.map((initiative, idx) => (
+              <div key={initiative.id || idx} className={styles.initiativeCard}>
+                <h3 className={styles.initiativeTitle}>{initiative.title}</h3>
+                {initiative.createdAt && (
+                  <span className={styles.initiativeDate}>
+                    Posted{" "}
+                    {new Date(initiative.createdAt).toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}
+                  </span>
+                )}
+                <p className={styles.initiativeDescription}>
+                  {initiative.description}
+                </p>
+                <h4 className={styles.objectivesLabel}>Objectives:</h4>
+                <ul className={styles.initiativeList}>
+                  {initiative.objectives.map((obj, objIdx) => (
+                    <li key={objIdx} className={styles.initiativeListItem}>
+                      {obj}
+                    </li>
+                  ))}
+                </ul>
               </div>
-
-              {/* Details portion */}
-              <div className={styles.memberDetails}>
-                <div className={styles.memberSection}>
-                  <h4 className={styles.memberSectionTitle}>
-                    Responsibilities
-                  </h4>
-                  <ul className={styles.memberList}>
-                    {member.responsibilities.map((resp, idx) => (
-                      <li key={idx} className={styles.memberListItem}>
-                        {resp}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                <div className={styles.memberSection}>
-                  <h4 className={styles.memberSectionTitle}>
-                    Key Contributions
-                  </h4>
-                  <ul className={styles.memberList}>
-                    {member.contributions.map((contr, idx) => (
-                      <li key={idx} className={styles.memberListItem}>
-                        {contr}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                <div className={styles.memberSection}>
-                  <h4 className={styles.memberSectionTitle}>Initiatives</h4>
-                  <div className={styles.initiativesGrid}>
-                    {member.initiatives.map((init, idx) => (
-                      <div key={init.id || idx} className={styles.initiativeCard}>
-                        <h5 className={styles.initiativeTitle}>{init.title}</h5>
-                        <p className={styles.initiativeDescription}>
-                          {init.description}
-                        </p>
-                        <h6 className={styles.objectivesLabel}>Objectives:</h6>
-                        <ul className={styles.initiativeList}>
-                          {init.objectives.map((obj, objIdx) => (
-                            <li
-                              key={objIdx}
-                              className={styles.initiativeListItem}
-                            >
-                              {obj}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* More Initiatives Button */}
-                  {member.hasMoreInitiatives && (
-                    <Link
-                      href={`/board/initiatives/${member.id}`}
-                      className={styles.moreInitiativesButton}
-                    >
-                      Click for More Initiatives
-                    </Link>
-                  )}
-                </div>
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </Container>
     </MarketingLayout>

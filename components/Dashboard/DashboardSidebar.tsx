@@ -9,9 +9,10 @@ import {
   DASHBOARD_DOCUMENTS_URL,
   DASHBOARD_HOME_URL,
   DASHBOARD_PROFILE_URL,
+  DASHBOARD_PUBLIC_POST_URL,
 } from "@/constants";
 import { EditIcon, FileIcon, FolderIcon, HomeIcon, UserIcon } from "@/icons";
-import { isAdmin } from "@/lib/auth/admin";
+import { isAdmin, canManageBlog, isBoardMember } from "@/lib/auth/admin";
 import { LinkButton } from "@/primitives/Button";
 import { Group } from "@/types";
 import { normalizeTrailingSlash } from "@/utils";
@@ -53,9 +54,10 @@ function SidebarLink({
 
 export function DashboardSidebar({ className, groups, ...props }: Props) {
   const { data: session } = useSession();
-  const userIsAdmin = session?.user?.email
-    ? isAdmin(session.user.email)
-    : false;
+  const userEmail = session?.user?.email;
+  const userIsAdmin = userEmail ? isAdmin(userEmail) : false;
+  const userCanManageBlog = userEmail ? canManageBlog(userEmail) : false;
+  const userIsBoardMember = userEmail ? isBoardMember(userEmail) : false;
 
   return (
     <div className={clsx(className, styles.sidebar)} {...props}>
@@ -77,17 +79,24 @@ export function DashboardSidebar({ className, groups, ...props }: Props) {
                 Profile
               </SidebarLink>
             </li>
+            {userIsBoardMember && (
+              <li>
+                <SidebarLink href={DASHBOARD_PUBLIC_POST_URL} icon={<EditIcon />}>
+                  Public Post
+                </SidebarLink>
+              </li>
+            )}
+            {userCanManageBlog && (
+              <li>
+                <SidebarLink href={ADMIN_BLOG_URL} icon={<EditIcon />}>
+                  Blog Posts
+                </SidebarLink>
+              </li>
+            )}
             {userIsAdmin && (
-              <>
-                <li>
-                  <SidebarLink href={ADMIN_BLOG_URL} icon={<EditIcon />}>
-                    Blog Posts
-                  </SidebarLink>
-                </li>
-                <li>
-                  <SidebarLink href={ADMIN_URL}>Admin</SidebarLink>
-                </li>
-              </>
+              <li>
+                <SidebarLink href={ADMIN_URL}>Admin</SidebarLink>
+              </li>
             )}
           </ul>
         </div>

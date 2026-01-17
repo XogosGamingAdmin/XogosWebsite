@@ -107,6 +107,21 @@ CREATE TABLE IF NOT EXISTS blog_posts (
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
+-- Board Member Initiatives Table
+CREATE TABLE IF NOT EXISTS board_initiatives (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  member_id TEXT NOT NULL,  -- e.g., "zack-edwards", "michael-weaver"
+  member_email TEXT NOT NULL,
+  member_name TEXT NOT NULL,
+  member_title TEXT NOT NULL,
+  member_role TEXT NOT NULL,
+  member_image TEXT NOT NULL,
+  title TEXT NOT NULL,
+  description TEXT NOT NULL,
+  objectives TEXT[] NOT NULL,  -- Array of objective strings
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
 -- Insert default users (board members)
 INSERT INTO users (id, name, avatar) VALUES
   ('enjoyweaver@gmail.com', 'Michael Weaver', '/images/board/michael.png'),
@@ -154,6 +169,9 @@ CREATE INDEX IF NOT EXISTS idx_user_groups_user_id ON user_groups(user_id);
 CREATE INDEX IF NOT EXISTS idx_user_groups_group_id ON user_groups(group_id);
 CREATE INDEX IF NOT EXISTS idx_blog_posts_created_at ON blog_posts(created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_blog_posts_category ON blog_posts(category);
+CREATE INDEX IF NOT EXISTS idx_board_initiatives_member_id ON board_initiatives(member_id);
+CREATE INDEX IF NOT EXISTS idx_board_initiatives_member_email ON board_initiatives(member_email);
+CREATE INDEX IF NOT EXISTS idx_board_initiatives_created_at ON board_initiatives(created_at DESC);
 
 -- Enable Row Level Security (RLS)
 ALTER TABLE users ENABLE ROW LEVEL SECURITY;
@@ -166,6 +184,7 @@ ALTER TABLE checklist_items ENABLE ROW LEVEL SECURITY;
 ALTER TABLE xogos_statistics ENABLE ROW LEVEL SECURITY;
 ALTER TABLE xogos_financials ENABLE ROW LEVEL SECURITY;
 ALTER TABLE blog_posts ENABLE ROW LEVEL SECURITY;
+ALTER TABLE board_initiatives ENABLE ROW LEVEL SECURITY;
 
 -- Create policies (allow all operations for now - you can restrict later)
 DROP POLICY IF EXISTS "Allow all for authenticated users" ON users;
@@ -197,3 +216,6 @@ CREATE POLICY "Allow all for authenticated users" ON xogos_financials FOR ALL US
 
 DROP POLICY IF EXISTS "Allow all for authenticated users" ON blog_posts;
 CREATE POLICY "Allow all for authenticated users" ON blog_posts FOR ALL USING (true);
+
+DROP POLICY IF EXISTS "Allow all for authenticated users" ON board_initiatives;
+CREATE POLICY "Allow all for authenticated users" ON board_initiatives FOR ALL USING (true);

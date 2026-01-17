@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
-import { isAdmin } from "@/lib/auth/admin";
+import { canManageBlog } from "@/lib/auth/admin";
 import generatedPosts from "@/data/generated-posts.json";
 
 interface BlogPost {
@@ -124,9 +124,9 @@ export async function PUT(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Check if user is admin
-    if (!isAdmin(session.user.email)) {
-      return NextResponse.json({ error: "Admin access required" }, { status: 403 });
+    // Check if user can manage blog
+    if (!canManageBlog(session.user.email)) {
+      return NextResponse.json({ error: "Blog management access required" }, { status: 403 });
     }
 
     const { slug } = await params;
