@@ -20,10 +20,24 @@ interface BoardDocument {
   icon: string;
 }
 
+// Type for initiative data
+interface MemberInitiative {
+  memberId: string;
+  memberName: string;
+  initiatives: Array<{
+    id: string;
+    title: string;
+    description: string;
+    objectives: string[];
+    createdAt: string;
+  }>;
+}
+
 // Real board members with proper seating positions
 const boardMembers = [
   {
     name: "Michael Weaver",
+    memberId: "michael-weaver",
     title: "President",
     role: "Insurance & Risk",
     imagePath: "/images/board/weaver.jpg",
@@ -32,6 +46,7 @@ const boardMembers = [
   },
   {
     name: "Zack Edwards",
+    memberId: "zack-edwards",
     title: "CEO",
     role: "Executive Oversight",
     imagePath: "/images/board/zack.png",
@@ -40,6 +55,7 @@ const boardMembers = [
   },
   {
     name: "Braden Perry",
+    memberId: "braden-perry",
     title: "Legal Director",
     role: "Legal & Regulatory",
     imagePath: "/images/board/braden.jpg",
@@ -48,6 +64,7 @@ const boardMembers = [
   },
   {
     name: "Terrance Gatsby",
+    memberId: "terrance-gatsby",
     title: "Crypto & Exchanges Director",
     role: "Cryptocurrency Integration",
     imagePath: "/images/board/terrance.jpg",
@@ -56,6 +73,7 @@ const boardMembers = [
   },
   {
     name: "Kevin Stursberg",
+    memberId: "kevin-stursberg",
     title: "Accounting Director",
     role: "Financial Oversight",
     imagePath: "/images/board/kevin.jpg",
@@ -64,6 +82,7 @@ const boardMembers = [
   },
   {
     name: "McKayla Reece",
+    memberId: "mckayla-reece",
     title: "Education Director",
     role: "Educational Strategy",
     imagePath: "/images/board/mckayla.jpg",
@@ -72,6 +91,7 @@ const boardMembers = [
   },
   {
     name: "Open Position",
+    memberId: null,
     title: "Compliance Director",
     role: "Regulatory Oversight",
     imagePath: null,
@@ -175,6 +195,29 @@ export default function BoardPage() {
     expenses: 0,
   });
   const [publishedDocs, setPublishedDocs] = useState<BoardDocument[]>([]);
+  const [memberInitiatives, setMemberInitiatives] = useState<MemberInitiative[]>([]);
+
+  // Fetch initiatives for all members
+  useEffect(() => {
+    async function fetchInitiatives() {
+      try {
+        const response = await fetch("/api/initiatives");
+        const data = await response.json();
+        setMemberInitiatives(data.initiativesByMember || []);
+      } catch (error) {
+        console.error("Error fetching initiatives:", error);
+      }
+    }
+    fetchInitiatives();
+  }, []);
+
+  // Helper to get the latest initiative for a board member
+  const getLatestInitiative = (memberId: string | null) => {
+    if (!memberId) return null;
+    const memberData = memberInitiatives.find((m) => m.memberId === memberId);
+    if (!memberData || memberData.initiatives.length === 0) return null;
+    return memberData.initiatives[0]; // Already sorted by createdAt DESC
+  };
 
   // Fetch published documents for board display
   useEffect(() => {
@@ -518,7 +561,7 @@ export default function BoardPage() {
 
                     {/* Member Details Popup */}
                     {selectedMember === member.name && (
-                      <div className={styles.memberDetailsPopup}>
+                      <div className={`${styles.memberDetailsPopup} ${getLatestInitiative(member.memberId) ? styles.hasInitiative : ""}`}>
                         <div className={styles.popupHeader}>
                           <h3>{member.name}</h3>
                           <button
@@ -531,25 +574,47 @@ export default function BoardPage() {
                             ×
                           </button>
                         </div>
-                        <div className={styles.popupContent}>
-                          <p>
-                            <strong>Title:</strong> {member.title}
-                          </p>
-                          <p>
-                            <strong>Focus Area:</strong> {member.role}
-                          </p>
-                          <p>
-                            <strong>Status:</strong>{" "}
-                            {member.status === "present"
-                              ? "Present"
-                              : "Vacant Position"}
-                          </p>
-                          <Link
-                            href="/boardmembers"
-                            className={styles.viewProfileButton}
-                          >
-                            View Full Profile →
-                          </Link>
+                        <div className={styles.popupBody}>
+                          {/* Left side - Member Info */}
+                          <div className={styles.popupContent}>
+                            <p>
+                              <strong>Title:</strong> {member.title}
+                            </p>
+                            <p>
+                              <strong>Focus Area:</strong> {member.role}
+                            </p>
+                            <p>
+                              <strong>Status:</strong>{" "}
+                              {member.status === "present"
+                                ? "Present"
+                                : "Vacant Position"}
+                            </p>
+                            <Link
+                              href="/board/members"
+                              className={styles.viewProfileButton}
+                            >
+                              View Full Profile →
+                            </Link>
+                          </div>
+                          {/* Right side - Latest Initiative */}
+                          {getLatestInitiative(member.memberId) && (
+                            <div className={styles.popupInitiative}>
+                              <div className={styles.initiativeLabel}>Latest Initiative</div>
+                              <h4 className={styles.initiativeTitle}>
+                                {getLatestInitiative(member.memberId)?.title}
+                              </h4>
+                              <p className={styles.initiativeDescription}>
+                                {getLatestInitiative(member.memberId)?.description.slice(0, 150)}
+                                {(getLatestInitiative(member.memberId)?.description.length || 0) > 150 ? "..." : ""}
+                              </p>
+                              <Link
+                                href={`/board/initiatives/${member.memberId}`}
+                                className={styles.viewInitiativeButton}
+                              >
+                                View Initiative →
+                              </Link>
+                            </div>
+                          )}
                         </div>
                       </div>
                     )}
