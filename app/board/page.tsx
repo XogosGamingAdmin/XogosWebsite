@@ -561,7 +561,7 @@ export default function BoardPage() {
 
                     {/* Member Details Popup */}
                     {selectedMember === member.name && (
-                      <div className={`${styles.memberDetailsPopup} ${getLatestInitiative(member.memberId) ? styles.hasInitiative : ""}`}>
+                      <div className={`${styles.memberDetailsPopup} ${member.status === "present" ? styles.hasInitiative : ""}`}>
                         <div className={styles.popupHeader}>
                           <h3>{member.name}</h3>
                           <button
@@ -597,22 +597,30 @@ export default function BoardPage() {
                             </Link>
                           </div>
                           {/* Right side - Latest Initiative */}
-                          {getLatestInitiative(member.memberId) && (
+                          {member.status === "present" && (
                             <div className={styles.popupInitiative}>
                               <div className={styles.initiativeLabel}>Latest Initiative</div>
-                              <h4 className={styles.initiativeTitle}>
-                                {getLatestInitiative(member.memberId)?.title}
-                              </h4>
-                              <p className={styles.initiativeDescription}>
-                                {getLatestInitiative(member.memberId)?.description.slice(0, 150)}
-                                {(getLatestInitiative(member.memberId)?.description.length || 0) > 150 ? "..." : ""}
-                              </p>
-                              <Link
-                                href={`/board/initiatives/${member.memberId}`}
-                                className={styles.viewInitiativeButton}
-                              >
-                                View Initiative →
-                              </Link>
+                              {getLatestInitiative(member.memberId) ? (
+                                <>
+                                  <h4 className={styles.initiativeTitle}>
+                                    {getLatestInitiative(member.memberId)?.title}
+                                  </h4>
+                                  <p className={styles.initiativeDescription}>
+                                    {getLatestInitiative(member.memberId)?.description.slice(0, 150)}
+                                    {(getLatestInitiative(member.memberId)?.description.length || 0) > 150 ? "..." : ""}
+                                  </p>
+                                  <Link
+                                    href={`/board/initiatives/${member.memberId}`}
+                                    className={styles.viewInitiativeButton}
+                                  >
+                                    View Initiative →
+                                  </Link>
+                                </>
+                              ) : (
+                                <p className={styles.noInitiativeMessage}>
+                                  This member has not yet released their first initiative.
+                                </p>
+                              )}
                             </div>
                           )}
                         </div>

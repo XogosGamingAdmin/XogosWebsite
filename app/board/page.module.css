@@ -583,6 +583,14 @@
   transform: translateY(-1px);
 }
 
+.noInitiativeMessage {
+  font-size: 0.85rem;
+  color: rgba(229, 229, 229, 0.5);
+  font-style: italic;
+  line-height: 1.5;
+  margin: 0;
+}
+
 .presenceIndicator {
   position: absolute;
   bottom: -2px;
