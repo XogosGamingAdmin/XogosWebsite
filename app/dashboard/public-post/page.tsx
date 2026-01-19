@@ -21,6 +21,7 @@ export default function PublicPostPage() {
   const [initiatives, setInitiatives] = useState<Initiative[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [deleting, setDeleting] = useState<string | null>(null);
   const [message, setMessage] = useState<{
     type: "success" | "error";
     text: string;
@@ -30,6 +31,9 @@ export default function PublicPostPage() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [objectives, setObjectives] = useState("");
+
+  // Edit state
+  const [editingId, setEditingId] = useState<string | null>(null);
 
   const memberInfo = getBoardMemberByEmail(session?.user?.email);
 
@@ -63,6 +67,60 @@ export default function PublicPostPage() {
     }
   }, [status, session, router]);
 
+  const resetForm = () => {
+    setTitle("");
+    setDescription("");
+    setObjectives("");
+    setEditingId(null);
+  };
+
+  const handleEdit = (initiative: Initiative) => {
+    setTitle(initiative.title);
+    setDescription(initiative.description);
+    setObjectives(initiative.objectives.join("\n"));
+    setEditingId(initiative.id);
+    setMessage(null);
+    // Scroll to form
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleCancelEdit = () => {
+    resetForm();
+    setMessage(null);
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this initiative? This action cannot be undone.")) {
+      return;
+    }
+
+    setDeleting(id);
+    setMessage(null);
+
+    try {
+      const res = await fetch(`/api/initiatives/${id}`, {
+        method: "DELETE",
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        setMessage({ type: "success", text: "Initiative deleted successfully" });
+        setInitiatives((prev) => prev.filter((init) => init.id !== id));
+        // If we were editing this initiative, reset the form
+        if (editingId === id) {
+          resetForm();
+        }
+      } else {
+        setMessage({ type: "error", text: data.error || "Failed to delete initiative" });
+      }
+    } catch {
+      setMessage({ type: "error", text: "An error occurred while deleting" });
+    } finally {
+      setDeleting(null);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
@@ -71,8 +129,8 @@ export default function PublicPostPage() {
     // Parse objectives (one per line)
     const objectivesList = objectives
       .split("\n")
-      .map(o => o.trim())
-      .filter(o => o.length > 0);
+      .map((o) => o.trim())
+      .filter((o) => o.length > 0);
 
     if (objectivesList.length === 0) {
       setMessage({ type: "error", text: "Please add at least one objective" });
@@ -81,8 +139,11 @@ export default function PublicPostPage() {
     }
 
     try {
-      const res = await fetch("/api/initiatives", {
-        method: "POST",
+      const url = editingId ? `/api/initiatives/${editingId}` : "/api/initiatives";
+      const method = editingId ? "PUT" : "POST";
+
+      const res = await fetch(url, {
+        method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           title,
@@ -96,12 +157,12 @@ export default function PublicPostPage() {
       if (res.ok) {
         setMessage({
           type: "success",
-          text: "Initiative published successfully! It will appear on the Board Initiatives page.",
+          text: editingId
+            ? "Initiative updated successfully!"
+            : "Initiative published successfully! It will appear on the Board Initiatives page.",
         });
         // Reset form
-        setTitle("");
-        setDescription("");
-        setObjectives("");
+        resetForm();
         // Refresh initiatives list
         const refreshRes = await fetch("/api/initiatives/my");
         if (refreshRes.ok) {
@@ -111,11 +172,11 @@ export default function PublicPostPage() {
       } else {
         setMessage({
           type: "error",
-          text: data.error || "Failed to publish initiative",
+          text: data.error || `Failed to ${editingId ? "update" : "publish"} initiative`,
         });
       }
     } catch {
-      setMessage({ type: "error", text: "An error occurred while publishing" });
+      setMessage({ type: "error", text: `An error occurred while ${editingId ? "updating" : "publishing"}` });
     } finally {
       setSaving(false);
     }
@@ -151,24 +212,26 @@ export default function PublicPostPage() {
           />
           <div>
             <h2 className={styles.memberName}>{memberInfo.name}</h2>
-            <p className={styles.memberTitle}>{memberInfo.title} - {memberInfo.role}</p>
+            <p className={styles.memberTitle}>
+              {memberInfo.title} - {memberInfo.role}
+            </p>
           </div>
         </div>
       )}
 
       {message && (
-        <div className={`${styles.message} ${styles[message.type]}`}>
-          {message.text}
-        </div>
+        <div className={`${styles.message} ${styles[message.type]}`}>{message.text}</div>
       )}
 
       <div className={styles.content}>
-        {/* Create New Initiative Form */}
+        {/* Create/Edit Initiative Form */}
         <section className={styles.formSection}>
-          <h2>Create New Initiative</h2>
+          <h2>{editingId ? "Edit Initiative" : "Create New Initiative"}</h2>
           <p className={styles.formDescription}>
             Your initiative will be published on the{" "}
-            <Link href="/board/initiatives" target="_blank">Board Initiatives</Link>{" "}
+            <Link href="/board/initiatives" target="_blank">
+              Board Initiatives
+            </Link>{" "}
             page under your name.
           </p>
           <form onSubmit={handleSubmit} className={styles.form}>
@@ -208,13 +271,26 @@ export default function PublicPostPage() {
               />
             </div>
 
-            <button
-              type="submit"
-              disabled={saving}
-              className={styles.submitButton}
-            >
-              {saving ? "Publishing..." : "Publish Initiative"}
-            </button>
+            <div className={styles.formButtons}>
+              <button type="submit" disabled={saving} className={styles.submitButton}>
+                {saving
+                  ? editingId
+                    ? "Updating..."
+                    : "Publishing..."
+                  : editingId
+                    ? "Update Initiative"
+                    : "Publish Initiative"}
+              </button>
+              {editingId && (
+                <button
+                  type="button"
+                  onClick={handleCancelEdit}
+                  className={styles.cancelButton}
+                >
+                  Cancel Edit
+                </button>
+              )}
+            </div>
           </form>
         </section>
 
@@ -224,16 +300,35 @@ export default function PublicPostPage() {
           <div className={styles.initiativesList}>
             {initiatives.length === 0 ? (
               <p className={styles.noInitiatives}>
-                You haven't published any initiatives yet.
+                You haven&apos;t published any initiatives yet.
               </p>
             ) : (
               initiatives.map((init) => (
-                <div key={init.id} className={styles.initiativeItem}>
+                <div
+                  key={init.id}
+                  className={`${styles.initiativeItem} ${editingId === init.id ? styles.editing : ""}`}
+                >
                   <h3>{init.title}</h3>
                   <p className={styles.initiativeDescription}>{init.description}</p>
                   <div className={styles.initiativeMeta}>
                     <span>{new Date(init.createdAt).toLocaleDateString()}</span>
                     <span>{init.objectives.length} objectives</span>
+                  </div>
+                  <div className={styles.initiativeActions}>
+                    <button
+                      onClick={() => handleEdit(init)}
+                      className={styles.editButton}
+                      disabled={deleting === init.id}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDelete(init.id)}
+                      className={styles.deleteButton}
+                      disabled={deleting === init.id}
+                    >
+                      {deleting === init.id ? "Deleting..." : "Delete"}
+                    </button>
                   </div>
                 </div>
               ))
