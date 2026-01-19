@@ -203,8 +203,6 @@ export default function BoardPage() {
       try {
         const response = await fetch("/api/initiatives");
         const data = await response.json();
-        console.log("Initiatives API response:", data);
-        console.log("Initiatives by member:", data.initiativesByMember);
         setMemberInitiatives(data.initiativesByMember || []);
       } catch (error) {
         console.error("Error fetching initiatives:", error);
@@ -216,10 +214,7 @@ export default function BoardPage() {
   // Helper to get the latest initiative for a board member
   const getLatestInitiative = (memberId: string | null) => {
     if (!memberId) return null;
-    console.log("Looking for initiatives for memberId:", memberId);
-    console.log("Available memberInitiatives:", memberInitiatives);
     const memberData = memberInitiatives.find((m) => m.memberId === memberId);
-    console.log("Found memberData:", memberData);
     if (!memberData || memberData.initiatives.length === 0) return null;
     return memberData.initiatives[0]; // Already sorted by createdAt DESC
   };
