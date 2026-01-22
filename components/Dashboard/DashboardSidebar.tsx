@@ -82,7 +82,7 @@ export function DashboardSidebar({ className, groups, ...props }: Props) {
             {userIsBoardMember && (
               <li>
                 <SidebarLink href={DASHBOARD_PUBLIC_POST_URL} icon={<EditIcon />}>
-                  Public Post
+                  Initiatives
                 </SidebarLink>
               </li>
             )}

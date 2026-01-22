@@ -69,4 +69,20 @@ export const groups: Group[] = [
     id: "tokenomics",
     name: "Tokenomics",
   },
+  {
+    id: "auditing_group",
+    name: "Auditing Group",
+  },
+  {
+    id: "educational_group",
+    name: "Educational Group",
+  },
+  {
+    id: "crypto_group",
+    name: "Crypto Group",
+  },
+  {
+    id: "legal_group",
+    name: "Legal Group",
+  },
 ];

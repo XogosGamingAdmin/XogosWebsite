@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import {
   ADMIN_FINANCIALS_URL,
+  ADMIN_GROUPS_URL,
   ADMIN_STATISTICS_URL,
   DASHBOARD_HOME_URL,
 } from "@/constants";
@@ -99,6 +100,9 @@ export default function ChecklistsPage() {
           <Link href={ADMIN_FINANCIALS_URL} className={styles.tab}>
             Financials
           </Link>
+          <Link href={ADMIN_GROUPS_URL} className={styles.tab}>
+            Groups
+          </Link>
         </div>
       </div>
 
@@ -188,9 +192,8 @@ export default function ChecklistsPage() {
         </section>
 
         <p className={styles.note}>
-          NOTE: Deletions update the in-memory data. For persistent storage,
-          you'll need to manually update /data/checklists.ts or implement a
-          database.
+          All changes are saved to the Supabase database. Board members will see
+          their checklist items on their dashboard.
         </p>
       </div>
     </div>

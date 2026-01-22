@@ -1,0 +1,197 @@
+.container {
+  padding: 40px;
+  max-width: 1200px;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 20px;
+  }
+}
+
+.header {
+  margin-bottom: 32px;
+}
+
+.backLink {
+  display: inline-block;
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  margin-bottom: 12px;
+  transition: color 0.15s ease;
+}
+
+.backLink:hover {
+  color: var(--color-text);
+}
+
+.title {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0 0 8px 0;
+}
+
+.subtitle {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  margin: 0 0 16px 0;
+}
+
+.tabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.tab {
+  padding: 8px 16px;
+  background: var(--color-background-tertiary);
+  color: var(--color-text);
+  text-decoration: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.15s ease;
+}
+
+.tab:hover {
+  background: var(--color-border);
+}
+
+.content {
+  background: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 32px;
+}
+
+.loading {
+  color: var(--color-text-secondary);
+  text-align: center;
+  padding: 40px 20px;
+  margin: 0;
+}
+
+.successMessage {
+  color: var(--color-success, #10b981);
+  font-size: 14px;
+  margin: 0 0 16px 0;
+  padding: 12px;
+  background: rgba(16, 185, 129, 0.1);
+  border-radius: 6px;
+}
+
+.errorMessage {
+  color: var(--color-error);
+  font-size: 14px;
+  margin: 0 0 16px 0;
+  padding: 12px;
+  background: rgba(239, 68, 68, 0.1);
+  border-radius: 6px;
+}
+
+.groupsTable {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow-x: auto;
+}
+
+.tableHeader {
+  display: flex;
+  gap: 16px;
+  padding: 12px 16px;
+  background: var(--color-background-tertiary);
+  border-radius: 6px 6px 0 0;
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  min-width: 800px;
+}
+
+.tableRow {
+  display: flex;
+  gap: 16px;
+  padding: 16px;
+  background: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-top: none;
+  align-items: center;
+  min-width: 800px;
+}
+
+.tableRow:last-child {
+  border-radius: 0 0 6px 6px;
+}
+
+.tableRow:hover {
+  background: var(--color-background-secondary);
+}
+
+.userColumn {
+  flex: 0 0 250px;
+  min-width: 250px;
+}
+
+.groupColumn {
+  flex: 1;
+  min-width: 120px;
+  text-align: center;
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.userName {
+  font-weight: 600;
+  color: var(--color-text);
+  font-size: 14px;
+}
+
+.userEmail {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+.toggleButton {
+  min-width: 80px;
+  padding: 6px 12px;
+  font-size: 12px;
+}
+
+.note {
+  margin-top: 24px;
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  padding: 16px;
+  background: var(--color-background-tertiary);
+  border-radius: 6px;
+  border-left: 3px solid var(--color-accent);
+}
+
+.note strong {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--color-text);
+}
+
+.note ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.note li {
+  margin: 4px 0;
+}

@@ -20,7 +20,16 @@ export const ADMIN_URL = "/admin";
 export const ADMIN_STATISTICS_URL = `${ADMIN_URL}/statistics`;
 export const ADMIN_FINANCIALS_URL = `${ADMIN_URL}/financials`;
 export const ADMIN_CHECKLISTS_URL = `${ADMIN_URL}/checklists`;
+export const ADMIN_GROUPS_URL = `${ADMIN_URL}/groups`;
 export const ADMIN_BLOG_URL = `${ADMIN_URL}/posts`;
+
+// Document Groups (for sidebar display)
+export const DOCUMENT_GROUPS = [
+  { id: "auditing_group", name: "Auditing Group" },
+  { id: "educational_group", name: "Educational Group" },
+  { id: "crypto_group", name: "Crypto Group" },
+  { id: "legal_group", name: "Legal Group" },
+];
 
 // Public Post (Board Member Initiatives)
 export const DASHBOARD_PUBLIC_POST_URL = "/dashboard/public-post";

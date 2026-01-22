@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { TrendsDisplay } from "@/components/TrendsDisplay";
 import {
   ADMIN_CHECKLISTS_URL,
+  ADMIN_GROUPS_URL,
   ADMIN_STATISTICS_URL,
   DASHBOARD_HOME_URL,
 } from "@/constants";
@@ -75,6 +76,9 @@ export default function FinancialsPage() {
           </Link>
           <Link href={ADMIN_CHECKLISTS_URL} className={styles.tab}>
             Checklists
+          </Link>
+          <Link href={ADMIN_GROUPS_URL} className={styles.tab}>
+            Groups
           </Link>
         </div>
       </div>

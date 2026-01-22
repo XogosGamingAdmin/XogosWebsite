@@ -392,6 +392,99 @@ export const db = {
     return result.rows[0];
   },
 
+  // ============ GROUP FUNCTIONS ============
+
+  /**
+   * Get a group by ID
+   */
+  async getGroupById(groupId: string) {
+    const result = await query(
+      `SELECT id, name, created_at
+       FROM groups
+       WHERE id = $1`,
+      [groupId]
+    );
+    return result.rows[0];
+  },
+
+  /**
+   * Get all groups
+   */
+  async getAllGroups() {
+    const result = await query(
+      `SELECT id, name, created_at
+       FROM groups
+       ORDER BY name`
+    );
+    return result.rows;
+  },
+
+  /**
+   * Get multiple groups by their IDs
+   */
+  async getGroupsByIds(groupIds: string[]) {
+    if (groupIds.length === 0) return [];
+    const result = await query(
+      `SELECT id, name, created_at
+       FROM groups
+       WHERE id = ANY($1)
+       ORDER BY name`,
+      [groupIds]
+    );
+    return result.rows;
+  },
+
+  /**
+   * Create a new group
+   */
+  async createGroup(id: string, name: string) {
+    const result = await query(
+      `INSERT INTO groups (id, name)
+       VALUES ($1, $2)
+       ON CONFLICT (id) DO UPDATE SET name = $2
+       RETURNING id, name, created_at`,
+      [id, name]
+    );
+    return result.rows[0];
+  },
+
+  /**
+   * Delete a group
+   */
+  async deleteGroup(groupId: string) {
+    await query(`DELETE FROM groups WHERE id = $1`, [groupId]);
+  },
+
+  /**
+   * Get all groups for a user
+   */
+  async getGroupsForUser(userId: string) {
+    const result = await query(
+      `SELECT g.id, g.name, g.created_at
+       FROM groups g
+       INNER JOIN user_groups ug ON g.id = ug.group_id
+       WHERE ug.user_id = $1
+       ORDER BY g.name`,
+      [userId]
+    );
+    return result.rows;
+  },
+
+  /**
+   * Get all users in a group
+   */
+  async getUsersInGroup(groupId: string) {
+    const result = await query(
+      `SELECT u.id, u.name, u.avatar, u.is_active, u.created_at, u.updated_at
+       FROM users u
+       INNER JOIN user_groups ug ON u.id = ug.user_id
+       WHERE ug.group_id = $1
+       ORDER BY u.name`,
+      [groupId]
+    );
+    return result.rows;
+  },
+
   // ============ USER FUNCTIONS ============
 
   /**

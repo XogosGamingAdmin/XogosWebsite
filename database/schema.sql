@@ -8,10 +8,17 @@ CREATE TABLE IF NOT EXISTS users (
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
+-- Groups Table (document access groups)
+CREATE TABLE IF NOT EXISTS groups (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
 -- User Groups Junction Table
 CREATE TABLE IF NOT EXISTS user_groups (
   user_id TEXT REFERENCES users(id) ON DELETE CASCADE,
-  group_id TEXT NOT NULL,
+  group_id TEXT REFERENCES groups(id) ON DELETE CASCADE,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   PRIMARY KEY (user_id, group_id)
 );
@@ -124,22 +131,84 @@ CREATE TABLE IF NOT EXISTS board_initiatives (
 
 -- Insert default users (board members)
 INSERT INTO users (id, name, avatar) VALUES
-  ('enjoyweaver@gmail.com', 'Michael Weaver', '/images/board/michael.png'),
+  ('enjoyweaver@gmail.com', 'Michael Weaver', '/images/board/weaver.jpg'),
   ('zack@xogosgaming.com', 'Zack Edwards', '/images/board/zack.png'),
-  ('braden@kennyhertzperry.com', 'Braden Perry', '/images/board/braden.png'),
-  ('terrence@terrencegatsby.com', 'Terrence Gatsby', '/images/board/terrence.png'),
-  ('sturs49@gmail.com', 'Sean Sturtevant', '/images/board/sean.png'),
-  ('mckaylaareece@gmail.com', 'McKayla Reece', '/images/board/mckayla.png')
+  ('braden@kennyhertzperry.com', 'Braden Perry', '/images/board/braden.jpg'),
+  ('terrence@terrencegatsby.com', 'Terrance Gatsby', '/images/board/terrance.jpg'),
+  ('sturs49@gmail.com', 'Kevin Stursberg', '/images/board/kevin.jpg'),
+  ('mckaylaareece@gmail.com', 'McKayla', '/images/board/mckayla.jpg')
 ON CONFLICT (id) DO NOTHING;
 
--- Insert default user groups
+-- Insert default groups (document access groups)
+INSERT INTO groups (id, name) VALUES
+  ('board_member', 'Board Member'),
+  ('historical_agendas', 'Historical Agendas'),
+  ('advisory_board', 'Advisory Board'),
+  ('communications_committee', 'Communications Committee'),
+  ('audit_committee', 'Audit Committee'),
+  ('education_committee', 'Education Committee'),
+  ('fundraising_committee', 'Fundraising Committee'),
+  ('compliance_&_regulations_committee', 'Compliance & Regulations Committee'),
+  ('michaels_notes', 'Michael''s Notes'),
+  ('zacks_notes', 'Zack''s Notes'),
+  ('bradens_notes', 'Braden''s Notes'),
+  ('terrences_notes', 'Terrance''s Notes'),
+  ('kevins_notes', 'Kevin''s Notes'),
+  ('mckaylas_notes', 'McKayla''s Notes'),
+  ('jordans_notes', 'Jordan''s Notes'),
+  ('tokenomics', 'Tokenomics'),
+  ('auditing_group', 'Auditing Group'),
+  ('educational_group', 'Educational Group'),
+  ('crypto_group', 'Crypto Group'),
+  ('legal_group', 'Legal Group')
+ON CONFLICT (id) DO NOTHING;
+
+-- Insert default user groups (based on data/users.ts)
+-- Michael Weaver: board_member, audit_committee, michaels_notes, historical_agendas, tokenomics
 INSERT INTO user_groups (user_id, group_id) VALUES
-  ('enjoyweaver@gmail.com', 'board'),
-  ('zack@xogosgaming.com', 'board'),
-  ('braden@kennyhertzperry.com', 'board'),
-  ('terrence@terrencegatsby.com', 'board'),
-  ('sturs49@gmail.com', 'board'),
-  ('mckaylaareece@gmail.com', 'board')
+  ('enjoyweaver@gmail.com', 'board_member'),
+  ('enjoyweaver@gmail.com', 'audit_committee'),
+  ('enjoyweaver@gmail.com', 'michaels_notes'),
+  ('enjoyweaver@gmail.com', 'historical_agendas'),
+  ('enjoyweaver@gmail.com', 'tokenomics')
+ON CONFLICT (user_id, group_id) DO NOTHING;
+
+-- Zack Edwards: board_member, zacks_notes, historical_agendas, tokenomics
+INSERT INTO user_groups (user_id, group_id) VALUES
+  ('zack@xogosgaming.com', 'board_member'),
+  ('zack@xogosgaming.com', 'zacks_notes'),
+  ('zack@xogosgaming.com', 'historical_agendas'),
+  ('zack@xogosgaming.com', 'tokenomics')
+ON CONFLICT (user_id, group_id) DO NOTHING;
+
+-- Braden Perry: board_member, bradens_notes, historical_agendas
+INSERT INTO user_groups (user_id, group_id) VALUES
+  ('braden@kennyhertzperry.com', 'board_member'),
+  ('braden@kennyhertzperry.com', 'bradens_notes'),
+  ('braden@kennyhertzperry.com', 'historical_agendas')
+ON CONFLICT (user_id, group_id) DO NOTHING;
+
+-- Terrance Gatsby: board_member, compliance_&_regulations_committee, terrences_notes, historical_agendas
+INSERT INTO user_groups (user_id, group_id) VALUES
+  ('terrence@terrencegatsby.com', 'board_member'),
+  ('terrence@terrencegatsby.com', 'compliance_&_regulations_committee'),
+  ('terrence@terrencegatsby.com', 'terrences_notes'),
+  ('terrence@terrencegatsby.com', 'historical_agendas')
+ON CONFLICT (user_id, group_id) DO NOTHING;
+
+-- Kevin Stursberg: board_member, kevins_notes, historical_agendas
+INSERT INTO user_groups (user_id, group_id) VALUES
+  ('sturs49@gmail.com', 'board_member'),
+  ('sturs49@gmail.com', 'kevins_notes'),
+  ('sturs49@gmail.com', 'historical_agendas')
+ON CONFLICT (user_id, group_id) DO NOTHING;
+
+-- McKayla: board_member, education_committee, mckaylas_notes, historical_agendas
+INSERT INTO user_groups (user_id, group_id) VALUES
+  ('mckaylaareece@gmail.com', 'board_member'),
+  ('mckaylaareece@gmail.com', 'education_committee'),
+  ('mckaylaareece@gmail.com', 'mckaylas_notes'),
+  ('mckaylaareece@gmail.com', 'historical_agendas')
 ON CONFLICT (user_id, group_id) DO NOTHING;
 
 -- Insert default board member profiles
@@ -175,6 +244,7 @@ CREATE INDEX IF NOT EXISTS idx_board_initiatives_created_at ON board_initiatives
 
 -- Enable Row Level Security (RLS)
 ALTER TABLE users ENABLE ROW LEVEL SECURITY;
+ALTER TABLE groups ENABLE ROW LEVEL SECURITY;
 ALTER TABLE user_groups ENABLE ROW LEVEL SECURITY;
 ALTER TABLE newsletter_subscriptions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE error_logs ENABLE ROW LEVEL SECURITY;
@@ -189,6 +259,9 @@ ALTER TABLE board_initiatives ENABLE ROW LEVEL SECURITY;
 -- Create policies (allow all operations for now - you can restrict later)
 DROP POLICY IF EXISTS "Allow all for authenticated users" ON users;
 CREATE POLICY "Allow all for authenticated users" ON users FOR ALL USING (true);
+
+DROP POLICY IF EXISTS "Allow all for authenticated users" ON groups;
+CREATE POLICY "Allow all for authenticated users" ON groups FOR ALL USING (true);
 
 DROP POLICY IF EXISTS "Allow all for authenticated users" ON user_groups;
 CREATE POLICY "Allow all for authenticated users" ON user_groups FOR ALL USING (true);

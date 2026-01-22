@@ -6,6 +6,7 @@ import { TrendsDisplay } from "@/components/TrendsDisplay";
 import {
   ADMIN_CHECKLISTS_URL,
   ADMIN_FINANCIALS_URL,
+  ADMIN_GROUPS_URL,
   DASHBOARD_HOME_URL,
 } from "@/constants";
 import { getStatistics } from "@/lib/actions/getStatistics";
@@ -69,6 +70,9 @@ export default function StatisticsPage() {
           </Link>
           <Link href={ADMIN_CHECKLISTS_URL} className={styles.tab}>
             Checklists
+          </Link>
+          <Link href={ADMIN_GROUPS_URL} className={styles.tab}>
+            Groups
           </Link>
         </div>
       </div>
