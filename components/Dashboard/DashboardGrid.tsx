@@ -12,6 +12,7 @@ import {
   MonthlyMeetingChecklistCard,
   MultiRSSFeedCard,
   RecentBoardInsightsCard,
+  SiteAnalyticsCard,
   XogosFinancialsCard,
   XogosStatisticsCard,
 } from "./Cards";
@@ -56,6 +57,9 @@ export function DashboardGrid({ ...props }: Props) {
       <XogosFinancialsCard />
       <RecentBoardInsightsCard />
       <MonthlyMeetingChecklistCard />
+
+      {/* Admin-only: Site Analytics */}
+      {userIsAdmin && <SiteAnalyticsCard />}
 
       {/* Admin-only: All Board Member Tasks */}
       {userIsAdmin && <AllBoardMemberTasksCard />}

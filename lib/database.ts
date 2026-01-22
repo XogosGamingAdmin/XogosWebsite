@@ -392,6 +392,76 @@ export const db = {
     return result.rows[0];
   },
 
+  // ============ PAGE VISITS FUNCTIONS ============
+
+  /**
+   * Log a page visit
+   */
+  async logPageVisit(
+    pagePath: string,
+    pageName?: string,
+    visitorId?: string,
+    userAgent?: string,
+    referrer?: string
+  ) {
+    const result = await query(
+      `INSERT INTO page_visits (page_path, page_name, visitor_id, user_agent, referrer)
+       VALUES ($1, $2, $3, $4, $5)
+       RETURNING id, page_path, created_at`,
+      [pagePath, pageName, visitorId, userAgent, referrer]
+    );
+    return result.rows[0];
+  },
+
+  /**
+   * Get page visit statistics
+   */
+  async getPageVisitStats(days: number = 30) {
+    const result = await query(
+      `SELECT
+         page_path,
+         page_name,
+         COUNT(*) as visit_count,
+         COUNT(DISTINCT visitor_id) as unique_visitors
+       FROM page_visits
+       WHERE created_at >= NOW() - INTERVAL '1 day' * $1
+       GROUP BY page_path, page_name
+       ORDER BY visit_count DESC`,
+      [days]
+    );
+    return result.rows;
+  },
+
+  /**
+   * Get total site visits
+   */
+  async getTotalVisits(days: number = 30) {
+    const result = await query(
+      `SELECT
+         COUNT(*) as total_visits,
+         COUNT(DISTINCT visitor_id) as unique_visitors
+       FROM page_visits
+       WHERE created_at >= NOW() - INTERVAL '1 day' * $1`,
+      [days]
+    );
+    return result.rows[0];
+  },
+
+  /**
+   * Get visits for a specific page
+   */
+  async getPageVisits(pagePath: string, days: number = 30) {
+    const result = await query(
+      `SELECT
+         COUNT(*) as visit_count,
+         COUNT(DISTINCT visitor_id) as unique_visitors
+       FROM page_visits
+       WHERE page_path = $1 AND created_at >= NOW() - INTERVAL '1 day' * $2`,
+      [pagePath, days]
+    );
+    return result.rows[0];
+  },
+
   // ============ GROUP FUNCTIONS ============
 
   /**

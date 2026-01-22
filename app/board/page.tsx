@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
+import { PageTracker } from "@/components/Analytics";
 import { MarketingLayout } from "@/layouts/Marketing";
 import { getFinancials } from "@/lib/actions/getFinancials";
 import { getStatistics } from "@/lib/actions/getStatistics";
@@ -430,6 +431,7 @@ export default function BoardPage() {
 
   return (
     <MarketingLayout>
+      <PageTracker pagePath="/board" pageName="Board Room" />
       <div className={styles.boardRoom}>
         {/* Live Streaming Stats Ticker */}
         <div className={styles.liveStatsTicker}>

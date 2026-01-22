@@ -114,6 +114,21 @@ CREATE TABLE IF NOT EXISTS blog_posts (
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
+-- Page Visits Table (for analytics)
+CREATE TABLE IF NOT EXISTS page_visits (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  page_path TEXT NOT NULL,
+  page_name TEXT,
+  visitor_id TEXT,  -- Anonymous visitor identifier (from cookie/localStorage)
+  user_agent TEXT,
+  referrer TEXT,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Create index for faster analytics queries
+CREATE INDEX IF NOT EXISTS idx_page_visits_path ON page_visits(page_path);
+CREATE INDEX IF NOT EXISTS idx_page_visits_created_at ON page_visits(created_at DESC);
+
 -- Board Member Initiatives Table
 CREATE TABLE IF NOT EXISTS board_initiatives (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),

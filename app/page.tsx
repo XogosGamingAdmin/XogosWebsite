@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
+import { PageTracker } from "@/components/Analytics";
 import { MarketingLayout } from "@/layouts/Marketing/Marketing";
 import { NewsletterForm } from "@/components/Newsletter";
 import styles from "./page.module.css";
@@ -250,6 +251,7 @@ export default function HomePage() {
 
   return (
     <MarketingLayout>
+      <PageTracker pagePath="/" pageName="Homepage" />
       <main className={styles.main}>
         {/* Hero Section */}
         <section className={styles.heroSection}>
