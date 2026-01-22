@@ -2,7 +2,22 @@ import { redirect } from "next/navigation";
 import { ReactNode } from "react";
 import { auth } from "@/auth";
 import { DashboardLayout } from "@/layouts/Dashboard";
-import { getGroups } from "@/lib/database/getGroups";
+import { Group } from "@/types";
+
+/**
+ * Fetch user's groups directly from database (not from cached session)
+ * This ensures groups are always up-to-date when admin assigns them
+ */
+async function getUserGroupsFromDatabase(userId: string): Promise<Group[]> {
+  try {
+    const { db } = await import("@/lib/database");
+    const dbGroups = await db.getGroupsForUser(userId);
+    return dbGroups.map((g) => ({ id: g.id, name: g.name }));
+  } catch (error) {
+    console.error("Error fetching groups from database:", error);
+    return [];
+  }
+}
 
 export default async function Dashboard({ children }: { children: ReactNode }) {
   let session = null;
@@ -25,7 +40,8 @@ export default async function Dashboard({ children }: { children: ReactNode }) {
     redirect("/signin?callbackUrl=/dashboard");
   }
 
-  const groups = await getGroups(session.user.info.groupIds ?? []);
+  // Fetch groups directly from database to get latest assignments
+  const groups = await getUserGroupsFromDatabase(session.user.email || session.user.info.id);
 
   return <DashboardLayout groups={groups}>{children}</DashboardLayout>;
 }
