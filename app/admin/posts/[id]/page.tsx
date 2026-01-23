@@ -49,7 +49,7 @@ export default function EditPostPage() {
   const [content, setContent] = useState("");
   const [category, setCategory] = useState("Education");
   const [author, setAuthor] = useState("Zack Edwards");
-  const [imageUrl, setImageUrl] = useState("/images/fullLogo.jpeg");
+  const [imageUrl, setImageUrl] = useState("/images/XogosLogo.png");
   const [originalPost, setOriginalPost] = useState<BlogPost | null>(null);
 
   // Fetch existing post data
@@ -68,7 +68,7 @@ export default function EditPostPage() {
             setContent(post.content || "");
             setCategory(post.category || "Education");
             setAuthor(post.author?.name || "Zack Edwards");
-            setImageUrl(post.imageUrl || "/images/fullLogo.jpeg");
+            setImageUrl(post.imageUrl || "/images/XogosLogo.png");
           }
         } else {
           setMessage({ type: "error", text: "Post not found" });
@@ -211,7 +211,7 @@ export default function EditPostPage() {
                 type="text"
                 value={imageUrl}
                 onChange={(e) => setImageUrl(e.target.value)}
-                placeholder="/images/fullLogo.jpeg or https://..."
+                placeholder="/images/XogosLogo.png or https://..."
               />
             </div>
 

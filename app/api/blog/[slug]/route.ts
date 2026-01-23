@@ -172,7 +172,7 @@ export async function PUT(
           category || "Education",
           publishedAt,
           readTime,
-          imageUrl || "/images/fullLogo.jpeg",
+          imageUrl || "/images/XogosLogo.png",
         ]
       );
 

@@ -68,7 +68,7 @@ export function getPostBySlug(slug: string): Post | null {
           topic: data.topic || "General",
           publishedAt: data.publishedAt || "",
           author: data.author || "Xogos Team",
-          imageUrl: data.imageUrl || "/images/fullLogo.jpeg",
+          imageUrl: data.imageUrl || "/images/XogosLogo.png",
           readTime: data.readTime || "5 min read",
           content,
         };
@@ -107,7 +107,7 @@ export function getAllPosts(): PostMeta[] {
           topic: data.topic || "General",
           publishedAt: data.publishedAt || "",
           author: data.author || "Xogos Team",
-          imageUrl: data.imageUrl || "/images/fullLogo.jpeg",
+          imageUrl: data.imageUrl || "/images/XogosLogo.png",
           readTime: data.readTime || "5 min read",
         });
       }

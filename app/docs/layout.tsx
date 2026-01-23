@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     url: "https://xogosgaming.com/docs",
     images: [
       {
-        url: "/images/fullLogo.jpeg",
+        url: "/images/XogosLogo.png",
         width: 1200,
         height: 630,
         alt: "Xogos Gaming Documentation",
@@ -43,7 +43,7 @@ export const metadata: Metadata = {
     title: "Documentation | Xogos Gaming Educational Resources",
     description:
       "Access comprehensive documentation for teachers, homeschool parents, and schools.",
-    images: ["/images/fullLogo.jpeg"],
+    images: ["/images/XogosLogo.png"],
   },
 };
 

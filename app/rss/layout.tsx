@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     url: "https://xogosgaming.com/rss",
     images: [
       {
-        url: "/images/fullLogo.jpeg",
+        url: "/images/XogosLogo.png",
         width: 1200,
         height: 630,
         alt: "Xogos Gaming Social Media",
@@ -40,7 +40,7 @@ export const metadata: Metadata = {
     title: "Social Media & RSS Feeds | Xogos Gaming",
     description:
       "Follow Xogos Gaming on social media for educational gaming updates and resources.",
-    images: ["/images/fullLogo.jpeg"],
+    images: ["/images/XogosLogo.png"],
   },
 };
 

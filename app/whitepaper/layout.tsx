@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     url: "https://xogosgaming.com/whitepaper",
     images: [
       {
-        url: "/images/fullLogo.jpeg",
+        url: "/images/XogosLogo.png",
         width: 1200,
         height: 630,
         alt: "Xogos Gaming Whitepaper",
@@ -43,7 +43,7 @@ export const metadata: Metadata = {
     title: "Whitepaper | Xogos Gaming Educational Platform",
     description:
       "Read the Xogos Gaming Whitepaper about our educational gaming platform for K-12 students.",
-    images: ["/images/fullLogo.jpeg"],
+    images: ["/images/XogosLogo.png"],
   },
 };
 

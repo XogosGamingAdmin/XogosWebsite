@@ -159,7 +159,7 @@ category: "${category}"
 topic: "${topic || category}"
 publishedAt: "${publishedAt}"
 author: "${author || "Xogos Team"}"
-imageUrl: "${imageUrl || "/images/fullLogo.jpeg"}"
+imageUrl: "${imageUrl || "/images/XogosLogo.png"}"
 readTime: "${readTime}"
 ---
 

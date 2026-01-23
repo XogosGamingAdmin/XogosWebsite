@@ -67,7 +67,7 @@ export async function POST(request: NextRequest) {
       category: category || "Education",
       publishedAt,
       readTime,
-      imageUrl: imageUrl || "/images/fullLogo.jpeg",
+      imageUrl: imageUrl || "/images/XogosLogo.png",
       featured: false,
     };
 

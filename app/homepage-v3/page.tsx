@@ -155,7 +155,7 @@ export default function HomepageV3() {
             <div className={styles.heroImageWrapper}>
               <div className={styles.imageGlow}></div>
               <Image
-                src="/images/fullLogo.jpeg"
+                src="/images/XogosLogo.png"
                 alt="Xogos Gaming"
                 width={400}
                 height={400}

@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     url: "https://xogosgaming.com/about",
     images: [
       {
-        url: "/images/fullLogo.jpeg",
+        url: "/images/XogosLogo.png",
         width: 1200,
         height: 630,
         alt: "About Xogos Gaming",
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
     title: "About Xogos Gaming | Educational Gaming for K-12 Students",
     description:
       "Xogos Gaming transforms education through engaging gameplay. Learn about our mission and team.",
-    images: ["/images/fullLogo.jpeg"],
+    images: ["/images/XogosLogo.png"],
   },
 };
 

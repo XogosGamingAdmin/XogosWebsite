@@ -127,7 +127,7 @@ export default function HomepageV2() {
             <div className={styles.characterGlow}></div>
             <div className={styles.characterFrame}>
               <Image
-                src="/images/fullLogo.jpeg"
+                src="/images/XogosLogo.png"
                 alt="Hero Character"
                 width={280}
                 height={280}

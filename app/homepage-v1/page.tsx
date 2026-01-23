@@ -159,7 +159,7 @@ export default function HomepageV1() {
             <div className={styles.arcadeMachine}>
               <div className={styles.screenGlow}></div>
               <Image
-                src="/images/fullLogo.jpeg"
+                src="/images/XogosLogo.png"
                 alt="Xogos Gaming"
                 width={300}
                 height={300}

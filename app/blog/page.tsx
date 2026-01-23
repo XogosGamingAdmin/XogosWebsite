@@ -33,7 +33,7 @@ const staticBlogPostPreviews: BlogPostPreview[] = [
       "Discover how Xogos is revolutionizing the educational landscape by combining engaging gameplay with meaningful learning experiences that reward students for their achievements.",
     author: {
       name: "Xogos Team",
-      avatar: "/images/fullLogo.jpeg",
+      avatar: "/images/XogosLogo.png",
       role: "Education Innovation",
     },
     category: "Education",
@@ -49,7 +49,7 @@ const staticBlogPostPreviews: BlogPostPreview[] = [
       "Learn about our innovative dual-token system that powers the Xogos ecosystem, enabling students to earn rewards while learning and contributing to governance.",
     author: {
       name: "Xogos Team",
-      avatar: "/images/fullLogo.jpeg",
+      avatar: "/images/XogosLogo.png",
       role: "Blockchain & Tokenomics",
     },
     category: "Tokenomics",
@@ -64,7 +64,7 @@ const staticBlogPostPreviews: BlogPostPreview[] = [
       "Our latest science-focused game takes students on an adventure to restore a broken-down insectarium, discovering 220 real-life bugs along the way.",
     author: {
       name: "Xogos Team",
-      avatar: "/images/fullLogo.jpeg",
+      avatar: "/images/XogosLogo.png",
       role: "Game Development",
     },
     category: "Games",
@@ -79,7 +79,7 @@ const staticBlogPostPreviews: BlogPostPreview[] = [
       "A deep dive into how students can convert their earned tokens into real scholarship funds, creating tangible value from educational achievements.",
     author: {
       name: "Xogos Team",
-      avatar: "/images/fullLogo.jpeg",
+      avatar: "/images/XogosLogo.png",
       role: "Education & Finance",
     },
     category: "Scholarships",
@@ -94,7 +94,7 @@ const staticBlogPostPreviews: BlogPostPreview[] = [
       "Preview our upcoming financial literacy game that teaches students essential money management skills through engaging career simulation gameplay.",
     author: {
       name: "Xogos Team",
-      avatar: "/images/fullLogo.jpeg",
+      avatar: "/images/XogosLogo.png",
       role: "Game Development",
     },
     category: "Games",
@@ -109,7 +109,7 @@ const staticBlogPostPreviews: BlogPostPreview[] = [
       "Explore how Xogos extends beyond digital gaming to reward real-world activities like volunteering, physical education, and peer tutoring.",
     author: {
       name: "Xogos Team",
-      avatar: "/images/fullLogo.jpeg",
+      avatar: "/images/XogosLogo.png",
       role: "Community & Programs",
     },
     category: "Programs",

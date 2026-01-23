@@ -80,7 +80,7 @@ export const metadata: Metadata = {
       "Educational games for K-12 students, homeschoolers, parents, and teachers. Learn history, personal finance, science, and math through engaging gameplay.",
     images: [
       {
-        url: "/images/fullLogo.jpeg",
+        url: "/images/XogosLogo.png",
         width: 1200,
         height: 630,
         alt: "Xogos Gaming - Play, Learn, Earn",
@@ -95,7 +95,7 @@ export const metadata: Metadata = {
       "Xogos Gaming | Educational Games for K-12 Students, Homeschool & Teachers",
     description:
       "Educational games for K-12 students, homeschoolers, parents, and teachers. Learn history, personal finance, science, and math through engaging gameplay.",
-    images: ["/images/fullLogo.jpeg"],
+    images: ["/images/XogosLogo.png"],
   },
   category: "Education",
   classification: "Educational Games",
@@ -121,7 +121,7 @@ export default async function RootLayout({
         />
         <meta httpEquiv="Pragma" content="no-cache" />
         <meta httpEquiv="Expires" content="0" />
-        <link rel="icon" href="/images/fullLogo.jpeg" type="image/jpeg" />
+        <link rel="icon" href="/images/XogosLogo.png" type="image/png" />
         <link rel="canonical" href="https://xogosgaming.com" />
       </head>
       <body className={inter.className}>

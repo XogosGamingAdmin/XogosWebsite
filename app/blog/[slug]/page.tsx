@@ -57,7 +57,7 @@ const staticBlogPosts: BlogPost[] = [
     `,
     author: {
       name: "Xogos Team",
-      avatar: "/images/fullLogo.jpeg",
+      avatar: "/images/XogosLogo.png",
       role: "Education Innovation",
     },
     category: "Education",
@@ -107,7 +107,7 @@ const staticBlogPosts: BlogPost[] = [
     `,
     author: {
       name: "Xogos Team",
-      avatar: "/images/fullLogo.jpeg",
+      avatar: "/images/XogosLogo.png",
       role: "Blockchain & Tokenomics",
     },
     category: "Tokenomics",
@@ -152,7 +152,7 @@ const staticBlogPosts: BlogPost[] = [
     `,
     author: {
       name: "Xogos Team",
-      avatar: "/images/fullLogo.jpeg",
+      avatar: "/images/XogosLogo.png",
       role: "Game Development",
     },
     category: "Games",
@@ -194,7 +194,7 @@ const staticBlogPosts: BlogPost[] = [
     `,
     author: {
       name: "Xogos Team",
-      avatar: "/images/fullLogo.jpeg",
+      avatar: "/images/XogosLogo.png",
       role: "Education & Finance",
     },
     category: "Scholarships",
@@ -246,7 +246,7 @@ const staticBlogPosts: BlogPost[] = [
     `,
     author: {
       name: "Xogos Team",
-      avatar: "/images/fullLogo.jpeg",
+      avatar: "/images/XogosLogo.png",
       role: "Game Development",
     },
     category: "Games",
@@ -294,7 +294,7 @@ const staticBlogPosts: BlogPost[] = [
     `,
     author: {
       name: "Xogos Team",
-      avatar: "/images/fullLogo.jpeg",
+      avatar: "/images/XogosLogo.png",
       role: "Community & Programs",
     },
     category: "Programs",

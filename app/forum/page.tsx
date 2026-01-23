@@ -248,7 +248,7 @@ const recentTopics: ForumTopic[] = [
   {
     id: "1",
     title: "Welcome to the Xogos Gaming Community Forum!",
-    author: { name: "Xogos Team", avatar: "/images/fullLogo.jpeg" },
+    author: { name: "Xogos Team", avatar: "/images/XogosLogo.png" },
     category: "Announcements",
     replies: 24,
     views: 1523,
@@ -259,7 +259,7 @@ const recentTopics: ForumTopic[] = [
   {
     id: "2",
     title: "New Game Coming Soon: Totally Medieval - Math Adventure",
-    author: { name: "Xogos Team", avatar: "/images/fullLogo.jpeg" },
+    author: { name: "Xogos Team", avatar: "/images/XogosLogo.png" },
     category: "Announcements",
     replies: 67,
     views: 2341,
@@ -270,7 +270,7 @@ const recentTopics: ForumTopic[] = [
   {
     id: "3",
     title: "Best strategies for Historical Conquest tournament play?",
-    author: { name: "HistoryBuff2024", avatar: "/images/fullLogo.jpeg" },
+    author: { name: "HistoryBuff2024", avatar: "/images/XogosLogo.png" },
     category: "Games Discussion",
     replies: 45,
     views: 892,
@@ -280,7 +280,7 @@ const recentTopics: ForumTopic[] = [
   {
     id: "4",
     title: "How I earned 500 iPlay coins in one month - My strategy",
-    author: { name: "CoinMaster", avatar: "/images/fullLogo.jpeg" },
+    author: { name: "CoinMaster", avatar: "/images/XogosLogo.png" },
     category: "Tokens & Rewards",
     replies: 89,
     views: 3421,
@@ -290,7 +290,7 @@ const recentTopics: ForumTopic[] = [
   {
     id: "5",
     title: "Homeschool curriculum integration ideas for Bug and Seek",
-    author: { name: "HomeschoolMom", avatar: "/images/fullLogo.jpeg" },
+    author: { name: "HomeschoolMom", avatar: "/images/XogosLogo.png" },
     category: "Education & Learning",
     replies: 32,
     views: 567,
@@ -300,7 +300,7 @@ const recentTopics: ForumTopic[] = [
   {
     id: "6",
     title: "Can't login after password reset - need help!",
-    author: { name: "NewPlayer123", avatar: "/images/fullLogo.jpeg" },
+    author: { name: "NewPlayer123", avatar: "/images/XogosLogo.png" },
     category: "Help & Support",
     replies: 8,
     views: 124,
@@ -310,7 +310,7 @@ const recentTopics: ForumTopic[] = [
   {
     id: "7",
     title: "Introduce yourself! Where are you from?",
-    author: { name: "CommunityManager", avatar: "/images/fullLogo.jpeg" },
+    author: { name: "CommunityManager", avatar: "/images/XogosLogo.png" },
     category: "Community Hub",
     replies: 234,
     views: 4521,
@@ -322,7 +322,7 @@ const recentTopics: ForumTopic[] = [
     id: "8",
     title:
       "Teaching financial literacy to middle schoolers with Debt-Free Millionaire",
-    author: { name: "TeacherMike", avatar: "/images/fullLogo.jpeg" },
+    author: { name: "TeacherMike", avatar: "/images/XogosLogo.png" },
     category: "Education & Learning",
     replies: 28,
     views: 412,

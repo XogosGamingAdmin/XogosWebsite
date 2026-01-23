@@ -51,7 +51,7 @@ export default function AdminPostsPage() {
   const [content, setContent] = useState("");
   const [category, setCategory] = useState("Education");
   const [author, setAuthor] = useState("Zack Edwards");
-  const [imageUrl, setImageUrl] = useState("/images/fullLogo.jpeg");
+  const [imageUrl, setImageUrl] = useState("/images/XogosLogo.png");
 
   // Fetch existing posts from blog API
   useEffect(() => {
@@ -226,7 +226,7 @@ export default function AdminPostsPage() {
                 type="text"
                 value={imageUrl}
                 onChange={(e) => setImageUrl(e.target.value)}
-                placeholder="/images/fullLogo.jpeg or https://..."
+                placeholder="/images/XogosLogo.png or https://..."
               />
             </div>
 

@@ -98,7 +98,7 @@ export default async function PostPage({ params }: PageProps) {
               <div className={styles.authorSection}>
                 <div className={styles.authorAvatar}>
                   <Image
-                    src="/images/fullLogo.jpeg"
+                    src="/images/XogosLogo.png"
                     alt={post.author}
                     width={48}
                     height={48}

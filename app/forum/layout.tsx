@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     url: "https://xogosgaming.com/forum",
     images: [
       {
-        url: "/images/fullLogo.jpeg",
+        url: "/images/XogosLogo.png",
         width: 1200,
         height: 630,
         alt: "Xogos Gaming Community Forum",
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
     title: "Community Forum | Xogos Gaming",
     description:
       "Join the Xogos Gaming community forum. Connect with students, parents, and educators.",
-    images: ["/images/fullLogo.jpeg"],
+    images: ["/images/XogosLogo.png"],
   },
 };
 

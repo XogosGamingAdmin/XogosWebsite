@@ -78,7 +78,7 @@ const EarnIcon = () => (
 export default function HomepageV4() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [activeGame, setActiveGame] = useState(0);
-  const [screenImage, setScreenImage] = useState("/images/fullLogo.jpeg");
+  const [screenImage, setScreenImage] = useState("/images/XogosLogo.png");
   const [totalMembers, setTotalMembers] = useState(0);
 
   useEffect(() => {

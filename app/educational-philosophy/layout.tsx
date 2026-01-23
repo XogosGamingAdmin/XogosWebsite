@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     url: "https://xogosgaming.com/educational-philosophy",
     images: [
       {
-        url: "/images/fullLogo.jpeg",
+        url: "/images/XogosLogo.png",
         width: 1200,
         height: 630,
         alt: "Xogos Gaming Educational Philosophy",
@@ -43,7 +43,7 @@ export const metadata: Metadata = {
     title: "Educational Philosophy | Xogos Gaming",
     description:
       "Discover the research-based educational philosophy behind Xogos Gaming.",
-    images: ["/images/fullLogo.jpeg"],
+    images: ["/images/XogosLogo.png"],
   },
 };
 
