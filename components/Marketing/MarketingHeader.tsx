@@ -45,8 +45,8 @@ export function MarketingHeader({
               <Image
                 src="/images/XogosLogo.png"
                 alt="Xogos Gaming"
-                width={100}
-                height={40}
+                width={150}
+                height={60}
                 className={styles.logoImg}
                 style={{ objectFit: "contain" }}
                 priority
