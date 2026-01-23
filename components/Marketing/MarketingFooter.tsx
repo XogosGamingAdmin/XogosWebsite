@@ -25,7 +25,7 @@ export function MarketingFooter({
             <Link href="/" className={styles.footerLogo}>
               <div className={styles.footerLogoImage}>
                 <Image
-                  src="/images/fullLogo.jpeg"
+                  src="/images/XogosLogo.png"
                   alt="Xogos Gaming Logo"
                   width={100}
                   height={60}

@@ -43,7 +43,7 @@ export function MarketingHeader({
           <Link href="/" className={styles.logoLink}>
             <div className={styles.logoWrapper}>
               <Image
-                src="/images/fullLogo.jpeg"
+                src="/images/XogosLogo.png"
                 alt="Xogos Gaming"
                 width={100}
                 height={40}

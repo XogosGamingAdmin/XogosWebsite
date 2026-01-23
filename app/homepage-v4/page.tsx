@@ -3,7 +3,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useState, useRef } from "react";
-import { PageTracker } from "@/components/Analytics";
 import { MarketingLayout } from "@/layouts/Marketing/Marketing";
 import styles from "./page.module.css";
 
@@ -76,10 +75,10 @@ const EarnIcon = () => (
   </svg>
 );
 
-export default function HomePage() {
+export default function HomepageV4() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [activeGame, setActiveGame] = useState(0);
-  const [screenImage, setScreenImage] = useState("/images/XogosLogo.png");
+  const [screenImage, setScreenImage] = useState("/images/fullLogo.jpeg");
   const [totalMembers, setTotalMembers] = useState(0);
 
   useEffect(() => {
@@ -165,7 +164,6 @@ export default function HomePage() {
 
   return (
     <MarketingLayout>
-      <PageTracker pagePath="/" pageName="Homepage" />
       <div className={styles.arcadePage}>
         {/* Animated Background */}
         <div className={styles.gridBackground}>
