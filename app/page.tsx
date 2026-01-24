@@ -76,14 +76,146 @@ const EarnIcon = () => (
   </svg>
 );
 
+// Game type definition
+interface Game {
+  id: string;
+  title: string;
+  subject: string;
+  level: string;
+  description: string;
+  logo: string;
+  color: string;
+  tutorialLink: string | null;
+}
+
+// All games data
+const allGames: Game[] = [
+  {
+    id: "bug-and-seek",
+    title: "Bug and Seek",
+    subject: "Science",
+    level: "Beginner",
+    description: "A nature-based exploration game where students become the new owners of a broken-down insectarium. Players explore real-world ecosystems to catch up to 220 real-life bugs, each with fun facts and humor built into every codex entry. The game teaches entomology, biology, ecology, and environmental science.",
+    logo: "/images/games/BugAndSeek_logo.jpg",
+    color: "#4ade80",
+    tutorialLink: null,
+  },
+  {
+    id: "debt-free-millionaire",
+    title: "Debt-Free Millionaire",
+    subject: "Financial Literacy",
+    level: "Advanced",
+    description: "A personal finance and career simulation that teaches financial literacy through practical scenarios. Players explore career paths, learn about budgeting, debt management, and wealth-building, earning iPlay coins as their in-game avatar reaches different savings milestones.",
+    logo: "/images/games/DebtFreeMillionaire_logo.jpg",
+    color: "#e6bb84",
+    tutorialLink: null,
+  },
+  {
+    id: "digital-frontier",
+    title: "Digital Frontier",
+    subject: "STEM",
+    level: "Intermediate",
+    description: "A story-driven STEM adventure game where players step into a neon digital world as User, a self-aware program fighting to escape a controlled system. Through fast-paced racing, circuit repair, tank battles, structural puzzles, energy rerouting, and coding challenges, players learn real physics, engineering, and computer science concepts. The game spans 11 connected levels, each introducing new mechanics and STEM ideas.",
+    logo: "/images/games/DigitalFrontier_logo.png",
+    color: "#00d4ff",
+    tutorialLink: null,
+  },
+  {
+    id: "exploration-library",
+    title: "Exploration Library",
+    subject: "Literature",
+    level: "Beginner-Advanced",
+    description: "A revolutionary approach to classic literature that transforms passive reading into active discovery. Experience Treasure Island, Swiss Family Robinson, and Pride and Prejudice through multiple character perspectives. Students can access modern retellings or original Victorian prose, with text-to-speech and vocabulary help. Each chapter offers four unique perspectives written in different narrative styles.",
+    logo: "/images/games/ExplorationLibrary_logo.png",
+    color: "#a855f7",
+    tutorialLink: null,
+  },
+  {
+    id: "historical-conquest",
+    title: "Historical Conquest",
+    subject: "History",
+    level: "Intermediate",
+    description: "A strategic history-based card game that resembles Pokémon in appearance and Risk in gameplay mechanics. All cards are based on historical figures, events, and places. Players earn iPlay coins for time spent in the game and can purchase additional decks using their earned coins.",
+    logo: "/images/games/HistoricalConquest_logo.jpg",
+    color: "#e62739",
+    tutorialLink: null,
+  },
+  {
+    id: "hunt-the-past",
+    title: "Hunt the Past",
+    subject: "History",
+    level: "Beginner-Advanced",
+    description: "The cutting-edge online encyclopedia where students don't just look up people, places, and events—they talk to them. Thanks to built-in AI, students can ask questions, receive narrative responses from virtual historical figures, explore linked sources, and dive into compelling stories tied to each topic. Makes history conversational and exploratory.",
+    logo: "/images/games/HuntThePast_logo.jpg",
+    color: "#f59e0b",
+    tutorialLink: null,
+  },
+  {
+    id: "iserv-volunteer",
+    title: "iServ Volunteer",
+    subject: "Community Service",
+    level: "Intermediate-Advanced",
+    description: "Take action in your community—helping neighbors, running local events, cleaning parks, or mentoring younger kids—and every hour you serve earns you iPlay coins. These coins can be used in the Xogos Gaming Platform to unlock games, characters, and gear—or convert into real scholarships that fund your future!",
+    logo: "/images/games/iServVolunteer_logo.jpg",
+    color: "#22c55e",
+    tutorialLink: null,
+  },
+  {
+    id: "lightning-round",
+    title: "Lightning Round",
+    subject: "History",
+    level: "Intermediate",
+    description: "A fast-paced quiz game that tests and improves historical knowledge through quick-fire questions, timed challenges, and competitive multiplayer modes. Perfect for classroom use or independent learning with engaging rapid-fire gameplay.",
+    logo: "/images/games/LightningRound_logo.png",
+    color: "#fbbf24",
+    tutorialLink: null,
+  },
+  {
+    id: "monster-math",
+    title: "Monster Math",
+    subject: "Mathematics",
+    level: "Beginner-Intermediate",
+    description: "A thrilling test of brains and reflexes where learning meets survival. Play as the fearless Green Monster, racing to devour correct numbers while avoiding the hungry Red Monster. Every level ramps up with tougher math problems—multiples, factors, primes, and equations. Reaching Level 10 earns 1 iPlay coin toward scholarships!",
+    logo: "/images/games/MonsterMath_logo.png",
+    color: "#22c55e",
+    tutorialLink: null,
+  },
+  {
+    id: "totally-medieval",
+    title: "Totally Medieval",
+    subject: "Mathematics",
+    level: "Intermediate",
+    description: "Build your medieval kingdom while mastering math skills through strategic resource management and castle building. Players solve increasingly complex math problems to acquire resources, build structures, and defend their kingdoms from rivals.",
+    logo: "/images/games/TotallyMedieval_logo.png",
+    color: "#7928ca",
+    tutorialLink: null,
+  },
+];
+
+// Fisher-Yates shuffle algorithm
+function shuffleArray<T>(array: T[]): T[] {
+  const shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+}
+
 export default function HomePage() {
   const [isLoaded, setIsLoaded] = useState(false);
-  const [activeGame, setActiveGame] = useState(0);
+  const [activeGameIndex, setActiveGameIndex] = useState(0);
   const [screenImage, setScreenImage] = useState("/images/XogosLogo.png");
   const [totalMembers, setTotalMembers] = useState(0);
+  const [displayedGames, setDisplayedGames] = useState<Game[]>([]);
+  const [selectedGame, setSelectedGame] = useState<Game | null>(null);
 
   useEffect(() => {
     setIsLoaded(true);
+
+    // Randomly select 4 games to display
+    const shuffled = shuffleArray(allGames);
+    setDisplayedGames(shuffled.slice(0, 4));
 
     // Fetch member stats from API
     async function fetchMemberStats() {
@@ -107,40 +239,13 @@ export default function HomePage() {
     { value: 98, suffix: "%", label: "Fun Rating" },
   ];
 
-  const games = [
-    {
-      title: "Bug and Seek",
-      subject: "Science",
-      xp: 500,
-      level: "Beginner",
-      image: "/images/games/BugandSeek.jpg",
-      color: "#e62739",
-    },
-    {
-      title: "Totally Medieval",
-      subject: "Mathematics",
-      xp: 750,
-      level: "Intermediate",
-      image: "/images/games/TotallyMedieval.jpg",
-      color: "#7928ca",
-    },
-    {
-      title: "Debt-Free Millionaire",
-      subject: "Financial Literacy",
-      xp: 1000,
-      level: "Advanced",
-      image: "/images/games/DebtFreeMil.jpg",
-      color: "#e6bb84",
-    },
-    {
-      title: "Battles and Thrones",
-      subject: "History",
-      xp: 850,
-      level: "Intermediate",
-      image: "/images/games/BattleThrones.jpg",
-      color: "#e62739",
-    },
-  ];
+  const handleGameClick = (game: Game) => {
+    setSelectedGame(game);
+  };
+
+  const closeModal = () => {
+    setSelectedGame(null);
+  };
 
   const features = [
     {
@@ -304,6 +409,43 @@ export default function HomePage() {
           </p>
         </section>
 
+        {/* Game Select Section */}
+        <section className={styles.gameSelectSection}>
+          <h2 className={styles.sectionTitle}>
+            <span className={styles.titleIcon}>🕹️</span>
+            SELECT YOUR GAME
+          </h2>
+          <div className={styles.gameCarousel}>
+            {displayedGames.map((game, index) => (
+              <div
+                key={game.id}
+                className={`${styles.gameCard} ${activeGameIndex === index ? styles.active : ""}`}
+                onClick={() => handleGameClick(game)}
+                style={{ "--glow-color": game.color } as React.CSSProperties}
+              >
+                <div className={styles.gameImageWrapper}>
+                  <Image
+                    src={game.logo}
+                    alt={game.title}
+                    fill
+                    className={styles.gameImage}
+                  />
+                  <div className={styles.gameOverlay}>
+                    <span className={styles.playIcon}>▶</span>
+                  </div>
+                </div>
+                <div className={styles.gameInfo}>
+                  <div className={styles.gameSubject}>{game.subject}</div>
+                  <h3 className={styles.gameTitle}>{game.title}</h3>
+                  <div className={styles.gameStats}>
+                    <span className={styles.levelBadgeSmall}>{game.level}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
         {/* Special Events Section */}
         <section className={styles.specialEventsSection}>
           <div className={styles.sectionHeading}>
@@ -412,44 +554,6 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Game Select Section */}
-        <section className={styles.gameSelectSection}>
-          <h2 className={styles.sectionTitle}>
-            <span className={styles.titleIcon}>🕹️</span>
-            SELECT YOUR GAME
-          </h2>
-          <div className={styles.gameCarousel}>
-            {games.map((game, index) => (
-              <div
-                key={index}
-                className={`${styles.gameCard} ${activeGame === index ? styles.active : ""}`}
-                onClick={() => setActiveGame(index)}
-                style={{ "--glow-color": game.color } as React.CSSProperties}
-              >
-                <div className={styles.gameImageWrapper}>
-                  <Image
-                    src={game.image}
-                    alt={game.title}
-                    fill
-                    className={styles.gameImage}
-                  />
-                  <div className={styles.gameOverlay}>
-                    <span className={styles.playIcon}>▶</span>
-                  </div>
-                </div>
-                <div className={styles.gameInfo}>
-                  <div className={styles.gameSubject}>{game.subject}</div>
-                  <h3 className={styles.gameTitle}>{game.title}</h3>
-                  <div className={styles.gameStats}>
-                    <span className={styles.xpReward}>+{game.xp} XP</span>
-                    <span className={styles.gameLevel}>{game.level}</span>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
         {/* Why Choose Xogos Section */}
         <section className={styles.featuresSection}>
           <div className={styles.sectionHeading}>
@@ -544,6 +648,54 @@ export default function HomePage() {
             </div>
           </div>
         </section>
+
+        {/* Game Details Modal */}
+        {selectedGame && (
+          <div className={styles.gameModal} onClick={closeModal}>
+            <div className={styles.gameModalContent} onClick={(e) => e.stopPropagation()}>
+              <button className={styles.gameModalClose} onClick={closeModal}>
+                ×
+              </button>
+              <div className={styles.gameModalHeader}>
+                <div className={styles.gameModalLogoWrapper}>
+                  <Image
+                    src={selectedGame.logo}
+                    alt={selectedGame.title}
+                    fill
+                    className={styles.gameModalLogo}
+                  />
+                </div>
+              </div>
+              <div className={styles.gameModalBody}>
+                <h2 className={styles.gameModalTitle}>{selectedGame.title}</h2>
+                <div className={styles.gameModalMeta}>
+                  <span className={styles.gameModalSubject}>{selectedGame.subject}</span>
+                  <span
+                    className={styles.gameModalLevel}
+                    style={{ "--level-color": selectedGame.color } as React.CSSProperties}
+                  >
+                    {selectedGame.level}
+                  </span>
+                </div>
+                <p className={styles.gameModalDescription}>{selectedGame.description}</p>
+                <div className={styles.gameModalActions}>
+                  {selectedGame.tutorialLink ? (
+                    <Link href={selectedGame.tutorialLink} className={styles.gameModalTutorialBtn}>
+                      Watch Tutorial
+                    </Link>
+                  ) : (
+                    <span className={styles.gameModalTutorialComingSoon}>
+                      Tutorial Coming Soon
+                    </span>
+                  )}
+                  <Link href="/games" className={styles.gameModalPlayBtn}>
+                    View All Games
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </MarketingLayout>
   );
