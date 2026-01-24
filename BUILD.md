@@ -9,7 +9,181 @@ XogosBoard is a Next.js 14.2.3 application deployed on AWS Amplify at https://ww
 
 ---
 
-## Latest Session: January 23, 2026
+## Latest Session: January 23, 2026 (Evening)
+
+### Major Work Completed
+
+#### 1. Supabase Accounts Schema - Board Table SQL
+**Feature:** Created SQL schema for a new `accounts` schema with `board` table to store board member information.
+
+**Schema Created:** `accounts`
+
+**Table Created:** `accounts.board`
+
+**Table Fields:**
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | UUID | Primary key (auto-generated) |
+| `member_id` | TEXT | Unique slug identifier (e.g., 'zack-edwards') |
+| `email` | TEXT | Board member email (unique) |
+| `name` | TEXT | Full display name |
+| `title` | TEXT | Position title (CEO, President, etc.) |
+| `role` | TEXT | Role category (executive, director, advisor) |
+| `term_number` | INTEGER | Which term (1, 2, 3...) |
+| `term_start` | DATE | When term began |
+| `term_end` | DATE | When term ends (NULL if ongoing) |
+| `is_active` | BOOLEAN | Currently serving on board |
+| `image_path` | TEXT | Path to profile photo |
+| `bio` | TEXT | Short biography |
+| `created_at` | TIMESTAMP | Record creation time |
+| `updated_at` | TIMESTAMP | Last update time (auto-updated via trigger) |
+
+**RLS Policies Created:**
+- `Authenticated users can view board members` - SELECT for authenticated role
+- `Authenticated users can insert board members` - INSERT for authenticated role
+- `Authenticated users can update board members` - UPDATE for authenticated role
+- `Authenticated users can delete board members` - DELETE for authenticated role
+
+**Permissions Granted:**
+- `GRANT USAGE ON SCHEMA accounts TO authenticated`
+- `GRANT SELECT, INSERT, UPDATE, DELETE ON accounts.board TO authenticated`
+- `GRANT USAGE ON ALL SEQUENCES IN SCHEMA accounts TO authenticated`
+
+**Additional Features:**
+- Indexes on `email`, `member_id`, and `is_active` for query performance
+- Trigger function `accounts.update_updated_at_column()` for automatic timestamp updates
+
+**SQL NOT saved to file** - Returned directly to user for manual execution in Supabase.
+
+#### 2. Website Journey Documentation
+**Feature:** Created comprehensive documentation of user journeys for all user types.
+
+**File Created:**
+- `WEBSITE_JOURNEY.md`
+
+**Documentation Includes:**
+- **Public Visitor Journey** - All accessible pages with ASCII flow diagrams
+- **Registered Member Journey** - Newsletter subscription flow
+- **Board Member Journey** - Complete flows for:
+  - Authentication (Google OAuth with email whitelist)
+  - Dashboard cards and navigation
+  - Document management (create, edit, multi-select delete)
+  - Initiative publishing workflow
+  - Checklist completion workflow
+  - RSS feed management
+- **Admin User Journey** - Detailed flows for:
+  - Statistics management (Zack only)
+  - Financials management (Zack only)
+  - Checklist creation for board members
+  - Blog post management (Zack only)
+  - Error logging dashboard
+- **Reference Tables** - All pages, API endpoints, database tables
+
+#### 3. Public Visitor Guide
+**Feature:** Created a user-friendly guide for website visitors.
+
+**File Created:**
+- `VISITOR_GUIDE.md`
+
+**Guide Includes:**
+- Website overview with navigation diagram
+- Header and footer menu breakdown
+- Detailed page descriptions:
+  - Homepage sections (hero, stats, game carousel, etc.)
+  - Games page with game descriptions
+  - Blog page (339+ articles by category)
+  - Board Room section (members, initiatives, risk, tokenomics)
+  - Documentation, Forum, and Events pages
+- Available actions for visitors
+- Newsletter subscription instructions
+- Social media links
+- Quick reference tables
+- Help and contact information
+
+#### 4. Easter Egg Treasure Hunt Feature
+**Feature:** Added a hidden Easter Egg system to engage visitors and encourage site exploration.
+
+**Homepage - Special Events Section (`app/page.tsx`):**
+- New "Special Events" section added after Stats section
+- Shows 2026 Event Season dates (January 1 - December 31, 2026)
+- Three event cards:
+  1. **Easter Egg Hunt** (ACTIVE) - Jan 25 to Feb 28, 2026
+     - Hint directs players to board initiatives page
+     - Reward: 5 FREE coins
+     - Easter Egg automatically hides after event ends
+  2. **Summer Challenge** (Coming Soon) - Jun 1 to Aug 31, 2026
+  3. **Holiday Special** (Coming Soon) - Dec 1 to Dec 31, 2026
+- Explains coins go towards gameplay buys and scholarships
+
+**Initiatives Page - Hidden Easter Egg (`app/board/initiatives/page.tsx`):**
+- Subtle egg icon (🥚) hidden in the hero section
+- Very low opacity (30%) - increases on hover
+- **Time-limited:** Only visible Jan 25 - Feb 28, 2026 (automatically hides after)
+- When clicked, reveals congratulations modal with:
+  - Secret code: `XOGOS-EGG-2026-439234F`
+  - Copy button for easy code copying
+  - Instructions to use code when signing up for Xogos
+  - Warning that code can only be redeemed once per account
+
+**Files Modified:**
+- `app/page.tsx` - Added Special Events section
+- `app/page.module.css` - Added Special Events styles (150+ lines)
+- `app/board/initiatives/page.tsx` - Added EasterEgg component
+- `app/board/initiatives/page.module.css` - Added Easter Egg reveal styles
+
+**How It Works:**
+1. Visitor sees "Special Events" on homepage
+2. Reads about Easter Egg Hunt with hint about "board member vision"
+3. Navigates to `/board/initiatives`
+4. Finds and clicks the hidden egg icon
+5. Receives congratulations and secret code `XOGOS-EGG-2026-439234F`
+6. Sees warning that code can only be redeemed once per account
+7. Uses code when signing up for 5 FREE coins
+
+**CSS Features:**
+- Animated status dots (green pulse for active events)
+- Glowing borders on active event cards
+- Confetti animation when egg is found
+- Code box with dashed border and copy functionality
+- Responsive grid (3 cols → 2 cols → 1 col)
+
+---
+
+### WHERE WE LEFT OFF
+
+**Status:** Documentation completed. SQL provided for manual execution.
+
+**What Was Done:**
+1. Created SQL for `accounts` schema with `board` table
+2. Included RLS policies for authenticated users
+3. Included GRANT permissions for authenticated role
+4. Created `WEBSITE_JOURNEY.md` with complete user journey documentation (technical/internal)
+5. Created `VISITOR_GUIDE.md` with public visitor guide (user-friendly)
+6. Added Special Events section to homepage with Easter Egg Hunt introduction
+7. Added hidden Easter Egg (code: `XOGOS-EGG-2026-439234F`) to initiatives page
+
+**Next Steps (if continuing):**
+1. Execute the SQL in Supabase to create the `accounts.board` table
+2. Create additional tables in the `accounts` schema as needed
+3. Build API endpoints to interact with the `accounts.board` table
+4. Update board member pages to pull from database instead of static data
+5. Consider adding more tables: `accounts.terms`, `accounts.roles`, etc.
+6. Create code redemption system in Xogos game to validate `XOGOS-EGG-2026-439234F` (one-time use per account)
+7. Add more Easter Egg events for Summer Challenge and Holiday Special
+8. Test Easter Egg discovery flow end-to-end
+
+**SQL to Execute in Supabase:**
+The SQL was provided directly in chat - includes:
+- Schema creation: `CREATE SCHEMA IF NOT EXISTS accounts`
+- Table creation: `CREATE TABLE accounts.board (...)`
+- Indexes for performance
+- Trigger for `updated_at` auto-update
+- RLS enabled with 4 policies (SELECT, INSERT, UPDATE, DELETE)
+- GRANT statements for authenticated role
+
+---
+
+## Previous Session: January 23, 2026 (Morning)
 
 ### Major Work Completed
 
@@ -143,9 +317,9 @@ abe0b75 - Replace fullLogo.jpeg with XogosLogo.png across entire site
 
 ---
 
-### WHERE WE LEFT OFF
+### Session Summary (Morning)
 
-**Status:** All changes completed and pushed to GitHub.
+**Status:** Completed - All changes pushed to GitHub.
 
 **What Was Done:**
 1. Main homepage updated with arcade theme and Game Boy visual
@@ -153,14 +327,7 @@ abe0b75 - Replace fullLogo.jpeg with XogosLogo.png across entire site
 3. XogosLogo.png (white text) replaced fullLogo.jpeg site-wide
 4. Header logo increased to 150x60 pixels
 
-**Next Steps (if continuing):**
-1. Test the new homepage on production after Amplify deployment
-2. Verify the XogosLogo.png displays correctly (white text on dark backgrounds)
-3. Check that the public-stats API returns correct member counts
-4. Consider adding more interactive features to the Game Boy component
-5. Test responsive design on mobile devices
-
-**Key Files to Know:**
+**Key Files Modified:**
 - Main homepage: `app/page.tsx` and `app/page.module.css`
 - Logo location: `public/images/XogosLogo.png`
 - Header component: `components/Marketing/MarketingHeader.tsx`
@@ -1255,10 +1422,15 @@ f14469a - Fix Board Sign-In to use proper NextAuth flow
 
 ---
 
-## Session End Status: ✅ ALL FEATURES WORKING - DEPLOYED
+## Session End Status: ✅ DOCUMENTATION & SCHEMA WORK COMPLETE
 
-**Last tested:** January 6, 2026
-**Last commit:** `ed85423` - Pushed to GitHub, Amplify auto-deploying
+**Last session:** January 23, 2026 (Evening)
+**Last commit:** Pending - Code changes ready for commit
+**Documentation Created:** `WEBSITE_JOURNEY.md` + `VISITOR_GUIDE.md` ✅
+**Database Schema:** `accounts.board` SQL created (not yet executed) ✅
+**Easter Egg Feature:** Special Events section + Hidden code on initiatives page ✅
+
+### Previous System Status:
 **Liveblocks Documents:** Working - downgraded to v2.24.4 ✅
 **Multi-Select Delete:** Implemented and deployed ✅
 **Header/Footer:** Reorganized - header simplified, links moved to footer ✅
@@ -1315,4 +1487,21 @@ f14469a - Fix Board Sign-In to use proper NextAuth flow
 
 ---
 
+### Files Created This Session (January 23, Evening):
+- `WEBSITE_JOURNEY.md` - Comprehensive user journey documentation (internal/technical)
+- `VISITOR_GUIDE.md` - Public visitor guide showing what's available on the site
+
+### Files Modified This Session (January 23, Evening):
+- `app/page.tsx` - Added Special Events section with Easter Egg Hunt intro
+- `app/page.module.css` - Added Special Events styles (150+ lines)
+- `app/board/initiatives/page.tsx` - Added EasterEgg component with hidden code
+- `app/board/initiatives/page.module.css` - Added Easter Egg reveal animation styles
+
+### SQL Pending Execution:
+- `accounts` schema creation
+- `accounts.board` table with RLS policies and grants
+
+---
+
 *This document is auto-maintained by Claude Code. Update after each significant session.*
+*Last updated: January 23, 2026*

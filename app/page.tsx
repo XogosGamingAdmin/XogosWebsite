@@ -101,9 +101,9 @@ export default function HomePage() {
   }, []);
 
   const stats = [
-    { value: totalMembers || 10000, suffix: "+", label: "Players Learning" },
-    { value: 50, suffix: "+", label: "Educational Games" },
-    { value: 1000000, suffix: "", label: "Coins Earned" },
+    { value: 301, suffix: "", label: "Players Learning" },
+    { value: 13, suffix: "", label: "Educational Games" },
+    { value: 58, suffix: " So Far", label: "Coins Earned" },
     { value: 98, suffix: "%", label: "Fun Rating" },
   ];
 
@@ -298,6 +298,117 @@ export default function HomePage() {
                 label={stat.label}
               />
             ))}
+          </div>
+          <p className={styles.statsSubline}>
+            Relaunch of Xogos Gaming Platform - January 26
+          </p>
+        </section>
+
+        {/* Special Events Section */}
+        <section className={styles.specialEventsSection}>
+          <div className={styles.sectionHeading}>
+            <h2 className={styles.sectionTitle}>
+              <span className={styles.titleIcon}>🎁</span>
+              SPECIAL EVENTS
+            </h2>
+            <p className={styles.sectionSubtitle}>
+              Throughout the year, we host special events where you can earn bonus coins!
+              These coins go towards in-game purchases and can even contribute to scholarship funds.
+            </p>
+            <div className={styles.eventsDates}>
+              <span className={styles.dateLabel}>2026 Event Season:</span>
+              <span className={styles.dateRange}>January 1 - December 31, 2026</span>
+            </div>
+          </div>
+
+          <div className={styles.eventsGrid}>
+            {/* Event 1 - Easter Egg Hunt (Active) */}
+            <div className={`${styles.eventCard} ${styles.eventActive}`}>
+              <div className={styles.eventStatus}>
+                <span className={styles.statusDot}></span>
+                ACTIVE NOW
+              </div>
+              <div className={styles.eventIcon}>🥚</div>
+              <h3 className={styles.eventTitle}>Easter Egg Hunt</h3>
+              <p className={styles.eventDescription}>
+                A secret code is hidden somewhere on our website. Find it and earn
+                <strong> 5 FREE coins</strong> when you start playing Xogos!
+              </p>
+              <div className={styles.eventHint}>
+                <span className={styles.hintIcon}>💡</span>
+                <span>Hint: Explore where our board members share their vision for the future...</span>
+              </div>
+              <div className={styles.eventDates}>
+                <div className={styles.eventDateItem}>
+                  <span className={styles.eventDateLabel}>Starts</span>
+                  <span className={styles.eventDateValue}>Jan 25, 2026</span>
+                </div>
+                <div className={styles.eventDateItem}>
+                  <span className={styles.eventDateLabel}>Ends</span>
+                  <span className={styles.eventDateValue}>Feb 28, 2026</span>
+                </div>
+              </div>
+              <div className={styles.eventReward}>
+                <span className={styles.rewardIcon}>🪙</span>
+                <span>+5 Coins</span>
+              </div>
+            </div>
+
+            {/* Event 2 - Coming Soon */}
+            <div className={`${styles.eventCard} ${styles.eventComingSoon}`}>
+              <div className={styles.eventStatus}>
+                <span className={styles.statusDotInactive}></span>
+                COMING SOON
+              </div>
+              <div className={styles.eventIcon}>🎮</div>
+              <h3 className={styles.eventTitle}>Summer Challenge</h3>
+              <p className={styles.eventDescription}>
+                A special summer event is being prepared. Stay tuned for exciting
+                challenges and bigger rewards!
+              </p>
+              <div className={styles.eventDates}>
+                <div className={styles.eventDateItem}>
+                  <span className={styles.eventDateLabel}>Starts</span>
+                  <span className={styles.eventDateValue}>Jun 1, 2026</span>
+                </div>
+                <div className={styles.eventDateItem}>
+                  <span className={styles.eventDateLabel}>Ends</span>
+                  <span className={styles.eventDateValue}>Aug 31, 2026</span>
+                </div>
+              </div>
+              <div className={styles.eventReward}>
+                <span className={styles.rewardIcon}>🪙</span>
+                <span>??? Coins</span>
+              </div>
+            </div>
+
+            {/* Event 3 - Coming Soon */}
+            <div className={`${styles.eventCard} ${styles.eventComingSoon}`}>
+              <div className={styles.eventStatus}>
+                <span className={styles.statusDotInactive}></span>
+                COMING SOON
+              </div>
+              <div className={styles.eventIcon}>🎄</div>
+              <h3 className={styles.eventTitle}>Holiday Special</h3>
+              <p className={styles.eventDescription}>
+                End the year with a bang! Our biggest event of the year is coming
+                this holiday season.
+              </p>
+              <div className={styles.eventDates}>
+                <div className={styles.eventDateItem}>
+                  <span className={styles.eventDateLabel}>Starts</span>
+                  <span className={styles.eventDateValue}>Dec 1, 2026</span>
+                </div>
+                <div className={styles.eventDateItem}>
+                  <span className={styles.eventDateLabel}>Ends</span>
+                  <span className={styles.eventDateValue}>Dec 31, 2026</span>
+                </div>
+              </div>
+              <div className={styles.eventReward}>
+                <span className={styles.rewardIcon}>🪙</span>
+                <span>??? Coins</span>
+              </div>
+            </div>
           </div>
         </section>
 

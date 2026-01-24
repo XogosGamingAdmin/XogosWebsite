@@ -6,6 +6,84 @@ import { MarketingLayout } from "@/layouts/Marketing";
 import { Container } from "@/primitives/Container";
 import styles from "./page.module.css";
 
+// Easter Egg Component - Hidden treasure for players to find
+// Note: This code can be changed for future events. The backend should validate and track redemptions.
+// Event Period: January 25, 2026 - February 28, 2026
+function EasterEgg() {
+  const [found, setFound] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const [isEventActive, setIsEventActive] = useState(false);
+
+  const secretCode = "XOGOS-EGG-2026-439234F";
+
+  // Event date range (UTC to avoid timezone issues)
+  const eventStartDate = new Date("2026-01-25T00:00:00");
+  const eventEndDate = new Date("2026-02-28T23:59:59");
+
+  useEffect(() => {
+    const now = new Date();
+    setIsEventActive(now >= eventStartDate && now <= eventEndDate);
+  }, []);
+
+  const handleClick = () => {
+    setFound(true);
+  };
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(secretCode);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error("Failed to copy:", err);
+    }
+  };
+
+  // Don't render anything if event is not active
+  if (!isEventActive) {
+    return null;
+  }
+
+  if (!found) {
+    return (
+      <button
+        className={styles.hiddenEgg}
+        onClick={handleClick}
+        title="What's this?"
+        aria-label="Hidden Easter Egg"
+      >
+        <span className={styles.eggIcon}>🥚</span>
+      </button>
+    );
+  }
+
+  return (
+    <div className={styles.easterEggFound}>
+      <div className={styles.eggConfetti}>🎉</div>
+      <h3 className={styles.eggTitle}>You Found It!</h3>
+      <p className={styles.eggMessage}>
+        Congratulations, treasure hunter! You discovered the hidden Easter Egg.
+        Use this code when you sign up to receive <strong>5 FREE coins</strong>!
+      </p>
+      <div className={styles.eggCodeBox}>
+        <span className={styles.eggCode}>{secretCode}</span>
+        <button
+          className={styles.eggCopyBtn}
+          onClick={handleCopy}
+        >
+          {copied ? "Copied!" : "Copy"}
+        </button>
+      </div>
+      <p className={styles.eggNote}>
+        Enter this code in Xogos to claim your reward!
+      </p>
+      <p className={styles.eggWarning}>
+        This code can only be redeemed once per account.
+      </p>
+    </div>
+  );
+}
+
 // Static board member data with default initiatives
 const staticBoardMembers = [
   {
@@ -347,6 +425,8 @@ export default function BoardInitiativesPage() {
             Where each board member's role and responsibilities align with
             initiatives guiding our next steps.
           </p>
+          {/* Hidden Easter Egg - Placed subtly in the hero */}
+          <EasterEgg />
         </div>
       </Container>
 

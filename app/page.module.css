@@ -576,6 +576,232 @@
   letter-spacing: 2px;
 }
 
+.statsSubline {
+  text-align: center;
+  margin-top: 30px;
+  font-size: 16px;
+  color: #e6bb84;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+/* Special Events Section */
+.specialEventsSection {
+  position: relative;
+  z-index: 1;
+  padding: 80px;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.eventsDates {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 20px;
+  padding: 15px 30px;
+  background: rgba(230, 187, 132, 0.1);
+  border: 1px solid rgba(230, 187, 132, 0.3);
+  border-radius: 30px;
+}
+
+.dateLabel {
+  font-size: 14px;
+  color: rgba(229, 229, 229, 0.7);
+  font-weight: 600;
+}
+
+.dateRange {
+  font-size: 14px;
+  color: #e6bb84;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.eventsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.eventCard {
+  position: relative;
+  padding: 30px;
+  background: rgba(0, 0, 0, 0.5);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  text-align: center;
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.eventCard::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #e62739, #7928ca);
+}
+
+.eventActive {
+  border-color: rgba(230, 39, 57, 0.4);
+  box-shadow: 0 0 30px rgba(230, 39, 57, 0.2);
+}
+
+.eventActive::before {
+  background: linear-gradient(90deg, #e62739, #e6bb84);
+  animation: glowPulse 2s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+  0%, 100% { box-shadow: 0 0 10px rgba(230, 39, 57, 0.5); }
+  50% { box-shadow: 0 0 20px rgba(230, 39, 57, 0.8); }
+}
+
+.eventComingSoon {
+  opacity: 0.7;
+}
+
+.eventComingSoon:hover {
+  opacity: 0.85;
+}
+
+.eventCard:hover {
+  transform: translateY(-5px);
+}
+
+.eventActive:hover {
+  border-color: rgba(230, 39, 57, 0.6);
+  box-shadow: 0 10px 40px rgba(230, 39, 57, 0.3);
+}
+
+.eventStatus {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin-bottom: 20px;
+}
+
+.statusDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #4ade80;
+  animation: statusPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes statusPulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 5px #4ade80; }
+  50% { opacity: 0.5; box-shadow: 0 0 10px #4ade80; }
+}
+
+.statusDotInactive {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.eventIcon {
+  font-size: 48px;
+  margin-bottom: 15px;
+}
+
+.eventTitle {
+  font-size: 22px;
+  font-weight: 700;
+  color: #e5e5e5;
+  margin-bottom: 15px;
+}
+
+.eventDescription {
+  font-size: 14px;
+  color: rgba(229, 229, 229, 0.7);
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.eventDescription strong {
+  color: #e6bb84;
+}
+
+.eventHint {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 15px;
+  background: rgba(230, 187, 132, 0.1);
+  border: 1px solid rgba(230, 187, 132, 0.2);
+  border-radius: 10px;
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.hintIcon {
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.eventHint span:last-child {
+  font-size: 13px;
+  color: #e6bb84;
+  font-style: italic;
+  line-height: 1.5;
+}
+
+.eventDates {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin-bottom: 20px;
+}
+
+.eventDateItem {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.eventDateLabel {
+  font-size: 11px;
+  color: rgba(229, 229, 229, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.eventDateValue {
+  font-size: 14px;
+  color: #e5e5e5;
+  font-weight: 600;
+}
+
+.eventReward {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, rgba(230, 187, 132, 0.2) 0%, rgba(230, 39, 57, 0.2) 100%);
+  border: 1px solid rgba(230, 187, 132, 0.3);
+  border-radius: 25px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #e6bb84;
+}
+
+.rewardIcon {
+  font-size: 20px;
+}
+
 /* Game Select Section */
 .gameSelectSection {
   position: relative;
@@ -926,6 +1152,9 @@
   .statsGrid {
     grid-template-columns: repeat(2, 1fr);
   }
+  .eventsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
   .gameBoyBody {
     width: 240px;
     height: 360px;
@@ -954,6 +1183,16 @@
   }
   .featuresGrid {
     grid-template-columns: 1fr;
+  }
+  .eventsGrid {
+    grid-template-columns: 1fr;
+  }
+  .specialEventsSection {
+    padding: 60px 30px;
+  }
+  .eventsDates {
+    flex-direction: column;
+    gap: 5px;
   }
   .featuresSection,
   .howItWorksSection {
