@@ -1,5 +1,6 @@
 # dependencies
 /node_modules
+node_modules
 
 # next.js
 /.next
@@ -29,12 +30,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 
+# Hardhat files
 /hardhat
 /contracts
-node_modules
-.env
-
-# Hardhat files
 /cache
 /artifacts
 
@@ -52,37 +50,11 @@ ignition/deployments/chain-31337
 # Documentation - keep local only, don't push to GitHub
 docs/*.md
 BUILD.md
+VISITOR_GUIDE.md
+WEBSITE_JOURNEY.md
 GOOGLE_OAUTH_SETUP.md
 RDS_SETUP_WALKTHROUGH.md
 SETUP_GUIDE.md
 WHAT_I_BUILT.md
 database/AWS_RDS_SETUP.md
-
-node_modules
-.env
-
-# Hardhat files
-/cache
-/artifacts
-
-# TypeChain files
-/typechain
-/typechain-types
-
-# solidity-coverage files
-/coverage
-/coverage.json
-
-# Hardhat Ignition default folder for deployments against a local node
-ignition/deployments/chain-31337
-
-# Documentation - keep local only, don't push to GitHub
-docs/*.md
-BUILD.md
-GOOGLE_OAUTH_SETUP.md
-RDS_SETUP_WALKTHROUGH.md
-SETUP_GUIDE.md
-WHAT_I_BUILT.md
-database/AWS_RDS_SETUP.md
-
 Gaming/**/*.md
