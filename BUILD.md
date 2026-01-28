@@ -9,7 +9,252 @@ XogosBoard is a Next.js 14.2.3 application deployed on AWS Amplify at https://ww
 
 ---
 
-## Latest Session: January 23, 2026 (Evening)
+## Latest Session: January 28, 2026
+
+### Major Work Completed
+
+#### 1. Statistics Dashboard Card - Growth Chart
+**Feature:** Added a line graph to the Xogos Statistics card on the board member dashboard showing historical trends.
+
+**Implementation Details:**
+- Installed `recharts` library (v2.15.0) for charting
+- Graph displays three metrics over time:
+  - **Accounts** (red line - `#e62739`)
+  - **Active Users** (gold line - `#e6bb84`)
+  - **Total Hours** (purple line - `#7928ca`)
+- Chart only appears when 2+ historical records exist
+- Uses existing `getStatisticsHistory` server action (fetches up to 30 data points)
+- Responsive design with hover tooltips
+- Dark theme styling matching site aesthetic
+
+**Files Modified:**
+- `package.json` - Added `recharts: ^2.15.0`
+- `components/Dashboard/Cards/XogosStatisticsCard.tsx` - Added LineChart component with ResponsiveContainer
+- `components/Dashboard/Cards/XogosStatisticsCard.module.css` - Added `.chartContainer` and `.chartTitle` styles
+
+**Key Code - Chart Implementation:**
+```typescript
+import { LineChart, Line, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer, CartesianGrid } from "recharts";
+
+// Chart renders when history has 2+ entries
+{chartData.length > 1 && (
+  <ResponsiveContainer width="100%" height={250}>
+    <LineChart data={chartData}>
+      <Line dataKey="Accounts" stroke="#e62739" />
+      <Line dataKey="Active Users" stroke="#e6bb84" />
+      <Line dataKey="Total Hours" stroke="#7928ca" />
+    </LineChart>
+  </ResponsiveContainer>
+)}
+```
+
+#### 2. Statistics Migration to Supabase
+**Feature:** Confirmed statistics are stored in Supabase database (not AWS RDS).
+
+**Background:**
+- The `DATABASE_HOST` environment variable was already pointing to Supabase pooler: `aws-1-us-east-1.pooler.supabase.com`
+- No new environment variables needed - existing PostgreSQL connection via `lib/database.ts` works with Supabase
+
+**Supabase Project Details:**
+- Project ID: `bqeurqjjrcrbrtsgmnlp`
+- Database Host: `aws-1-us-east-1.pooler.supabase.com` (pooler connection)
+- Anon Key: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...` (stored in Supabase dashboard)
+
+**Table Created in Supabase:**
+```sql
+CREATE TABLE IF NOT EXISTS xogos_statistics (
+  id SERIAL PRIMARY KEY,
+  accounts INTEGER NOT NULL DEFAULT 0,
+  active_users INTEGER NOT NULL DEFAULT 0,
+  total_hours INTEGER NOT NULL DEFAULT 0,
+  last_updated TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_by TEXT
+);
+
+-- RLS Policies
+ALTER TABLE xogos_statistics ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Allow public read access" ON xogos_statistics FOR SELECT USING (true);
+CREATE POLICY "Allow insert" ON xogos_statistics FOR INSERT WITH CHECK (true);
+```
+
+**Initial Data Seeded:**
+| Date | Accounts | Active Users | Total Hours | Updated By |
+|------|----------|--------------|-------------|------------|
+| 1/19/2026 11:59:50 AM | 234 | 151 | 18 | zack@xogosgaming.com |
+
+**Files Modified:**
+- `app/admin/statistics/page.tsx` - Updated note text to say "Supabase" instead of "AWS RDS PostgreSQL"
+
+**How Statistics Work:**
+1. Each update creates a NEW row (preserves history for trending)
+2. `getStatistics()` - Returns latest record (ORDER BY id DESC LIMIT 1)
+3. `getStatisticsHistory()` - Returns up to 30 historical records for graphing
+4. `updateStatistics()` - Inserts new row with timestamp (only Zack can update)
+5. Dashboard graph and admin history table both pull from same data
+
+---
+
+### Git Commits This Session
+
+```
+beef0e4 - Add growth chart to Xogos Statistics dashboard card
+fcec782 - Migrate statistics to Supabase database
+f868dde - Use existing Supabase pooler connection for statistics
+```
+
+---
+
+### WHERE WE LEFT OFF
+
+**Status:** Statistics chart and Supabase migration complete and deployed.
+
+**What Was Done:**
+1. Added Recharts line graph to Statistics dashboard card
+2. Confirmed database connection uses Supabase (via pooler)
+3. Created `xogos_statistics` table in Supabase with RLS policies
+4. Seeded first historical record (1/19/2026)
+5. Updated admin page note to reference Supabase
+6. Pushed all changes to GitHub for AWS Amplify deployment
+
+**Current Statistics Flow:**
+```
+Admin updates stats (/admin/statistics)
+    ↓
+updateStatistics() server action
+    ↓
+db.updateStatistics() → INSERT new row
+    ↓
+xogos_statistics table (Supabase)
+    ↓
+getStatisticsHistory() fetches for graph
+    ↓
+Dashboard shows line chart with trends
+```
+
+**Next Steps (if continuing):**
+1. Add more statistics entries to see graph populate with multiple data points
+2. Consider adding similar graph to Financials card
+3. Add date range filter to statistics history view
+4. Create data export feature for statistics/financials
+
+---
+
+## Previous Session: January 24, 2026
+
+### Major Work Completed
+
+#### 1. Game Selection Expansion with Rotating Display
+**Feature:** Expanded the "Select Your Game" section on the homepage with 10 games that randomly rotate on each page refresh.
+
+**Implementation Details:**
+- Shows 4 random games at a time using Fisher-Yates shuffle algorithm
+- Games rotate on each page refresh for variety
+- Moved section above "Special Events" per user request
+
+**Games Added (10 Total):**
+| Game | Subject | Level | Description |
+|------|---------|-------|-------------|
+| Bug and Seek | Science | Beginner | Nature-based exploration game with 220+ real insects |
+| Debt-Free Millionaire | Personal Finance | Intermediate | Career simulation teaching budgeting and wealth-building |
+| Digital Frontier | STEM | Intermediate | Story-driven adventure with physics, engineering, coding |
+| Exploration Library | Literature | Beg-Adv | Interactive classic literature (Treasure Island, Pride & Prejudice) |
+| Historical Conquest | History | Intermediate | Strategic card game with historical figures and events |
+| Hunt the Past | History | Beg-Adv | AI-powered encyclopedia - talk to historical figures |
+| iServ Volunteer | Community Service | Inter-Adv | Track volunteer hours, earn coins, convert to scholarships |
+| Lightning Round | History | Beginner | Fast-paced quiz game with timed challenges |
+| Monster Math | Mathematics | Beg-Inter | Survival math game - chase correct answers, avoid monsters |
+| Totally Medieval | Mathematics | Intermediate | Kingdom building with strategic math challenges |
+
+**Game Modal Popup:**
+- Click any game card to open detailed popup
+- Shows: Logo, title, level badge, full description
+- Tutorial link (where available)
+- Close button (×) or click outside to dismiss
+
+**Files Modified:**
+- `app/page.tsx` - Added Game interface, allGames array, shuffle function, modal component
+- `app/page.module.css` - Added modal styles (~150 lines: overlay, content, animations)
+
+**Key Code - Fisher-Yates Shuffle:**
+```typescript
+function shuffleArray<T>(array: T[]): T[] {
+  const shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+}
+```
+
+#### 2. Games Page Update
+**Feature:** Updated the `/games` page with comprehensive descriptions for all 10 games.
+
+**File Modified:**
+- `app/games/page.tsx` - Replaced games array with 10 games including detailed descriptions, features, and status badges
+
+**Each Game Entry Includes:**
+- id, title, subject
+- Full description
+- imagePath to logo
+- featured flag (for homepage carousel)
+- status: "active" | "beta" | "upcoming"
+- features array (5 key features each)
+
+#### 3. Game Logo Assets
+**Feature:** Added 10 game logo images to the public assets folder.
+
+**Files Added to `public/images/games/`:**
+- BugAndSeek_logo.jpg
+- DebtFreeMillionaire_logo.jpg
+- DigitalFrontier_logo.png
+- ExplorationLibrary_logo.png
+- HistoricalConquest_logo.jpg
+- HuntThePast_logo.jpg
+- iServVolunteer_logo.jpg
+- LightningRound_logo.png
+- MonsterMath_logo.png
+- TotallyMedieval_logo.png
+
+**Source:** Copied from `extra/` folder (original files retained)
+
+---
+
+### Git Commit This Session
+
+```
+408b315 - Expand game selection with rotating display and modal popups
+```
+
+**Changes in Commit:**
+- 13 files changed, 552 insertions(+), 154 deletions(-)
+- 10 new image files created in public/images/games/
+
+---
+
+### WHERE WE LEFT OFF
+
+**Status:** All game expansion features complete and deployed.
+
+**What Was Done:**
+1. Added 10 games to homepage with random 4-game rotation
+2. Created game modal popup with full details
+3. Moved "Select Your Game" above "Special Events"
+4. Updated Games page with all 10 games and descriptions
+5. Added all game logo images
+6. Pushed to GitHub for AWS Amplify deployment
+
+**Next Steps (if continuing):**
+1. Add tutorial links for games that have them
+2. Create individual game detail pages at `/games/[game-id]`
+3. Add "Play Now" functionality when game platform is ready
+4. Consider adding game filtering by subject on homepage
+5. Add game ratings/reviews system
+6. Connect games to iPlay coin earning system
+
+---
+
+## Previous Session: January 23, 2026 (Evening)
 
 ### Major Work Completed
 
@@ -1422,86 +1667,118 @@ f14469a - Fix Board Sign-In to use proper NextAuth flow
 
 ---
 
-## Session End Status: ✅ DOCUMENTATION & SCHEMA WORK COMPLETE
+## Session End Status: ✅ STATISTICS CHART & SUPABASE MIGRATION COMPLETE
 
-**Last session:** January 23, 2026 (Evening)
-**Last commit:** Pending - Code changes ready for commit
-**Documentation Created:** `WEBSITE_JOURNEY.md` + `VISITOR_GUIDE.md` ✅
-**Database Schema:** `accounts.board` SQL created (not yet executed) ✅
-**Easter Egg Feature:** Special Events section + Hidden code on initiatives page ✅
+**Last session:** January 28, 2026
+**Last commit:** `f868dde` - Pushed to GitHub, AWS Amplify auto-deploying
+**Statistics Chart:** Line graph added to dashboard card using Recharts ✅
+**Supabase Migration:** Statistics now stored in Supabase via pooler connection ✅
 
-### Previous System Status:
+### Current System Status:
+**Statistics Dashboard Card:** Now includes "Growth Over Time" line chart ✅
+**Database:** Supabase PostgreSQL (via pooler: `aws-1-us-east-1.pooler.supabase.com`) ✅
+**Statistics Table:** `xogos_statistics` created with RLS policies ✅
+**First Data Point:** 1/19/2026 - 234 accounts, 151 active users, 18 hours ✅
+**Homepage Games:** 4 random games shown per refresh (10 total in rotation) ✅
+**Game Modal:** Click any game card for full details popup ✅
+**Games Page:** All 10 games with features and descriptions ✅
+**Easter Egg:** Still active (Jan 25 - Feb 28, 2026) - Code: `XOGOS-EGG-2026-439234F` ✅
 **Liveblocks Documents:** Working - downgraded to v2.24.4 ✅
 **Multi-Select Delete:** Implemented and deployed ✅
-**Header/Footer:** Reorganized - header simplified, links moved to footer ✅
-**Sign-In Security:** Authorized emails list removed from UI ✅
-**Build Status:** Successful (381 pages generated) ✅
-**Dashboard Status:** Personalized with live RSS feeds - Functional ✅
+**Dashboard Status:** Personalized with live RSS feeds + statistics graph ✅
 **Admin Access:** Working - visible to Zack and Michael ✅
-**Database:** AWS RDS PostgreSQL configured and working ✅
 
 ### What's Working Now:
-1. **Document Creation & Editing** - Click "+ New Draft" → "Text" works correctly
-2. **Multi-Select Delete** - Select multiple documents and delete them at once
-3. **Real-time Collaboration** - Liveblocks 2.24.4 is stable and functional
-4. **Board Dashboard** - All cards loading with live data
-5. **Admin Panel** - Statistics, financials, and checklists management
-6. **Simplified Navigation** - Header: Games, About Us, Blog only
-7. **Sign-In Security** - No visible email whitelist
+1. **Statistics Growth Chart** - Line graph showing Accounts, Active Users, Total Hours trends
+2. **Statistics History Table** - Admin page shows all historical entries
+3. **Homepage Game Selection** - 4 random games rotate on each refresh
+4. **Game Modal Popup** - Click card for logo, description, level, tutorial link
+5. **Games Page** - All 10 games with comprehensive descriptions
+6. **Special Events Section** - Easter Egg Hunt with hidden code
+7. **Document Creation & Editing** - Liveblocks 2.24.4 stable
+8. **Multi-Select Delete** - Select and bulk delete documents
+9. **Board Dashboard** - All cards loading with live data
+10. **Admin Panel** - Statistics, financials, checklists management
 
 ### Test URLs:
-- Homepage: https://www.histronics.com (check header/footer)
-- Documents page: https://www.histronics.com/dashboard/documents
-- Sign-in page: https://www.histronics.com/signin (no email list visible)
-- Dashboard: https://www.histronics.com/dashboard
+- Homepage: https://www.histronics.com (check game rotation)
+- Games page: https://www.histronics.com/games (all 10 games)
+- Easter Egg: https://www.histronics.com/board/initiatives (hidden egg in hero)
+- Dashboard: https://www.histronics.com/dashboard (see statistics chart)
+- Admin Statistics: https://www.histronics.com/admin/statistics (update stats, see history)
 - Admin (Zack/Michael only): https://www.histronics.com/admin
 
-### Navigation Structure:
-**Header Links:** Games, About Us, Blog
-**Footer Links:**
-- Platform: Games, Membership, Scholarships, Forum, Events
-- Company: About Us, Board Room, Board Sign-In, Contact
-- Resources: Blog, Documentation, FAQ
-- Connect: Twitter/X, Facebook, Instagram, Pinterest, YouTube
+### Database Configuration:
+**Connection:** Supabase PostgreSQL via pooler
+```
+DATABASE_HOST=aws-1-us-east-1.pooler.supabase.com
+DATABASE_NAME=postgres
+DATABASE_PORT=5432 (or 6543 for pooler)
+DATABASE_USER=postgres.bqeurqjjrcrbrtsgmnlp
+DATABASE_SSL=true
+```
 
 ### Key Technical Notes:
+- **Statistics Chart:** Uses `recharts` library - ResponsiveContainer with LineChart
+- **Chart Colors:** Accounts (#e62739 red), Active Users (#e6bb84 gold), Total Hours (#7928ca purple)
+- **Chart Visibility:** Only shows when 2+ historical records exist
+- **Data Flow:** `getStatisticsHistory()` → up to 30 records → reversed for chronological display
+- **Game Rotation:** Uses Fisher-Yates shuffle for true randomness
+- **Game Modal:** React state `selectedGame` controls popup visibility
+- **Image Paths:** All game logos in `public/images/games/[GameName]_logo.[jpg|png]`
 - **Liveblocks Version:** Must stay on 2.24.4 - version 3.x has initialization bug
-- **Auth Pattern:** Using simple string URL for authEndpoint, not callback function
-- **Selection State:** Uses React state with Set<string> for efficient selection tracking
-- **Bulk Delete:** Server action validates permissions for each document individually
-- **Email Whitelist:** Still enforced in `lib/auth/authorized-emails.ts`, just hidden from UI
+- **Email Whitelist:** Enforced in `lib/auth/authorized-emails.ts`, hidden from UI
 
 ### Next Steps / TODO:
-1. Test all changes on production after Amplify deployment
-2. Consider adding "Select All" checkbox in header
-3. Consider adding keyboard shortcuts (Ctrl+A for select all)
-4. Newsletter/Registration system still needs implementation
+1. Add more statistics entries to populate the growth chart
+2. Consider adding similar graph to Financials card
+3. Add date range filter to statistics history view
+4. Add tutorial links for games that have tutorials
+5. Create individual game detail pages at `/games/[game-id]`
+6. Connect "Play Now" buttons to actual game platform
+7. Implement code redemption for Easter Egg (`XOGOS-EGG-2026-439234F`)
+8. Newsletter/Registration system still needs implementation
+9. Execute pending SQL for `accounts.board` table in Supabase
 
 **Next Developer Notes:**
+- Statistics are in Supabase - each update creates a new row for history
+- Chart requires 2+ data points to display - add more entries via admin panel
+- To add a new game: Add to both `app/page.tsx` and `app/games/page.tsx` arrays
+- Game modal close: Click × button OR click outside modal
+- Easter Egg only visible Jan 25 - Feb 28, 2026 (auto-hides via date check)
 - If Liveblocks errors return, check version - do NOT upgrade past 2.24.4
-- Multi-select delete only shows for documents user has write access to
-- Bulk action bar only appears when at least one document is selected
-- All database operations use AWS RDS PostgreSQL via `lib/database.ts`
-- Header simplified intentionally - secondary links now in footer
-- Authorized emails whitelist is in `lib/auth/authorized-emails.ts` (not visible to users)
 
 ---
 
-### Files Created This Session (January 23, Evening):
-- `WEBSITE_JOURNEY.md` - Comprehensive user journey documentation (internal/technical)
-- `VISITOR_GUIDE.md` - Public visitor guide showing what's available on the site
+### Files Modified This Session (January 28, 2026):
+- `package.json` - Added `recharts: ^2.15.0`
+- `components/Dashboard/Cards/XogosStatisticsCard.tsx` - Added LineChart with history data
+- `components/Dashboard/Cards/XogosStatisticsCard.module.css` - Added chart container styles
+- `app/admin/statistics/page.tsx` - Updated note to reference Supabase
+- `lib/actions/getStatistics.ts` - Uses existing db connection (comments updated)
+- `lib/actions/updateStatistics.ts` - Uses existing db connection (comments updated)
+- `lib/actions/getStatisticsHistory.ts` - Uses existing db connection (comments updated)
 
-### Files Modified This Session (January 23, Evening):
-- `app/page.tsx` - Added Special Events section with Easter Egg Hunt intro
-- `app/page.module.css` - Added Special Events styles (150+ lines)
-- `app/board/initiatives/page.tsx` - Added EasterEgg component with hidden code
-- `app/board/initiatives/page.module.css` - Added Easter Egg reveal animation styles
+### SQL Executed in Supabase This Session:
+```sql
+CREATE TABLE xogos_statistics (
+  id SERIAL PRIMARY KEY,
+  accounts INTEGER NOT NULL DEFAULT 0,
+  active_users INTEGER NOT NULL DEFAULT 0,
+  total_hours INTEGER NOT NULL DEFAULT 0,
+  last_updated TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_by TEXT
+);
 
-### SQL Pending Execution:
+-- RLS Policies added
+-- First record seeded: 1/19/2026, 234/151/18, zack@xogosgaming.com
+```
+
+### SQL Still Pending Execution:
 - `accounts` schema creation
 - `accounts.board` table with RLS policies and grants
 
 ---
 
 *This document is auto-maintained by Claude Code. Update after each significant session.*
-*Last updated: January 23, 2026*
+*Last updated: January 28, 2026*
