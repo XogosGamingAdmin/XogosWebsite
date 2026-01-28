@@ -1,15 +1,15 @@
 "use server";
 
-import { db } from "@/lib/database";
+import { statsDb } from "@/lib/supabase";
 
 /**
  * Get Statistics
  *
- * Retrieves the current Xogos statistics data from database
+ * Retrieves the current Xogos statistics data from Supabase
  */
 export async function getStatistics() {
   try {
-    const stats = await db.getStatistics();
+    const stats = await statsDb.getStatistics();
 
     if (!stats) {
       return {
@@ -26,7 +26,7 @@ export async function getStatistics() {
         accounts: stats.accounts,
         activeUsers: stats.active_users,
         totalHours: stats.total_hours,
-        lastUpdated: stats.last_updated.toISOString(),
+        lastUpdated: stats.last_updated,
         updatedBy: stats.updated_by,
       },
     };
@@ -36,7 +36,7 @@ export async function getStatistics() {
       error: {
         code: 500,
         message: "Failed to fetch statistics",
-        suggestion: "Check database connection and try again",
+        suggestion: "Check Supabase connection and try again",
       },
     };
   }

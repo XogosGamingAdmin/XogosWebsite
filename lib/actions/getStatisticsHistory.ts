@@ -1,6 +1,6 @@
 "use server";
 
-import { db } from "@/lib/database";
+import { statsDb } from "@/lib/supabase";
 
 type Props = {
   limit?: number;
@@ -11,7 +11,7 @@ type Props = {
 /**
  * Get Statistics History
  *
- * Retrieves historical Xogos statistics data for trending/graphing
+ * Retrieves historical Xogos statistics data from Supabase for trending/graphing
  * Each record represents a snapshot in time with timestamp
  *
  * @param limit - Number of records to retrieve (default: 30)
@@ -27,7 +27,7 @@ export async function getStatisticsHistory({
     const start = startDate ? new Date(startDate) : undefined;
     const end = endDate ? new Date(endDate) : undefined;
 
-    const history = await db.getStatisticsHistory(limit, start, end);
+    const history = await statsDb.getStatisticsHistory(limit, start, end);
 
     return {
       data: history.map((record) => ({
@@ -35,7 +35,7 @@ export async function getStatisticsHistory({
         accounts: record.accounts,
         activeUsers: record.active_users,
         totalHours: record.total_hours,
-        lastUpdated: record.last_updated.toISOString(),
+        lastUpdated: record.last_updated,
         updatedBy: record.updated_by,
       })),
     };
@@ -45,7 +45,7 @@ export async function getStatisticsHistory({
       error: {
         code: 500,
         message: "Failed to fetch statistics history",
-        suggestion: "Check database connection and try again",
+        suggestion: "Check Supabase connection and try again",
       },
     };
   }

@@ -141,9 +141,8 @@ export default function StatisticsPage() {
             )}
 
             <p className={styles.note}>
-              ✅ Changes are saved to AWS RDS PostgreSQL database with
-              timestamp. Each update creates a new historical record for
-              trending/analytics.
+              ✅ Changes are saved to Supabase database with timestamp. Each
+              update creates a new historical record for trending/analytics.
             </p>
           </form>
         )}

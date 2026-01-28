@@ -2,7 +2,7 @@
 
 import { auth } from "@/auth";
 import { canUpdateStatistics } from "@/lib/auth/admin";
-import { db } from "@/lib/database";
+import { statsDb } from "@/lib/supabase";
 
 type Props = {
   accounts: number;
@@ -14,7 +14,7 @@ type Props = {
  * Update Statistics
  *
  * Updates the Xogos statistics (admin only)
- * Creates a new historical record in the database with timestamp
+ * Creates a new historical record in Supabase with timestamp
  *
  * @param data - The updated statistics values
  */
@@ -48,8 +48,8 @@ export async function updateStatistics({
   }
 
   try {
-    // Save to database - creates a new row with current timestamp
-    const updatedStats = await db.updateStatistics(
+    // Save to Supabase - creates a new row with current timestamp
+    const updatedStats = await statsDb.updateStatistics(
       accounts,
       activeUsers,
       totalHours,
@@ -61,7 +61,7 @@ export async function updateStatistics({
         accounts: updatedStats.accounts,
         activeUsers: updatedStats.active_users,
         totalHours: updatedStats.total_hours,
-        lastUpdated: updatedStats.last_updated.toISOString(),
+        lastUpdated: updatedStats.last_updated,
         updatedBy: updatedStats.updated_by,
       },
     };
@@ -71,7 +71,7 @@ export async function updateStatistics({
       error: {
         code: 500,
         message: "Failed to update statistics",
-        suggestion: "Check database connection and try again",
+        suggestion: "Check Supabase connection and try again",
       },
     };
   }
