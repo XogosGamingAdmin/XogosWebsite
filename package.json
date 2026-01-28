@@ -23,7 +23,6 @@
   },
   "dependencies": {
     "@anthropic-ai/claude-code": "^2.0.29",
-    "@supabase/supabase-js": "^2.47.0",
     "@liveblocks/client": "2.24.4",
     "@liveblocks/node": "2.24.4",
     "@liveblocks/react": "2.24.4",

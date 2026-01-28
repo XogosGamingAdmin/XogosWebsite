@@ -1,6 +1,6 @@
 "use server";
 
-import { statsDb } from "@/lib/supabase";
+import { db } from "@/lib/database";
 
 /**
  * Get Statistics
@@ -9,7 +9,7 @@ import { statsDb } from "@/lib/supabase";
  */
 export async function getStatistics() {
   try {
-    const stats = await statsDb.getStatistics();
+    const stats = await db.getStatistics();
 
     if (!stats) {
       return {
@@ -26,7 +26,7 @@ export async function getStatistics() {
         accounts: stats.accounts,
         activeUsers: stats.active_users,
         totalHours: stats.total_hours,
-        lastUpdated: stats.last_updated,
+        lastUpdated: stats.last_updated.toISOString(),
         updatedBy: stats.updated_by,
       },
     };
@@ -36,7 +36,7 @@ export async function getStatistics() {
       error: {
         code: 500,
         message: "Failed to fetch statistics",
-        suggestion: "Check Supabase connection and try again",
+        suggestion: "Check database connection and try again",
       },
     };
   }

@@ -1,6 +1,6 @@
 "use server";
 
-import { statsDb } from "@/lib/supabase";
+import { db } from "@/lib/database";
 
 type Props = {
   limit?: number;
@@ -27,7 +27,7 @@ export async function getStatisticsHistory({
     const start = startDate ? new Date(startDate) : undefined;
     const end = endDate ? new Date(endDate) : undefined;
 
-    const history = await statsDb.getStatisticsHistory(limit, start, end);
+    const history = await db.getStatisticsHistory(limit, start, end);
 
     return {
       data: history.map((record) => ({
@@ -35,7 +35,7 @@ export async function getStatisticsHistory({
         accounts: record.accounts,
         activeUsers: record.active_users,
         totalHours: record.total_hours,
-        lastUpdated: record.last_updated,
+        lastUpdated: record.last_updated.toISOString(),
         updatedBy: record.updated_by,
       })),
     };
@@ -45,7 +45,7 @@ export async function getStatisticsHistory({
       error: {
         code: 500,
         message: "Failed to fetch statistics history",
-        suggestion: "Check Supabase connection and try again",
+        suggestion: "Check database connection and try again",
       },
     };
   }
