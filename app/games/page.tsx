@@ -214,12 +214,6 @@ export default function GamesPage() {
     setActiveGame(game);
   };
 
-  const handleLearnMore = (gameId: string) => {
-    if (gameId === "panic-attack") {
-      window.location.href = "/games/panic-attack";
-    }
-  };
-
   const closeGameDetails = () => {
     setActiveGame(null);
   };
@@ -476,32 +470,30 @@ export default function GamesPage() {
 
                 <div className={styles.gameModalActions}>
                   {activeGame.status === "active" && (
-                    <Link
-                      href="/membership"
+                    <a
+                      href="https://www.myXogos.com"
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className={styles.modalPrimaryButton}
                     >
                       Play Now
-                    </Link>
+                    </a>
                   )}
                   {activeGame.status === "beta" && (
-                    <Link
-                      href="/membership"
+                    <a
+                      href="https://www.myXogos.com"
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className={styles.modalSecondaryButton}
                     >
                       Join Beta
-                    </Link>
+                    </a>
                   )}
                   {activeGame.status === "upcoming" && (
                     <button className={styles.modalDisabledButton} disabled>
                       Coming Soon
                     </button>
                   )}
-                  <button
-                    className={styles.modalLinkButton}
-                    onClick={() => handleLearnMore(activeGame.id)}
-                  >
-                    Learn More
-                  </button>
                 </div>
               </div>
             </div>
