@@ -1,0 +1,490 @@
+.container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0d0d1a 0%, #1a1a2e 50%, #16213e 100%);
+  color: #fff;
+}
+
+/* Header */
+.header {
+  background: rgba(0, 0, 0, 0.3);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 1rem 2rem;
+}
+
+.headerContent {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.headerTitle {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.headerTitle h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0;
+  background: linear-gradient(135deg, #e62739, #e6bb84);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.badge {
+  background: rgba(230, 39, 57, 0.2);
+  border: 1px solid #e62739;
+  color: #e62739;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.userEmail {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.875rem;
+}
+
+.backLink {
+  color: #e6bb84;
+  text-decoration: none;
+  font-size: 0.875rem;
+  transition: color 0.2s;
+}
+
+.backLink:hover {
+  color: #fff;
+}
+
+/* Main Content */
+.main {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* Sections */
+.section {
+  margin-bottom: 2.5rem;
+}
+
+.sectionTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1.25rem;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Metrics Grid */
+.metricsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.25rem;
+}
+
+.metricCard {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 1.5rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  transition: transform 0.2s, border-color 0.2s;
+}
+
+.metricCard:hover {
+  transform: translateY(-2px);
+  border-color: rgba(230, 39, 57, 0.3);
+}
+
+.metricIcon {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.metricContent {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.metricTitle {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 500;
+}
+
+.metricValue {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.2;
+}
+
+.metricSubtitle {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.metricSubtitle.up {
+  color: #4ade80;
+}
+
+.metricSubtitle.down {
+  color: #f87171;
+}
+
+/* Member Type Grid */
+.memberTypeGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+}
+
+@media (max-width: 768px) {
+  .memberTypeGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.memberTypeCard {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.memberTypeIcon {
+  font-size: 2.5rem;
+  line-height: 1;
+}
+
+.memberTypeInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.memberTypeLabel {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.memberTypeCount {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+/* Revenue Section */
+.revenueSection {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 1.5rem;
+}
+
+@media (max-width: 900px) {
+  .revenueSection {
+    grid-template-columns: 1fr;
+  }
+}
+
+.revenueCard {
+  background: linear-gradient(135deg, rgba(230, 39, 57, 0.2), rgba(121, 40, 202, 0.2));
+  border: 1px solid rgba(230, 39, 57, 0.3);
+  border-radius: 12px;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.revenueHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.revenueIcon {
+  font-size: 1.5rem;
+}
+
+.revenueLabel {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1rem;
+}
+
+.revenueValue {
+  font-size: 3rem;
+  font-weight: 700;
+  color: #4ade80;
+  line-height: 1.2;
+}
+
+.revenueCurrency {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+/* Chart */
+.revenueChartContainer {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.chartTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.chart {
+  height: 200px;
+  display: flex;
+  align-items: flex-end;
+}
+
+.chartBars {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-around;
+  width: 100%;
+  height: 100%;
+  gap: 0.5rem;
+}
+
+.chartBar {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  justify-content: flex-end;
+}
+
+.bar {
+  width: 100%;
+  max-width: 60px;
+  background: linear-gradient(180deg, #e62739, #7928ca);
+  border-radius: 4px 4px 0 0;
+  position: relative;
+  min-height: 10px;
+  transition: height 0.3s ease;
+}
+
+.barValue {
+  position: absolute;
+  top: -24px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.7);
+  white-space: nowrap;
+}
+
+.barLabel {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin-top: 0.5rem;
+}
+
+.chartPlaceholder {
+  height: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.5);
+  text-align: center;
+}
+
+.chartPlaceholder small {
+  font-size: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+/* Info Section */
+.infoSection {
+  margin-top: 2rem;
+}
+
+.infoCard {
+  background: rgba(230, 187, 132, 0.1);
+  border: 1px solid rgba(230, 187, 132, 0.3);
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.infoCard h3 {
+  font-size: 1rem;
+  margin-bottom: 0.75rem;
+  color: #e6bb84;
+}
+
+.infoCard p {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.875rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.infoNote {
+  margin-top: 1rem !important;
+  font-size: 0.75rem !important;
+  color: rgba(255, 255, 255, 0.5) !important;
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  padding: 2rem;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.875rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Loading State */
+.loading {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  border-top-color: #e62739;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Access Denied */
+.accessDenied {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem;
+}
+
+.accessDeniedIcon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+
+.accessDenied h1 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: #e62739;
+}
+
+.accessDenied p {
+  color: rgba(255, 255, 255, 0.7);
+  max-width: 400px;
+  line-height: 1.5;
+}
+
+.accessDeniedSubtext {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.5);
+  margin-top: 1rem;
+}
+
+.accessDeniedActions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+/* Error State */
+.error {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem;
+}
+
+.error h2 {
+  color: #f87171;
+  margin-bottom: 0.5rem;
+}
+
+.error p {
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 1.5rem;
+}
+
+/* Buttons */
+.primaryButton {
+  background: linear-gradient(135deg, #e62739, #c41e2f);
+  color: #fff;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: transform 0.2s, box-shadow 0.2s;
+  border: none;
+  cursor: pointer;
+}
+
+.primaryButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(230, 39, 57, 0.3);
+}
+
+.secondaryButton {
+  background: transparent;
+  color: #e6bb84;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  border: 1px solid #e6bb84;
+  transition: background 0.2s, color 0.2s;
+}
+
+.secondaryButton:hover {
+  background: rgba(230, 187, 132, 0.1);
+}

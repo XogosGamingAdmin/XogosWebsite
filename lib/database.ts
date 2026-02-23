@@ -773,6 +773,265 @@ export const db = {
     );
     return result.rowCount;
   },
+
+  // ============ STRIPE FUNCTIONS ============
+
+  /**
+   * Log a Stripe webhook event
+   */
+  async logStripeEvent(eventId: string, eventType: string, eventData: string) {
+    const result = await query(
+      `INSERT INTO stripe_events (stripe_event_id, event_type, event_data)
+       VALUES ($1, $2, $3)
+       ON CONFLICT (stripe_event_id) DO NOTHING
+       RETURNING id, stripe_event_id, event_type, created_at`,
+      [eventId, eventType, eventData]
+    );
+    return result.rows[0];
+  },
+
+  /**
+   * Upsert a Stripe customer
+   */
+  async upsertStripeCustomer(data: {
+    stripeCustomerId: string;
+    email: string;
+    name: string;
+    metadata?: Record<string, string>;
+  }) {
+    const result = await query(
+      `INSERT INTO stripe_customers (stripe_customer_id, email, name, metadata)
+       VALUES ($1, $2, $3, $4)
+       ON CONFLICT (stripe_customer_id)
+       DO UPDATE SET
+         email = COALESCE($2, stripe_customers.email),
+         name = COALESCE($3, stripe_customers.name),
+         metadata = COALESCE($4, stripe_customers.metadata),
+         updated_at = NOW()
+       RETURNING id, stripe_customer_id, email, name, created_at`,
+      [
+        data.stripeCustomerId,
+        data.email,
+        data.name,
+        data.metadata ? JSON.stringify(data.metadata) : null,
+      ]
+    );
+    return result.rows[0];
+  },
+
+  /**
+   * Delete a Stripe customer
+   */
+  async deleteStripeCustomer(stripeCustomerId: string) {
+    await query(
+      `DELETE FROM stripe_customers WHERE stripe_customer_id = $1`,
+      [stripeCustomerId]
+    );
+  },
+
+  /**
+   * Upsert a Stripe subscription
+   */
+  async upsertStripeSubscription(data: {
+    stripeSubscriptionId: string;
+    stripeCustomerId: string;
+    stripePriceId: string;
+    subscriptionType: string;
+    status: string;
+    currentPeriodStart: Date;
+    currentPeriodEnd: Date;
+    canceledAt: Date | null;
+  }) {
+    const result = await query(
+      `INSERT INTO stripe_subscriptions (
+         stripe_subscription_id, stripe_customer_id, stripe_price_id,
+         subscription_type, status, current_period_start, current_period_end, canceled_at
+       )
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+       ON CONFLICT (stripe_subscription_id)
+       DO UPDATE SET
+         stripe_customer_id = $2,
+         stripe_price_id = $3,
+         subscription_type = $4,
+         status = $5,
+         current_period_start = $6,
+         current_period_end = $7,
+         canceled_at = $8,
+         updated_at = NOW()
+       RETURNING *`,
+      [
+        data.stripeSubscriptionId,
+        data.stripeCustomerId,
+        data.stripePriceId,
+        data.subscriptionType,
+        data.status,
+        data.currentPeriodStart,
+        data.currentPeriodEnd,
+        data.canceledAt,
+      ]
+    );
+    return result.rows[0];
+  },
+
+  /**
+   * Update subscription status
+   */
+  async updateStripeSubscriptionStatus(
+    stripeSubscriptionId: string,
+    status: string
+  ) {
+    const result = await query(
+      `UPDATE stripe_subscriptions
+       SET status = $2, updated_at = NOW(), canceled_at = CASE WHEN $2 = 'canceled' THEN NOW() ELSE canceled_at END
+       WHERE stripe_subscription_id = $1
+       RETURNING *`,
+      [stripeSubscriptionId, status]
+    );
+    return result.rows[0];
+  },
+
+  /**
+   * Record a Stripe payment
+   */
+  async recordStripePayment(data: {
+    stripeCustomerId: string;
+    stripeInvoiceId: string;
+    amount: number;
+    currency: string;
+    paidAt: Date;
+  }) {
+    const result = await query(
+      `INSERT INTO stripe_payments (stripe_customer_id, stripe_invoice_id, amount, currency, paid_at)
+       VALUES ($1, $2, $3, $4, $5)
+       ON CONFLICT (stripe_invoice_id) DO NOTHING
+       RETURNING *`,
+      [
+        data.stripeCustomerId,
+        data.stripeInvoiceId,
+        data.amount,
+        data.currency,
+        data.paidAt,
+      ]
+    );
+    return result.rows[0];
+  },
+
+  /**
+   * Get membership metrics for financial dashboard
+   */
+  async getMembershipMetrics() {
+    // Total active members by type
+    const activeMembers = await query(
+      `SELECT
+         subscription_type,
+         COUNT(*) as count
+       FROM stripe_subscriptions
+       WHERE status = 'active'
+       GROUP BY subscription_type`
+    );
+
+    // New members this month
+    const newMembersThisMonth = await query(
+      `SELECT COUNT(*) as count
+       FROM stripe_subscriptions
+       WHERE created_at >= date_trunc('month', CURRENT_DATE)
+       AND status = 'active'`
+    );
+
+    // Members lost this month (canceled)
+    const membersLostThisMonth = await query(
+      `SELECT COUNT(*) as count
+       FROM stripe_subscriptions
+       WHERE canceled_at >= date_trunc('month', CURRENT_DATE)`
+    );
+
+    // Revenue this month
+    const revenueThisMonth = await query(
+      `SELECT
+         COALESCE(SUM(amount), 0) as total,
+         currency
+       FROM stripe_payments
+       WHERE paid_at >= date_trunc('month', CURRENT_DATE)
+       GROUP BY currency`
+    );
+
+    // Calculate churn rate
+    const totalActiveAtStartOfMonth = await query(
+      `SELECT COUNT(*) as count
+       FROM stripe_subscriptions
+       WHERE created_at < date_trunc('month', CURRENT_DATE)
+       AND (canceled_at IS NULL OR canceled_at >= date_trunc('month', CURRENT_DATE))`
+    );
+
+    const startCount = parseInt(totalActiveAtStartOfMonth.rows[0]?.count || "0");
+    const lostCount = parseInt(membersLostThisMonth.rows[0]?.count || "0");
+    const churnRate = startCount > 0 ? ((lostCount / startCount) * 100).toFixed(2) : "0.00";
+
+    // Monthly revenue trend (last 6 months)
+    const revenueTrend = await query(
+      `SELECT
+         date_trunc('month', paid_at) as month,
+         COALESCE(SUM(amount), 0) as total
+       FROM stripe_payments
+       WHERE paid_at >= date_trunc('month', CURRENT_DATE) - INTERVAL '6 months'
+       GROUP BY date_trunc('month', paid_at)
+       ORDER BY month ASC`
+    );
+
+    // Build response
+    const membersByType: Record<string, number> = {};
+    activeMembers.rows.forEach((row: { subscription_type: string; count: string }) => {
+      membersByType[row.subscription_type] = parseInt(row.count);
+    });
+
+    return {
+      totalMembers: Object.values(membersByType).reduce((a, b) => a + b, 0),
+      membersByType,
+      newMembersThisMonth: parseInt(newMembersThisMonth.rows[0]?.count || "0"),
+      membersLostThisMonth: parseInt(membersLostThisMonth.rows[0]?.count || "0"),
+      revenueThisMonth: revenueThisMonth.rows[0]?.total
+        ? parseFloat(revenueThisMonth.rows[0].total)
+        : 0,
+      currency: revenueThisMonth.rows[0]?.currency || "usd",
+      churnRate: parseFloat(churnRate),
+      revenueTrend: revenueTrend.rows.map((row: { month: string; total: string }) => ({
+        month: row.month,
+        total: parseFloat(row.total),
+      })),
+    };
+  },
+
+  /**
+   * Get all Stripe customers with their subscriptions
+   */
+  async getStripeCustomersWithSubscriptions(limit: number = 100) {
+    const result = await query(
+      `SELECT
+         c.id, c.stripe_customer_id, c.email, c.name, c.created_at,
+         s.stripe_subscription_id, s.subscription_type, s.status,
+         s.current_period_start, s.current_period_end
+       FROM stripe_customers c
+       LEFT JOIN stripe_subscriptions s ON c.stripe_customer_id = s.stripe_customer_id
+       ORDER BY c.created_at DESC
+       LIMIT $1`,
+      [limit]
+    );
+    return result.rows;
+  },
+
+  /**
+   * Get recent Stripe events
+   */
+  async getRecentStripeEvents(limit: number = 50) {
+    const result = await query(
+      `SELECT id, stripe_event_id, event_type, created_at
+       FROM stripe_events
+       ORDER BY created_at DESC
+       LIMIT $1`,
+      [limit]
+    );
+    return result.rows;
+  },
 };
 
 export default pool;

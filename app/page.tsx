@@ -649,6 +649,15 @@ export default function HomePage() {
           </div>
         </section>
 
+        {/* Financial Dashboard Access - Bottom of Page */}
+        <section className={styles.financialAccessSection}>
+          <Link href="/finance" className={styles.financialAccessBtn}>
+            <span className={styles.financialIcon}>📊</span>
+            <span className={styles.financialText}>Financial Dashboard</span>
+            <span className={styles.financialBadge}>Audit Committee</span>
+          </Link>
+        </section>
+
         {/* Game Details Modal */}
         {selectedGame && (
           <div className={styles.gameModal} onClick={closeModal}>
