@@ -1,36 +1,33 @@
 /**
  * Financial dashboard authorization utilities
  *
- * Determines who has access to the financial dashboard based on
- * audit_committee group membership.
+ * Determines who has access to the financial dashboard.
  */
 
-import { db } from "@/lib/database";
+/**
+ * Emails authorized to access the Financial Dashboard
+ * Add emails here to grant access
+ */
+export const FINANCIAL_ADMIN_EMAILS = [
+  "zack@xogosgaming.com",
+  "enjoyweaver@gmail.com",
+];
 
 /**
  * Check if a user has access to the financial dashboard
- * User must be in the audit_committee group
  *
  * @param email - The user's email address
  * @returns true if user can access financial dashboard, false otherwise
  */
-export async function canAccessFinancialDashboard(
+export function canAccessFinancialDashboard(
   email: string | null | undefined
-): Promise<boolean> {
+): boolean {
   if (!email) return false;
 
-  try {
-    const normalizedEmail = email.toLowerCase().trim();
-    const groups = await db.getGroupsForUser(normalizedEmail);
-
-    // Check if user is in the audit_committee group
-    return groups.some(
-      (group: { id: string; name: string }) => group.id === "audit_committee"
-    );
-  } catch (error) {
-    console.error("Error checking financial dashboard access:", error);
-    return false;
-  }
+  const normalizedEmail = email.toLowerCase().trim();
+  return FINANCIAL_ADMIN_EMAILS.some(
+    (adminEmail) => adminEmail.toLowerCase() === normalizedEmail
+  );
 }
 
 /**

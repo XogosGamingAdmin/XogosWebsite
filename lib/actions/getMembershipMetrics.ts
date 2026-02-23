@@ -32,7 +32,7 @@ export async function getMembershipMetrics(): Promise<MembershipMetrics | null> 
     const userEmail = session?.user?.email;
 
     // Check if user has access to financial dashboard
-    const hasAccess = await canAccessFinancialDashboard(userEmail);
+    const hasAccess = canAccessFinancialDashboard(userEmail);
     if (!hasAccess) {
       console.error("User does not have access to financial dashboard");
       return null;
@@ -68,7 +68,7 @@ export async function getRecentStripeEvents(limit: number = 20) {
     const session = await auth();
     const userEmail = session?.user?.email;
 
-    const hasAccess = await canAccessFinancialDashboard(userEmail);
+    const hasAccess = canAccessFinancialDashboard(userEmail);
     if (!hasAccess) {
       return null;
     }
