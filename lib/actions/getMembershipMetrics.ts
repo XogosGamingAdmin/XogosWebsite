@@ -11,9 +11,21 @@ export interface MembershipMetrics {
     yearly: number;
     lifetime: number;
   };
+  stripeMembers: {
+    monthly: number;
+    yearly: number;
+    lifetime: number;
+  };
+  manualMembers: {
+    monthly: number;
+    yearly: number;
+    lifetime: number;
+  };
   newMembersThisMonth: number;
   membersLostThisMonth: number;
   revenueThisMonth: number;
+  stripeRevenue: number;
+  manualRevenue: number;
   currency: string;
   churnRate: number;
   revenueTrend: Array<{
@@ -24,7 +36,7 @@ export interface MembershipMetrics {
 
 /**
  * Get membership metrics for the financial dashboard
- * Only accessible by users in the audit_committee group
+ * Combines Stripe data with manual entries
  */
 export async function getMembershipMetrics(): Promise<MembershipMetrics | null> {
   try {
@@ -38,21 +50,44 @@ export async function getMembershipMetrics(): Promise<MembershipMetrics | null> 
       return null;
     }
 
-    const metrics = await db.getMembershipMetrics();
+    // Get Stripe metrics
+    const stripeMetrics = await db.getMembershipMetrics();
+
+    // Get manual entry totals
+    const manualMembers = await db.getManualMemberTotals();
+    const manualRevenue = await db.getManualRevenueThisMonth();
+
+    // Combine totals
+    const combinedMembers = {
+      monthly: (stripeMetrics.membersByType.monthly || 0) + (manualMembers.monthly || 0),
+      yearly: (stripeMetrics.membersByType.yearly || 0) + (manualMembers.yearly || 0),
+      lifetime: (stripeMetrics.membersByType.lifetime || 0) + (manualMembers.lifetime || 0),
+    };
+
+    const totalMembers = combinedMembers.monthly + combinedMembers.yearly + combinedMembers.lifetime;
+    const totalRevenue = stripeMetrics.revenueThisMonth + manualRevenue.total;
 
     return {
-      totalMembers: metrics.totalMembers,
-      membersByType: {
-        monthly: metrics.membersByType.monthly || 0,
-        yearly: metrics.membersByType.yearly || 0,
-        lifetime: metrics.membersByType.lifetime || 0,
+      totalMembers,
+      membersByType: combinedMembers,
+      stripeMembers: {
+        monthly: stripeMetrics.membersByType.monthly || 0,
+        yearly: stripeMetrics.membersByType.yearly || 0,
+        lifetime: stripeMetrics.membersByType.lifetime || 0,
       },
-      newMembersThisMonth: metrics.newMembersThisMonth,
-      membersLostThisMonth: metrics.membersLostThisMonth,
-      revenueThisMonth: metrics.revenueThisMonth,
-      currency: metrics.currency,
-      churnRate: metrics.churnRate,
-      revenueTrend: metrics.revenueTrend,
+      manualMembers: {
+        monthly: manualMembers.monthly || 0,
+        yearly: manualMembers.yearly || 0,
+        lifetime: manualMembers.lifetime || 0,
+      },
+      newMembersThisMonth: stripeMetrics.newMembersThisMonth,
+      membersLostThisMonth: stripeMetrics.membersLostThisMonth,
+      revenueThisMonth: totalRevenue,
+      stripeRevenue: stripeMetrics.revenueThisMonth,
+      manualRevenue: manualRevenue.total,
+      currency: stripeMetrics.currency || manualRevenue.currency || "usd",
+      churnRate: stripeMetrics.churnRate,
+      revenueTrend: stripeMetrics.revenueTrend,
     };
   } catch (error) {
     console.error("Error fetching membership metrics:", error);

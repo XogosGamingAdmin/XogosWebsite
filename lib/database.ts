@@ -1032,6 +1032,131 @@ export const db = {
     );
     return result.rows;
   },
+
+  // ============ MANUAL ENTRY FUNCTIONS ============
+
+  /**
+   * Add a manual member entry
+   */
+  async addManualMember(
+    memberType: "monthly" | "yearly" | "lifetime",
+    count: number,
+    notes: string,
+    entryDate: Date,
+    createdBy: string
+  ) {
+    const result = await query(
+      `INSERT INTO manual_members (member_type, count, notes, entry_date, created_by)
+       VALUES ($1, $2, $3, $4, $5)
+       RETURNING *`,
+      [memberType, count, notes, entryDate, createdBy]
+    );
+    return result.rows[0];
+  },
+
+  /**
+   * Add a manual revenue entry
+   */
+  async addManualRevenue(
+    amount: number,
+    description: string,
+    revenueDate: Date,
+    createdBy: string,
+    currency: string = "usd"
+  ) {
+    const result = await query(
+      `INSERT INTO manual_revenue (amount, description, revenue_date, created_by, currency)
+       VALUES ($1, $2, $3, $4, $5)
+       RETURNING *`,
+      [amount, description, revenueDate, createdBy, currency]
+    );
+    return result.rows[0];
+  },
+
+  /**
+   * Get manual member totals
+   */
+  async getManualMemberTotals() {
+    const result = await query(
+      `SELECT
+         member_type,
+         SUM(count) as total
+       FROM manual_members
+       GROUP BY member_type`
+    );
+
+    const totals: Record<string, number> = {
+      monthly: 0,
+      yearly: 0,
+      lifetime: 0,
+    };
+
+    result.rows.forEach((row: { member_type: string; total: string }) => {
+      totals[row.member_type] = parseInt(row.total) || 0;
+    });
+
+    return totals;
+  },
+
+  /**
+   * Get manual revenue total for current month
+   */
+  async getManualRevenueThisMonth() {
+    const result = await query(
+      `SELECT
+         COALESCE(SUM(amount), 0) as total,
+         currency
+       FROM manual_revenue
+       WHERE revenue_date >= date_trunc('month', CURRENT_DATE)
+       GROUP BY currency`
+    );
+    return {
+      total: result.rows[0]?.total ? parseFloat(result.rows[0].total) : 0,
+      currency: result.rows[0]?.currency || "usd",
+    };
+  },
+
+  /**
+   * Get recent manual entries
+   */
+  async getRecentManualEntries(limit: number = 20) {
+    const members = await query(
+      `SELECT id, member_type as type, count as value, notes as description, entry_date as date, 'member' as entry_type, created_at
+       FROM manual_members
+       ORDER BY created_at DESC
+       LIMIT $1`,
+      [limit]
+    );
+
+    const revenue = await query(
+      `SELECT id, 'revenue' as type, amount as value, description, revenue_date as date, 'revenue' as entry_type, created_at
+       FROM manual_revenue
+       ORDER BY created_at DESC
+       LIMIT $1`,
+      [limit]
+    );
+
+    // Combine and sort by created_at
+    const combined = [...members.rows, ...revenue.rows].sort(
+      (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+    );
+
+    return combined.slice(0, limit);
+  },
+
+  /**
+   * Delete a manual member entry
+   */
+  async deleteManualMember(id: string) {
+    await query(`DELETE FROM manual_members WHERE id = $1`, [id]);
+  },
+
+  /**
+   * Delete a manual revenue entry
+   */
+  async deleteManualRevenue(id: string) {
+    await query(`DELETE FROM manual_revenue WHERE id = $1`, [id]);
+  },
 };
 
 export default pool;

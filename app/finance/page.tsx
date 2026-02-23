@@ -8,7 +8,15 @@ import {
   getMembershipMetrics,
   MembershipMetrics,
 } from "@/lib/actions/getMembershipMetrics";
+import {
+  addManualMember,
+  addManualRevenue,
+  getRecentManualEntries,
+  deleteManualEntry,
+} from "@/lib/actions/manualEntries";
 import styles from "./page.module.css";
+
+const MANUAL_ENTRY_ADMIN = "zack@xogosgaming.com";
 
 function MetricCard({
   title,
@@ -52,7 +60,7 @@ function RevenueChart({
     return (
       <div className={styles.chartPlaceholder}>
         <p>No revenue data available yet</p>
-        <small>Data will appear after Stripe processes payments</small>
+        <small>Data will appear after payments are processed</small>
       </div>
     );
   }
@@ -86,37 +94,116 @@ function RevenueChart({
   );
 }
 
+interface ManualEntry {
+  id: string;
+  type: string;
+  value: number;
+  description: string;
+  date: string;
+  entry_type: "member" | "revenue";
+  created_at: string;
+}
+
 export default function FinanceDashboardPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [metrics, setMetrics] = useState<MembershipMetrics | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [recentEntries, setRecentEntries] = useState<ManualEntry[]>([]);
+
+  // Manual entry form states
+  const [memberType, setMemberType] = useState<"monthly" | "yearly" | "lifetime">("monthly");
+  const [memberCount, setMemberCount] = useState(1);
+  const [memberNotes, setMemberNotes] = useState("");
+  const [memberDate, setMemberDate] = useState(new Date().toISOString().split("T")[0]);
+
+  const [revenueAmount, setRevenueAmount] = useState(0);
+  const [revenueDescription, setRevenueDescription] = useState("");
+  const [revenueDate, setRevenueDate] = useState(new Date().toISOString().split("T")[0]);
+
+  const [submitting, setSubmitting] = useState(false);
+  const [formMessage, setFormMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
+
+  const isAdmin = session?.user?.email?.toLowerCase() === MANUAL_ENTRY_ADMIN.toLowerCase();
+
+  async function fetchData() {
+    try {
+      const data = await getMembershipMetrics();
+      if (data === null) {
+        setError("access_denied");
+      } else {
+        setMetrics(data);
+      }
+
+      if (isAdmin) {
+        const entries = await getRecentManualEntries();
+        if (entries) {
+          setRecentEntries(entries as ManualEntry[]);
+        }
+      }
+    } catch (err) {
+      console.error("Error fetching metrics:", err);
+      setError("fetch_error");
+    } finally {
+      setLoading(false);
+    }
+  }
 
   useEffect(() => {
-    async function fetchData() {
-      try {
-        const data = await getMembershipMetrics();
-        if (data === null) {
-          // User doesn't have access, redirect to board
-          setError("access_denied");
-        } else {
-          setMetrics(data);
-        }
-      } catch (err) {
-        console.error("Error fetching metrics:", err);
-        setError("fetch_error");
-      } finally {
-        setLoading(false);
-      }
-    }
-
     if (status === "authenticated") {
       fetchData();
     } else if (status === "unauthenticated") {
       router.push("/signin?callbackUrl=/finance");
     }
-  }, [status, router]);
+  }, [status, router, isAdmin]);
+
+  async function handleAddMember(e: React.FormEvent) {
+    e.preventDefault();
+    setSubmitting(true);
+    setFormMessage(null);
+
+    const result = await addManualMember(memberType, memberCount, memberNotes, memberDate);
+
+    if (result.success) {
+      setFormMessage({ type: "success", text: "Member entry added successfully!" });
+      setMemberCount(1);
+      setMemberNotes("");
+      fetchData(); // Refresh data
+    } else {
+      setFormMessage({ type: "error", text: result.error || "Failed to add entry" });
+    }
+
+    setSubmitting(false);
+  }
+
+  async function handleAddRevenue(e: React.FormEvent) {
+    e.preventDefault();
+    setSubmitting(true);
+    setFormMessage(null);
+
+    const result = await addManualRevenue(revenueAmount, revenueDescription, revenueDate);
+
+    if (result.success) {
+      setFormMessage({ type: "success", text: "Revenue entry added successfully!" });
+      setRevenueAmount(0);
+      setRevenueDescription("");
+      fetchData(); // Refresh data
+    } else {
+      setFormMessage({ type: "error", text: result.error || "Failed to add entry" });
+    }
+
+    setSubmitting(false);
+  }
+
+  async function handleDeleteEntry(id: string, entryType: "member" | "revenue") {
+    if (!confirm("Are you sure you want to delete this entry?")) return;
+
+    const result = await deleteManualEntry(id, entryType);
+    if (result.success) {
+      fetchData(); // Refresh data
+    }
+  }
 
   // Loading state
   if (status === "loading" || loading) {
@@ -240,6 +327,11 @@ export default function FinanceDashboardPage() {
                 <span className={styles.memberTypeCount}>
                   {metrics?.membersByType?.monthly || 0}
                 </span>
+                {isAdmin && (
+                  <span className={styles.memberTypeBreakdown}>
+                    Stripe: {metrics?.stripeMembers?.monthly || 0} | Manual: {metrics?.manualMembers?.monthly || 0}
+                  </span>
+                )}
               </div>
             </div>
             <div className={styles.memberTypeCard}>
@@ -249,6 +341,11 @@ export default function FinanceDashboardPage() {
                 <span className={styles.memberTypeCount}>
                   {metrics?.membersByType?.yearly || 0}
                 </span>
+                {isAdmin && (
+                  <span className={styles.memberTypeBreakdown}>
+                    Stripe: {metrics?.stripeMembers?.yearly || 0} | Manual: {metrics?.manualMembers?.yearly || 0}
+                  </span>
+                )}
               </div>
             </div>
             <div className={styles.memberTypeCard}>
@@ -258,6 +355,11 @@ export default function FinanceDashboardPage() {
                 <span className={styles.memberTypeCount}>
                   {metrics?.membersByType?.lifetime || 0}
                 </span>
+                {isAdmin && (
+                  <span className={styles.memberTypeBreakdown}>
+                    Stripe: {metrics?.stripeMembers?.lifetime || 0} | Manual: {metrics?.manualMembers?.lifetime || 0}
+                  </span>
+                )}
               </div>
             </div>
           </div>
@@ -282,6 +384,12 @@ export default function FinanceDashboardPage() {
               <span className={styles.revenueCurrency}>
                 {(metrics?.currency || "usd").toUpperCase()}
               </span>
+              {isAdmin && (
+                <div className={styles.revenueBreakdown}>
+                  <span>Stripe: ${metrics?.stripeRevenue?.toFixed(2) || "0.00"}</span>
+                  <span>Manual: ${metrics?.manualRevenue?.toFixed(2) || "0.00"}</span>
+                </div>
+              )}
             </div>
             <div className={styles.revenueChartContainer}>
               <h3 className={styles.chartTitle}>Revenue Trend (6 Months)</h3>
@@ -290,13 +398,148 @@ export default function FinanceDashboardPage() {
           </div>
         </section>
 
+        {/* Manual Entry Section - Only for Zack */}
+        {isAdmin && (
+          <section className={styles.section}>
+            <h2 className={styles.sectionTitle}>📝 Manual Entry</h2>
+
+            {formMessage && (
+              <div className={`${styles.formMessage} ${styles[formMessage.type]}`}>
+                {formMessage.text}
+              </div>
+            )}
+
+            <div className={styles.manualEntryGrid}>
+              {/* Add Member Form */}
+              <div className={styles.manualEntryCard}>
+                <h3>Add Members</h3>
+                <form onSubmit={handleAddMember}>
+                  <div className={styles.formGroup}>
+                    <label>Member Type</label>
+                    <select
+                      value={memberType}
+                      onChange={(e) => setMemberType(e.target.value as "monthly" | "yearly" | "lifetime")}
+                    >
+                      <option value="monthly">Monthly</option>
+                      <option value="yearly">Yearly</option>
+                      <option value="lifetime">Lifetime</option>
+                    </select>
+                  </div>
+                  <div className={styles.formGroup}>
+                    <label>Count</label>
+                    <input
+                      type="number"
+                      min="1"
+                      value={memberCount}
+                      onChange={(e) => setMemberCount(parseInt(e.target.value) || 1)}
+                    />
+                  </div>
+                  <div className={styles.formGroup}>
+                    <label>Date</label>
+                    <input
+                      type="date"
+                      value={memberDate}
+                      onChange={(e) => setMemberDate(e.target.value)}
+                    />
+                  </div>
+                  <div className={styles.formGroup}>
+                    <label>Notes (optional)</label>
+                    <input
+                      type="text"
+                      value={memberNotes}
+                      onChange={(e) => setMemberNotes(e.target.value)}
+                      placeholder="e.g., School batch signup"
+                    />
+                  </div>
+                  <button type="submit" disabled={submitting} className={styles.submitButton}>
+                    {submitting ? "Adding..." : "Add Members"}
+                  </button>
+                </form>
+              </div>
+
+              {/* Add Revenue Form */}
+              <div className={styles.manualEntryCard}>
+                <h3>Add Revenue</h3>
+                <form onSubmit={handleAddRevenue}>
+                  <div className={styles.formGroup}>
+                    <label>Amount ($)</label>
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      value={revenueAmount}
+                      onChange={(e) => setRevenueAmount(parseFloat(e.target.value) || 0)}
+                    />
+                  </div>
+                  <div className={styles.formGroup}>
+                    <label>Date</label>
+                    <input
+                      type="date"
+                      value={revenueDate}
+                      onChange={(e) => setRevenueDate(e.target.value)}
+                    />
+                  </div>
+                  <div className={styles.formGroup}>
+                    <label>Description</label>
+                    <input
+                      type="text"
+                      value={revenueDescription}
+                      onChange={(e) => setRevenueDescription(e.target.value)}
+                      placeholder="e.g., Grant funding, Donation"
+                    />
+                  </div>
+                  <button type="submit" disabled={submitting} className={styles.submitButton}>
+                    {submitting ? "Adding..." : "Add Revenue"}
+                  </button>
+                </form>
+              </div>
+            </div>
+
+            {/* Recent Manual Entries */}
+            {recentEntries.length > 0 && (
+              <div className={styles.recentEntriesSection}>
+                <h3>Recent Manual Entries</h3>
+                <div className={styles.entriesTable}>
+                  <div className={styles.entriesHeader}>
+                    <span>Type</span>
+                    <span>Value</span>
+                    <span>Description</span>
+                    <span>Date</span>
+                    <span>Action</span>
+                  </div>
+                  {recentEntries.map((entry) => (
+                    <div key={entry.id} className={styles.entryRow}>
+                      <span className={styles.entryType}>
+                        {entry.entry_type === "member" ? `👥 ${entry.type}` : "💰 Revenue"}
+                      </span>
+                      <span>
+                        {entry.entry_type === "member"
+                          ? `${entry.value} members`
+                          : `$${entry.value.toFixed(2)}`}
+                      </span>
+                      <span>{entry.description || "-"}</span>
+                      <span>{new Date(entry.date).toLocaleDateString()}</span>
+                      <button
+                        onClick={() => handleDeleteEntry(entry.id, entry.entry_type)}
+                        className={styles.deleteButton}
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </section>
+        )}
+
         {/* Data Source Info */}
         <section className={styles.infoSection}>
           <div className={styles.infoCard}>
             <h3>📊 Data Source</h3>
             <p>
-              This dashboard displays real-time data from Stripe. All membership
-              and payment information is synced automatically via webhooks.
+              This dashboard combines data from Stripe (automatic) and manual entries.
+              All membership and payment information is synced automatically via webhooks.
             </p>
             <p className={styles.infoNote}>
               Last updated: {new Date().toLocaleString()}
