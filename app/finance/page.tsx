@@ -515,7 +515,7 @@ export default function FinanceDashboardPage() {
                       <span>
                         {entry.entry_type === "member"
                           ? `${entry.value} members`
-                          : `$${entry.value.toFixed(2)}`}
+                          : `$${Number(entry.value).toFixed(2)}`}
                       </span>
                       <span>{entry.description || "-"}</span>
                       <span>{new Date(entry.date).toLocaleDateString()}</span>
