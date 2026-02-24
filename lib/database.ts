@@ -1099,6 +1099,18 @@ export const db = {
   },
 
   /**
+   * Get manual members added this month
+   */
+  async getManualMembersThisMonth() {
+    const result = await query(
+      `SELECT COALESCE(SUM(count), 0) as total
+       FROM manual_members
+       WHERE entry_date >= date_trunc('month', CURRENT_DATE)`
+    );
+    return parseInt(result.rows[0]?.total) || 0;
+  },
+
+  /**
    * Get manual revenue total for current month
    */
   async getManualRevenueThisMonth() {

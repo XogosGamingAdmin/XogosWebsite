@@ -56,6 +56,7 @@ export async function getMembershipMetrics(): Promise<MembershipMetrics | null> 
     // Get manual entry totals
     const manualMembers = await db.getManualMemberTotals();
     const manualRevenue = await db.getManualRevenueThisMonth();
+    const manualMembersThisMonth = await db.getManualMembersThisMonth();
 
     // Combine totals
     const combinedMembers = {
@@ -66,6 +67,7 @@ export async function getMembershipMetrics(): Promise<MembershipMetrics | null> 
 
     const totalMembers = combinedMembers.monthly + combinedMembers.yearly + combinedMembers.lifetime;
     const totalRevenue = stripeMetrics.revenueThisMonth + manualRevenue.total;
+    const totalNewThisMonth = stripeMetrics.newMembersThisMonth + manualMembersThisMonth;
 
     return {
       totalMembers,
@@ -80,7 +82,7 @@ export async function getMembershipMetrics(): Promise<MembershipMetrics | null> 
         yearly: manualMembers.yearly || 0,
         lifetime: manualMembers.lifetime || 0,
       },
-      newMembersThisMonth: stripeMetrics.newMembersThisMonth,
+      newMembersThisMonth: totalNewThisMonth,
       membersLostThisMonth: stripeMetrics.membersLostThisMonth,
       revenueThisMonth: totalRevenue,
       stripeRevenue: stripeMetrics.revenueThisMonth,
