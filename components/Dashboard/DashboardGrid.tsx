@@ -14,6 +14,7 @@ import {
   RecentBoardInsightsCard,
   SiteAnalyticsCard,
   XogosFinancialsCard,
+  XogosScholarshipsCard,
   XogosStatisticsCard,
 } from "./Cards";
 import styles from "./DashboardGrid.module.css";
@@ -55,6 +56,7 @@ export function DashboardGrid({ ...props }: Props) {
       <BoardMemberProfileCard />
       <XogosStatisticsCard />
       <XogosFinancialsCard />
+      <XogosScholarshipsCard />
       <RecentBoardInsightsCard />
       <MonthlyMeetingChecklistCard />
 
