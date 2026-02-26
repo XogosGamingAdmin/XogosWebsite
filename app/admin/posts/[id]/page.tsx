@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
+import ImageUpload from "@/components/admin/ImageUpload";
 import { canManageBlog } from "@/lib/auth/admin";
 import styles from "../page.module.css";
 
@@ -204,16 +205,16 @@ export default function EditPostPage() {
               </div>
             </div>
 
-            <div className={styles.formGroup}>
-              <label htmlFor="imageUrl">Featured Image URL</label>
-              <input
-                id="imageUrl"
-                type="text"
-                value={imageUrl}
-                onChange={(e) => setImageUrl(e.target.value)}
-                placeholder="/images/XogosLogo.png or https://..."
-              />
-            </div>
+            <ImageUpload
+              currentImageUrl={imageUrl !== "/images/XogosLogo.png" ? imageUrl : undefined}
+              postId={id as string}
+              onImageUploaded={(url) => {
+                setImageUrl(url);
+              }}
+              onImageRemoved={() => {
+                setImageUrl("/images/XogosLogo.png");
+              }}
+            />
 
             <div className={styles.formGroup}>
               <label htmlFor="excerpt">Excerpt (Summary)</label>

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
+import ImageUpload from "@/components/admin/ImageUpload";
 import { canManageBlog } from "@/lib/auth/admin";
 import styles from "./page.module.css";
 
@@ -52,6 +53,7 @@ export default function AdminPostsPage() {
   const [category, setCategory] = useState("Education");
   const [author, setAuthor] = useState("Zack Edwards");
   const [imageUrl, setImageUrl] = useState("/images/XogosLogo.png");
+  const [uploadedImageId, setUploadedImageId] = useState<string | null>(null);
 
   // Fetch existing posts from blog API
   useEffect(() => {
@@ -98,6 +100,7 @@ export default function AdminPostsPage() {
           category,
           author,
           imageUrl,
+          imageId: uploadedImageId,
         }),
       });
 
@@ -112,6 +115,8 @@ export default function AdminPostsPage() {
         setTitle("");
         setExcerpt("");
         setContent("");
+        setImageUrl("/images/XogosLogo.png");
+        setUploadedImageId(null);
         // Refresh posts list
         const postsRes = await fetch("/api/blog");
         if (postsRes.ok) {
@@ -219,16 +224,17 @@ export default function AdminPostsPage() {
               </div>
             </div>
 
-            <div className={styles.formGroup}>
-              <label htmlFor="imageUrl">Featured Image URL</label>
-              <input
-                id="imageUrl"
-                type="text"
-                value={imageUrl}
-                onChange={(e) => setImageUrl(e.target.value)}
-                placeholder="/images/XogosLogo.png or https://..."
-              />
-            </div>
+            <ImageUpload
+              currentImageUrl={imageUrl !== "/images/XogosLogo.png" ? imageUrl : undefined}
+              onImageUploaded={(url, id) => {
+                setImageUrl(url);
+                setUploadedImageId(id);
+              }}
+              onImageRemoved={() => {
+                setImageUrl("/images/XogosLogo.png");
+                setUploadedImageId(null);
+              }}
+            />
 
             <div className={styles.formGroup}>
               <label htmlFor="excerpt">Excerpt (Summary)</label>

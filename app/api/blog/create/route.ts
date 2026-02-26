@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { title, excerpt, content, category, author, imageUrl } = body;
+    const { title, excerpt, content, category, author, imageUrl, imageId } = body;
 
     if (!title || !content) {
       return NextResponse.json(
@@ -99,6 +99,14 @@ export async function POST(request: NextRequest) {
             newPost.featured,
           ]
         );
+
+      // Link the uploaded image to the post if imageId was provided
+      if (imageId) {
+        await query(
+          `UPDATE blog_images SET post_id = $1 WHERE id = $2`,
+          [newPost.id, imageId]
+        );
+      }
     } catch (dbError) {
       console.error("Database error:", dbError);
       // If database fails, still return success but note it

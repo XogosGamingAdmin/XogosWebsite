@@ -1169,6 +1169,63 @@ export const db = {
   async deleteManualRevenue(id: string) {
     await query(`DELETE FROM manual_revenue WHERE id = $1`, [id]);
   },
+
+  // ============ BLOG IMAGE FUNCTIONS ============
+
+  /**
+   * Get images for a blog post
+   */
+  async getBlogImages(postId: string) {
+    const result = await query(
+      `SELECT id, public_url, original_filename, file_size, mime_type, alt_text, created_at
+       FROM blog_images
+       WHERE post_id = $1
+       ORDER BY created_at DESC`,
+      [postId]
+    );
+    return result.rows;
+  },
+
+  /**
+   * Link an image to a blog post
+   */
+  async linkImageToPost(imageId: string, postId: string) {
+    const result = await query(
+      `UPDATE blog_images
+       SET post_id = $2
+       WHERE id = $1
+       RETURNING id, public_url`,
+      [imageId, postId]
+    );
+    return result.rows[0];
+  },
+
+  /**
+   * Unlink an image from a blog post (make it orphaned)
+   */
+  async unlinkImageFromPost(imageId: string) {
+    const result = await query(
+      `UPDATE blog_images
+       SET post_id = NULL
+       WHERE id = $1
+       RETURNING id`,
+      [imageId]
+    );
+    return result.rows[0];
+  },
+
+  /**
+   * Get all orphaned images (not linked to any post)
+   */
+  async getOrphanedImages() {
+    const result = await query(
+      `SELECT id, public_url, original_filename, file_size, created_at
+       FROM blog_images
+       WHERE post_id IS NULL
+       ORDER BY created_at DESC`
+    );
+    return result.rows;
+  },
 };
 
 export default pool;

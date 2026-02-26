@@ -1,0 +1,173 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: rgba(229, 229, 229, 0.8);
+}
+
+.dropzone {
+  border: 2px dashed rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.dropzone:hover,
+.dragActive {
+  border-color: #e62739;
+  background: rgba(230, 39, 57, 0.1);
+}
+
+.dropzoneContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  color: rgba(229, 229, 229, 0.7);
+}
+
+.dropzoneContent p {
+  margin: 0;
+}
+
+.icon {
+  font-size: 2.5rem;
+  font-weight: 300;
+  color: rgba(229, 229, 229, 0.5);
+}
+
+.hint {
+  font-size: 0.75rem;
+  color: rgba(229, 229, 229, 0.5);
+}
+
+.hiddenInput {
+  display: none;
+}
+
+.previewContainer {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.preview {
+  width: 100%;
+  max-height: 300px;
+  object-fit: cover;
+  display: block;
+}
+
+.previewOverlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1rem;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.9));
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.changeButton,
+.removeButton {
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+.changeButton {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+}
+
+.changeButton:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.changeButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.removeButton {
+  background: rgba(239, 68, 68, 0.2);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  color: #ef4444;
+}
+
+.removeButton:hover:not(:disabled) {
+  background: rgba(239, 68, 68, 0.3);
+}
+
+.removeButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.uploadingIndicator {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  background: rgba(230, 39, 57, 0.1);
+  border: 1px solid rgba(230, 39, 57, 0.3);
+  border-radius: 6px;
+  font-size: 0.875rem;
+  color: #e62739;
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(230, 39, 57, 0.3);
+  border-top-color: #e62739;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.error {
+  color: #ef4444;
+  font-size: 0.875rem;
+  margin: 0;
+  padding: 0.5rem 0.75rem;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 6px;
+}
+
+@media (max-width: 480px) {
+  .dropzone {
+    padding: 1.5rem 1rem;
+  }
+
+  .previewOverlay {
+    padding: 0.75rem;
+  }
+
+  .changeButton,
+  .removeButton {
+    padding: 0.4rem 0.75rem;
+    font-size: 0.8rem;
+  }
+}
