@@ -9,4 +9,4 @@ export { AddRSSFeedCard } from "./AddRSSFeedCard";
 export { AllBoardMemberTasksCard } from "./AllBoardMemberTasksCard";
 export { ErrorLoggingCard } from "./ErrorLoggingCard";
 export { SiteAnalyticsCard } from "./SiteAnalyticsCard";
-export { XogosScholarshipsCard } from "./XogosScholarshipsCard";
+export { QuickLinksCard } from "./QuickLinksCard";
