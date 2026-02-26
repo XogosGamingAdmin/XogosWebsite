@@ -167,9 +167,14 @@ export default function AdminPostsPage() {
     <div className={styles.container}>
       <header className={styles.header}>
         <h1>Blog Post Manager</h1>
-        <Link href="/dashboard" className={styles.backLink}>
-          Back to Dashboard
-        </Link>
+        <div style={{ display: "flex", gap: "0.75rem" }}>
+          <Link href="/admin/images" className={styles.backLink}>
+            Image Library
+          </Link>
+          <Link href="/dashboard" className={styles.backLink}>
+            Back to Dashboard
+          </Link>
+        </div>
       </header>
 
       {message && (
