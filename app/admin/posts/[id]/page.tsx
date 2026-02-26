@@ -10,10 +10,12 @@ import styles from "../page.module.css";
 
 const categories = [
   "AI Education",
+  "Debt Free Millionaire",
+  "Education",
   "Financial Literacy",
+  "Historical Conquest",
   "History",
   "Lesson Plans",
-  "Education",
   "Creator's Notes",
 ];
 
