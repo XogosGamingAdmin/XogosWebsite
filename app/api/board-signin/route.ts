@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 export async function GET() {
   // Get environment variables
   const clientId = process.env.GOOGLE_CLIENT_ID;
-  const baseUrl = process.env.NEXTAUTH_URL || "https://www.histronics.com";
+  const baseUrl = process.env.NEXTAUTH_URL || "https://www.xogosgaming.com";
 
   if (!clientId) {
     return NextResponse.json(

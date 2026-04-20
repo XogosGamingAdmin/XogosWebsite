@@ -4,8 +4,8 @@
 This document outlines the process to scrape blog posts from the Histronics/Xogos Gaming blog and migrate them to the XogosBoard blog page.
 
 ## Source Information
-- **Original Blog URL**: https://www.histronics.com/blog
-- **RSS Feed URL**: https://www.histronics.com/blog-feed.xml
+- **Original Blog URL**: https://www.xogosgaming.com/blog
+- **RSS Feed URL**: https://www.xogosgaming.com/blog-feed.xml
 - **New Domain** (after transfer): https://www.xogosgaming.com/blog
 - **Author**: Zack Edwards
 

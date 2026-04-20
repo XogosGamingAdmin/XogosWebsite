@@ -6,7 +6,7 @@ import { isAuthorizedEmail } from "@/lib/auth/authorized-emails";
 // Force production URL in production environment
 const getAuthUrl = () => {
   if (process.env.NODE_ENV === "production") {
-    return "https://www.histronics.com";
+    return "https://www.xogosgaming.com";
   }
   return process.env.AUTH_URL || process.env.NEXTAUTH_URL || "http://localhost:3000";
 };

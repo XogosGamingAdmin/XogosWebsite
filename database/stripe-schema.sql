@@ -85,7 +85,7 @@ CREATE POLICY "Allow all for authenticated users" ON stripe_payments FOR ALL USI
 -- AFTER RUNNING THIS SQL:
 -- 1. Go to your Stripe Dashboard
 -- 2. Navigate to Developers > Webhooks
--- 3. Add endpoint: https://www.histronics.com/api/stripe-webhook
+-- 3. Add endpoint: https://www.xogosgaming.com/api/stripe-webhook
 -- 4. Select these events:
 --    - customer.created
 --    - customer.updated

@@ -49,7 +49,7 @@ This creates:
 2. Click **Add endpoint**
 3. Enter your webhook URL:
    ```
-   https://www.histronics.com/api/stripe-webhook
+   https://www.xogosgaming.com/api/stripe-webhook
    ```
 4. Select these events to listen to:
    - `customer.created`
