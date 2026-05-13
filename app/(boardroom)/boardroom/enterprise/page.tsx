@@ -4,7 +4,26 @@ import Link from "next/link";
 import { Container } from "@/primitives/Container";
 import styles from "./page.module.css";
 
-const corporateStructure = {
+interface Product {
+  name: string;
+  url?: string;
+  category?: string;
+  comingSoon?: boolean;
+}
+
+interface Subsidiary {
+  name: string;
+  type: string;
+  description: string;
+  color: string;
+  products: Product[];
+}
+
+const corporateStructure: {
+  parent: { name: string; type: string; description: string; color: string };
+  subsidiaries: Subsidiary[];
+  nonprofit: { name: string; type: string; description: string; color: string; relationship: string };
+} = {
   parent: {
     name: "Xogos Education",
     type: "Parent Company",
