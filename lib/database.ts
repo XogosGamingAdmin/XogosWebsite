@@ -823,10 +823,9 @@ export const db = {
    * Delete a Stripe customer
    */
   async deleteStripeCustomer(stripeCustomerId: string) {
-    await query(
-      `DELETE FROM stripe_customers WHERE stripe_customer_id = $1`,
-      [stripeCustomerId]
-    );
+    await query(`DELETE FROM stripe_customers WHERE stripe_customer_id = $1`, [
+      stripeCustomerId,
+    ]);
   },
 
   /**
@@ -963,9 +962,12 @@ export const db = {
        AND (canceled_at IS NULL OR canceled_at >= date_trunc('month', CURRENT_DATE))`
     );
 
-    const startCount = parseInt(totalActiveAtStartOfMonth.rows[0]?.count || "0");
+    const startCount = parseInt(
+      totalActiveAtStartOfMonth.rows[0]?.count || "0"
+    );
     const lostCount = parseInt(membersLostThisMonth.rows[0]?.count || "0");
-    const churnRate = startCount > 0 ? ((lostCount / startCount) * 100).toFixed(2) : "0.00";
+    const churnRate =
+      startCount > 0 ? ((lostCount / startCount) * 100).toFixed(2) : "0.00";
 
     // Monthly revenue trend (last 6 months)
     const revenueTrend = await query(
@@ -980,24 +982,30 @@ export const db = {
 
     // Build response
     const membersByType: Record<string, number> = {};
-    activeMembers.rows.forEach((row: { subscription_type: string; count: string }) => {
-      membersByType[row.subscription_type] = parseInt(row.count);
-    });
+    activeMembers.rows.forEach(
+      (row: { subscription_type: string; count: string }) => {
+        membersByType[row.subscription_type] = parseInt(row.count);
+      }
+    );
 
     return {
       totalMembers: Object.values(membersByType).reduce((a, b) => a + b, 0),
       membersByType,
       newMembersThisMonth: parseInt(newMembersThisMonth.rows[0]?.count || "0"),
-      membersLostThisMonth: parseInt(membersLostThisMonth.rows[0]?.count || "0"),
+      membersLostThisMonth: parseInt(
+        membersLostThisMonth.rows[0]?.count || "0"
+      ),
       revenueThisMonth: revenueThisMonth.rows[0]?.total
         ? parseFloat(revenueThisMonth.rows[0].total)
         : 0,
       currency: revenueThisMonth.rows[0]?.currency || "usd",
       churnRate: parseFloat(churnRate),
-      revenueTrend: revenueTrend.rows.map((row: { month: string; total: string }) => ({
-        month: row.month,
-        total: parseFloat(row.total),
-      })),
+      revenueTrend: revenueTrend.rows.map(
+        (row: { month: string; total: string }) => ({
+          month: row.month,
+          total: parseFloat(row.total),
+        })
+      ),
     };
   },
 
@@ -1150,7 +1158,8 @@ export const db = {
 
     // Combine and sort by created_at
     const combined = [...members.rows, ...revenue.rows].sort(
-      (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+      (a, b) =>
+        new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
     );
 
     return combined.slice(0, limit);
@@ -1223,6 +1232,264 @@ export const db = {
        FROM blog_images
        WHERE post_id IS NULL
        ORDER BY created_at DESC`
+    );
+    return result.rows;
+  },
+
+  // ============ SKILLS MATRIX FUNCTIONS ============
+
+  /**
+   * Get all skill definitions (categories and skills)
+   */
+  async getSkillDefinitions() {
+    const result = await query(
+      `SELECT id, category, skill_name, description, display_order
+       FROM skill_definitions
+       WHERE is_active = true
+       ORDER BY category, display_order`
+    );
+    return result.rows;
+  },
+
+  /**
+   * Get skills for a specific board member
+   */
+  async getBoardMemberSkills(userId: string) {
+    const result = await query(
+      `SELECT id, user_id, skill_category, skill_name, proficiency_level, notes, updated_at
+       FROM board_member_skills
+       WHERE user_id = $1
+       ORDER BY skill_category, skill_name`,
+      [userId]
+    );
+    return result.rows;
+  },
+
+  /**
+   * Get all board members' skills (for results page)
+   */
+  async getAllBoardMemberSkills() {
+    const result = await query(
+      `SELECT bms.id, bms.user_id, bms.skill_category, bms.skill_name, bms.proficiency_level, bms.notes, bms.updated_at,
+              u.name as user_name, u.avatar as user_avatar
+       FROM board_member_skills bms
+       JOIN users u ON bms.user_id = u.id
+       ORDER BY u.name, bms.skill_category, bms.skill_name`
+    );
+    return result.rows;
+  },
+
+  /**
+   * Upsert a board member skill (create or update)
+   */
+  async upsertBoardMemberSkill(
+    userId: string,
+    skillCategory: string,
+    skillName: string,
+    proficiencyLevel: number,
+    notes?: string
+  ) {
+    const result = await query(
+      `INSERT INTO board_member_skills (user_id, skill_category, skill_name, proficiency_level, notes, updated_at)
+       VALUES ($1, $2, $3, $4, $5, NOW())
+       ON CONFLICT (user_id, skill_category, skill_name)
+       DO UPDATE SET proficiency_level = $4, notes = $5, updated_at = NOW()
+       RETURNING id, user_id, skill_category, skill_name, proficiency_level, notes, updated_at`,
+      [userId, skillCategory, skillName, proficiencyLevel, notes || null]
+    );
+    return result.rows[0];
+  },
+
+  /**
+   * Bulk upsert board member skills
+   */
+  async bulkUpsertBoardMemberSkills(
+    userId: string,
+    skills: Array<{
+      skillCategory: string;
+      skillName: string;
+      proficiencyLevel: number;
+      notes?: string;
+    }>
+  ) {
+    const results = [];
+    for (const skill of skills) {
+      const result = await this.upsertBoardMemberSkill(
+        userId,
+        skill.skillCategory,
+        skill.skillName,
+        skill.proficiencyLevel,
+        skill.notes
+      );
+      results.push(result);
+    }
+    return results;
+  },
+
+  /**
+   * Delete a board member skill
+   */
+  async deleteBoardMemberSkill(id: string, userId: string) {
+    await query(
+      `DELETE FROM board_member_skills WHERE id = $1 AND user_id = $2`,
+      [id, userId]
+    );
+  },
+
+  /**
+   * Get skill statistics across all board members
+   */
+  async getSkillsStatistics() {
+    const result = await query(
+      `SELECT
+         skill_category,
+         skill_name,
+         COUNT(*) as member_count,
+         ROUND(AVG(proficiency_level), 2) as avg_proficiency,
+         MAX(proficiency_level) as max_proficiency,
+         MIN(proficiency_level) as min_proficiency
+       FROM board_member_skills
+       GROUP BY skill_category, skill_name
+       ORDER BY skill_category, skill_name`
+    );
+    return result.rows;
+  },
+
+  /**
+   * Get board members who have completed their skills assessment
+   */
+  async getBoardMembersWithSkills() {
+    const result = await query(
+      `SELECT
+         u.id, u.name, u.avatar,
+         COUNT(bms.id) as skills_count,
+         MAX(bms.updated_at) as last_updated
+       FROM users u
+       LEFT JOIN board_member_skills bms ON u.id = bms.user_id
+       JOIN user_groups ug ON u.id = ug.user_id
+       WHERE ug.group_id = 'board_member'
+       GROUP BY u.id, u.name, u.avatar
+       ORDER BY u.name`
+    );
+    return result.rows;
+  },
+
+  // ============================================
+  // Email-based Skills Functions (for Board Room)
+  // ============================================
+
+  /**
+   * Get skills for a board member by email
+   */
+  async getSkillsByEmail(userEmail: string) {
+    const result = await query(
+      `SELECT id, user_email, user_name, user_avatar, skill_category, skill_name, proficiency_level, notes, updated_at
+       FROM board_skills
+       WHERE user_email = $1
+       ORDER BY skill_category, skill_name`,
+      [userEmail]
+    );
+    return result.rows;
+  },
+
+  /**
+   * Get all board members' skills (email-based)
+   */
+  async getAllSkillsByEmail() {
+    const result = await query(
+      `SELECT id, user_email, user_name, user_avatar, skill_category, skill_name, proficiency_level, notes, updated_at
+       FROM board_skills
+       ORDER BY user_name, skill_category, skill_name`
+    );
+    return result.rows;
+  },
+
+  /**
+   * Upsert a skill by email
+   */
+  async upsertSkillByEmail(
+    userEmail: string,
+    userName: string,
+    userAvatar: string | null,
+    skillCategory: string,
+    skillName: string,
+    proficiencyLevel: number,
+    notes?: string
+  ) {
+    const result = await query(
+      `INSERT INTO board_skills (user_email, user_name, user_avatar, skill_category, skill_name, proficiency_level, notes, updated_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, NOW())
+       ON CONFLICT (user_email, skill_category, skill_name)
+       DO UPDATE SET proficiency_level = $6, notes = $7, user_name = $2, user_avatar = $3, updated_at = NOW()
+       RETURNING *`,
+      [userEmail, userName, userAvatar, skillCategory, skillName, proficiencyLevel, notes || null]
+    );
+    return result.rows[0];
+  },
+
+  /**
+   * Bulk upsert skills by email
+   */
+  async bulkUpsertSkillsByEmail(
+    userEmail: string,
+    userName: string,
+    userAvatar: string | null,
+    skills: Array<{
+      skillCategory: string;
+      skillName: string;
+      proficiencyLevel: number;
+      notes?: string;
+    }>
+  ) {
+    const results = [];
+    for (const skill of skills) {
+      const result = await this.upsertSkillByEmail(
+        userEmail,
+        userName,
+        userAvatar,
+        skill.skillCategory,
+        skill.skillName,
+        skill.proficiencyLevel,
+        skill.notes
+      );
+      results.push(result);
+    }
+    return results;
+  },
+
+  /**
+   * Get members with skill counts (email-based)
+   */
+  async getMembersWithSkillsByEmail() {
+    const result = await query(
+      `SELECT
+         user_email,
+         user_name,
+         user_avatar,
+         COUNT(*) as skills_count,
+         MAX(updated_at) as last_updated
+       FROM board_skills
+       GROUP BY user_email, user_name, user_avatar
+       ORDER BY user_name`
+    );
+    return result.rows;
+  },
+
+  /**
+   * Get skill statistics (email-based)
+   */
+  async getSkillsStatsByEmail() {
+    const result = await query(
+      `SELECT
+         skill_category,
+         skill_name,
+         COUNT(*) as member_count,
+         ROUND(AVG(proficiency_level), 2) as avg_proficiency,
+         MAX(proficiency_level) as max_proficiency,
+         MIN(proficiency_level) as min_proficiency
+       FROM board_skills
+       GROUP BY skill_category, skill_name
+       ORDER BY skill_category, skill_name`
     );
     return result.rows;
   },

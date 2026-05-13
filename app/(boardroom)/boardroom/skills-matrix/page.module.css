@@ -1,0 +1,472 @@
+.skillsPage {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0d0d1a 0%, #1a1a2e 100%);
+  color: #e5e5e5;
+  font-family: "Inter", sans-serif;
+  position: relative;
+}
+
+.skillsBackground {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.skillsGrid {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300' viewBox='0 0 100 100'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M96 95h4v1h-4v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9zm-1 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+.bgGlow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: 0.15;
+}
+
+.bgGlow:nth-child(2) {
+  top: -200px;
+  right: -100px;
+  width: 600px;
+  height: 600px;
+  background: #e62739;
+}
+
+.bgGlow:nth-child(3) {
+  bottom: -300px;
+  left: -200px;
+  width: 800px;
+  height: 800px;
+  background: #7928ca;
+}
+
+.bgGlow:nth-child(4) {
+  top: 40%;
+  right: 20%;
+  width: 300px;
+  height: 300px;
+  background: #2dd4bf;
+}
+
+.container {
+  position: relative;
+  z-index: 1;
+  padding: 120px 0 80px;
+}
+
+.backLink {
+  margin-bottom: 2rem;
+}
+
+.backLink a {
+  color: rgba(229, 229, 229, 0.7);
+  text-decoration: none;
+  font-size: 0.875rem;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.2s ease;
+  display: inline-block;
+}
+
+.backLink a:hover {
+  color: #e5e5e5;
+  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.heroSection {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.heroTitle {
+  font-family: "Montserrat", sans-serif;
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  background: linear-gradient(90deg, #e62739, #7928ca);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.heroDescription {
+  font-size: 1.25rem;
+  color: rgba(229, 229, 229, 0.8);
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.heroActions {
+  margin-top: 1.5rem;
+}
+
+.viewResultsBtn {
+  display: inline-block;
+  padding: 0.875rem 2rem;
+  background: linear-gradient(135deg, rgba(121, 40, 202, 0.3), rgba(230, 39, 57, 0.3));
+  border: 1px solid rgba(121, 40, 202, 0.5);
+  border-radius: 8px;
+  color: #e5e5e5;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.viewResultsBtn:hover {
+  background: linear-gradient(135deg, rgba(121, 40, 202, 0.5), rgba(230, 39, 57, 0.5));
+  border-color: #7928ca;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(121, 40, 202, 0.3);
+}
+
+.messageBar {
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+  text-align: center;
+  font-weight: 500;
+}
+
+.messageBar.success {
+  background: rgba(34, 197, 94, 0.2);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  color: #22c55e;
+}
+
+.messageBar.error {
+  background: rgba(239, 68, 68, 0.2);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #ef4444;
+}
+
+.loadingState {
+  min-height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  color: rgba(229, 229, 229, 0.7);
+}
+
+.progressBar {
+  background: rgba(26, 26, 46, 0.6);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.progressInfo {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+  font-size: 0.875rem;
+  color: rgba(229, 229, 229, 0.8);
+}
+
+.progressTrack {
+  height: 8px;
+  background: rgba(13, 13, 26, 0.8);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background: linear-gradient(90deg, #e62739, #7928ca);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.legendSection {
+  background: rgba(26, 26, 46, 0.4);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 2rem;
+  margin-bottom: 3rem;
+}
+
+.legendTitle {
+  font-family: "Montserrat", sans-serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #e5e5e5;
+  margin: 0 0 1.5rem;
+  text-align: center;
+}
+
+.legendGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  background: rgba(13, 13, 26, 0.6);
+  border-radius: 8px;
+}
+
+.legendBadge {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  color: white;
+  flex-shrink: 0;
+}
+
+.legendContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.legendLabel {
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #e5e5e5;
+}
+
+.legendDesc {
+  font-size: 0.75rem;
+  color: rgba(229, 229, 229, 0.6);
+  line-height: 1.4;
+}
+
+.matrixSection {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.categorySection {
+  background: rgba(26, 26, 46, 0.4);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  overflow: hidden;
+}
+
+.categoryHeader {
+  position: relative;
+  padding: 1.25rem 1.5rem;
+  background: rgba(13, 13, 26, 0.6);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.categoryTitle {
+  font-family: "Montserrat", sans-serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.categoryAccent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+}
+
+.skillsTable {
+  padding: 1rem;
+}
+
+.skillRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1rem 0.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  transition: background 0.2s ease;
+}
+
+.skillRow:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.skillRow:last-child {
+  border-bottom: none;
+}
+
+.skillInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.skillName {
+  display: block;
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #e5e5e5;
+  margin-bottom: 0.25rem;
+}
+
+.skillDescription {
+  display: block;
+  font-size: 0.8rem;
+  color: rgba(229, 229, 229, 0.5);
+}
+
+.ratingButtons {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.ratingBtn {
+  width: 40px;
+  height: 40px;
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  background: rgba(13, 13, 26, 0.6);
+  color: rgba(229, 229, 229, 0.7);
+  font-family: "Montserrat", sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ratingBtn:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+  background: rgba(26, 26, 46, 0.8);
+  color: #e5e5e5;
+  transform: scale(1.05);
+}
+
+.ratingBtn.selected {
+  color: white;
+  border-color: transparent;
+}
+
+.ratingLabel {
+  font-size: 0.75rem;
+  color: rgba(229, 229, 229, 0.5);
+  min-width: 80px;
+  text-align: center;
+}
+
+.saveSection {
+  text-align: center;
+  padding: 2.5rem;
+  background: rgba(26, 26, 46, 0.4);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.saveButton {
+  padding: 1rem 3rem;
+  background: linear-gradient(135deg, #e62739, #7928ca);
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 600;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.saveButton:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(230, 39, 57, 0.3);
+}
+
+.saveButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.saveHint {
+  margin-top: 1rem;
+  font-size: 0.875rem;
+  color: rgba(229, 229, 229, 0.5);
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 100px 0 60px;
+  }
+
+  .heroTitle {
+    font-size: 2.25rem;
+  }
+
+  .heroDescription {
+    font-size: 1.1rem;
+  }
+
+  .legendGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .skillRow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .ratingButtons {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .ratingBtn {
+    width: 44px;
+    height: 44px;
+  }
+
+  .ratingLabel {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 80px 0 40px;
+  }
+
+  .heroTitle {
+    font-size: 1.875rem;
+  }
+
+  .legendSection,
+  .categorySection,
+  .saveSection {
+    padding: 1.25rem;
+  }
+
+  .ratingBtn {
+    width: 40px;
+    height: 40px;
+    font-size: 0.85rem;
+  }
+}

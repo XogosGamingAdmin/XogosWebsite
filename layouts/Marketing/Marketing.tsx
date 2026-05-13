@@ -15,7 +15,7 @@ export function MarketingLayout({
   const pathname = usePathname();
 
   // Show BoardroomHeader for all board-related paths
-  const showBoardroomHeader = pathname?.startsWith("/board");
+  const showBoardroomHeader = pathname?.startsWith("/boardroom");
 
   return (
     <div className={clsx(className, styles.layout)} {...props}>

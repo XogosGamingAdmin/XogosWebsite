@@ -35,8 +35,8 @@ export function BoardroomHeader() {
   const isActive = (path: string) => {
     if (typeof window !== "undefined") {
       // Use exact matching for the main board room
-      if (path === "/board") {
-        return window.location.pathname === "/board";
+      if (path === "/boardroom") {
+        return window.location.pathname === "/boardroom";
       }
       // Use startsWith for other paths
       return window.location.pathname.startsWith(path);
@@ -56,58 +56,58 @@ export function BoardroomHeader() {
           >
             <div className={styles.navLinkContainer}>
               <Link
-                href="/board"
+                href="/boardroom"
                 className={clsx(
                   styles.navLink,
-                  isActive("/board") && styles.active
+                  isActive("/boardroom") && styles.active
                 )}
               >
                 Board Room
               </Link>
               <Link
-                href="/board/members"
+                href="/boardroom/skills-matrix"
                 className={clsx(
                   styles.navLink,
-                  isActive("/board/members") && styles.active
+                  isActive("/boardroom/skills-matrix") && styles.active
                 )}
               >
-                Members
+                Skills Matrix
               </Link>
               <Link
-                href="/board/initiatives"
+                href="/boardroom/initiatives"
                 className={clsx(
                   styles.navLink,
-                  isActive("/board/initiatives") && styles.active
+                  isActive("/boardroom/initiatives") && styles.active
                 )}
               >
                 Initiatives
               </Link>
               <Link
-                href="/board/risk"
+                href="/boardroom/bylaws"
                 className={clsx(
                   styles.navLink,
-                  isActive("/board/risk") && styles.active
+                  isActive("/boardroom/bylaws") && styles.active
                 )}
               >
-                Risk
+                ByLaws
               </Link>
               <Link
-                href="/board/tokenomics"
+                href="/boardroom/enterprise"
                 className={clsx(
                   styles.navLink,
-                  isActive("/board/tokenomics") && styles.active
+                  isActive("/boardroom/enterprise") && styles.active
                 )}
               >
-                Tokenomics
+                Enterprise
               </Link>
               <Link
-                href="/board/insights"
+                href="/dashboard"
                 className={clsx(
                   styles.navLink,
-                  isActive("/board/insights") && styles.active
+                  isActive("/dashboard") && styles.active
                 )}
               >
-                Insights
+                Dashboard
               </Link>
             </div>
           </nav>

@@ -1,0 +1,337 @@
+.page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0d0d1a 0%, #1a1a2e 100%);
+  color: #e5e5e5;
+  position: relative;
+}
+
+.background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.grid {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300' viewBox='0 0 100 100'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M96 95h4v1h-4v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9zm-1 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+.glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: 0.15;
+}
+
+.glow:nth-child(2) {
+  top: -200px;
+  right: -100px;
+  width: 600px;
+  height: 600px;
+  background: #8b5cf6;
+}
+
+.glow:nth-child(3) {
+  bottom: -300px;
+  left: -200px;
+  width: 800px;
+  height: 800px;
+  background: #06b6d4;
+}
+
+.glow:nth-child(4) {
+  top: 50%;
+  left: 40%;
+  width: 400px;
+  height: 400px;
+  background: #e62739;
+}
+
+.container {
+  position: relative;
+  z-index: 1;
+  padding: 120px 0 80px;
+}
+
+.backLink {
+  margin-bottom: 2rem;
+}
+
+.backLink a {
+  color: rgba(229, 229, 229, 0.7);
+  text-decoration: none;
+  font-size: 0.875rem;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.2s ease;
+  display: inline-block;
+}
+
+.backLink a:hover {
+  color: #e5e5e5;
+  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.hero {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.title {
+  font-family: "Montserrat", sans-serif;
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  background: linear-gradient(90deg, #8b5cf6, #06b6d4);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.subtitle {
+  font-size: 1.25rem;
+  color: rgba(229, 229, 229, 0.8);
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.statCard {
+  background: rgba(26, 26, 46, 0.6);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.statValue {
+  font-family: "Montserrat", sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #8b5cf6;
+  margin-bottom: 0.25rem;
+}
+
+.statLabel {
+  font-size: 0.75rem;
+  color: rgba(229, 229, 229, 0.7);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.legend {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: rgba(229, 229, 229, 0.8);
+}
+
+.legendIcon {
+  font-size: 1rem;
+}
+
+.treeContainer {
+  background: rgba(26, 26, 46, 0.6);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 2rem;
+  overflow-x: auto;
+}
+
+.treeRoot {
+  min-width: 600px;
+}
+
+.rootNode {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.5rem;
+  background: rgba(139, 92, 246, 0.2);
+  border-radius: 12px;
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  margin-bottom: 1.5rem;
+}
+
+.rootIcon {
+  font-size: 1.5rem;
+}
+
+.rootName {
+  font-family: "Montserrat", sans-serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #e5e5e5;
+}
+
+.treeItem {
+  position: relative;
+}
+
+.treeItem::before {
+  content: "";
+  position: absolute;
+  left: -12px;
+  top: 0;
+  bottom: 50%;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.treeItem::after {
+  content: "";
+  position: absolute;
+  left: -12px;
+  top: 50%;
+  width: 12px;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.treeItem:first-child::before {
+  top: 50%;
+}
+
+.treeItem:last-child::before {
+  display: none;
+}
+
+.treeNode {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  margin: 0.25rem 0;
+  border-radius: 8px;
+  background: rgba(13, 13, 26, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 0.2s ease;
+}
+
+.treeNode:hover {
+  background: rgba(13, 13, 26, 0.6);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.treeNode.category {
+  background: rgba(139, 92, 246, 0.1);
+  border-color: rgba(139, 92, 246, 0.2);
+}
+
+.treeNode.secure {
+  border-left: 3px solid #f59e0b;
+}
+
+.treeNode.admin {
+  border-left: 3px solid #ef4444;
+}
+
+.treeNode.api {
+  border-left: 3px solid #22c55e;
+}
+
+.nodeIcon {
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.nodeName {
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #e5e5e5;
+}
+
+.nodeDesc {
+  font-size: 0.75rem;
+  color: rgba(229, 229, 229, 0.5);
+  flex: 1;
+}
+
+.nodePath {
+  font-size: 0.75rem;
+  font-family: monospace;
+  color: rgba(139, 92, 246, 0.8);
+  background: rgba(139, 92, 246, 0.1);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+}
+
+.treeChildren {
+  padding-left: 24px;
+}
+
+@media (max-width: 1024px) {
+  .stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 100px 0 60px;
+  }
+
+  .title {
+    font-size: 2.5rem;
+  }
+
+  .legend {
+    gap: 1rem;
+  }
+
+  .treeContainer {
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 80px 0 40px;
+  }
+
+  .title {
+    font-size: 2rem;
+  }
+
+  .stats {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+
+  .statCard {
+    padding: 1rem;
+  }
+
+  .statValue {
+    font-size: 1.5rem;
+  }
+}
