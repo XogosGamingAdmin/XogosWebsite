@@ -62,7 +62,7 @@ export function getAllPosts(): BlogPost[] {
       const slug = fileName.toLowerCase().replace(/\s+/g, "-");
 
       // Parse date to sortable format
-      let publishedAt = data.publishedAt || "January 1, 2025";
+      const publishedAt = data.publishedAt || "January 1, 2025";
 
       // Map category from folder structure if not in frontmatter
       const relativePath = path.relative(postsDirectory, filePath);

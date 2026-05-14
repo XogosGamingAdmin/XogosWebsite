@@ -10,6 +10,14 @@ export const DASHBOARD_DOCUMENTS_DRAFTS_URL = `${DASHBOARD_DOCUMENTS_URL}/drafts
 export const DASHBOARD_DOCUMENTS_GROUP_URL = (id: string) =>
   `${DASHBOARD_DOCUMENTS_URL}/group/${id}`;
 
+// Boardroom routes (secured area with marketing layout)
+export const BOARDROOM_URL = "/boardroom";
+export const BOARDROOM_SKILLS_MATRIX_URL = `${BOARDROOM_URL}/skills-matrix`;
+export const BOARDROOM_INITIATIVES_URL = `${BOARDROOM_URL}/initiatives`;
+export const BOARDROOM_BYLAWS_URL = `${BOARDROOM_URL}/bylaws`;
+export const BOARDROOM_WEBSITE_SCHEMA_URL = `${BOARDROOM_URL}/website-schema`;
+export const BOARDROOM_ENTERPRISE_URL = `${BOARDROOM_URL}/enterprise`;
+
 // Legacy dashboard URL (keep for backward compatibility)
 export const DASHBOARD_URL = DASHBOARD_HOME_URL;
 export const DASHBOARD_DRAFTS_URL = DASHBOARD_DOCUMENTS_DRAFTS_URL;

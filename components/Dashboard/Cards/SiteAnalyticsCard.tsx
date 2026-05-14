@@ -70,7 +70,9 @@ export function SiteAnalyticsCard() {
                 <div className={styles.statLabel}>Board Room Visits</div>
               </div>
               <div className={styles.statHighlight}>
-                <div className={styles.statValue}>{stats.boardRoomUniqueVisitors}</div>
+                <div className={styles.statValue}>
+                  {stats.boardRoomUniqueVisitors}
+                </div>
                 <div className={styles.statLabel}>Board Room Unique</div>
               </div>
             </div>

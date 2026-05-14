@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from "react";
 import {
+  clearOldErrorLogs,
   getErrorLogs,
   getErrorStats,
-  clearOldErrorLogs,
 } from "@/lib/actions/getErrorLogs";
 import styles from "./ErrorLoggingCard.module.css";
 

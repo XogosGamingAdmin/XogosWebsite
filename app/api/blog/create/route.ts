@@ -31,11 +31,15 @@ export async function POST(request: NextRequest) {
 
     // Check if user can manage blog
     if (!canManageBlog(session.user.email)) {
-      return NextResponse.json({ error: "Blog management access required" }, { status: 403 });
+      return NextResponse.json(
+        { error: "Blog management access required" },
+        { status: 403 }
+      );
     }
 
     const body = await request.json();
-    const { title, excerpt, content, category, author, imageUrl, imageId } = body;
+    const { title, excerpt, content, category, author, imageUrl, imageId } =
+      body;
 
     if (!title || !content) {
       return NextResponse.json(
@@ -57,7 +61,8 @@ export async function POST(request: NextRequest) {
     const newPost = {
       id,
       title,
-      excerpt: excerpt || content.replace(/<[^>]*>/g, "").substring(0, 200) + "...",
+      excerpt:
+        excerpt || content.replace(/<[^>]*>/g, "").substring(0, 200) + "...",
       content,
       author: {
         name: author || "Zack Edwards",
@@ -75,7 +80,7 @@ export async function POST(request: NextRequest) {
     try {
       const { query } = await import("@/lib/database");
       await query(
-          `INSERT INTO blog_posts (id, title, excerpt, content, author_name, author_avatar, author_role, category, published_at, read_time, image_url, featured, created_at)
+        `INSERT INTO blog_posts (id, title, excerpt, content, author_name, author_avatar, author_role, category, published_at, read_time, image_url, featured, created_at)
            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, NOW())
            ON CONFLICT (id) DO UPDATE SET
              title = EXCLUDED.title,
@@ -84,35 +89,36 @@ export async function POST(request: NextRequest) {
              author_name = EXCLUDED.author_name,
              category = EXCLUDED.category,
              image_url = EXCLUDED.image_url`,
-          [
-            newPost.id,
-            newPost.title,
-            newPost.excerpt,
-            newPost.content,
-            newPost.author.name,
-            newPost.author.avatar,
-            newPost.author.role,
-            newPost.category,
-            newPost.publishedAt,
-            newPost.readTime,
-            newPost.imageUrl,
-            newPost.featured,
-          ]
-        );
+        [
+          newPost.id,
+          newPost.title,
+          newPost.excerpt,
+          newPost.content,
+          newPost.author.name,
+          newPost.author.avatar,
+          newPost.author.role,
+          newPost.category,
+          newPost.publishedAt,
+          newPost.readTime,
+          newPost.imageUrl,
+          newPost.featured,
+        ]
+      );
 
       // Link the uploaded image to the post if imageId was provided
       if (imageId) {
-        await query(
-          `UPDATE blog_images SET post_id = $1 WHERE id = $2`,
-          [newPost.id, imageId]
-        );
+        await query(`UPDATE blog_images SET post_id = $1 WHERE id = $2`, [
+          newPost.id,
+          imageId,
+        ]);
       }
     } catch (dbError) {
       console.error("Database error:", dbError);
       // If database fails, still return success but note it
       return NextResponse.json({
         id: newPost.id,
-        message: "Post created (database storage failed - post may not persist)",
+        message:
+          "Post created (database storage failed - post may not persist)",
         post: newPost,
       });
     }

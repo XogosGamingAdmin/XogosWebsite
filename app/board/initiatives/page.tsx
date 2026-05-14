@@ -67,10 +67,7 @@ function EasterEgg() {
       </p>
       <div className={styles.eggCodeBox}>
         <span className={styles.eggCode}>{secretCode}</span>
-        <button
-          className={styles.eggCopyBtn}
-          onClick={handleCopy}
-        >
+        <button className={styles.eggCopyBtn} onClick={handleCopy}>
           {copied ? "Copied!" : "Copy"}
         </button>
       </div>
@@ -345,7 +342,9 @@ interface BoardMemberWithInitiatives {
 }
 
 export default function BoardInitiativesPage() {
-  const [boardMembers, setBoardMembers] = useState<BoardMemberWithInitiatives[]>([]);
+  const [boardMembers, setBoardMembers] = useState<
+    BoardMemberWithInitiatives[]
+  >([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -362,7 +361,8 @@ export default function BoardInitiativesPage() {
           const dynamicMember = dynamicData.find(
             (d: { memberId: string }) => d.memberId === member.id
           );
-          const dynamicInitiatives: DynamicInitiative[] = dynamicMember?.initiatives || [];
+          const dynamicInitiatives: DynamicInitiative[] =
+            dynamicMember?.initiatives || [];
 
           // Combine: dynamic initiatives first (newest), then static as fallback
           // Show max 2 on the card, rest go to detail page
@@ -484,7 +484,10 @@ export default function BoardInitiativesPage() {
                   <h4 className={styles.memberSectionTitle}>Initiatives</h4>
                   <div className={styles.initiativesGrid}>
                     {member.initiatives.map((init, idx) => (
-                      <div key={init.id || idx} className={styles.initiativeCard}>
+                      <div
+                        key={init.id || idx}
+                        className={styles.initiativeCard}
+                      >
                         <h5 className={styles.initiativeTitle}>{init.title}</h5>
                         <p className={styles.initiativeDescription}>
                           {init.description}

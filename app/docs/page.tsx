@@ -1,9 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { MarketingLayout } from "@/layouts/Marketing";
-import { DOCUMENT_CATEGORIES, PublishedDocument } from "@/types/published-document";
+import {
+  DOCUMENT_CATEGORIES,
+  PublishedDocument,
+} from "@/types/published-document";
 import styles from "./docs.module.css";
 
 // Document type for internal use
@@ -29,20 +32,22 @@ export default function DocsPage() {
       try {
         const response = await fetch("/api/public-documents");
         const data = await response.json();
-        const formatted: DocumentItem[] = (data.documents || []).map((doc: PublishedDocument) => ({
-          id: doc.id,
-          title: doc.title,
-          category: doc.category,
-          description: doc.description,
-          lastUpdated: new Date(doc.lastUpdated).toLocaleDateString("en-US", {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          }),
-          link: `/docs/${doc.id}`,
-          chapters: doc.chapters,
-          isPublished: true,
-        }));
+        const formatted: DocumentItem[] = (data.documents || []).map(
+          (doc: PublishedDocument) => ({
+            id: doc.id,
+            title: doc.title,
+            category: doc.category,
+            description: doc.description,
+            lastUpdated: new Date(doc.lastUpdated).toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            }),
+            link: `/docs/${doc.id}`,
+            chapters: doc.chapters,
+            isPublished: true,
+          })
+        );
         setPublishedDocs(formatted);
       } catch (error) {
         console.error("Error fetching published documents:", error);
@@ -365,7 +370,10 @@ export default function DocsPage() {
       doc.chapters.some(
         (chapter) =>
           chapter.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          (chapter.description?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false)
+          (chapter.description
+            ?.toLowerCase()
+            .includes(searchQuery.toLowerCase()) ??
+            false)
       );
     return matchesCategory && matchesSearch;
   });

@@ -17,7 +17,7 @@ export function NextAuthLogin({ callbackUrl }: Props) {
   // Redirect if already signed in
   useEffect(() => {
     if (status === "authenticated" && session) {
-      router.push(callbackUrl || "/dashboard");
+      router.push(callbackUrl || "/boardroom");
     }
   }, [status, session, router, callbackUrl]);
 
@@ -35,7 +35,7 @@ export function NextAuthLogin({ callbackUrl }: Props) {
     <div className={styles.actions}>
       <Button
         onClick={() =>
-          signIn("google", { callbackUrl: callbackUrl || "/dashboard" })
+          signIn("google", { callbackUrl: callbackUrl || "/boardroom" })
         }
       >
         Sign in with Google

@@ -1,18 +1,18 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
 import {
-  getMembershipMetrics,
   MembershipMetrics,
+  getMembershipMetrics,
 } from "@/lib/actions/getMembershipMetrics";
 import {
   addManualMember,
   addManualRevenue,
-  getRecentManualEntries,
   deleteManualEntry,
+  getRecentManualEntries,
 } from "@/lib/actions/manualEntries";
 import styles from "./page.module.css";
 
@@ -113,19 +113,29 @@ export default function FinanceDashboardPage() {
   const [recentEntries, setRecentEntries] = useState<ManualEntry[]>([]);
 
   // Manual entry form states
-  const [memberType, setMemberType] = useState<"monthly" | "yearly" | "lifetime">("monthly");
+  const [memberType, setMemberType] = useState<
+    "monthly" | "yearly" | "lifetime"
+  >("monthly");
   const [memberCount, setMemberCount] = useState(1);
   const [memberNotes, setMemberNotes] = useState("");
-  const [memberDate, setMemberDate] = useState(new Date().toISOString().split("T")[0]);
+  const [memberDate, setMemberDate] = useState(
+    new Date().toISOString().split("T")[0]
+  );
 
   const [revenueAmount, setRevenueAmount] = useState(0);
   const [revenueDescription, setRevenueDescription] = useState("");
-  const [revenueDate, setRevenueDate] = useState(new Date().toISOString().split("T")[0]);
+  const [revenueDate, setRevenueDate] = useState(
+    new Date().toISOString().split("T")[0]
+  );
 
   const [submitting, setSubmitting] = useState(false);
-  const [formMessage, setFormMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
+  const [formMessage, setFormMessage] = useState<{
+    type: "success" | "error";
+    text: string;
+  } | null>(null);
 
-  const isAdmin = session?.user?.email?.toLowerCase() === MANUAL_ENTRY_ADMIN.toLowerCase();
+  const isAdmin =
+    session?.user?.email?.toLowerCase() === MANUAL_ENTRY_ADMIN.toLowerCase();
 
   async function fetchData() {
     try {
@@ -163,15 +173,26 @@ export default function FinanceDashboardPage() {
     setSubmitting(true);
     setFormMessage(null);
 
-    const result = await addManualMember(memberType, memberCount, memberNotes, memberDate);
+    const result = await addManualMember(
+      memberType,
+      memberCount,
+      memberNotes,
+      memberDate
+    );
 
     if (result.success) {
-      setFormMessage({ type: "success", text: "Member entry added successfully!" });
+      setFormMessage({
+        type: "success",
+        text: "Member entry added successfully!",
+      });
       setMemberCount(1);
       setMemberNotes("");
       fetchData(); // Refresh data
     } else {
-      setFormMessage({ type: "error", text: result.error || "Failed to add entry" });
+      setFormMessage({
+        type: "error",
+        text: result.error || "Failed to add entry",
+      });
     }
 
     setSubmitting(false);
@@ -182,21 +203,34 @@ export default function FinanceDashboardPage() {
     setSubmitting(true);
     setFormMessage(null);
 
-    const result = await addManualRevenue(revenueAmount, revenueDescription, revenueDate);
+    const result = await addManualRevenue(
+      revenueAmount,
+      revenueDescription,
+      revenueDate
+    );
 
     if (result.success) {
-      setFormMessage({ type: "success", text: "Revenue entry added successfully!" });
+      setFormMessage({
+        type: "success",
+        text: "Revenue entry added successfully!",
+      });
       setRevenueAmount(0);
       setRevenueDescription("");
       fetchData(); // Refresh data
     } else {
-      setFormMessage({ type: "error", text: result.error || "Failed to add entry" });
+      setFormMessage({
+        type: "error",
+        text: result.error || "Failed to add entry",
+      });
     }
 
     setSubmitting(false);
   }
 
-  async function handleDeleteEntry(id: string, entryType: "member" | "revenue") {
+  async function handleDeleteEntry(
+    id: string,
+    entryType: "member" | "revenue"
+  ) {
     if (!confirm("Are you sure you want to delete this entry?")) return;
 
     const result = await deleteManualEntry(id, entryType);
@@ -329,7 +363,8 @@ export default function FinanceDashboardPage() {
                 </span>
                 {isAdmin && (
                   <span className={styles.memberTypeBreakdown}>
-                    Stripe: {metrics?.stripeMembers?.monthly || 0} | Manual: {metrics?.manualMembers?.monthly || 0}
+                    Stripe: {metrics?.stripeMembers?.monthly || 0} | Manual:{" "}
+                    {metrics?.manualMembers?.monthly || 0}
                   </span>
                 )}
               </div>
@@ -343,7 +378,8 @@ export default function FinanceDashboardPage() {
                 </span>
                 {isAdmin && (
                   <span className={styles.memberTypeBreakdown}>
-                    Stripe: {metrics?.stripeMembers?.yearly || 0} | Manual: {metrics?.manualMembers?.yearly || 0}
+                    Stripe: {metrics?.stripeMembers?.yearly || 0} | Manual:{" "}
+                    {metrics?.manualMembers?.yearly || 0}
                   </span>
                 )}
               </div>
@@ -357,7 +393,8 @@ export default function FinanceDashboardPage() {
                 </span>
                 {isAdmin && (
                   <span className={styles.memberTypeBreakdown}>
-                    Stripe: {metrics?.stripeMembers?.lifetime || 0} | Manual: {metrics?.manualMembers?.lifetime || 0}
+                    Stripe: {metrics?.stripeMembers?.lifetime || 0} | Manual:{" "}
+                    {metrics?.manualMembers?.lifetime || 0}
                   </span>
                 )}
               </div>
@@ -386,8 +423,12 @@ export default function FinanceDashboardPage() {
               </span>
               {isAdmin && (
                 <div className={styles.revenueBreakdown}>
-                  <span>Stripe: ${metrics?.stripeRevenue?.toFixed(2) || "0.00"}</span>
-                  <span>Manual: ${metrics?.manualRevenue?.toFixed(2) || "0.00"}</span>
+                  <span>
+                    Stripe: ${metrics?.stripeRevenue?.toFixed(2) || "0.00"}
+                  </span>
+                  <span>
+                    Manual: ${metrics?.manualRevenue?.toFixed(2) || "0.00"}
+                  </span>
                 </div>
               )}
             </div>
@@ -404,7 +445,9 @@ export default function FinanceDashboardPage() {
             <h2 className={styles.sectionTitle}>📝 Manual Entry</h2>
 
             {formMessage && (
-              <div className={`${styles.formMessage} ${styles[formMessage.type]}`}>
+              <div
+                className={`${styles.formMessage} ${styles[formMessage.type]}`}
+              >
                 {formMessage.text}
               </div>
             )}
@@ -418,7 +461,11 @@ export default function FinanceDashboardPage() {
                     <label>Member Type</label>
                     <select
                       value={memberType}
-                      onChange={(e) => setMemberType(e.target.value as "monthly" | "yearly" | "lifetime")}
+                      onChange={(e) =>
+                        setMemberType(
+                          e.target.value as "monthly" | "yearly" | "lifetime"
+                        )
+                      }
                     >
                       <option value="monthly">Monthly</option>
                       <option value="yearly">Yearly</option>
@@ -431,7 +478,9 @@ export default function FinanceDashboardPage() {
                       type="number"
                       min="1"
                       value={memberCount}
-                      onChange={(e) => setMemberCount(parseInt(e.target.value) || 1)}
+                      onChange={(e) =>
+                        setMemberCount(parseInt(e.target.value) || 1)
+                      }
                     />
                   </div>
                   <div className={styles.formGroup}>
@@ -451,7 +500,11 @@ export default function FinanceDashboardPage() {
                       placeholder="e.g., School batch signup"
                     />
                   </div>
-                  <button type="submit" disabled={submitting} className={styles.submitButton}>
+                  <button
+                    type="submit"
+                    disabled={submitting}
+                    className={styles.submitButton}
+                  >
                     {submitting ? "Adding..." : "Add Members"}
                   </button>
                 </form>
@@ -468,7 +521,9 @@ export default function FinanceDashboardPage() {
                       min="0"
                       step="0.01"
                       value={revenueAmount}
-                      onChange={(e) => setRevenueAmount(parseFloat(e.target.value) || 0)}
+                      onChange={(e) =>
+                        setRevenueAmount(parseFloat(e.target.value) || 0)
+                      }
                     />
                   </div>
                   <div className={styles.formGroup}>
@@ -488,7 +543,11 @@ export default function FinanceDashboardPage() {
                       placeholder="e.g., Grant funding, Donation"
                     />
                   </div>
-                  <button type="submit" disabled={submitting} className={styles.submitButton}>
+                  <button
+                    type="submit"
+                    disabled={submitting}
+                    className={styles.submitButton}
+                  >
                     {submitting ? "Adding..." : "Add Revenue"}
                   </button>
                 </form>
@@ -510,7 +569,9 @@ export default function FinanceDashboardPage() {
                   {recentEntries.map((entry) => (
                     <div key={entry.id} className={styles.entryRow}>
                       <span className={styles.entryType}>
-                        {entry.entry_type === "member" ? `👥 ${entry.type}` : "💰 Revenue"}
+                        {entry.entry_type === "member"
+                          ? `👥 ${entry.type}`
+                          : "💰 Revenue"}
                       </span>
                       <span>
                         {entry.entry_type === "member"
@@ -520,7 +581,9 @@ export default function FinanceDashboardPage() {
                       <span>{entry.description || "-"}</span>
                       <span>{new Date(entry.date).toLocaleDateString()}</span>
                       <button
-                        onClick={() => handleDeleteEntry(entry.id, entry.entry_type)}
+                        onClick={() =>
+                          handleDeleteEntry(entry.id, entry.entry_type)
+                        }
                         className={styles.deleteButton}
                       >
                         Delete
@@ -538,8 +601,9 @@ export default function FinanceDashboardPage() {
           <div className={styles.infoCard}>
             <h3>📊 Data Source</h3>
             <p>
-              This dashboard combines data from Stripe (automatic) and manual entries.
-              All membership and payment information is synced automatically via webhooks.
+              This dashboard combines data from Stripe (automatic) and manual
+              entries. All membership and payment information is synced
+              automatically via webhooks.
             </p>
             <p className={styles.infoNote}>
               Last updated: {new Date().toLocaleString()}

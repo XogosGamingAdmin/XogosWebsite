@@ -81,7 +81,10 @@ export default function AdminPostsPage() {
   useEffect(() => {
     if (status === "unauthenticated") {
       router.push("/signin");
-    } else if (status === "authenticated" && !canManageBlog(session?.user?.email)) {
+    } else if (
+      status === "authenticated" &&
+      !canManageBlog(session?.user?.email)
+    ) {
       router.push("/dashboard");
     }
   }, [status, session, router]);
@@ -151,7 +154,10 @@ export default function AdminPostsPage() {
   });
 
   // Get unique categories from posts
-  const allCategories = ["All", ...new Set(posts.map((p) => p.category))].sort();
+  const allCategories = [
+    "All",
+    ...new Set(posts.map((p) => p.category)),
+  ].sort();
 
   if (status === "loading" || loading) {
     return (
@@ -232,7 +238,9 @@ export default function AdminPostsPage() {
             </div>
 
             <ImageUpload
-              currentImageUrl={imageUrl !== "/images/XogosLogo.png" ? imageUrl : undefined}
+              currentImageUrl={
+                imageUrl !== "/images/XogosLogo.png" ? imageUrl : undefined
+              }
               onImageUploaded={(url, id) => {
                 setImageUrl(url);
                 setUploadedImageId(id);
@@ -350,7 +358,8 @@ export default function AdminPostsPage() {
             )}
             {filteredPosts.length > 50 && (
               <p className={styles.moreResults}>
-                Showing 50 of {filteredPosts.length} posts. Use search to find specific posts.
+                Showing 50 of {filteredPosts.length} posts. Use search to find
+                specific posts.
               </p>
             )}
           </div>

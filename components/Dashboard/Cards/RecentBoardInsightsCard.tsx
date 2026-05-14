@@ -124,9 +124,11 @@ export function RecentBoardInsightsCard() {
                 <div
                   className={`${styles.documentIcon} ${insight.type === "initiative" ? styles.initiativeIcon : ""}`}
                 >
-                  {insight.type === "document" && insight.document
-                    ? getDocumentIcon(insight.document.type)
-                    : <InitiativeIcon />}
+                  {insight.type === "document" && insight.document ? (
+                    getDocumentIcon(insight.document.type)
+                  ) : (
+                    <InitiativeIcon />
+                  )}
                 </div>
                 <div className={styles.documentInfo}>
                   <div className={styles.documentName}>{insight.title}</div>

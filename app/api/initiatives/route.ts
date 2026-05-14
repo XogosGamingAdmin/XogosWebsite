@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
-import { isBoardMember, getBoardMemberByEmail } from "@/lib/auth/admin";
+import { getBoardMemberByEmail, isBoardMember } from "@/lib/auth/admin";
 
 // GET - Get all initiatives (public)
 export async function GET() {
@@ -14,20 +14,23 @@ export async function GET() {
     );
 
     // Group initiatives by member
-    const initiativesByMember: Record<string, {
-      memberId: string;
-      memberName: string;
-      memberTitle: string;
-      memberRole: string;
-      memberImage: string;
-      initiatives: Array<{
-        id: string;
-        title: string;
-        description: string;
-        objectives: string[];
-        createdAt: string;
-      }>;
-    }> = {};
+    const initiativesByMember: Record<
+      string,
+      {
+        memberId: string;
+        memberName: string;
+        memberTitle: string;
+        memberRole: string;
+        memberImage: string;
+        initiatives: Array<{
+          id: string;
+          title: string;
+          description: string;
+          objectives: string[];
+          createdAt: string;
+        }>;
+      }
+    > = {};
 
     for (const row of result.rows) {
       if (!initiativesByMember[row.member_id]) {
@@ -72,12 +75,18 @@ export async function POST(request: NextRequest) {
 
     // Check if user is a board member
     if (!isBoardMember(session.user.email)) {
-      return NextResponse.json({ error: "Board member access required" }, { status: 403 });
+      return NextResponse.json(
+        { error: "Board member access required" },
+        { status: 403 }
+      );
     }
 
     const memberInfo = getBoardMemberByEmail(session.user.email);
     if (!memberInfo) {
-      return NextResponse.json({ error: "Member info not found" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Member info not found" },
+        { status: 400 }
+      );
     }
 
     const body = await request.json();
@@ -85,7 +94,9 @@ export async function POST(request: NextRequest) {
 
     if (!title || !description || !objectives || objectives.length === 0) {
       return NextResponse.json(
-        { error: "Title, description, and at least one objective are required" },
+        {
+          error: "Title, description, and at least one objective are required",
+        },
         { status: 400 }
       );
     }
@@ -95,7 +106,9 @@ export async function POST(request: NextRequest) {
 
     // Ensure objectives is an array of strings
     const objectivesArray = Array.isArray(objectives)
-      ? objectives.filter((obj: unknown) => typeof obj === 'string' && obj.trim() !== '')
+      ? objectives.filter(
+          (obj: unknown) => typeof obj === "string" && obj.trim() !== ""
+        )
       : [];
 
     if (objectivesArray.length === 0) {
@@ -129,7 +142,8 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error("Error creating initiative:", error);
-    const errorMessage = error instanceof Error ? error.message : "Unknown error";
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
       { error: `Failed to create initiative: ${errorMessage}` },
       { status: 500 }

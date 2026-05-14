@@ -30,35 +30,37 @@ async function getDbPosts(): Promise<BlogPost[]> {
        FROM blog_posts
        ORDER BY created_at DESC`
     );
-    return result.rows.map((row: {
-      id: string;
-      title: string;
-      excerpt: string;
-      content: string;
-      author_name: string;
-      author_avatar: string;
-      author_role: string;
-      category: string;
-      published_at: string;
-      read_time: string;
-      image_url: string;
-      featured: boolean;
-    }) => ({
-      id: row.id,
-      title: row.title,
-      excerpt: row.excerpt,
-      content: row.content,
-      author: {
-        name: row.author_name,
-        avatar: row.author_avatar,
-        role: row.author_role,
-      },
-      category: row.category,
-      publishedAt: row.published_at,
-      readTime: row.read_time,
-      imageUrl: row.image_url,
-      featured: row.featured,
-    }));
+    return result.rows.map(
+      (row: {
+        id: string;
+        title: string;
+        excerpt: string;
+        content: string;
+        author_name: string;
+        author_avatar: string;
+        author_role: string;
+        category: string;
+        published_at: string;
+        read_time: string;
+        image_url: string;
+        featured: boolean;
+      }) => ({
+        id: row.id,
+        title: row.title,
+        excerpt: row.excerpt,
+        content: row.content,
+        author: {
+          name: row.author_name,
+          avatar: row.author_avatar,
+          role: row.author_role,
+        },
+        category: row.category,
+        publishedAt: row.published_at,
+        readTime: row.read_time,
+        imageUrl: row.image_url,
+        featured: row.featured,
+      })
+    );
   } catch (error) {
     console.error("Error fetching DB posts:", error);
     return [];
@@ -72,10 +74,10 @@ export async function GET() {
     const dbPosts = await getDbPosts();
 
     // Merge with static posts (DB posts take precedence if same ID)
-    const dbPostIds = new Set(dbPosts.map(p => p.id));
+    const dbPostIds = new Set(dbPosts.map((p) => p.id));
     const allPosts = [
       ...dbPosts,
-      ...staticPosts.filter(p => !dbPostIds.has(p.id))
+      ...staticPosts.filter((p) => !dbPostIds.has(p.id)),
     ];
 
     // Return posts without the full content field to keep response small

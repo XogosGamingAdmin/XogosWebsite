@@ -2,13 +2,21 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { PageTracker } from "@/components/Analytics";
 import { MarketingLayout } from "@/layouts/Marketing/Marketing";
 import styles from "./page.module.css";
 
 // Stat Card component with animated counter
-function StatCard({ value, suffix, label }: { value: number; suffix: string; label: string }) {
+function StatCard({
+  value,
+  suffix,
+  label,
+}: {
+  value: number;
+  suffix: string;
+  label: string;
+}) {
   const [count, setCount] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -49,7 +57,8 @@ function StatCard({ value, suffix, label }: { value: number; suffix: string; lab
   return (
     <div className={styles.statCard} ref={ref}>
       <div className={styles.statValue}>
-        {count.toLocaleString()}{suffix}
+        {count.toLocaleString()}
+        {suffix}
       </div>
       <div className={styles.statLabel}>{label}</div>
       <div className={styles.statGlow}></div>
@@ -59,19 +68,31 @@ function StatCard({ value, suffix, label }: { value: number; suffix: string; lab
 
 // SVG Icons for features
 const GameIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="currentColor"
+  >
     <path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm4.5 2c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4-3c-.83 0-1.5-.67-1.5-1.5S18.67 9 19.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z" />
   </svg>
 );
 
 const LearnIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="currentColor"
+  >
     <path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72L12 15l5-2.73v3.72z" />
   </svg>
 );
 
 const EarnIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="currentColor"
+  >
     <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1.41 16.09V20h-2.67v-1.93c-1.71-.36-3.16-1.46-3.27-3.4h1.96c.1 1.05.82 1.87 2.65 1.87 1.96 0 2.4-.98 2.4-1.59 0-.83-.44-1.61-2.67-2.14-2.48-.6-4.18-1.62-4.18-3.67 0-1.72 1.39-2.84 3.11-3.21V4h2.67v1.95c1.86.45 2.79 1.86 2.85 3.39H14.3c-.05-1.11-.64-1.87-2.22-1.87-1.5 0-2.4.68-2.4 1.64 0 .84.65 1.39 2.67 1.91s4.18 1.39 4.18 3.91c-.01 1.83-1.38 2.83-3.12 3.16z" />
   </svg>
 );
@@ -95,7 +116,8 @@ const allGames: Game[] = [
     title: "Bug and Seek",
     subject: "Science",
     level: "Beginner",
-    description: "A nature-based exploration game where students become the new owners of a broken-down insectarium. Players explore real-world ecosystems to catch up to 220 real-life bugs, each with fun facts and humor built into every codex entry. The game teaches entomology, biology, ecology, and environmental science.",
+    description:
+      "A nature-based exploration game where students become the new owners of a broken-down insectarium. Players explore real-world ecosystems to catch up to 220 real-life bugs, each with fun facts and humor built into every codex entry. The game teaches entomology, biology, ecology, and environmental science.",
     logo: "/images/games/BugAndSeek_logo.jpg",
     color: "#4ade80",
     tutorialLink: null,
@@ -105,7 +127,8 @@ const allGames: Game[] = [
     title: "Debt-Free Millionaire",
     subject: "Financial Literacy",
     level: "Advanced",
-    description: "A personal finance and career simulation that teaches financial literacy through practical scenarios. Players explore career paths, learn about budgeting, debt management, and wealth-building, earning iPlay coins as their in-game avatar reaches different savings milestones.",
+    description:
+      "A personal finance and career simulation that teaches financial literacy through practical scenarios. Players explore career paths, learn about budgeting, debt management, and wealth-building, earning iPlay coins as their in-game avatar reaches different savings milestones.",
     logo: "/images/games/DebtFreeMillionaire_logo.jpg",
     color: "#e6bb84",
     tutorialLink: null,
@@ -115,7 +138,8 @@ const allGames: Game[] = [
     title: "Digital Frontier",
     subject: "STEM",
     level: "Intermediate",
-    description: "A story-driven STEM adventure game where players step into a neon digital world as User, a self-aware program fighting to escape a controlled system. Through fast-paced racing, circuit repair, tank battles, structural puzzles, energy rerouting, and coding challenges, players learn real physics, engineering, and computer science concepts. The game spans 11 connected levels, each introducing new mechanics and STEM ideas.",
+    description:
+      "A story-driven STEM adventure game where players step into a neon digital world as User, a self-aware program fighting to escape a controlled system. Through fast-paced racing, circuit repair, tank battles, structural puzzles, energy rerouting, and coding challenges, players learn real physics, engineering, and computer science concepts. The game spans 11 connected levels, each introducing new mechanics and STEM ideas.",
     logo: "/images/games/DigitalFrontier_logo.png",
     color: "#00d4ff",
     tutorialLink: null,
@@ -125,7 +149,8 @@ const allGames: Game[] = [
     title: "Exploration Library",
     subject: "Literature",
     level: "Beginner-Advanced",
-    description: "A revolutionary approach to classic literature that transforms passive reading into active discovery. Experience Treasure Island, Swiss Family Robinson, and Pride and Prejudice through multiple character perspectives. Students can access modern retellings or original Victorian prose, with text-to-speech and vocabulary help. Each chapter offers four unique perspectives written in different narrative styles.",
+    description:
+      "A revolutionary approach to classic literature that transforms passive reading into active discovery. Experience Treasure Island, Swiss Family Robinson, and Pride and Prejudice through multiple character perspectives. Students can access modern retellings or original Victorian prose, with text-to-speech and vocabulary help. Each chapter offers four unique perspectives written in different narrative styles.",
     logo: "/images/games/ExplorationLibrary_logo.png",
     color: "#a855f7",
     tutorialLink: null,
@@ -135,7 +160,8 @@ const allGames: Game[] = [
     title: "Historical Conquest",
     subject: "History",
     level: "Intermediate",
-    description: "A strategic history-based card game that resembles Pokémon in appearance and Risk in gameplay mechanics. All cards are based on historical figures, events, and places. Players earn iPlay coins for time spent in the game and can purchase additional decks using their earned coins.",
+    description:
+      "A strategic history-based card game that resembles Pokémon in appearance and Risk in gameplay mechanics. All cards are based on historical figures, events, and places. Players earn iPlay coins for time spent in the game and can purchase additional decks using their earned coins.",
     logo: "/images/games/HistoricalConquest_logo.jpg",
     color: "#e62739",
     tutorialLink: null,
@@ -145,7 +171,8 @@ const allGames: Game[] = [
     title: "Hunt the Past",
     subject: "History",
     level: "Beginner-Advanced",
-    description: "The cutting-edge online encyclopedia where students don't just look up people, places, and events—they talk to them. Thanks to built-in AI, students can ask questions, receive narrative responses from virtual historical figures, explore linked sources, and dive into compelling stories tied to each topic. Makes history conversational and exploratory.",
+    description:
+      "The cutting-edge online encyclopedia where students don't just look up people, places, and events—they talk to them. Thanks to built-in AI, students can ask questions, receive narrative responses from virtual historical figures, explore linked sources, and dive into compelling stories tied to each topic. Makes history conversational and exploratory.",
     logo: "/images/games/HuntThePast_logo.jpg",
     color: "#f59e0b",
     tutorialLink: null,
@@ -155,7 +182,8 @@ const allGames: Game[] = [
     title: "iServ Volunteer",
     subject: "Community Service",
     level: "Intermediate-Advanced",
-    description: "Take action in your community—helping neighbors, running local events, cleaning parks, or mentoring younger kids—and every hour you serve earns you iPlay coins. These coins can be used in the Xogos Gaming Platform to unlock games, characters, and gear—or convert into real scholarships that fund your future!",
+    description:
+      "Take action in your community—helping neighbors, running local events, cleaning parks, or mentoring younger kids—and every hour you serve earns you iPlay coins. These coins can be used in the Xogos Gaming Platform to unlock games, characters, and gear—or convert into real scholarships that fund your future!",
     logo: "/images/games/iServVolunteer_logo.jpg",
     color: "#22c55e",
     tutorialLink: null,
@@ -165,7 +193,8 @@ const allGames: Game[] = [
     title: "Lightning Round",
     subject: "History",
     level: "Intermediate",
-    description: "A fast-paced quiz game that tests and improves historical knowledge through quick-fire questions, timed challenges, and competitive multiplayer modes. Perfect for classroom use or independent learning with engaging rapid-fire gameplay.",
+    description:
+      "A fast-paced quiz game that tests and improves historical knowledge through quick-fire questions, timed challenges, and competitive multiplayer modes. Perfect for classroom use or independent learning with engaging rapid-fire gameplay.",
     logo: "/images/games/LightningRound_logo.png",
     color: "#fbbf24",
     tutorialLink: null,
@@ -175,7 +204,8 @@ const allGames: Game[] = [
     title: "Monster Math",
     subject: "Mathematics",
     level: "Beginner-Intermediate",
-    description: "A thrilling test of brains and reflexes where learning meets survival. Play as the fearless Green Monster, racing to devour correct numbers while avoiding the hungry Red Monster. Every level ramps up with tougher math problems—multiples, factors, primes, and equations. Reaching Level 10 earns 1 iPlay coin toward scholarships!",
+    description:
+      "A thrilling test of brains and reflexes where learning meets survival. Play as the fearless Green Monster, racing to devour correct numbers while avoiding the hungry Red Monster. Every level ramps up with tougher math problems—multiples, factors, primes, and equations. Reaching Level 10 earns 1 iPlay coin toward scholarships!",
     logo: "/images/games/MonsterMath_logo.png",
     color: "#22c55e",
     tutorialLink: null,
@@ -185,7 +215,8 @@ const allGames: Game[] = [
     title: "Totally Medieval",
     subject: "Mathematics",
     level: "Intermediate",
-    description: "Build your medieval kingdom while mastering math skills through strategic resource management and castle building. Players solve increasingly complex math problems to acquire resources, build structures, and defend their kingdoms from rivals.",
+    description:
+      "Build your medieval kingdom while mastering math skills through strategic resource management and castle building. Players solve increasingly complex math problems to acquire resources, build structures, and defend their kingdoms from rivals.",
     logo: "/images/games/TotallyMedieval_logo.png",
     color: "#7928ca",
     tutorialLink: null,
@@ -285,7 +316,9 @@ export default function HomePage() {
               <span className={styles.levelIcon}>⭐</span>
               <span>LEVEL UP YOUR EDUCATION</span>
             </div>
-            <h1 className={`${styles.heroTitle} ${isLoaded ? styles.visible : ""}`}>
+            <h1
+              className={`${styles.heroTitle} ${isLoaded ? styles.visible : ""}`}
+            >
               <span className={styles.heroPlay}>PLAY.</span>
               <span className={styles.heroLearn}>LEARN.</span>
               <span className={styles.heroEarn}>EARN.</span>
@@ -307,12 +340,16 @@ export default function HomePage() {
             </div>
             <div className={styles.xpBar}>
               <div className={styles.xpFill} style={{ width: "65%" }}></div>
-              <span className={styles.xpText}>6,500 / 10,000 XP to Next Level</span>
+              <span className={styles.xpText}>
+                6,500 / 10,000 XP to Next Level
+              </span>
             </div>
           </div>
 
           {/* Game Boy Visual */}
-          <div className={`${styles.heroVisual} ${isLoaded ? styles.visible : ""}`}>
+          <div
+            className={`${styles.heroVisual} ${isLoaded ? styles.visible : ""}`}
+          >
             <div className={styles.gameBoyContainer}>
               <div className={styles.gameBoyBody}>
                 {/* Top Section */}
@@ -352,10 +389,18 @@ export default function HomePage() {
                   {/* D-Pad */}
                   <div className={styles.dpadContainer}>
                     <div className={styles.dpad}>
-                      <div className={`${styles.dpadButton} ${styles.dpadUp}`}></div>
-                      <div className={`${styles.dpadButton} ${styles.dpadRight}`}></div>
-                      <div className={`${styles.dpadButton} ${styles.dpadDown}`}></div>
-                      <div className={`${styles.dpadButton} ${styles.dpadLeft}`}></div>
+                      <div
+                        className={`${styles.dpadButton} ${styles.dpadUp}`}
+                      ></div>
+                      <div
+                        className={`${styles.dpadButton} ${styles.dpadRight}`}
+                      ></div>
+                      <div
+                        className={`${styles.dpadButton} ${styles.dpadDown}`}
+                      ></div>
+                      <div
+                        className={`${styles.dpadButton} ${styles.dpadLeft}`}
+                      ></div>
                       <div className={styles.dpadCenter}></div>
                     </div>
                   </div>
@@ -364,13 +409,17 @@ export default function HomePage() {
                   <div className={styles.actionButtons}>
                     <div
                       className={styles.actionButton}
-                      onClick={() => setScreenImage("/images/games/TotallyMedieval.jpg")}
+                      onClick={() =>
+                        setScreenImage("/images/games/TotallyMedieval.jpg")
+                      }
                     >
                       <span>A</span>
                     </div>
                     <div
                       className={styles.actionButton}
-                      onClick={() => setScreenImage("/images/games/DebtFreeMil.jpg")}
+                      onClick={() =>
+                        setScreenImage("/images/games/DebtFreeMil.jpg")
+                      }
                     >
                       <span>B</span>
                     </div>
@@ -454,12 +503,15 @@ export default function HomePage() {
               SPECIAL EVENTS
             </h2>
             <p className={styles.sectionSubtitle}>
-              Throughout the year, we host special events where you can earn bonus coins!
-              These coins go towards in-game purchases and can even contribute to scholarship funds.
+              Throughout the year, we host special events where you can earn
+              bonus coins! These coins go towards in-game purchases and can even
+              contribute to scholarship funds.
             </p>
             <div className={styles.eventsDates}>
               <span className={styles.dateLabel}>2026 Event Season:</span>
-              <span className={styles.dateRange}>January 1 - December 31, 2026</span>
+              <span className={styles.dateRange}>
+                January 1 - December 31, 2026
+              </span>
             </div>
           </div>
 
@@ -473,12 +525,16 @@ export default function HomePage() {
               <div className={styles.eventIcon}>🥚</div>
               <h3 className={styles.eventTitle}>Easter Egg Hunt</h3>
               <p className={styles.eventDescription}>
-                A secret code is hidden somewhere on our website. Find it and earn
+                A secret code is hidden somewhere on our website. Find it and
+                earn
                 <strong> 5 FREE coins</strong> when you start playing Xogos!
               </p>
               <div className={styles.eventHint}>
                 <span className={styles.hintIcon}>💡</span>
-                <span>Hint: Explore where our board members share their vision for the future...</span>
+                <span>
+                  Hint: Explore where our board members share their vision for
+                  the future...
+                </span>
               </div>
               <div className={styles.eventDates}>
                 <div className={styles.eventDateItem}>
@@ -505,8 +561,8 @@ export default function HomePage() {
               <div className={styles.eventIcon}>🎮</div>
               <h3 className={styles.eventTitle}>Summer Challenge</h3>
               <p className={styles.eventDescription}>
-                A special summer event is being prepared. Stay tuned for exciting
-                challenges and bigger rewards!
+                A special summer event is being prepared. Stay tuned for
+                exciting challenges and bigger rewards!
               </p>
               <div className={styles.eventDates}>
                 <div className={styles.eventDateItem}>
@@ -533,8 +589,8 @@ export default function HomePage() {
               <div className={styles.eventIcon}>🎄</div>
               <h3 className={styles.eventTitle}>Holiday Special</h3>
               <p className={styles.eventDescription}>
-                End the year with a bang! Our biggest event of the year is coming
-                this holiday season.
+                End the year with a bang! Our biggest event of the year is
+                coming this holiday season.
               </p>
               <div className={styles.eventDates}>
                 <div className={styles.eventDateItem}>
@@ -572,7 +628,9 @@ export default function HomePage() {
                 <div className={styles.featureIcon}>{feature.icon}</div>
                 <div className={styles.featureContent}>
                   <h3 className={styles.featureTitle}>{feature.title}</h3>
-                  <p className={styles.featureDescription}>{feature.description}</p>
+                  <p className={styles.featureDescription}>
+                    {feature.description}
+                  </p>
                 </div>
               </div>
             ))}
@@ -597,10 +655,10 @@ export default function HomePage() {
               <div className={styles.stepContent}>
                 <h3 className={styles.stepTitle}>Play Educational Games</h3>
                 <p className={styles.stepDescription}>
-                  Engage with our collection of fun, interactive games
-                  designed to build knowledge and skills across multiple
-                  subject areas. Each achievement is verified through our
-                  secure blockchain technology.
+                  Engage with our collection of fun, interactive games designed
+                  to build knowledge and skills across multiple subject areas.
+                  Each achievement is verified through our secure blockchain
+                  technology.
                 </p>
               </div>
             </div>
@@ -609,10 +667,10 @@ export default function HomePage() {
               <div className={styles.stepContent}>
                 <h3 className={styles.stepTitle}>Save & Multiply Rewards</h3>
                 <p className={styles.stepDescription}>
-                  As you earn iPlay tokens through educational achievements,
-                  you can save them in the Xogos Bank where they grow through
-                  our multiplier system. The longer you save, the more your
-                  tokens grow – up to 2x after 180 days.
+                  As you earn iPlay tokens through educational achievements, you
+                  can save them in the Xogos Bank where they grow through our
+                  multiplier system. The longer you save, the more your tokens
+                  grow – up to 2x after 180 days.
                 </p>
               </div>
             </div>
@@ -621,10 +679,9 @@ export default function HomePage() {
               <div className={styles.stepContent}>
                 <h3 className={styles.stepTitle}>Convert to Scholarships</h3>
                 <p className={styles.stepDescription}>
-                  Transform your accumulated tokens into real scholarship
-                  funds through our transparent conversion system. Your
-                  educational achievements directly contribute to your
-                  academic future.
+                  Transform your accumulated tokens into real scholarship funds
+                  through our transparent conversion system. Your educational
+                  achievements directly contribute to your academic future.
                 </p>
               </div>
             </div>
@@ -661,7 +718,10 @@ export default function HomePage() {
         {/* Game Details Modal */}
         {selectedGame && (
           <div className={styles.gameModal} onClick={closeModal}>
-            <div className={styles.gameModalContent} onClick={(e) => e.stopPropagation()}>
+            <div
+              className={styles.gameModalContent}
+              onClick={(e) => e.stopPropagation()}
+            >
               <button className={styles.gameModalClose} onClick={closeModal}>
                 ×
               </button>
@@ -678,18 +738,29 @@ export default function HomePage() {
               <div className={styles.gameModalBody}>
                 <h2 className={styles.gameModalTitle}>{selectedGame.title}</h2>
                 <div className={styles.gameModalMeta}>
-                  <span className={styles.gameModalSubject}>{selectedGame.subject}</span>
+                  <span className={styles.gameModalSubject}>
+                    {selectedGame.subject}
+                  </span>
                   <span
                     className={styles.gameModalLevel}
-                    style={{ "--level-color": selectedGame.color } as React.CSSProperties}
+                    style={
+                      {
+                        "--level-color": selectedGame.color,
+                      } as React.CSSProperties
+                    }
                   >
                     {selectedGame.level}
                   </span>
                 </div>
-                <p className={styles.gameModalDescription}>{selectedGame.description}</p>
+                <p className={styles.gameModalDescription}>
+                  {selectedGame.description}
+                </p>
                 <div className={styles.gameModalActions}>
                   {selectedGame.tutorialLink ? (
-                    <Link href={selectedGame.tutorialLink} className={styles.gameModalTutorialBtn}>
+                    <Link
+                      href={selectedGame.tutorialLink}
+                      className={styles.gameModalTutorialBtn}
+                    >
                       Watch Tutorial
                     </Link>
                   ) : (

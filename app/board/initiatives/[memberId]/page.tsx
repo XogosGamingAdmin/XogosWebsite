@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
+import React, { useEffect, useState } from "react";
 import { MarketingLayout } from "@/layouts/Marketing";
 import { Container } from "@/primitives/Container";
 import styles from "./page.module.css";
@@ -236,7 +236,8 @@ export default function MemberInitiativesPage() {
         const dynamicMember = dynamicData.find(
           (d: { memberId: string }) => d.memberId === memberId
         );
-        const dynamicInitiatives: DynamicInitiative[] = dynamicMember?.initiatives || [];
+        const dynamicInitiatives: DynamicInitiative[] =
+          dynamicMember?.initiatives || [];
 
         // Combine: dynamic initiatives first (newest), then static
         const allInitiatives: Initiative[] = [
@@ -353,11 +354,14 @@ export default function MemberInitiativesPage() {
                 {initiative.createdAt && (
                   <span className={styles.initiativeDate}>
                     Posted{" "}
-                    {new Date(initiative.createdAt).toLocaleDateString("en-US", {
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    })}
+                    {new Date(initiative.createdAt).toLocaleDateString(
+                      "en-US",
+                      {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      }
+                    )}
                   </span>
                 )}
                 <p className={styles.initiativeDescription}>

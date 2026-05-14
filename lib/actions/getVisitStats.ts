@@ -49,7 +49,9 @@ export async function getVisitStats(
         totalVisits: parseInt(totalStats?.total_visits || "0"),
         uniqueVisitors: parseInt(totalStats?.unique_visitors || "0"),
         boardRoomVisits: parseInt(boardRoomStats?.visit_count || "0"),
-        boardRoomUniqueVisitors: parseInt(boardRoomStats?.unique_visitors || "0"),
+        boardRoomUniqueVisitors: parseInt(
+          boardRoomStats?.unique_visitors || "0"
+        ),
         pageBreakdown: pageBreakdown.map((p) => ({
           pagePath: p.page_path,
           pageName: p.page_name,

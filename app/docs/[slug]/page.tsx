@@ -2,7 +2,10 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { MarketingLayout } from "@/layouts/Marketing";
-import { getPublicDocumentBySlug, getPublicDocuments } from "@/lib/actions/publishDocumentToPublic";
+import {
+  getPublicDocumentBySlug,
+  getPublicDocuments,
+} from "@/lib/actions/publishDocumentToPublic";
 import { DOCUMENT_CATEGORIES } from "@/types/published-document";
 import styles from "./document.module.css";
 
@@ -101,16 +104,12 @@ export default async function PublishedDocumentPage({ params }: Props) {
               <span className={styles.category}>{categoryName}</span>
               <span className={styles.date}>Published {formattedDate}</span>
               {document.publishedAt !== document.lastUpdated && (
-                <span className={styles.date}>
-                  Updated {lastUpdatedDate}
-                </span>
+                <span className={styles.date}>Updated {lastUpdatedDate}</span>
               )}
             </div>
             <h1 className={styles.title}>{document.title}</h1>
             <p className={styles.description}>{document.description}</p>
-            <div className={styles.author}>
-              By {document.authorName}
-            </div>
+            <div className={styles.author}>By {document.authorName}</div>
           </div>
         </header>
 

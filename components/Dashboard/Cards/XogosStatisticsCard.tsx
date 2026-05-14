@@ -2,14 +2,14 @@
 
 import { useEffect, useState } from "react";
 import {
-  LineChart,
+  CartesianGrid,
+  Legend,
   Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
   XAxis,
   YAxis,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-  CartesianGrid,
 } from "recharts";
 import { getStatistics } from "@/lib/actions/getStatistics";
 import { getStatisticsHistory } from "@/lib/actions/getStatisticsHistory";
@@ -72,9 +72,7 @@ export function XogosStatisticsCard() {
                 <div className={styles.statLabel}>Accounts</div>
               </div>
               <div className={styles.stat}>
-                <div className={styles.statValue}>
-                  {statistics.activeUsers}
-                </div>
+                <div className={styles.statValue}>{statistics.activeUsers}</div>
                 <div className={styles.statLabel}>Active Users</div>
               </div>
               <div className={styles.stat}>
@@ -93,7 +91,10 @@ export function XogosStatisticsCard() {
                       tick={{ fontSize: 11, fill: "#999" }}
                       stroke="#555"
                     />
-                    <YAxis tick={{ fontSize: 11, fill: "#999" }} stroke="#555" />
+                    <YAxis
+                      tick={{ fontSize: 11, fill: "#999" }}
+                      stroke="#555"
+                    />
                     <Tooltip
                       contentStyle={{
                         backgroundColor: "#1a1a2e",

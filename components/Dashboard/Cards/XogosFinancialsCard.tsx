@@ -54,13 +54,13 @@ export function XogosFinancialsCard() {
                 <div className={styles.statValue}>
                   {formatCurrency(financials.monthlyPayments)}
                 </div>
-                <div className={styles.statLabel}>Monthly Payments</div>
+                <div className={styles.statLabel}>Monthly Accounts</div>
               </div>
               <div className={styles.stat}>
                 <div className={styles.statValue}>
                   {formatCurrency(financials.yearlyPayments)}
                 </div>
-                <div className={styles.statLabel}>Yearly Payments</div>
+                <div className={styles.statLabel}>Yearly Members</div>
               </div>
               <div className={styles.stat}>
                 <div className={styles.statValue}>

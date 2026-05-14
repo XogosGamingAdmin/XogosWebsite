@@ -3,7 +3,6 @@
 import { ComponentProps, useState } from "react";
 import { Button } from "@/primitives/Button";
 import { Dialog } from "@/primitives/Dialog";
-import { Input } from "@/primitives/Input";
 import { Select } from "@/primitives/Select";
 import {
   DOCUMENT_CATEGORIES,
@@ -29,7 +28,8 @@ export function DocumentPublishDialog({
   children,
   ...props
 }: Props) {
-  const [category, setCategory] = useState<PublishedDocumentCategory>("technical");
+  const [category, setCategory] =
+    useState<PublishedDocumentCategory>("technical");
   const [description, setDescription] = useState("");
   const [isPublishing, setIsPublishing] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -50,7 +50,9 @@ export function DocumentPublishDialog({
       });
       onOpenChange(false);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to publish document");
+      setError(
+        err instanceof Error ? err.message : "Failed to publish document"
+      );
     } finally {
       setIsPublishing(false);
     }
@@ -66,7 +68,8 @@ export function DocumentPublishDialog({
       content={
         <div className={styles.dialog}>
           <p className={styles.description}>
-            Publish &quot;{documentName}&quot; to the public documentation pages.
+            Publish &quot;{documentName}&quot; to the public documentation
+            pages.
           </p>
 
           <div className={styles.formGroup}>
@@ -74,7 +77,9 @@ export function DocumentPublishDialog({
             <Select
               items={categoryItems}
               value={category}
-              onChange={(value) => setCategory(value as PublishedDocumentCategory)}
+              onChange={(value) =>
+                setCategory(value as PublishedDocumentCategory)
+              }
               placeholder="Select a category"
               aboveOverlay
             />
@@ -92,7 +97,8 @@ export function DocumentPublishDialog({
               rows={4}
             />
             <p className={styles.hint}>
-              This description will be used for SEO metadata and displayed on the document card.
+              This description will be used for SEO metadata and displayed on
+              the document card.
             </p>
           </div>
 

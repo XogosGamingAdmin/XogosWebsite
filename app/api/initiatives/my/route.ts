@@ -13,7 +13,10 @@ export async function GET() {
 
     // Check if user is a board member
     if (!isBoardMember(session.user.email)) {
-      return NextResponse.json({ error: "Board member access required" }, { status: 403 });
+      return NextResponse.json(
+        { error: "Board member access required" },
+        { status: 403 }
+      );
     }
 
     const { query } = await import("@/lib/database");
@@ -25,19 +28,21 @@ export async function GET() {
       [session.user.email]
     );
 
-    const initiatives = result.rows.map((row: {
-      id: string;
-      title: string;
-      description: string;
-      objectives: string[];
-      created_at: string;
-    }) => ({
-      id: row.id,
-      title: row.title,
-      description: row.description,
-      objectives: row.objectives,
-      createdAt: row.created_at,
-    }));
+    const initiatives = result.rows.map(
+      (row: {
+        id: string;
+        title: string;
+        description: string;
+        objectives: string[];
+        created_at: string;
+      }) => ({
+        id: row.id,
+        title: row.title,
+        description: row.description,
+        objectives: row.objectives,
+        createdAt: row.created_at,
+      })
+    );
 
     return NextResponse.json({ initiatives });
   } catch (error) {

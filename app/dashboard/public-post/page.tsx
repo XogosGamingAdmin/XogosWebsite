@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
-import { isBoardMember, getBoardMemberByEmail } from "@/lib/auth/admin";
+import { getBoardMemberByEmail, isBoardMember } from "@/lib/auth/admin";
 import styles from "./page.module.css";
 
 interface Initiative {
@@ -62,7 +62,10 @@ export default function PublicPostPage() {
   useEffect(() => {
     if (status === "unauthenticated") {
       router.push("/signin");
-    } else if (status === "authenticated" && !isBoardMember(session?.user?.email)) {
+    } else if (
+      status === "authenticated" &&
+      !isBoardMember(session?.user?.email)
+    ) {
       router.push("/dashboard");
     }
   }, [status, session, router]);
@@ -90,7 +93,11 @@ export default function PublicPostPage() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this initiative? This action cannot be undone.")) {
+    if (
+      !confirm(
+        "Are you sure you want to delete this initiative? This action cannot be undone."
+      )
+    ) {
       return;
     }
 
@@ -105,14 +112,20 @@ export default function PublicPostPage() {
       const data = await res.json();
 
       if (res.ok) {
-        setMessage({ type: "success", text: "Initiative deleted successfully" });
+        setMessage({
+          type: "success",
+          text: "Initiative deleted successfully",
+        });
         setInitiatives((prev) => prev.filter((init) => init.id !== id));
         // If we were editing this initiative, reset the form
         if (editingId === id) {
           resetForm();
         }
       } else {
-        setMessage({ type: "error", text: data.error || "Failed to delete initiative" });
+        setMessage({
+          type: "error",
+          text: data.error || "Failed to delete initiative",
+        });
       }
     } catch {
       setMessage({ type: "error", text: "An error occurred while deleting" });
@@ -139,7 +152,9 @@ export default function PublicPostPage() {
     }
 
     try {
-      const url = editingId ? `/api/initiatives/${editingId}` : "/api/initiatives";
+      const url = editingId
+        ? `/api/initiatives/${editingId}`
+        : "/api/initiatives";
       const method = editingId ? "PUT" : "POST";
 
       const res = await fetch(url, {
@@ -172,11 +187,16 @@ export default function PublicPostPage() {
       } else {
         setMessage({
           type: "error",
-          text: data.error || `Failed to ${editingId ? "update" : "publish"} initiative`,
+          text:
+            data.error ||
+            `Failed to ${editingId ? "update" : "publish"} initiative`,
         });
       }
     } catch {
-      setMessage({ type: "error", text: `An error occurred while ${editingId ? "updating" : "publishing"}` });
+      setMessage({
+        type: "error",
+        text: `An error occurred while ${editingId ? "updating" : "publishing"}`,
+      });
     } finally {
       setSaving(false);
     }
@@ -220,7 +240,9 @@ export default function PublicPostPage() {
       )}
 
       {message && (
-        <div className={`${styles.message} ${styles[message.type]}`}>{message.text}</div>
+        <div className={`${styles.message} ${styles[message.type]}`}>
+          {message.text}
+        </div>
       )}
 
       <div className={styles.content}>
@@ -272,7 +294,11 @@ export default function PublicPostPage() {
             </div>
 
             <div className={styles.formButtons}>
-              <button type="submit" disabled={saving} className={styles.submitButton}>
+              <button
+                type="submit"
+                disabled={saving}
+                className={styles.submitButton}
+              >
                 {saving
                   ? editingId
                     ? "Updating..."
@@ -309,7 +335,9 @@ export default function PublicPostPage() {
                   className={`${styles.initiativeItem} ${editingId === init.id ? styles.editing : ""}`}
                 >
                   <h3>{init.title}</h3>
-                  <p className={styles.initiativeDescription}>{init.description}</p>
+                  <p className={styles.initiativeDescription}>
+                    {init.description}
+                  </p>
                   <div className={styles.initiativeMeta}>
                     <span>{new Date(init.createdAt).toLocaleDateString()}</span>
                     <span>{init.objectives.length} objectives</span>

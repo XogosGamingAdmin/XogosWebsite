@@ -41,7 +41,9 @@ export default async function Dashboard({ children }: { children: ReactNode }) {
   }
 
   // Fetch groups directly from database to get latest assignments
-  const groups = await getUserGroupsFromDatabase(session.user.email || session.user.info.id);
+  const groups = await getUserGroupsFromDatabase(
+    session.user.email || session.user.info.id
+  );
 
   return <DashboardLayout groups={groups}>{children}</DashboardLayout>;
 }

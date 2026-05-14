@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { canManageBlog } from "@/lib/auth/admin";
 import styles from "./page.module.css";
 
@@ -41,9 +41,10 @@ export default function ImageLibraryPage() {
   async function fetchImages() {
     setLoading(true);
     try {
-      const url = filter === "orphaned"
-        ? "/api/blog/images?orphaned=true"
-        : "/api/blog/images";
+      const url =
+        filter === "orphaned"
+          ? "/api/blog/images?orphaned=true"
+          : "/api/blog/images";
       const res = await fetch(url);
       if (res.ok) {
         const data = await res.json();
@@ -60,7 +61,10 @@ export default function ImageLibraryPage() {
   useEffect(() => {
     if (status === "unauthenticated") {
       router.push("/signin");
-    } else if (status === "authenticated" && !canManageBlog(session?.user?.email)) {
+    } else if (
+      status === "authenticated" &&
+      !canManageBlog(session?.user?.email)
+    ) {
       router.push("/dashboard");
     }
   }, [status, session, router]);
@@ -90,7 +94,11 @@ export default function ImageLibraryPage() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this image? This cannot be undone.")) {
+    if (
+      !confirm(
+        "Are you sure you want to delete this image? This cannot be undone."
+      )
+    ) {
       return;
     }
 
@@ -105,7 +113,10 @@ export default function ImageLibraryPage() {
         setMessage({ type: "success", text: "Image deleted successfully" });
       } else {
         const data = await res.json();
-        setMessage({ type: "error", text: data.error || "Failed to delete image" });
+        setMessage({
+          type: "error",
+          text: data.error || "Failed to delete image",
+        });
       }
     } catch (error) {
       setMessage({ type: "error", text: "Failed to delete image" });
@@ -118,12 +129,18 @@ export default function ImageLibraryPage() {
   const handleUpload = async (file: File) => {
     const allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"];
     if (!allowedTypes.includes(file.type)) {
-      setMessage({ type: "error", text: "Invalid file type. Please use JPEG, PNG, WebP, or GIF." });
+      setMessage({
+        type: "error",
+        text: "Invalid file type. Please use JPEG, PNG, WebP, or GIF.",
+      });
       return;
     }
 
     if (file.size > 5 * 1024 * 1024) {
-      setMessage({ type: "error", text: "File too large. Maximum size is 5MB." });
+      setMessage({
+        type: "error",
+        text: "File too large. Maximum size is 5MB.",
+      });
       return;
     }
 
@@ -222,17 +239,26 @@ export default function ImageLibraryPage() {
       ) : images.length === 0 ? (
         <div className={styles.emptyState}>
           <p>No images found.</p>
-          <p>Upload images when creating blog posts, or use the upload button above.</p>
+          <p>
+            Upload images when creating blog posts, or use the upload button
+            above.
+          </p>
         </div>
       ) : (
         <div className={styles.grid}>
           {images.map((image) => (
             <div key={image.id} className={styles.imageCard}>
               <div className={styles.imagePreview}>
-                <img src={image.public_url} alt={image.alt_text || image.original_filename} />
+                <img
+                  src={image.public_url}
+                  alt={image.alt_text || image.original_filename}
+                />
               </div>
               <div className={styles.imageInfo}>
-                <div className={styles.filename} title={image.original_filename}>
+                <div
+                  className={styles.filename}
+                  title={image.original_filename}
+                >
                   {image.original_filename}
                 </div>
                 <div className={styles.meta}>

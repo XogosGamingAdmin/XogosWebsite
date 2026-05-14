@@ -95,7 +95,10 @@ export async function getRecentManualEntries() {
 /**
  * Delete a manual entry
  */
-export async function deleteManualEntry(id: string, entryType: "member" | "revenue") {
+export async function deleteManualEntry(
+  id: string,
+  entryType: "member" | "revenue"
+) {
   try {
     const session = await auth();
     const userEmail = session?.user?.email;

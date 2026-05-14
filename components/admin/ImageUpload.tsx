@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useRef, useState } from "react";
 import styles from "./ImageUpload.module.css";
 
 interface ImageUploadProps {
@@ -18,7 +18,9 @@ export default function ImageUpload({
 }: ImageUploadProps) {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [preview, setPreview] = useState<string | null>(currentImageUrl || null);
+  const [preview, setPreview] = useState<string | null>(
+    currentImageUrl || null
+  );
   const [dragActive, setDragActive] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 

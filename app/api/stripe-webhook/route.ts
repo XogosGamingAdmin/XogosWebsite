@@ -37,10 +37,7 @@ export async function POST(request: NextRequest) {
       event = stripe.webhooks.constructEvent(body, signature, webhookSecret);
     } catch (err) {
       console.error("Webhook signature verification failed:", err);
-      return NextResponse.json(
-        { error: "Invalid signature" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Invalid signature" }, { status: 400 });
     }
 
     console.log(`Received Stripe event: ${event.type}`);
@@ -71,13 +68,15 @@ export async function POST(request: NextRequest) {
       case "customer.subscription.created":
       case "customer.subscription.updated": {
         const subscription = event.data.object as Stripe.Subscription;
-        const customerId = typeof subscription.customer === "string"
-          ? subscription.customer
-          : subscription.customer.id;
+        const customerId =
+          typeof subscription.customer === "string"
+            ? subscription.customer
+            : subscription.customer.id;
 
         // Get the price to determine subscription type
         const priceId = subscription.items.data[0]?.price?.id || "";
-        const interval = subscription.items.data[0]?.price?.recurring?.interval || "month";
+        const interval =
+          subscription.items.data[0]?.price?.recurring?.interval || "month";
 
         // Determine subscription type based on interval
         let subscriptionType = "monthly";
@@ -93,7 +92,9 @@ export async function POST(request: NextRequest) {
           stripePriceId: priceId,
           subscriptionType,
           status: subscription.status,
-          currentPeriodStart: new Date(subscription.current_period_start * 1000),
+          currentPeriodStart: new Date(
+            subscription.current_period_start * 1000
+          ),
           currentPeriodEnd: new Date(subscription.current_period_end * 1000),
           canceledAt: subscription.canceled_at
             ? new Date(subscription.canceled_at * 1000)
@@ -110,9 +111,10 @@ export async function POST(request: NextRequest) {
 
       case "invoice.paid": {
         const invoice = event.data.object as Stripe.Invoice;
-        const customerId = typeof invoice.customer === "string"
-          ? invoice.customer
-          : invoice.customer?.id || "";
+        const customerId =
+          typeof invoice.customer === "string"
+            ? invoice.customer
+            : invoice.customer?.id || "";
 
         if (customerId && invoice.amount_paid) {
           await db.recordStripePayment({

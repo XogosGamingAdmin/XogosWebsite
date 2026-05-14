@@ -2,12 +2,20 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { MarketingLayout } from "@/layouts/Marketing/Marketing";
 import styles from "./page.module.css";
 
 // Stat Card component with animated counter
-function StatCard({ value, suffix, label }: { value: number; suffix: string; label: string }) {
+function StatCard({
+  value,
+  suffix,
+  label,
+}: {
+  value: number;
+  suffix: string;
+  label: string;
+}) {
   const [count, setCount] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -48,7 +56,8 @@ function StatCard({ value, suffix, label }: { value: number; suffix: string; lab
   return (
     <div className={styles.statCard} ref={ref}>
       <div className={styles.statValue}>
-        {count.toLocaleString()}{suffix}
+        {count.toLocaleString()}
+        {suffix}
       </div>
       <div className={styles.statLabel}>{label}</div>
       <div className={styles.statGlow}></div>
@@ -131,14 +140,16 @@ export default function HomepageV1() {
               <span className={styles.levelIcon}>⭐</span>
               <span>LEVEL UP YOUR EDUCATION</span>
             </div>
-            <h1 className={`${styles.heroTitle} ${isLoaded ? styles.glitch : ""}`}>
+            <h1
+              className={`${styles.heroTitle} ${isLoaded ? styles.glitch : ""}`}
+            >
               <span className={styles.neonText}>PLAY.</span>
               <span className={styles.neonTextAlt}>LEARN.</span>
               <span className={styles.neonTextAccent}>EARN.</span>
             </h1>
             <p className={styles.heroSubtitle}>
-              Enter the arcade where education meets gaming. Unlock achievements,
-              earn real rewards, and level up your future.
+              Enter the arcade where education meets gaming. Unlock
+              achievements, earn real rewards, and level up your future.
             </p>
             <div className={styles.heroActions}>
               <Link href="/games" className={styles.primaryBtn}>
@@ -152,7 +163,9 @@ export default function HomepageV1() {
             </div>
             <div className={styles.xpBar}>
               <div className={styles.xpFill} style={{ width: "65%" }}></div>
-              <span className={styles.xpText}>6,500 / 10,000 XP to Next Level</span>
+              <span className={styles.xpText}>
+                6,500 / 10,000 XP to Next Level
+              </span>
             </div>
           </div>
           <div className={styles.heroVisual}>
@@ -235,7 +248,9 @@ export default function HomepageV1() {
               >
                 <div className={styles.achievementIcon}>{achievement.icon}</div>
                 <div className={styles.achievementName}>{achievement.name}</div>
-                {!achievement.unlocked && <div className={styles.lockIcon}>🔒</div>}
+                {!achievement.unlocked && (
+                  <div className={styles.lockIcon}>🔒</div>
+                )}
               </div>
             ))}
           </div>

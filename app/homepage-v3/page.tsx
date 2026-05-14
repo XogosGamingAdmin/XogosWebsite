@@ -9,7 +9,12 @@ import styles from "./page.module.css";
 export default function HomepageV3() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [activeTab, setActiveTab] = useState("trending");
-  const [countdown, setCountdown] = useState({ days: 12, hours: 8, mins: 45, secs: 30 });
+  const [countdown, setCountdown] = useState({
+    days: 12,
+    hours: 8,
+    mins: 45,
+    secs: 30,
+  });
 
   useEffect(() => {
     setIsLoaded(true);
@@ -19,10 +24,24 @@ export default function HomepageV3() {
       setCountdown((prev) => {
         let { days, hours, mins, secs } = prev;
         secs--;
-        if (secs < 0) { secs = 59; mins--; }
-        if (mins < 0) { mins = 59; hours--; }
-        if (hours < 0) { hours = 23; days--; }
-        if (days < 0) { days = 0; hours = 0; mins = 0; secs = 0; }
+        if (secs < 0) {
+          secs = 59;
+          mins--;
+        }
+        if (mins < 0) {
+          mins = 59;
+          hours--;
+        }
+        if (hours < 0) {
+          hours = 23;
+          days--;
+        }
+        if (days < 0) {
+          days = 0;
+          hours = 0;
+          mins = 0;
+          secs = 0;
+        }
         return { days, hours, mins, secs };
       });
     }, 1000);
@@ -121,13 +140,16 @@ export default function HomepageV3() {
               <span className={styles.liveIndicator}></span>
               LIVE NOW
             </div>
-            <h1 className={`${styles.heroTitle} ${isLoaded ? styles.visible : ""}`}>
+            <h1
+              className={`${styles.heroTitle} ${isLoaded ? styles.visible : ""}`}
+            >
               Where Learning
               <span className={styles.gradientText}> Meets Competition</span>
             </h1>
             <p className={styles.heroSubtitle}>
-              Join the ultimate educational esports platform. Compete, learn, and earn real rewards
-              in tournaments designed for the next generation of scholars.
+              Join the ultimate educational esports platform. Compete, learn,
+              and earn real rewards in tournaments designed for the next
+              generation of scholars.
             </p>
             <div className={styles.heroCta}>
               <Link href="/games" className={styles.primaryBtn}>
@@ -237,7 +259,9 @@ export default function HomepageV3() {
                     className={styles.gameImage}
                   />
                   <div className={styles.gameStatus} data-status={game.status}>
-                    {game.status === "live" && <span className={styles.liveIndicator}></span>}
+                    {game.status === "live" && (
+                      <span className={styles.liveIndicator}></span>
+                    )}
                     {game.status.toUpperCase()}
                   </div>
                 </div>
@@ -245,7 +269,9 @@ export default function HomepageV3() {
                   <span className={styles.gameCategory}>{game.category}</span>
                   <h3 className={styles.gameTitle}>{game.title}</h3>
                   <div className={styles.gameMeta}>
-                    <span className={styles.gamePlayers}>👥 {game.players} playing</span>
+                    <span className={styles.gamePlayers}>
+                      👥 {game.players} playing
+                    </span>
                     <span className={styles.gameRating}>⭐ {game.rating}</span>
                   </div>
                   <Link href="/games" className={styles.playBtn}>
@@ -262,7 +288,9 @@ export default function HomepageV3() {
           <div className={styles.leaderboardCard}>
             <div className={styles.cardHeader}>
               <h3 className={styles.cardTitle}>🏆 Global Leaderboard</h3>
-              <Link href="/games" className={styles.viewAllLink}>View All</Link>
+              <Link href="/games" className={styles.viewAllLink}>
+                View All
+              </Link>
             </div>
             <div className={styles.leaderboardList}>
               {leaderboard.map((player) => (
@@ -272,9 +300,13 @@ export default function HomepageV3() {
                   </div>
                   <div className={styles.playerInfo}>
                     <span className={styles.playerName}>{player.name}</span>
-                    <span className={styles.playerScore}>{player.score.toLocaleString()} pts</span>
+                    <span className={styles.playerScore}>
+                      {player.score.toLocaleString()} pts
+                    </span>
                   </div>
-                  <div className={`${styles.rankChange} ${styles[player.change]}`}>
+                  <div
+                    className={`${styles.rankChange} ${styles[player.change]}`}
+                  >
                     {player.change === "up" && "↑"}
                     {player.change === "down" && "↓"}
                     {player.change === "same" && "−"}
@@ -287,18 +319,26 @@ export default function HomepageV3() {
           <div className={styles.tournamentsCard}>
             <div className={styles.cardHeader}>
               <h3 className={styles.cardTitle}>🎯 Upcoming Tournaments</h3>
-              <Link href="/games" className={styles.viewAllLink}>View All</Link>
+              <Link href="/games" className={styles.viewAllLink}>
+                View All
+              </Link>
             </div>
             <div className={styles.tournamentsList}>
               {tournaments.map((tournament, index) => (
                 <div key={index} className={styles.tournamentItem}>
                   <div className={styles.tournamentInfo}>
                     <h4 className={styles.tournamentName}>{tournament.name}</h4>
-                    <span className={styles.tournamentGame}>{tournament.game}</span>
+                    <span className={styles.tournamentGame}>
+                      {tournament.game}
+                    </span>
                   </div>
                   <div className={styles.tournamentMeta}>
-                    <span className={styles.tournamentPrize}>{tournament.prize}</span>
-                    <span className={styles.tournamentDate}>{tournament.startDate}</span>
+                    <span className={styles.tournamentPrize}>
+                      {tournament.prize}
+                    </span>
+                    <span className={styles.tournamentDate}>
+                      {tournament.startDate}
+                    </span>
                   </div>
                   <button className={styles.joinBtn}>Join</button>
                 </div>
@@ -313,8 +353,8 @@ export default function HomepageV3() {
             <div className={styles.ctaContent}>
               <h2 className={styles.ctaTitle}>Ready to Compete?</h2>
               <p className={styles.ctaText}>
-                Join thousands of students competing for scholarships, prizes, and academic glory.
-                Your journey to the top starts here.
+                Join thousands of students competing for scholarships, prizes,
+                and academic glory. Your journey to the top starts here.
               </p>
               <div className={styles.ctaActions}>
                 <Link href="/games" className={styles.ctaPrimaryBtn}>
@@ -327,10 +367,30 @@ export default function HomepageV3() {
             </div>
             <div className={styles.ctaVisual}>
               <div className={styles.ctaIcons}>
-                <span className={styles.floatingIcon} style={{ "--delay": "0s" } as React.CSSProperties}>🎮</span>
-                <span className={styles.floatingIcon} style={{ "--delay": "0.5s" } as React.CSSProperties}>🏆</span>
-                <span className={styles.floatingIcon} style={{ "--delay": "1s" } as React.CSSProperties}>🎓</span>
-                <span className={styles.floatingIcon} style={{ "--delay": "1.5s" } as React.CSSProperties}>💰</span>
+                <span
+                  className={styles.floatingIcon}
+                  style={{ "--delay": "0s" } as React.CSSProperties}
+                >
+                  🎮
+                </span>
+                <span
+                  className={styles.floatingIcon}
+                  style={{ "--delay": "0.5s" } as React.CSSProperties}
+                >
+                  🏆
+                </span>
+                <span
+                  className={styles.floatingIcon}
+                  style={{ "--delay": "1s" } as React.CSSProperties}
+                >
+                  🎓
+                </span>
+                <span
+                  className={styles.floatingIcon}
+                  style={{ "--delay": "1.5s" } as React.CSSProperties}
+                >
+                  💰
+                </span>
               </div>
             </div>
           </div>

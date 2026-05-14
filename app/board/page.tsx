@@ -8,7 +8,10 @@ import { PageTracker } from "@/components/Analytics";
 import { MarketingLayout } from "@/layouts/Marketing";
 import { getFinancials } from "@/lib/actions/getFinancials";
 import { getStatistics } from "@/lib/actions/getStatistics";
-import { DOCUMENT_CATEGORIES, PublishedDocument } from "@/types/published-document";
+import {
+  DOCUMENT_CATEGORIES,
+  PublishedDocument,
+} from "@/types/published-document";
 import styles from "./page.module.css";
 
 // Type for board document display
@@ -196,7 +199,9 @@ export default function BoardPage() {
     expenses: 0,
   });
   const [publishedDocs, setPublishedDocs] = useState<BoardDocument[]>([]);
-  const [memberInitiatives, setMemberInitiatives] = useState<MemberInitiative[]>([]);
+  const [memberInitiatives, setMemberInitiatives] = useState<
+    MemberInitiative[]
+  >([]);
 
   // Fetch initiatives for all members
   useEffect(() => {
@@ -229,7 +234,9 @@ export default function BoardPage() {
         const formatted: BoardDocument[] = (data.documents || [])
           .filter((doc: PublishedDocument) => doc.showOnBoard)
           .map((doc: PublishedDocument) => {
-            const categoryName = DOCUMENT_CATEGORIES.find(c => c.id === doc.category)?.name || doc.category;
+            const categoryName =
+              DOCUMENT_CATEGORIES.find((c) => c.id === doc.category)?.name ||
+              doc.category;
             return {
               name: doc.title,
               type: categoryName,
@@ -563,7 +570,9 @@ export default function BoardPage() {
 
                     {/* Member Details Popup */}
                     {selectedMember === member.name && (
-                      <div className={`${styles.memberDetailsPopup} ${member.status === "present" ? styles.hasInitiative : ""}`}>
+                      <div
+                        className={`${styles.memberDetailsPopup} ${member.status === "present" ? styles.hasInitiative : ""}`}
+                      >
                         <div className={styles.popupHeader}>
                           <h3>{member.name}</h3>
                           <button
@@ -601,15 +610,25 @@ export default function BoardPage() {
                           {/* Right side - Latest Initiative */}
                           {member.status === "present" && (
                             <div className={styles.popupInitiative}>
-                              <div className={styles.initiativeLabel}>Latest Initiative</div>
+                              <div className={styles.initiativeLabel}>
+                                Latest Initiative
+                              </div>
                               {getLatestInitiative(member.memberId) ? (
                                 <>
                                   <h4 className={styles.initiativeTitle}>
-                                    {getLatestInitiative(member.memberId)?.title}
+                                    {
+                                      getLatestInitiative(member.memberId)
+                                        ?.title
+                                    }
                                   </h4>
                                   <p className={styles.initiativeDescription}>
-                                    {getLatestInitiative(member.memberId)?.description.slice(0, 150)}
-                                    {(getLatestInitiative(member.memberId)?.description.length || 0) > 150 ? "..." : ""}
+                                    {getLatestInitiative(
+                                      member.memberId
+                                    )?.description.slice(0, 150)}
+                                    {(getLatestInitiative(member.memberId)
+                                      ?.description.length || 0) > 150
+                                      ? "..."
+                                      : ""}
                                   </p>
                                   <Link
                                     href={`/board/initiatives/${member.memberId}`}
@@ -620,7 +639,8 @@ export default function BoardPage() {
                                 </>
                               ) : (
                                 <p className={styles.noInitiativeMessage}>
-                                  This member has not yet released their first initiative.
+                                  This member has not yet released their first
+                                  initiative.
                                 </p>
                               )}
                             </div>

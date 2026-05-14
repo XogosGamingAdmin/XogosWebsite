@@ -60,14 +60,23 @@ export async function getMembershipMetrics(): Promise<MembershipMetrics | null> 
 
     // Combine totals
     const combinedMembers = {
-      monthly: (stripeMetrics.membersByType.monthly || 0) + (manualMembers.monthly || 0),
-      yearly: (stripeMetrics.membersByType.yearly || 0) + (manualMembers.yearly || 0),
-      lifetime: (stripeMetrics.membersByType.lifetime || 0) + (manualMembers.lifetime || 0),
+      monthly:
+        (stripeMetrics.membersByType.monthly || 0) +
+        (manualMembers.monthly || 0),
+      yearly:
+        (stripeMetrics.membersByType.yearly || 0) + (manualMembers.yearly || 0),
+      lifetime:
+        (stripeMetrics.membersByType.lifetime || 0) +
+        (manualMembers.lifetime || 0),
     };
 
-    const totalMembers = combinedMembers.monthly + combinedMembers.yearly + combinedMembers.lifetime;
+    const totalMembers =
+      combinedMembers.monthly +
+      combinedMembers.yearly +
+      combinedMembers.lifetime;
     const totalRevenue = stripeMetrics.revenueThisMonth + manualRevenue.total;
-    const totalNewThisMonth = stripeMetrics.newMembersThisMonth + manualMembersThisMonth;
+    const totalNewThisMonth =
+      stripeMetrics.newMembersThisMonth + manualMembersThisMonth;
 
     return {
       totalMembers,

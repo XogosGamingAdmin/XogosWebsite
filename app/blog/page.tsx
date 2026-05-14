@@ -2,9 +2,9 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import React, { useState, useEffect } from "react";
-import { MarketingLayout } from "@/layouts/Marketing/Marketing";
+import React, { useEffect, useState } from "react";
 import { NewsletterForm } from "@/components/Newsletter";
+import { MarketingLayout } from "@/layouts/Marketing/Marketing";
 import styles from "./page.module.css";
 
 // Blog post preview interface (without full content for listing)
@@ -225,7 +225,9 @@ const FeaturedBlogCard = ({ post }: { post: BlogPostPreview }) => {
 export default function BlogPage() {
   const [activeCategory, setActiveCategory] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
-  const [allPosts, setAllPosts] = useState<BlogPostPreview[]>(staticBlogPostPreviews);
+  const [allPosts, setAllPosts] = useState<BlogPostPreview[]>(
+    staticBlogPostPreviews
+  );
   const [categories, setCategories] = useState<string[]>(baseCategories);
   const [loading, setLoading] = useState(true);
 
@@ -239,7 +241,9 @@ export default function BlogPage() {
         if (result.data && result.data.length > 0) {
           // Merge static posts with API posts, avoiding duplicates by ID
           const staticIds = new Set(staticBlogPostPreviews.map((p) => p.id));
-          const newPosts = result.data.filter((p: BlogPostPreview) => !staticIds.has(p.id));
+          const newPosts = result.data.filter(
+            (p: BlogPostPreview) => !staticIds.has(p.id)
+          );
           const mergedPosts = [...staticBlogPostPreviews, ...newPosts];
 
           // Sort by date (newest first)

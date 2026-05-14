@@ -13,10 +13,7 @@ export async function POST(request: NextRequest) {
 
     // Validate email
     if (!email || typeof email !== "string") {
-      return NextResponse.json(
-        { error: "Email is required" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Email is required" }, { status: 400 });
     }
 
     // Basic email validation
@@ -75,10 +72,7 @@ export async function DELETE(request: NextRequest) {
     const email = searchParams.get("email");
 
     if (!email) {
-      return NextResponse.json(
-        { error: "Email is required" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Email is required" }, { status: 400 });
     }
 
     const result = await db.unsubscribeFromNewsletter(email);

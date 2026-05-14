@@ -7,7 +7,7 @@ import styles from "./signin.module.css";
 export default function SignInPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [callbackUrl, setCallbackUrl] = useState("/dashboard");
+  const [callbackUrl, setCallbackUrl] = useState("/boardroom");
 
   useEffect(() => {
     // Get callback URL from query params
@@ -72,17 +72,6 @@ export default function SignInPage() {
             onClick={handleGoogleSignIn}
             disabled={isLoading}
             className={styles.googleButton}
-            style={{
-              padding: "12px 24px",
-              fontSize: "16px",
-              backgroundColor: "#4285f4",
-              color: "white",
-              border: "none",
-              borderRadius: "4px",
-              cursor: isLoading ? "not-allowed" : "pointer",
-              opacity: isLoading ? 0.6 : 1,
-              fontWeight: 500,
-            }}
           >
             {isLoading ? "Signing in..." : "Sign in with Google"}
           </button>

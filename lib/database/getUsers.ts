@@ -1,7 +1,7 @@
+import { colors } from "@/data/colors";
 import { users } from "@/data/users";
 import { Document, User } from "@/types";
-import { getUser, getRandom } from "./getUser";
-import { colors } from "@/data/colors";
+import { getRandom, getUser } from "./getUser";
 
 type Props = {
   userIds?: Document["id"][];

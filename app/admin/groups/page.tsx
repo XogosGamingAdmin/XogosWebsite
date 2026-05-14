@@ -43,7 +43,11 @@ export default function GroupsPage() {
     loadData();
   }, []);
 
-  const handleToggleGroup = async (userId: string, groupId: string, isCurrentlyMember: boolean) => {
+  const handleToggleGroup = async (
+    userId: string,
+    groupId: string,
+    isCurrentlyMember: boolean
+  ) => {
     setSaving(`${userId}-${groupId}`);
     setMessage("");
 
@@ -57,18 +61,22 @@ export default function GroupsPage() {
       setMessage(`Error: ${result.error.message}`);
     } else {
       // Update local state
-      setUsers(users.map(user => {
-        if (user.id === userId) {
-          return {
-            ...user,
-            groupIds: isCurrentlyMember
-              ? user.groupIds.filter(id => id !== groupId)
-              : [...user.groupIds, groupId],
-          };
-        }
-        return user;
-      }));
-      setMessage(`Successfully ${isCurrentlyMember ? "removed from" : "added to"} group!`);
+      setUsers(
+        users.map((user) => {
+          if (user.id === userId) {
+            return {
+              ...user,
+              groupIds: isCurrentlyMember
+                ? user.groupIds.filter((id) => id !== groupId)
+                : [...user.groupIds, groupId],
+            };
+          }
+          return user;
+        })
+      );
+      setMessage(
+        `Successfully ${isCurrentlyMember ? "removed from" : "added to"} group!`
+      );
     }
 
     setSaving(null);
@@ -87,7 +95,8 @@ export default function GroupsPage() {
           </Link>
           <h1 className={styles.title}>Admin: Manage Board Member Groups</h1>
           <p className={styles.subtitle}>
-            Assign board members to document groups. Members will see group links in their sidebar.
+            Assign board members to document groups. Members will see group
+            links in their sidebar.
           </p>
         </div>
         <div className={styles.tabs}>
@@ -104,7 +113,13 @@ export default function GroupsPage() {
       </div>
 
       {message && (
-        <p className={message.startsWith("Error") ? styles.errorMessage : styles.successMessage}>
+        <p
+          className={
+            message.startsWith("Error")
+              ? styles.errorMessage
+              : styles.successMessage
+          }
+        >
           {message}
         </p>
       )}
@@ -116,57 +131,66 @@ export default function GroupsPage() {
           <div className={styles.groupsTable}>
             <div className={styles.tableHeader}>
               <div className={styles.userColumn}>Board Member</div>
-              {DOCUMENT_GROUPS.map(group => (
+              {DOCUMENT_GROUPS.map((group) => (
                 <div key={group.id} className={styles.groupColumn}>
                   {group.name}
                 </div>
               ))}
             </div>
 
-            {users.filter(u => u.id && u.id !== "tbd").map(user => (
-              <div key={user.id} className={styles.tableRow}>
-                <div className={styles.userColumn}>
-                  <div className={styles.userInfo}>
-                    {user.avatar && (
-                      <img
-                        src={user.avatar}
-                        alt={user.name}
-                        className={styles.avatar}
-                      />
-                    )}
-                    <div>
-                      <div className={styles.userName}>{user.name}</div>
-                      <div className={styles.userEmail}>{user.id}</div>
+            {users
+              .filter((u) => u.id && u.id !== "tbd")
+              .map((user) => (
+                <div key={user.id} className={styles.tableRow}>
+                  <div className={styles.userColumn}>
+                    <div className={styles.userInfo}>
+                      {user.avatar && (
+                        <img
+                          src={user.avatar}
+                          alt={user.name}
+                          className={styles.avatar}
+                        />
+                      )}
+                      <div>
+                        <div className={styles.userName}>{user.name}</div>
+                        <div className={styles.userEmail}>{user.id}</div>
+                      </div>
                     </div>
                   </div>
+                  {DOCUMENT_GROUPS.map((group) => {
+                    const isMember = isUserInGroup(user, group.id);
+                    const isSaving = saving === `${user.id}-${group.id}`;
+                    return (
+                      <div key={group.id} className={styles.groupColumn}>
+                        <Button
+                          variant={isMember ? "primary" : "secondary"}
+                          onClick={() =>
+                            handleToggleGroup(user.id, group.id, isMember)
+                          }
+                          disabled={isSaving}
+                          className={styles.toggleButton}
+                        >
+                          {isSaving ? "..." : isMember ? "Remove" : "Add"}
+                        </Button>
+                      </div>
+                    );
+                  })}
                 </div>
-                {DOCUMENT_GROUPS.map(group => {
-                  const isMember = isUserInGroup(user, group.id);
-                  const isSaving = saving === `${user.id}-${group.id}`;
-                  return (
-                    <div key={group.id} className={styles.groupColumn}>
-                      <Button
-                        variant={isMember ? "primary" : "secondary"}
-                        onClick={() => handleToggleGroup(user.id, group.id, isMember)}
-                        disabled={isSaving}
-                        className={styles.toggleButton}
-                      >
-                        {isSaving ? "..." : isMember ? "Remove" : "Add"}
-                      </Button>
-                    </div>
-                  );
-                })}
-              </div>
-            ))}
+              ))}
           </div>
         )}
 
         <div className={styles.note}>
           <strong>How it works:</strong>
           <ul>
-            <li>Click &quot;Add&quot; to give a board member access to a document group</li>
+            <li>
+              Click &quot;Add&quot; to give a board member access to a document
+              group
+            </li>
             <li>Click &quot;Remove&quot; to revoke access</li>
-            <li>Members will see the group link in their sidebar when they log in</li>
+            <li>
+              Members will see the group link in their sidebar when they log in
+            </li>
             <li>Changes are saved to the database immediately</li>
           </ul>
         </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, FormEvent } from "react";
+import { FormEvent, useState } from "react";
 import styles from "./NewsletterForm.module.css";
 
 interface NewsletterFormProps {

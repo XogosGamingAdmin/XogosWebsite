@@ -3,8 +3,9 @@ import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { ComponentProps, useMemo } from "react";
 import {
-  ADMIN_URL,
   ADMIN_BLOG_URL,
+  ADMIN_URL,
+  BOARDROOM_URL,
   DASHBOARD_DOCUMENTS_GROUP_URL,
   DASHBOARD_DOCUMENTS_URL,
   DASHBOARD_HOME_URL,
@@ -12,7 +13,7 @@ import {
   DASHBOARD_PUBLIC_POST_URL,
 } from "@/constants";
 import { EditIcon, FileIcon, FolderIcon, HomeIcon, UserIcon } from "@/icons";
-import { isAdmin, canManageBlog, isBoardMember } from "@/lib/auth/admin";
+import { canManageBlog, isAdmin, isBoardMember } from "@/lib/auth/admin";
 import { LinkButton } from "@/primitives/Button";
 import { Group } from "@/types";
 import { normalizeTrailingSlash } from "@/utils";
@@ -70,6 +71,11 @@ export function DashboardSidebar({ className, groups, ...props }: Props) {
               </SidebarLink>
             </li>
             <li>
+              <SidebarLink href={BOARDROOM_URL} icon={<FolderIcon />}>
+                Board Room
+              </SidebarLink>
+            </li>
+            <li>
               <SidebarLink href={DASHBOARD_DOCUMENTS_URL} icon={<FileIcon />}>
                 Documents
               </SidebarLink>
@@ -81,7 +87,10 @@ export function DashboardSidebar({ className, groups, ...props }: Props) {
             </li>
             {userIsBoardMember && (
               <li>
-                <SidebarLink href={DASHBOARD_PUBLIC_POST_URL} icon={<EditIcon />}>
+                <SidebarLink
+                  href={DASHBOARD_PUBLIC_POST_URL}
+                  icon={<EditIcon />}
+                >
                   Initiatives
                 </SidebarLink>
               </li>

@@ -20,7 +20,10 @@ export async function GET(
     );
 
     if (result.rows.length === 0) {
-      return NextResponse.json({ error: "Initiative not found" }, { status: 404 });
+      return NextResponse.json(
+        { error: "Initiative not found" },
+        { status: 404 }
+      );
     }
 
     const row = result.rows[0];
@@ -64,7 +67,10 @@ export async function PUT(
 
     // Check if user is a board member
     if (!isBoardMember(session.user.email)) {
-      return NextResponse.json({ error: "Board member access required" }, { status: 403 });
+      return NextResponse.json(
+        { error: "Board member access required" },
+        { status: 403 }
+      );
     }
 
     const { query } = await import("@/lib/database");
@@ -76,7 +82,10 @@ export async function PUT(
     );
 
     if (existingResult.rows.length === 0) {
-      return NextResponse.json({ error: "Initiative not found" }, { status: 404 });
+      return NextResponse.json(
+        { error: "Initiative not found" },
+        { status: 404 }
+      );
     }
 
     if (existingResult.rows[0].member_email !== session.user.email) {
@@ -91,14 +100,18 @@ export async function PUT(
 
     if (!title || !description || !objectives || objectives.length === 0) {
       return NextResponse.json(
-        { error: "Title, description, and at least one objective are required" },
+        {
+          error: "Title, description, and at least one objective are required",
+        },
         { status: 400 }
       );
     }
 
     // Ensure objectives is an array of strings
     const objectivesArray = Array.isArray(objectives)
-      ? objectives.filter((obj: unknown) => typeof obj === "string" && obj.trim() !== "")
+      ? objectives.filter(
+          (obj: unknown) => typeof obj === "string" && obj.trim() !== ""
+        )
       : [];
 
     if (objectivesArray.length === 0) {
@@ -128,7 +141,8 @@ export async function PUT(
     });
   } catch (error) {
     console.error("Error updating initiative:", error);
-    const errorMessage = error instanceof Error ? error.message : "Unknown error";
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
       { error: `Failed to update initiative: ${errorMessage}` },
       { status: 500 }
@@ -152,7 +166,10 @@ export async function DELETE(
 
     // Check if user is a board member
     if (!isBoardMember(session.user.email)) {
-      return NextResponse.json({ error: "Board member access required" }, { status: 403 });
+      return NextResponse.json(
+        { error: "Board member access required" },
+        { status: 403 }
+      );
     }
 
     const { query } = await import("@/lib/database");
@@ -164,7 +181,10 @@ export async function DELETE(
     );
 
     if (existingResult.rows.length === 0) {
-      return NextResponse.json({ error: "Initiative not found" }, { status: 404 });
+      return NextResponse.json(
+        { error: "Initiative not found" },
+        { status: 404 }
+      );
     }
 
     if (existingResult.rows[0].member_email !== session.user.email) {
@@ -179,7 +199,8 @@ export async function DELETE(
     return NextResponse.json({ message: "Initiative deleted successfully" });
   } catch (error) {
     console.error("Error deleting initiative:", error);
-    const errorMessage = error instanceof Error ? error.message : "Unknown error";
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
       { error: `Failed to delete initiative: ${errorMessage}` },
       { status: 500 }

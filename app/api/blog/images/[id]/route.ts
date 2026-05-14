@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { canManageBlog } from "@/lib/auth/admin";
 import { query } from "@/lib/database";
-import { createSupabaseServerClient, BLOG_IMAGES_BUCKET } from "@/lib/supabase";
+import { BLOG_IMAGES_BUCKET, createSupabaseServerClient } from "@/lib/supabase";
 
 // GET - Get image metadata
 export async function GET(
@@ -25,10 +25,7 @@ export async function GET(
     return NextResponse.json({ data: result.rows[0] });
   } catch (error) {
     console.error("Get image error:", error);
-    return NextResponse.json(
-      { error: "Failed to get image" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to get image" }, { status: 500 });
   }
 }
 

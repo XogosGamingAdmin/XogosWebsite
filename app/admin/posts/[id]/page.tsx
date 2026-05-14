@@ -90,7 +90,10 @@ export default function EditPostPage() {
   useEffect(() => {
     if (status === "unauthenticated") {
       router.push("/signin");
-    } else if (status === "authenticated" && !canManageBlog(session?.user?.email)) {
+    } else if (
+      status === "authenticated" &&
+      !canManageBlog(session?.user?.email)
+    ) {
       router.push("/dashboard");
     }
   }, [status, session, router]);
@@ -208,7 +211,9 @@ export default function EditPostPage() {
             </div>
 
             <ImageUpload
-              currentImageUrl={imageUrl !== "/images/XogosLogo.png" ? imageUrl : undefined}
+              currentImageUrl={
+                imageUrl !== "/images/XogosLogo.png" ? imageUrl : undefined
+              }
               postId={id as string}
               onImageUploaded={(url) => {
                 setImageUrl(url);
@@ -256,7 +261,7 @@ export default function EditPostPage() {
                 style={{
                   background: "rgba(255, 255, 255, 0.1)",
                   textAlign: "center",
-                  textDecoration: "none"
+                  textDecoration: "none",
                 }}
               >
                 Preview Post

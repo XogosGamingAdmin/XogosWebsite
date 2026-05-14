@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
-import { canManageBlog } from "@/lib/auth/admin";
 import generatedPosts from "@/data/generated-posts.json";
+import { canManageBlog } from "@/lib/auth/admin";
 
 interface BlogPost {
   id: string;
@@ -88,10 +88,7 @@ export async function GET(
     const post = staticPosts.find((p) => p.id === slug);
 
     if (!post) {
-      return NextResponse.json(
-        { error: "Post not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Post not found" }, { status: 404 });
     }
 
     return NextResponse.json({ data: post });
@@ -126,7 +123,10 @@ export async function PUT(
 
     // Check if user can manage blog
     if (!canManageBlog(session.user.email)) {
-      return NextResponse.json({ error: "Blog management access required" }, { status: 403 });
+      return NextResponse.json(
+        { error: "Blog management access required" },
+        { status: 403 }
+      );
     }
 
     const { slug } = await params;

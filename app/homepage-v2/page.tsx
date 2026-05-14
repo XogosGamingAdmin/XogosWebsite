@@ -16,7 +16,8 @@ export default function HomepageV2() {
 
     const handleScroll = () => {
       const scrollTop = window.scrollY;
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const docHeight =
+        document.documentElement.scrollHeight - window.innerHeight;
       const progress = (scrollTop / docHeight) * 100;
       setScrollProgress(progress);
     };
@@ -76,11 +77,36 @@ export default function HomepageV2() {
   ];
 
   const milestones = [
-    { level: 1, title: "Novice Learner", unlocked: true, reward: "Starter Pack" },
-    { level: 5, title: "Apprentice Scholar", unlocked: true, reward: "Bonus XP" },
-    { level: 10, title: "Knowledge Seeker", unlocked: true, reward: "Rare Badge" },
-    { level: 25, title: "Wisdom Keeper", unlocked: false, reward: "Scholarship Boost" },
-    { level: 50, title: "Grand Master", unlocked: false, reward: "Legendary Rewards" },
+    {
+      level: 1,
+      title: "Novice Learner",
+      unlocked: true,
+      reward: "Starter Pack",
+    },
+    {
+      level: 5,
+      title: "Apprentice Scholar",
+      unlocked: true,
+      reward: "Bonus XP",
+    },
+    {
+      level: 10,
+      title: "Knowledge Seeker",
+      unlocked: true,
+      reward: "Rare Badge",
+    },
+    {
+      level: 25,
+      title: "Wisdom Keeper",
+      unlocked: false,
+      reward: "Scholarship Boost",
+    },
+    {
+      level: 50,
+      title: "Grand Master",
+      unlocked: false,
+      reward: "Legendary Rewards",
+    },
   ];
 
   return (
@@ -88,7 +114,10 @@ export default function HomepageV2() {
       <div className={styles.questPage}>
         {/* Progress Map */}
         <div className={styles.progressMap}>
-          <div className={styles.progressPath} style={{ height: `${scrollProgress}%` }}></div>
+          <div
+            className={styles.progressPath}
+            style={{ height: `${scrollProgress}%` }}
+          ></div>
         </div>
 
         {/* Hero Section */}
@@ -103,13 +132,15 @@ export default function HomepageV2() {
               <span className={styles.bannerIcon}>⚔️</span>
               <span>YOUR ADVENTURE AWAITS</span>
             </div>
-            <h1 className={`${styles.heroTitle} ${isLoaded ? styles.visible : ""}`}>
+            <h1
+              className={`${styles.heroTitle} ${isLoaded ? styles.visible : ""}`}
+            >
               Embark on Your
               <span className={styles.highlight}> Learning Quest</span>
             </h1>
             <p className={styles.heroSubtitle}>
-              Journey through worlds of knowledge, complete epic quests,
-              and earn legendary rewards for your education.
+              Journey through worlds of knowledge, complete epic quests, and
+              earn legendary rewards for your education.
             </p>
             <div className={styles.heroActions}>
               <Link href="/games" className={styles.questBtn}>
@@ -151,10 +182,14 @@ export default function HomepageV2() {
               <div
                 key={index}
                 className={styles.treasureCard}
-                style={{ "--treasure-color": treasure.color } as React.CSSProperties}
+                style={
+                  { "--treasure-color": treasure.color } as React.CSSProperties
+                }
               >
                 <div className={styles.treasureIcon}>{treasure.icon}</div>
-                <div className={styles.treasureAmount}>{treasure.amount.toLocaleString()}</div>
+                <div className={styles.treasureAmount}>
+                  {treasure.amount.toLocaleString()}
+                </div>
                 <div className={styles.treasureName}>{treasure.name}</div>
               </div>
             ))}
@@ -182,7 +217,9 @@ export default function HomepageV2() {
                       fill
                       className={styles.questImage}
                     />
-                    <div className={styles.questDifficulty}>{quest.difficulty}</div>
+                    <div className={styles.questDifficulty}>
+                      {quest.difficulty}
+                    </div>
                   </div>
                   <div className={styles.questInfo}>
                     <h3 className={styles.questTitle}>{quest.title}</h3>
@@ -195,11 +232,15 @@ export default function HomepageV2() {
                           style={{ width: `${quest.progress}%` }}
                         ></div>
                       </div>
-                      <span className={styles.progressText}>{quest.progress}% Complete</span>
+                      <span className={styles.progressText}>
+                        {quest.progress}% Complete
+                      </span>
                     </div>
                     <div className={styles.questRewards}>
                       {quest.rewards.map((reward, i) => (
-                        <span key={i} className={styles.rewardTag}>{reward}</span>
+                        <span key={i} className={styles.rewardTag}>
+                          {reward}
+                        </span>
                       ))}
                     </div>
                     <Link href="/games" className={styles.acceptQuest}>
@@ -228,7 +269,9 @@ export default function HomepageV2() {
                   {milestone.unlocked ? "✓" : milestone.level}
                 </div>
                 <div className={styles.milestoneInfo}>
-                  <div className={styles.milestoneLevel}>Level {milestone.level}</div>
+                  <div className={styles.milestoneLevel}>
+                    Level {milestone.level}
+                  </div>
                   <div className={styles.milestoneTitle}>{milestone.title}</div>
                   <div className={styles.milestoneReward}>
                     <span className={styles.rewardIcon}>🎁</span>
@@ -236,7 +279,9 @@ export default function HomepageV2() {
                   </div>
                 </div>
                 {index < milestones.length - 1 && (
-                  <div className={`${styles.pathLine} ${milestone.unlocked ? styles.active : ""}`}></div>
+                  <div
+                    className={`${styles.pathLine} ${milestone.unlocked ? styles.active : ""}`}
+                  ></div>
                 )}
               </div>
             ))}
@@ -250,8 +295,8 @@ export default function HomepageV2() {
             <div className={styles.scrollContent}>
               <h2 className={styles.ctaTitle}>Ready for Adventure?</h2>
               <p className={styles.ctaText}>
-                Join thousands of heroes on their quest for knowledge and rewards.
-                Your legend begins today.
+                Join thousands of heroes on their quest for knowledge and
+                rewards. Your legend begins today.
               </p>
               <Link href="/games" className={styles.ctaBtn}>
                 <span>🏰</span>

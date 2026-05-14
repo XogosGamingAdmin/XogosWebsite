@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { MarketingLayout } from "@/layouts/Marketing/Marketing";
 import styles from "./page.module.css";
 
@@ -341,7 +341,10 @@ export default function BlogPostPage() {
           if (allResult.data) {
             setAllPosts(allResult.data);
             const related = allResult.data
-              .filter((p: BlogPost) => p.id !== slug && p.category === result.data.category)
+              .filter(
+                (p: BlogPost) =>
+                  p.id !== slug && p.category === result.data.category
+              )
               .slice(0, 2);
             setRelatedPosts(related);
           }

@@ -80,7 +80,11 @@ async function readPublishedDocs(): Promise<PublishedDocumentsData> {
  * Write published documents to the JSON file
  */
 async function writePublishedDocs(data: PublishedDocumentsData): Promise<void> {
-  await fs.writeFile(PUBLISHED_DOCS_PATH, JSON.stringify(data, null, 2), "utf-8");
+  await fs.writeFile(
+    PUBLISHED_DOCS_PATH,
+    JSON.stringify(data, null, 2),
+    "utf-8"
+  );
 }
 
 /**

@@ -1,8 +1,8 @@
 "use server";
 
 import { auth } from "@/auth";
-import { isAdmin } from "@/lib/auth/admin";
 import { DOCUMENT_GROUPS } from "@/constants";
+import { isAdmin } from "@/lib/auth/admin";
 
 interface DocumentGroup {
   id: string;
@@ -29,9 +29,7 @@ export async function getAdminDocumentGroups(): Promise<{
   try {
     // First try to get from database
     const { db } = await import("@/lib/database");
-    const dbGroups = await db.getGroupsByIds(
-      DOCUMENT_GROUPS.map((g) => g.id)
-    );
+    const dbGroups = await db.getGroupsByIds(DOCUMENT_GROUPS.map((g) => g.id));
 
     if (dbGroups && dbGroups.length > 0) {
       return {

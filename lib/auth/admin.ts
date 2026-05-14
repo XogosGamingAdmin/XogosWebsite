@@ -100,7 +100,10 @@ export function getBoardMemberByEmail(email: string | null | undefined): {
   if (!email) return null;
   const normalizedEmail = email.toLowerCase().trim();
 
-  const memberMap: Record<string, { id: string; name: string; title: string; role: string; imagePath: string }> = {
+  const memberMap: Record<
+    string,
+    { id: string; name: string; title: string; role: string; imagePath: string }
+  > = {
     "zack@xogosgaming.com": {
       id: "zack-edwards",
       name: "Zack Edwards",

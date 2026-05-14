@@ -1,12 +1,12 @@
-import { NextRequest, NextResponse } from "next/server";
 import { nanoid } from "nanoid";
+import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { canManageBlog } from "@/lib/auth/admin";
 import { query } from "@/lib/database";
 import {
+  BLOG_IMAGES_BUCKET,
   createSupabaseServerClient,
   getPublicImageUrl,
-  BLOG_IMAGES_BUCKET,
 } from "@/lib/supabase";
 
 // Configuration
@@ -50,7 +50,9 @@ export async function POST(request: NextRequest) {
     // Validate file size
     if (file.size > MAX_FILE_SIZE) {
       return NextResponse.json(
-        { error: `File too large. Maximum size: ${MAX_FILE_SIZE / 1024 / 1024}MB` },
+        {
+          error: `File too large. Maximum size: ${MAX_FILE_SIZE / 1024 / 1024}MB`,
+        },
         { status: 400 }
       );
     }
