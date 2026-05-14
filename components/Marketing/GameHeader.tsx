@@ -74,7 +74,7 @@ export function GameHeader({
               <Link href="/docs" className={styles.navLink}>
                 Docs
               </Link>
-              <Link href="/board" className={styles.navLink}>
+              <Link href="/boardroom" className={styles.navLink}>
                 Board
               </Link>
             </div>

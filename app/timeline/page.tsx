@@ -395,7 +395,7 @@ export default function TimelinePage() {
           </div>
 
           <div className={styles.timelineFooter}>
-            <Link href="/board" className={styles.backButton}>
+            <Link href="/boardroom" className={styles.backButton}>
               Return to Board Room
             </Link>
           </div>
