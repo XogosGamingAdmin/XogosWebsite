@@ -32,23 +32,7 @@ export default function GamesPage() {
 
   // Games data based on whitepaper and existing content
   const games: Game[] = [
-    {
-      id: "bug-and-seek",
-      title: "Bug and Seek",
-      subject: "Science",
-      description:
-        "A nature-based exploration game where students become the new owners of a broken-down insectarium. Players explore real-world ecosystems to catch up to 220 real-life bugs, each with fun facts and humor built into every codex entry. The game teaches entomology, biology, ecology, and environmental science.",
-      imagePath: "/images/games/BugAndSeek_logo.jpg",
-      featured: true,
-      status: "active",
-      features: [
-        "220+ real insects to discover",
-        "Ecosystem exploration",
-        "Museum restoration",
-        "Scientific facts database",
-        "Environmental education",
-      ],
-    },
+    // FEATURED GAMES (shown in Featured section)
     {
       id: "debt-free-millionaire",
       title: "Debt-Free Millionaire",
@@ -67,13 +51,46 @@ export default function GamesPage() {
       ],
     },
     {
+      id: "body-battle",
+      title: "Body Battle",
+      subject: "Health Science",
+      description:
+        "An action-packed health science adventure where players command the body's immune system against invading pathogens. Learn about anatomy, the immune response, bacteria, viruses, and how the human body defends itself. Battle through organs and systems while mastering real medical concepts.",
+      imagePath: "/images/games/new_body_battle.png",
+      featured: true,
+      status: "active",
+      features: [
+        "Immune system gameplay",
+        "Real anatomy education",
+        "Pathogen battles",
+        "Medical terminology",
+        "Health awareness",
+      ],
+    },
+    // ALL OTHER GAMES (alphabetical)
+    {
+      id: "bug-and-seek",
+      title: "Bug and Seek",
+      subject: "Science",
+      description:
+        "A nature-based exploration game where students become the new owners of a broken-down insectarium. Players explore real-world ecosystems to catch up to 220 real-life bugs, each with fun facts and humor built into every codex entry. The game teaches entomology, biology, ecology, and environmental science.",
+      imagePath: "/images/games/new_bugandseek.png",
+      status: "active",
+      features: [
+        "220+ real insects to discover",
+        "Ecosystem exploration",
+        "Museum restoration",
+        "Scientific facts database",
+        "Environmental education",
+      ],
+    },
+    {
       id: "digital-frontier",
       title: "Digital Frontier",
       subject: "STEM",
       description:
-        "A story-driven STEM adventure game where players step into a neon digital world as User, a self-aware program fighting to escape a controlled system. Through fast-paced racing, circuit repair, tank battles, structural puzzles, energy rerouting, and coding challenges, players learn real physics, engineering, and computer science concepts by using them to survive. Newton's laws, projectile motion, electrical circuits, energy flow, and basic programming are woven directly into gameplay.",
-      imagePath: "/images/games/DigitalFrontier_logo.png",
-      featured: true,
+        "A story-driven STEM adventure game where players step into a neon digital world as User, a self-aware program fighting to escape a controlled system. Through fast-paced racing, circuit repair, tank battles, structural puzzles, energy rerouting, and coding challenges, players learn real physics, engineering, and computer science concepts by using them to survive.",
+      imagePath: "/images/games/new_digial_frontier.png",
       status: "active",
       features: [
         "11 connected levels",
@@ -88,9 +105,8 @@ export default function GamesPage() {
       title: "Exploration Library",
       subject: "Literature",
       description:
-        "A revolutionary approach to classic literature that transforms passive reading into active discovery. Experience Treasure Island, Swiss Family Robinson, and Pride and Prejudice through multiple character perspectives. Students can access modern retellings or original Victorian prose, with text-to-speech and vocabulary help. Each chapter offers four unique perspectives written in different narrative styles.",
+        "A revolutionary approach to classic literature that transforms passive reading into active discovery. Experience Treasure Island, Swiss Family Robinson, and Pride and Prejudice through multiple character perspectives. Students can access modern retellings or original Victorian prose, with text-to-speech and vocabulary help.",
       imagePath: "/images/games/ExplorationLibrary_logo.png",
-      featured: true,
       status: "active",
       features: [
         "Multiple character perspectives",
@@ -101,13 +117,28 @@ export default function GamesPage() {
       ],
     },
     {
+      id: "geotag",
+      title: "GeoTag",
+      subject: "Geography",
+      description:
+        "An immersive geography adventure where players explore the world through interactive maps, landmarks, and cultural discoveries. Master countries, capitals, physical features, and cultural geography while completing missions across continents. Perfect for building global awareness and spatial thinking skills.",
+      imagePath: "/images/games/new_geo_tag.png",
+      status: "active",
+      features: [
+        "Interactive world maps",
+        "Country and capital mastery",
+        "Cultural exploration",
+        "Landmark discoveries",
+        "Global missions",
+      ],
+    },
+    {
       id: "historical-conquest-digital",
       title: "Historical Conquest Digital",
       subject: "History",
       description:
         "A strategic history-based game that resembles Pokémon in appearance and Risk in gameplay mechanics, with all cards based on historical figures, events, and places. Players earn iPlay coins for time spent in the game and can purchase additional decks using their earned coins.",
-      imagePath: "/images/games/HistoricalConquest_logo.jpg",
-      featured: true,
+      imagePath: "/images/games/new_historical-conquest.png",
       status: "active",
       features: [
         "Strategic card-based gameplay",
@@ -122,9 +153,8 @@ export default function GamesPage() {
       title: "Hunt the Past",
       subject: "History",
       description:
-        "The cutting-edge online encyclopedia where students don't just look up people, places, and events—they talk to them. Thanks to built-in AI, students can ask questions, receive narrative responses from virtual historical figures, explore linked sources, and dive into compelling stories tied to each topic. Makes history conversational and exploratory.",
+        "The cutting-edge online encyclopedia where students don't just look up people, places, and events—they talk to them. Thanks to built-in AI, students can ask questions, receive narrative responses from virtual historical figures, explore linked sources, and dive into compelling stories tied to each topic.",
       imagePath: "/images/games/HuntThePast_logo.jpg",
-      featured: true,
       status: "active",
       features: [
         "AI-powered conversations",
@@ -139,7 +169,7 @@ export default function GamesPage() {
       title: "iServ Volunteer",
       subject: "Community Service",
       description:
-        "Take action in your community—helping neighbors, running local events, cleaning parks, or mentoring younger kids—and every hour you serve earns you iPlay coins. These coins can be used in the Xogos Gaming Platform to unlock games, characters, and gear—or convert into real scholarships that fund your future!",
+        "Take action in your community—helping neighbors, running local events, cleaning parks, or mentoring younger kids—and every hour you serve earns you iPlay coins. These coins can be used in the Xogos Gaming Platform to unlock games, characters, and gear—or convert into real scholarships!",
       imagePath: "/images/games/iServVolunteer_logo.jpg",
       status: "active",
       features: [
@@ -153,9 +183,9 @@ export default function GamesPage() {
     {
       id: "lightning-round",
       title: "Lightning Round",
-      subject: "History",
+      subject: "Quiz",
       description:
-        "A fast-paced quiz game that tests and improves historical knowledge through quick-fire questions, timed challenges, and competitive multiplayer modes. Perfect for classroom use or independent learning.",
+        "A fast-paced quiz game that tests and improves knowledge across multiple subjects through quick-fire questions, timed challenges, and competitive multiplayer modes. Perfect for classroom use or independent learning.",
       imagePath: "/images/games/LightningRound_logo.png",
       status: "active",
       features: [
@@ -163,7 +193,23 @@ export default function GamesPage() {
         "Timed challenges",
         "Multiplayer competition",
         "Classroom integration",
-        "Historical knowledge base",
+        "Multi-subject knowledge base",
+      ],
+    },
+    {
+      id: "medical-diagnosis",
+      title: "Medical Diagnosis",
+      subject: "Health Science",
+      description:
+        "Step into the role of a medical professional and learn diagnostic reasoning through realistic patient scenarios. Analyze symptoms, order tests, interpret results, and make diagnoses while learning about diseases, anatomy, and the medical decision-making process. Perfect for aspiring healthcare professionals.",
+      imagePath: "/images/games/new_medical_diagnosis.png",
+      status: "active",
+      features: [
+        "Realistic patient cases",
+        "Diagnostic reasoning",
+        "Medical terminology",
+        "Test interpretation",
+        "Healthcare career prep",
       ],
     },
     {
@@ -171,9 +217,8 @@ export default function GamesPage() {
       title: "Monster Math",
       subject: "Mathematics",
       description:
-        "A thrilling test of brains and reflexes where learning meets survival. Play as the fearless Green Monster, racing to devour correct numbers while avoiding the hungry Red Monster. Every level ramps up with tougher math problems—multiples, factors, primes, and equations. Reaching Level 10 earns 1 iPlay coin toward scholarships!",
+        "A thrilling test of brains and reflexes where learning meets survival. Play as the fearless Green Monster, racing to devour correct numbers while avoiding the hungry Red Monster. Every level ramps up with tougher math problems—multiples, factors, primes, and equations. Reaching Level 10 earns 1 iPlay coin!",
       imagePath: "/images/games/MonsterMath_logo.png",
-      featured: true,
       status: "active",
       features: [
         "Survival math gameplay",
@@ -184,13 +229,44 @@ export default function GamesPage() {
       ],
     },
     {
+      id: "shakespeares-conspiracy",
+      title: "Shakespeare's Conspiracy",
+      subject: "English",
+      description:
+        "Dive into the world of William Shakespeare through an interactive mystery adventure. Explore his plays, sonnets, and life while uncovering secrets hidden within his works. Learn Elizabethan English, theatrical history, and literary analysis through engaging puzzles and story-driven gameplay.",
+      imagePath: "/images/games/new_shakespeares_conspiracy.png",
+      status: "active",
+      features: [
+        "Interactive Shakespeare plays",
+        "Literary mystery adventure",
+        "Elizabethan English learning",
+        "Theater history",
+        "Poetry and sonnet analysis",
+      ],
+    },
+    {
+      id: "timequest",
+      title: "TimeQuest",
+      subject: "History",
+      description:
+        "Travel through time to experience history firsthand! Visit ancient civilizations, witness pivotal moments, and interact with historical figures across different eras. Complete missions that teach cause and effect, historical context, and the interconnected nature of world events.",
+      imagePath: "/images/games/new_timequest.png",
+      status: "active",
+      features: [
+        "Time travel adventures",
+        "Ancient civilizations",
+        "Historical figure interactions",
+        "Era-based missions",
+        "World history coverage",
+      ],
+    },
+    {
       id: "totally-medieval",
       title: "Totally Medieval",
       subject: "Mathematics",
       description:
         "Build your medieval kingdom while mastering math skills through strategic resource management and castle building. Players solve increasingly complex math problems to acquire resources, build structures, and defend their kingdoms from rivals.",
-      imagePath: "/images/games/TotallyMedieval_logo.png",
-      featured: true,
+      imagePath: "/images/games/new_totally-medieval.png",
       status: "active",
       features: [
         "Kingdom building mechanics",
