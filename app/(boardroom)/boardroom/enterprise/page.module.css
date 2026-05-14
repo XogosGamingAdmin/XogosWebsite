@@ -294,11 +294,19 @@
   padding: 0.625rem;
   border-left: 3px solid var(--card-color);
   transition: all 0.2s ease;
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  cursor: pointer;
 }
 
 .productCard:hover {
   background: rgba(26, 26, 46, 1);
   transform: translateX(2px);
+}
+
+a.productCard:hover {
+  box-shadow: 0 0 10px rgba(var(--card-color), 0.3);
 }
 
 .productName {

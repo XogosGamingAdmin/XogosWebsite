@@ -211,32 +211,59 @@ export default function EnterprisePage() {
 
                   {sub.products && sub.products.length > 0 && (
                     <div className={styles.productsGrid}>
-                      {sub.products.map((product, pIdx) => (
-                        <div
-                          key={pIdx}
-                          className={styles.productCard}
-                          style={
-                            { "--card-color": sub.color } as React.CSSProperties
-                          }
-                        >
-                          <div className={styles.productName}>
-                            {product.name}
+                      {sub.products.map((product, pIdx) => {
+                        const cardContent = (
+                          <>
+                            <div className={styles.productName}>
+                              {product.name}
+                            </div>
+                            {product.category && (
+                              <div className={styles.productCategory}>
+                                {product.category}
+                              </div>
+                            )}
+                            {product.comingSoon && (
+                              <div className={styles.comingSoon}>Coming Soon</div>
+                            )}
+                            {product.url && (
+                              <div className={styles.productUrl}>
+                                {product.url}
+                              </div>
+                            )}
+                          </>
+                        );
+
+                        const fullUrl = product.url
+                          ? product.url.startsWith("http")
+                            ? product.url
+                            : `https://${product.url}`
+                          : null;
+
+                        return product.url ? (
+                          <a
+                            key={pIdx}
+                            href={fullUrl!}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={styles.productCard}
+                            style={
+                              { "--card-color": sub.color } as React.CSSProperties
+                            }
+                          >
+                            {cardContent}
+                          </a>
+                        ) : (
+                          <div
+                            key={pIdx}
+                            className={styles.productCard}
+                            style={
+                              { "--card-color": sub.color } as React.CSSProperties
+                            }
+                          >
+                            {cardContent}
                           </div>
-                          {product.category && (
-                            <div className={styles.productCategory}>
-                              {product.category}
-                            </div>
-                          )}
-                          {product.comingSoon && (
-                            <div className={styles.comingSoon}>Coming Soon</div>
-                          )}
-                          {product.url && (
-                            <div className={styles.productUrl}>
-                              {product.url}
-                            </div>
-                          )}
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   )}
 
