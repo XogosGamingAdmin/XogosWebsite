@@ -41,12 +41,6 @@ const corporateStructure: {
         { name: "Xogos Bank", url: "www.XogosGaming.com" },
         { name: "ScienceHub", category: "Sciences", url: "ScienceHub.com" },
         {
-          name: "Battles and Thrones",
-          category: "History",
-          url: "www.battlesandthrones.com",
-          comingSoon: true,
-        },
-        {
           name: "MedicalDiagnosis",
           category: "Medical",
           url: "www.medicaldiagnosis.rocks",
@@ -75,14 +69,20 @@ const corporateStructure: {
           category: "Engineering",
           url: "www.digitalfrontiergame.com",
         },
-        { name: "iServ", category: "Active Incentives" },
-        { name: "Monster Math", url: "www.monstermathgames.com" },
+        { name: "iServ", category: "Active Incentives", url: "www.iservapp.org" },
+        { name: "Monster Math", category: "Math", url: "www.monstermathgames.com" },
         {
           name: "Totally Medieval",
           category: "Math & History",
           url: "www.thetotallymedievalgame.com",
         },
         { name: "Trade Academy", url: "www.tradeacademy.com" },
+        {
+          name: "Battles and Thrones",
+          category: "History",
+          url: "www.battlesandthrones.com",
+          comingSoon: true,
+        },
       ],
     },
     {
@@ -100,7 +100,10 @@ const corporateStructure: {
       type: "LLC",
       description: "Artificial intelligence and machine learning solutions",
       color: "#2dd4bf",
-      products: [{ name: "XogosAI", url: "www.XogosAI.com" }],
+      products: [
+        { name: "XogosAI", url: "www.XogosAI.com" },
+        { name: "RankAI", url: "rankAI.xogosai.com" },
+      ],
     },
     {
       name: "Xogos Media",
@@ -108,7 +111,6 @@ const corporateStructure: {
       description: "Content production and digital media services",
       color: "#3b82f6",
       products: [
-        { name: "RankAI", url: "rankAI.xogosai.com" },
         { name: "SocialHub", url: "www.socialhub.rocks" },
         { name: "XogosAudio", url: "www.xogosaudio.com" },
       ],
