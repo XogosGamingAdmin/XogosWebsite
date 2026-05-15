@@ -154,7 +154,7 @@ export default function GamesPage() {
       subject: "History",
       description:
         "The cutting-edge online encyclopedia where students don't just look up people, places, and events—they talk to them. Thanks to built-in AI, students can ask questions, receive narrative responses from virtual historical figures, explore linked sources, and dive into compelling stories tied to each topic.",
-      imagePath: "/images/games/HuntThePast_logo.jpg",
+      imagePath: "/images/games/new_huntthepast.png",
       status: "active",
       features: [
         "AI-powered conversations",
@@ -170,7 +170,7 @@ export default function GamesPage() {
       subject: "Community Service",
       description:
         "Take action in your community—helping neighbors, running local events, cleaning parks, or mentoring younger kids—and every hour you serve earns you iPlay coins. These coins can be used in the Xogos Gaming Platform to unlock games, characters, and gear—or convert into real scholarships!",
-      imagePath: "/images/games/iServVolunteer_logo.jpg",
+      imagePath: "/images/games/new_iserv_volunteer.png",
       status: "active",
       features: [
         "Track volunteer hours",
@@ -186,7 +186,7 @@ export default function GamesPage() {
       subject: "Quiz",
       description:
         "A fast-paced quiz game that tests and improves knowledge across multiple subjects through quick-fire questions, timed challenges, and competitive multiplayer modes. Perfect for classroom use or independent learning.",
-      imagePath: "/images/games/LightningRound_logo.png",
+      imagePath: "/images/games/new_lightning_round.png",
       status: "active",
       features: [
         "Fast-paced quiz format",

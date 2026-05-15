@@ -522,30 +522,31 @@
 .statsSection {
   position: relative;
   z-index: 1;
-  padding: 80px;
+  padding: 30px 40px 40px;
+  margin-top: -20px;
 }
 
 .statsGrid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 30px;
-  max-width: 1200px;
+  gap: 20px;
+  max-width: 1000px;
   margin: 0 auto;
 }
 
 .statCard {
   position: relative;
-  padding: 40px 30px;
+  padding: 20px 15px;
   background: rgba(0, 0, 0, 0.5);
   border: 1px solid rgba(230, 39, 57, 0.2);
-  border-radius: 16px;
+  border-radius: 12px;
   text-align: center;
   overflow: hidden;
   transition: all 0.3s ease;
 }
 
 .statCard:hover {
-  transform: translateY(-10px);
+  transform: translateY(-5px);
   border-color: rgba(230, 39, 57, 0.5);
 }
 
@@ -555,34 +556,281 @@
   left: 50%;
   transform: translateX(-50%);
   width: 80%;
-  height: 3px;
+  height: 2px;
   background: linear-gradient(90deg, transparent, #e62739, transparent);
 }
 
 .statValue {
-  font-size: 48px;
+  font-size: 32px;
   font-weight: 900;
   background: linear-gradient(90deg, #e62739, #7928ca);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
 }
 
 .statLabel {
-  font-size: 14px;
+  font-size: 11px;
   color: rgba(229, 229, 229, 0.6);
   text-transform: uppercase;
-  letter-spacing: 2px;
+  letter-spacing: 1.5px;
 }
 
 .statsSubline {
   text-align: center;
-  margin-top: 30px;
-  font-size: 16px;
+  margin-top: 20px;
+  font-size: 14px;
   color: #e6bb84;
   font-weight: 600;
   letter-spacing: 1px;
+}
+
+/* Active Incentive Programs Section */
+.activeIncentiveSection {
+  position: relative;
+  z-index: 1;
+  padding: 80px 40px;
+  background: linear-gradient(180deg, rgba(139, 92, 246, 0.1) 0%, rgba(0, 0, 0, 0.3) 100%);
+}
+
+.incentiveGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 40px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.incentiveCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 30px;
+  background: rgba(26, 26, 46, 0.6);
+  border-radius: 20px;
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.incentiveCard:hover {
+  transform: translateY(-8px);
+  border-color: rgba(139, 92, 246, 0.6);
+  box-shadow: 0 20px 40px rgba(139, 92, 246, 0.2);
+}
+
+.incentiveLogoWrapper {
+  position: relative;
+  width: 180px;
+  height: 180px;
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.incentiveLogo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.comingSoonOverlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 8px;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.incentiveTitle {
+  font-family: "Montserrat", sans-serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #e5e5e5;
+  margin-bottom: 8px;
+}
+
+.incentiveDescription {
+  font-size: 0.9rem;
+  color: rgba(229, 229, 229, 0.7);
+  text-align: center;
+  line-height: 1.5;
+}
+
+.incentiveCta {
+  text-align: center;
+  margin-top: 40px;
+}
+
+.learnMoreBtn {
+  display: inline-block;
+  color: #8b5cf6;
+  font-weight: 600;
+  font-size: 1rem;
+  text-decoration: none;
+  padding: 12px 24px;
+  border: 2px solid rgba(139, 92, 246, 0.4);
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+.learnMoreBtn:hover {
+  background: rgba(139, 92, 246, 0.1);
+  border-color: #8b5cf6;
+}
+
+/* Free Elective Classes Section */
+.electiveClassesSection {
+  position: relative;
+  z-index: 1;
+  padding: 80px 40px;
+  background: linear-gradient(180deg, rgba(34, 197, 94, 0.08) 0%, rgba(0, 0, 0, 0.3) 100%);
+}
+
+.electiveGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 25px;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.electiveCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  background: rgba(26, 26, 46, 0.6);
+  border-radius: 16px;
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.electiveCard:hover {
+  transform: translateY(-5px);
+  border-color: rgba(34, 197, 94, 0.6);
+  box-shadow: 0 15px 30px rgba(34, 197, 94, 0.15);
+}
+
+.electiveLogo {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-bottom: 12px;
+}
+
+.electiveLabel {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #e5e5e5;
+  text-align: center;
+}
+
+.electiveCta {
+  text-align: center;
+  margin-top: 40px;
+}
+
+/* Scholarship Program Section */
+.scholarshipSection {
+  position: relative;
+  z-index: 1;
+  padding: 80px 40px;
+  background: linear-gradient(135deg, rgba(230, 39, 57, 0.1) 0%, rgba(121, 40, 202, 0.1) 100%);
+}
+
+.scholarshipContent {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 60px;
+  max-width: 1100px;
+  margin: 0 auto;
+  align-items: center;
+}
+
+.scholarshipTitle {
+  font-family: "Montserrat", sans-serif;
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #e5e5e5;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.scholarshipDescription {
+  font-size: 1.05rem;
+  line-height: 1.8;
+  color: rgba(229, 229, 229, 0.85);
+  margin-bottom: 30px;
+}
+
+.scholarshipStats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.scholarshipStat {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  background: rgba(26, 26, 46, 0.6);
+  border-radius: 10px;
+  border-left: 3px solid #e62739;
+}
+
+.scholarshipStatIcon {
+  font-size: 1.3rem;
+}
+
+.scholarshipStatText {
+  font-size: 0.9rem;
+  color: rgba(229, 229, 229, 0.9);
+}
+
+.scholarshipBtn {
+  display: inline-block;
+  background: linear-gradient(135deg, #e62739, #7928ca);
+  color: white;
+  font-weight: 600;
+  font-size: 1rem;
+  text-decoration: none;
+  padding: 14px 28px;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+.scholarshipBtn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(230, 39, 57, 0.4);
+}
+
+.scholarshipVisual {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.scholarshipImage {
+  width: 100%;
+  max-width: 350px;
+  height: auto;
+  border-radius: 20px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
 }
 
 /* Special Events Section */
@@ -1419,7 +1667,47 @@
     align-items: center;
   }
   .statsGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+  }
+  .statValue {
+    font-size: 26px;
+  }
+  .incentiveGrid {
     grid-template-columns: 1fr;
+    gap: 25px;
+  }
+  .incentiveLogoWrapper {
+    width: 150px;
+    height: 150px;
+  }
+  .electiveGrid {
+    max-width: 100%;
+  }
+  .electiveLogo {
+    width: 100px;
+    height: 100px;
+  }
+  .scholarshipContent {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  .scholarshipTitle {
+    font-size: 1.8rem;
+    justify-content: center;
+  }
+  .scholarshipText {
+    text-align: center;
+  }
+  .scholarshipStats {
+    grid-template-columns: 1fr;
+  }
+  .scholarshipBtn {
+    display: block;
+    text-align: center;
+  }
+  .scholarshipVisual {
+    order: -1;
   }
   .ctaTitle {
     font-size: 36px;

@@ -1,0 +1,794 @@
+/* Active Incentives Page Styles */
+.incentivesPage {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0d0d1a 0%, #1a1a2e 100%);
+  color: #e5e5e5;
+  font-family: "Inter", sans-serif;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Background Elements */
+.pageBackground {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.gridPattern {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+.bgGlow1 {
+  position: absolute;
+  top: -200px;
+  right: -100px;
+  width: 600px;
+  height: 600px;
+  background: #8b5cf6;
+  border-radius: 50%;
+  filter: blur(120px);
+  opacity: 0.15;
+}
+
+.bgGlow2 {
+  position: absolute;
+  bottom: -300px;
+  left: -200px;
+  width: 800px;
+  height: 800px;
+  background: #f59e0b;
+  border-radius: 50%;
+  filter: blur(150px);
+  opacity: 0.1;
+}
+
+.bgGlow3 {
+  position: absolute;
+  top: 50%;
+  right: 10%;
+  width: 400px;
+  height: 400px;
+  background: #ec4899;
+  border-radius: 50%;
+  filter: blur(130px);
+  opacity: 0.08;
+}
+
+/* Hero Section */
+.heroSection {
+  padding: 160px 0 80px;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+.heroContent {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.heroBadge {
+  display: inline-block;
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+  color: white;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 8px 20px;
+  border-radius: 30px;
+  margin-bottom: 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.heroTitle {
+  font-family: "Montserrat", sans-serif;
+  font-size: 4rem;
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 1.5rem;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.heroTitle.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.highlightText {
+  position: relative;
+  color: #8b5cf6;
+  z-index: 1;
+}
+
+.highlightText::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 30%;
+  background: rgba(139, 92, 246, 0.2);
+  z-index: -1;
+  transform: skewX(-5deg);
+}
+
+.heroSubtitle {
+  font-size: 1.3rem;
+  max-width: 700px;
+  margin: 0 auto;
+  line-height: 1.7;
+  color: rgba(229, 229, 229, 0.8);
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) 0.2s;
+}
+
+.heroSubtitle.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* How It Works Section */
+.howItWorksSection {
+  padding: 60px 0;
+  background: rgba(26, 26, 46, 0.4);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+  z-index: 1;
+}
+
+.howItWorksContent {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  text-align: center;
+}
+
+.howItWorksTitle {
+  font-family: "Montserrat", sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 40px;
+  color: #e5e5e5;
+}
+
+.stepsGrid {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.stepCard {
+  background: rgba(26, 26, 46, 0.6);
+  border-radius: 16px;
+  padding: 25px 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  min-width: 180px;
+  max-width: 200px;
+}
+
+.stepNumber {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.2rem;
+  margin: 0 auto 15px;
+}
+
+.stepTitle {
+  font-family: "Montserrat", sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #e5e5e5;
+  margin-bottom: 8px;
+}
+
+.stepDescription {
+  font-size: 0.85rem;
+  color: rgba(229, 229, 229, 0.7);
+  line-height: 1.4;
+}
+
+.stepArrow {
+  color: #8b5cf6;
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+/* Programs Section */
+.programsSection {
+  padding: 80px 0;
+  position: relative;
+  z-index: 1;
+}
+
+.sectionHeading {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.sectionTitle {
+  font-family: "Montserrat", sans-serif;
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  background: linear-gradient(90deg, #e5e5e5, rgba(229, 229, 229, 0.8));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.sectionDecoration {
+  width: 80px;
+  height: 4px;
+  background: linear-gradient(90deg, #8b5cf6, #7c3aed);
+  margin: 0 auto 1rem;
+  border-radius: 4px;
+}
+
+.sectionSubtitle {
+  font-size: 1.1rem;
+  color: rgba(229, 229, 229, 0.7);
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+/* Programs Grid */
+.programsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 40px;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.programCard {
+  background: rgba(26, 26, 46, 0.6);
+  border-radius: 24px;
+  overflow: hidden;
+  transition: all 0.4s ease;
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  position: relative;
+}
+
+.programCard:hover {
+  transform: translateY(-10px);
+  border-color: rgba(139, 92, 246, 0.4);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+}
+
+.comingSoonCard {
+  opacity: 0.85;
+}
+
+.comingSoonBanner {
+  position: absolute;
+  top: 20px;
+  left: -40px;
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: white;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 8px 50px;
+  transform: rotate(-45deg);
+  z-index: 10;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.programImageContainer {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 16/10;
+}
+
+.programImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.programCard:hover .programImage {
+  transform: scale(1.08);
+}
+
+.programOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.8) 0%,
+    rgba(0, 0, 0, 0) 60%
+  );
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px;
+}
+
+.programCategory {
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+  color: white;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 8px;
+  align-self: flex-start;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.statusBadge {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 6px;
+  align-self: flex-end;
+  margin-top: auto;
+}
+
+.programContent {
+  padding: 30px;
+}
+
+.programTitle {
+  font-family: "Montserrat", sans-serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: 15px;
+  color: #e5e5e5;
+}
+
+.programDescription {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: rgba(229, 229, 229, 0.75);
+  margin-bottom: 25px;
+}
+
+.programButton {
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+  color: white;
+  border: none;
+  padding: 14px 28px;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+}
+
+.programButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(139, 92, 246, 0.4);
+}
+
+/* Stats Section */
+.statsSection {
+  padding: 60px 0;
+  background: rgba(26, 26, 46, 0.4);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+  z-index: 1;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 25px;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.statCard {
+  background: rgba(26, 26, 46, 0.6);
+  border-radius: 16px;
+  padding: 30px 20px;
+  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.statCard:hover {
+  transform: translateY(-5px);
+  border-color: rgba(139, 92, 246, 0.3);
+}
+
+.statIcon {
+  font-size: 2.5rem;
+  margin-bottom: 15px;
+}
+
+.statValue {
+  font-family: "Montserrat", sans-serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #8b5cf6;
+  margin-bottom: 5px;
+}
+
+.statLabel {
+  font-size: 0.9rem;
+  color: rgba(229, 229, 229, 0.7);
+}
+
+/* CTA Section */
+.ctaSection {
+  padding: 80px 0;
+  position: relative;
+  z-index: 1;
+}
+
+.ctaContent {
+  text-align: center;
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.ctaTitle {
+  font-family: "Montserrat", sans-serif;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: #e5e5e5;
+}
+
+.ctaDescription {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  color: rgba(229, 229, 229, 0.8);
+  margin-bottom: 2.5rem;
+}
+
+.ctaButtons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.primaryButton {
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+  color: white;
+  text-decoration: none;
+  padding: 15px 35px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.primaryButton:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(139, 92, 246, 0.4);
+}
+
+.secondaryButton {
+  background: transparent;
+  color: #e5e5e5;
+  text-decoration: none;
+  padding: 15px 35px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.secondaryButton:hover {
+  border-color: #8b5cf6;
+  color: #8b5cf6;
+  transform: translateY(-3px);
+}
+
+/* Modal */
+.programModal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 2rem;
+  backdrop-filter: blur(8px);
+}
+
+.programModalContent {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  border-radius: 24px;
+  max-width: 800px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+}
+
+.closeModalButton {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  border: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  font-size: 1.6rem;
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.closeModalButton:hover {
+  background: rgba(239, 68, 68, 0.9);
+  transform: scale(1.1);
+}
+
+.programModalHeader {
+  position: relative;
+}
+
+.programModalImageContainer {
+  position: relative;
+  width: 100%;
+  height: 350px;
+  overflow: hidden;
+  border-radius: 24px 24px 0 0;
+}
+
+.programModalImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.programModalOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.7) 0%,
+    rgba(0, 0, 0, 0) 50%
+  );
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 25px;
+}
+
+.programModalCategory {
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+  color: white;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 8px;
+  align-self: flex-start;
+}
+
+.modalComingSoonBadge {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: white;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 8px;
+  align-self: flex-end;
+  margin-top: auto;
+}
+
+.programModalBody {
+  padding: 35px;
+}
+
+.programModalTitle {
+  font-family: "Montserrat", sans-serif;
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #e5e5e5;
+  margin-bottom: 20px;
+}
+
+.programModalDescription {
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: rgba(229, 229, 229, 0.85);
+  margin-bottom: 30px;
+}
+
+.programModalFeatures {
+  margin-bottom: 35px;
+}
+
+.programModalSubtitle {
+  font-family: "Montserrat", sans-serif;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #e5e5e5;
+  margin-bottom: 20px;
+}
+
+.featuresList {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.featureItem {
+  background: rgba(139, 92, 246, 0.1);
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  color: rgba(229, 229, 229, 0.9);
+  border-left: 3px solid #8b5cf6;
+}
+
+.programModalActions {
+  display: flex;
+  justify-content: center;
+}
+
+.modalPrimaryButton {
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+  color: white;
+  text-decoration: none;
+  padding: 14px 35px;
+  border-radius: 10px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+}
+
+.modalPrimaryButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(139, 92, 246, 0.4);
+}
+
+.modalDisabledButton {
+  background: rgba(100, 100, 100, 0.5);
+  color: rgba(229, 229, 229, 0.6);
+  padding: 14px 35px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 1rem;
+  border: none;
+  cursor: not-allowed;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .programsGrid {
+    grid-template-columns: 1fr;
+    max-width: 600px;
+  }
+
+  .stepsGrid {
+    flex-direction: column;
+  }
+
+  .stepArrow {
+    transform: rotate(90deg);
+  }
+
+  .statsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .heroTitle {
+    font-size: 2.5rem;
+  }
+
+  .heroSubtitle {
+    font-size: 1.1rem;
+  }
+
+  .sectionTitle {
+    font-size: 2rem;
+  }
+
+  .statsGrid {
+    grid-template-columns: 1fr;
+    max-width: 300px;
+    margin: 0 auto;
+  }
+
+  .ctaTitle {
+    font-size: 2rem;
+  }
+
+  .ctaButtons {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .primaryButton,
+  .secondaryButton {
+    width: 100%;
+    max-width: 300px;
+    text-align: center;
+  }
+
+  .featuresList {
+    grid-template-columns: 1fr;
+  }
+
+  .programModalImageContainer {
+    height: 250px;
+  }
+
+  .programModalTitle {
+    font-size: 1.8rem;
+  }
+
+  .comingSoonBanner {
+    font-size: 0.7rem;
+    padding: 6px 40px;
+    top: 15px;
+    left: -35px;
+  }
+}
+
+@media (max-width: 480px) {
+  .heroTitle {
+    font-size: 2rem;
+  }
+
+  .programModalBody {
+    padding: 25px;
+  }
+
+  .stepCard {
+    min-width: 100%;
+  }
+}

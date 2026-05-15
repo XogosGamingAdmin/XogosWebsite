@@ -458,6 +458,162 @@ export default function HomePage() {
           </p>
         </section>
 
+        {/* Active Incentive Programs Section */}
+        <section className={styles.activeIncentiveSection}>
+          <div className={styles.sectionHeading}>
+            <h2 className={styles.sectionTitle}>
+              <span className={styles.titleIcon}>🌟</span>
+              ACTIVE INCENTIVE PROGRAMS
+            </h2>
+            <p className={styles.sectionSubtitle}>
+              We believe students shouldn&apos;t be on screens all day. That&apos;s why Xogos runs on a simple subscription model with no ads, no microtransactions, and no tricks to keep kids glued to devices. Instead, we incentivize real-world growth through programs that reward getting off the screen.
+            </p>
+          </div>
+          <div className={styles.incentiveGrid}>
+            <Link href="/incentives" className={styles.incentiveCard}>
+              <div className={styles.incentiveLogoWrapper}>
+                <Image
+                  src="/images/games/new_iserv_volunteer.png"
+                  alt="iServ Volunteering"
+                  width={200}
+                  height={200}
+                  className={styles.incentiveLogo}
+                />
+              </div>
+              <h3 className={styles.incentiveTitle}>iServ Volunteering</h3>
+              <p className={styles.incentiveDescription}>
+                Earn coins through community service with local non-profits
+              </p>
+            </Link>
+            <Link href="/incentives" className={styles.incentiveCard}>
+              <div className={styles.incentiveLogoWrapper}>
+                <Image
+                  src="/images/games/new_pryde_gym.png"
+                  alt="Pryde Gym"
+                  width={200}
+                  height={200}
+                  className={styles.incentiveLogo}
+                />
+                <div className={styles.comingSoonOverlay}>Coming Soon - End of 2026</div>
+              </div>
+              <h3 className={styles.incentiveTitle}>Pryde Gym</h3>
+              <p className={styles.incentiveDescription}>
+                Earn coins through physical activity and fitness challenges
+              </p>
+            </Link>
+          </div>
+          <div className={styles.incentiveCta}>
+            <Link href="/incentives" className={styles.learnMoreBtn}>
+              Learn More About Active Incentives →
+            </Link>
+          </div>
+        </section>
+
+        {/* Free Elective Classes Section */}
+        <section className={styles.electiveClassesSection}>
+          <div className={styles.sectionHeading}>
+            <h2 className={styles.sectionTitle}>
+              <span className={styles.titleIcon}>📚</span>
+              FREE ELECTIVE CLASSES
+            </h2>
+            <p className={styles.sectionSubtitle}>
+              With a Xogos subscription, students gain access to dozens of hands-on elective classes that teach real-world skills—from cooking and astronomy to wilderness survival and personal finance. These aren&apos;t screen-based games; they&apos;re experiences that build confidence, knowledge, and life skills.
+            </p>
+          </div>
+          <div className={styles.electiveGrid}>
+            <Link href="/classes" className={styles.electiveCard}>
+              <Image
+                src="/images/programs/survival_academy.png"
+                alt="Survival Academy"
+                width={150}
+                height={150}
+                className={styles.electiveLogo}
+              />
+              <span className={styles.electiveLabel}>Survival Academy</span>
+            </Link>
+            <Link href="/classes" className={styles.electiveCard}>
+              <Image
+                src="/images/programs/debt_free_millionaire_investor.png"
+                alt="Debt Free Millionaire Investor"
+                width={150}
+                height={150}
+                className={styles.electiveLogo}
+              />
+              <span className={styles.electiveLabel}>DFM Investor</span>
+            </Link>
+            <Link href="/classes" className={styles.electiveCard}>
+              <Image
+                src="/images/programs/starfall_academy.png"
+                alt="StarFall Academy"
+                width={150}
+                height={150}
+                className={styles.electiveLogo}
+              />
+              <span className={styles.electiveLabel}>StarFall Academy</span>
+            </Link>
+            <Link href="/classes" className={styles.electiveCard}>
+              <Image
+                src="/images/programs/kitchenlab_academy.png"
+                alt="KitchenLab Academy"
+                width={150}
+                height={150}
+                className={styles.electiveLogo}
+              />
+              <span className={styles.electiveLabel}>KitchenLab Academy</span>
+            </Link>
+          </div>
+          <div className={styles.electiveCta}>
+            <Link href="/classes" className={styles.learnMoreBtn}>
+              Explore All Classes →
+            </Link>
+          </div>
+        </section>
+
+        {/* Scholarship Program Section */}
+        <section className={styles.scholarshipSection}>
+          <div className={styles.scholarshipContent}>
+            <div className={styles.scholarshipText}>
+              <h2 className={styles.scholarshipTitle}>
+                <span className={styles.titleIcon}>🎓</span>
+                TURN COINS INTO COLLEGE
+              </h2>
+              <p className={styles.scholarshipDescription}>
+                Every iPlay coin earned through gameplay, academic achievements, and real-world activities has real value. Students earn coins by playing educational games, maintaining good grades, volunteering in their communities, and staying physically active. These coins can be spent on in-game upgrades and digital benefits—or saved and converted into actual scholarship funds for universities, trade schools, and certificate programs. We&apos;re not just gamifying education; we&apos;re funding futures.
+              </p>
+              <div className={styles.scholarshipStats}>
+                <div className={styles.scholarshipStat}>
+                  <span className={styles.scholarshipStatIcon}>🎮</span>
+                  <span className={styles.scholarshipStatText}>Earn through gameplay</span>
+                </div>
+                <div className={styles.scholarshipStat}>
+                  <span className={styles.scholarshipStatIcon}>📝</span>
+                  <span className={styles.scholarshipStatText}>Bonus for good grades</span>
+                </div>
+                <div className={styles.scholarshipStat}>
+                  <span className={styles.scholarshipStatIcon}>🏃</span>
+                  <span className={styles.scholarshipStatText}>Rewards for real-world activity</span>
+                </div>
+                <div className={styles.scholarshipStat}>
+                  <span className={styles.scholarshipStatIcon}>🎓</span>
+                  <span className={styles.scholarshipStatText}>Convert to scholarships</span>
+                </div>
+              </div>
+              <Link href="/scholarships" className={styles.scholarshipBtn}>
+                Learn About Scholarships →
+              </Link>
+            </div>
+            <div className={styles.scholarshipVisual}>
+              <Image
+                src="/images/coin-to-diploma.png"
+                alt="Coins converting to scholarships"
+                width={400}
+                height={300}
+                className={styles.scholarshipImage}
+              />
+            </div>
+          </div>
+        </section>
+
         {/* Game Select Section */}
         <section className={styles.gameSelectSection}>
           <h2 className={styles.sectionTitle}>
