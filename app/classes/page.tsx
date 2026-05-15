@@ -132,6 +132,14 @@ export default function ClassesPage() {
                 off the screen and into experiences that build confidence,
                 knowledge, and practical abilities for life.
               </p>
+              <div className={styles.comingSoonBanner}>
+                <span className={styles.bannerIcon}>🚀</span>
+                <span>15 Classes launching by end of July 2026!</span>
+              </div>
+              <p className={styles.upcomingClasses}>
+                Including: Personal Finance, Journalism, Game Design, Business,
+                Marine Biology, and more!
+              </p>
             </div>
           </Container>
         </section>
@@ -183,6 +191,57 @@ export default function ClassesPage() {
                 </div>
               ))}
             </div>
+          </Container>
+        </section>
+
+        {/* Earn Coins Section */}
+        <section className={styles.earnCoinsSection}>
+          <Container>
+            <div className={styles.sectionHeading}>
+              <h2 className={styles.sectionTitle}>Earn Coins While You Learn</h2>
+              <div className={styles.sectionDecoration}></div>
+              <p className={styles.sectionSubtitle}>
+                Participate in classes and contribute to earn iPlay coins toward scholarships
+              </p>
+            </div>
+            <div className={styles.earnExamples}>
+              <div className={styles.earnCard}>
+                <div className={styles.earnIcon}>🍳</div>
+                <h3 className={styles.earnTitle}>KitchenLab Academy</h3>
+                <p className={styles.earnDescription}>
+                  We need great recipes with real photos! For each recipe you
+                  submit with actual pictures you took, you&apos;ll earn iPlay coins.
+                  Help build our recipe database while learning to cook.
+                </p>
+                <div className={styles.earnReward}>
+                  <span>Submit a recipe with photos</span>
+                  <span className={styles.coinBadge}>🪙 Earn Coins</span>
+                </div>
+              </div>
+              <div className={styles.earnCard}>
+                <div className={styles.earnIcon}>📰</div>
+                <h3 className={styles.earnTitle}>Journalism</h3>
+                <p className={styles.earnDescription}>
+                  Practice real journalism skills! Submit articles to earn coins,
+                  and earn even more when your article gets published. Learn to
+                  research, write, and edit like a professional journalist.
+                </p>
+                <div className={styles.earnRewards}>
+                  <div className={styles.earnReward}>
+                    <span>Submit an article</span>
+                    <span className={styles.coinBadge}>🪙 1 Coin</span>
+                  </div>
+                  <div className={styles.earnReward}>
+                    <span>Article gets published</span>
+                    <span className={styles.coinBadge}>🪙 5 Coins</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <p className={styles.earnNote}>
+              Each class offers unique opportunities to contribute and earn.
+              The more you participate, the more you can earn toward your future!
+            </p>
           </Container>
         </section>
 

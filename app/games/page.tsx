@@ -18,6 +18,7 @@ interface Game {
   featured?: boolean;
   status: "active" | "beta" | "upcoming";
   features?: string[];
+  videoId?: string;
 }
 
 export default function GamesPage() {
@@ -59,6 +60,7 @@ export default function GamesPage() {
       imagePath: "/images/games/new_body_battle.png",
       featured: true,
       status: "active",
+      videoId: "uUiOOmIVAwg",
       features: [
         "Immune system gameplay",
         "Real anatomy education",
@@ -76,6 +78,7 @@ export default function GamesPage() {
         "A nature-based exploration game where students become the new owners of a broken-down insectarium. Players explore real-world ecosystems to catch up to 220 real-life bugs, each with fun facts and humor built into every codex entry. The game teaches entomology, biology, ecology, and environmental science.",
       imagePath: "/images/games/new_bugandseek.png",
       status: "active",
+      videoId: "edXjP7znaI4",
       features: [
         "220+ real insects to discover",
         "Ecosystem exploration",
@@ -92,6 +95,7 @@ export default function GamesPage() {
         "A story-driven STEM adventure game where players step into a neon digital world as User, a self-aware program fighting to escape a controlled system. Through fast-paced racing, circuit repair, tank battles, structural puzzles, energy rerouting, and coding challenges, players learn real physics, engineering, and computer science concepts by using them to survive.",
       imagePath: "/images/games/new_digial_frontier.png",
       status: "active",
+      videoId: "Ep3ZhAFmLp8",
       features: [
         "11 connected levels",
         "Physics and engineering challenges",
@@ -108,6 +112,7 @@ export default function GamesPage() {
         "A revolutionary approach to classic literature that transforms passive reading into active discovery. Experience Treasure Island, Swiss Family Robinson, and Pride and Prejudice through multiple character perspectives. Students can access modern retellings or original Victorian prose, with text-to-speech and vocabulary help.",
       imagePath: "/images/games/ExplorationLibrary_logo.png",
       status: "active",
+      videoId: "V9vLVN-oiec",
       features: [
         "Multiple character perspectives",
         "Modern and original text options",
@@ -124,6 +129,7 @@ export default function GamesPage() {
         "An immersive geography adventure where players explore the world through interactive maps, landmarks, and cultural discoveries. Master countries, capitals, physical features, and cultural geography while completing missions across continents. Perfect for building global awareness and spatial thinking skills.",
       imagePath: "/images/games/new_geo_tag.png",
       status: "active",
+      videoId: "YJM0yY1ctnw",
       features: [
         "Interactive world maps",
         "Country and capital mastery",
@@ -156,6 +162,7 @@ export default function GamesPage() {
         "The cutting-edge online encyclopedia where students don't just look up people, places, and events—they talk to them. Thanks to built-in AI, students can ask questions, receive narrative responses from virtual historical figures, explore linked sources, and dive into compelling stories tied to each topic.",
       imagePath: "/images/games/new_huntthepast.png",
       status: "active",
+      videoId: "898Gw-sQVC0",
       features: [
         "AI-powered conversations",
         "Talk to historical figures",
@@ -188,6 +195,7 @@ export default function GamesPage() {
         "A fast-paced quiz game that tests and improves knowledge across multiple subjects through quick-fire questions, timed challenges, and competitive multiplayer modes. Perfect for classroom use or independent learning.",
       imagePath: "/images/games/new_lightning_round.png",
       status: "active",
+      videoId: "7lPyLazH2Jw",
       features: [
         "Fast-paced quiz format",
         "Timed challenges",
@@ -204,6 +212,7 @@ export default function GamesPage() {
         "Step into the role of a medical professional and learn diagnostic reasoning through realistic patient scenarios. Analyze symptoms, order tests, interpret results, and make diagnoses while learning about diseases, anatomy, and the medical decision-making process. Perfect for aspiring healthcare professionals.",
       imagePath: "/images/games/new_medical_diagnosis.png",
       status: "active",
+      videoId: "mH0PC1qk6BA",
       features: [
         "Realistic patient cases",
         "Diagnostic reasoning",
@@ -220,6 +229,7 @@ export default function GamesPage() {
         "A thrilling test of brains and reflexes where learning meets survival. Play as the fearless Green Monster, racing to devour correct numbers while avoiding the hungry Red Monster. Every level ramps up with tougher math problems—multiples, factors, primes, and equations. Reaching Level 10 earns 1 iPlay coin!",
       imagePath: "/images/games/MonsterMath_logo.png",
       status: "active",
+      videoId: "RF0Gyyni6jE",
       features: [
         "Survival math gameplay",
         "Progressive difficulty",
@@ -268,6 +278,7 @@ export default function GamesPage() {
         "Build your medieval kingdom while mastering math skills through strategic resource management and castle building. Players solve increasingly complex math problems to acquire resources, build structures, and defend their kingdoms from rivals.",
       imagePath: "/images/games/new_totally-medieval.png",
       status: "active",
+      videoId: "JPCvcnIoRUs",
       features: [
         "Kingdom building mechanics",
         "Progressive math challenges",
@@ -530,6 +541,30 @@ export default function GamesPage() {
                 <p className={styles.gameModalDescription}>
                   {activeGame.description}
                 </p>
+
+                {/* Video Player */}
+                <div className={styles.videoSection}>
+                  <h3 className={styles.gameModalSubtitle}>Watch Tutorial</h3>
+                  {activeGame.videoId ? (
+                    <div className={styles.videoContainer}>
+                      <iframe
+                        src={`https://www.youtube-nocookie.com/embed/${activeGame.videoId}?rel=0&modestbranding=1&showinfo=0&fs=1&disablekb=1&iv_load_policy=3`}
+                        title={`${activeGame.title} Tutorial`}
+                        allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                        className={styles.videoPlayer}
+                      ></iframe>
+                      {/* Overlays to block YouTube links */}
+                      <div className={styles.videoBlockerTop}></div>
+                      <div className={styles.videoBlockerBottom}></div>
+                    </div>
+                  ) : (
+                    <div className={styles.videoComingSoon}>
+                      <span className={styles.videoComingSoonIcon}>🎬</span>
+                      <span>Video Coming Soon</span>
+                    </div>
+                  )}
+                </div>
 
                 {activeGame.features && (
                   <div className={styles.gameModalFeatures}>

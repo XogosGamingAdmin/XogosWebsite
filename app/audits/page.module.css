@@ -1,0 +1,652 @@
+.auditsPage {
+  position: relative;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0d0d1a 0%, #1a1a2e 50%, #16213e 100%);
+  overflow: hidden;
+}
+
+/* Background */
+.pageBackground {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.gridPattern {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(230, 187, 132, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(230, 187, 132, 0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
+}
+
+.bgGlow1 {
+  position: absolute;
+  top: 20%;
+  right: 15%;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(230, 187, 132, 0.12) 0%, transparent 70%);
+  filter: blur(60px);
+}
+
+.bgGlow2 {
+  position: absolute;
+  bottom: 30%;
+  left: 10%;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(34, 197, 94, 0.1) 0%, transparent 70%);
+  filter: blur(80px);
+}
+
+/* Hero Section */
+.heroSection {
+  position: relative;
+  z-index: 1;
+  padding: 140px 20px 60px;
+  text-align: center;
+}
+
+.heroContent {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.heroBadge {
+  display: inline-block;
+  padding: 10px 24px;
+  background: rgba(230, 187, 132, 0.1);
+  border: 1px solid rgba(230, 187, 132, 0.3);
+  border-radius: 30px;
+  color: #e6bb84;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 30px;
+}
+
+.heroTitle {
+  font-family: "Montserrat", sans-serif;
+  font-size: 3.5rem;
+  font-weight: 900;
+  color: #e5e5e5;
+  margin-bottom: 25px;
+  line-height: 1.1;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.heroTitle.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.highlightText {
+  background: linear-gradient(135deg, #e6bb84 0%, #22c55e 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.heroSubtitle {
+  font-size: 1.25rem;
+  color: rgba(229, 229, 229, 0.8);
+  line-height: 1.7;
+  max-width: 600px;
+  margin: 0 auto;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.8s ease 0.2s, transform 0.8s ease 0.2s;
+}
+
+.heroSubtitle.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Status Banner */
+.statusBanner {
+  position: relative;
+  z-index: 1;
+  padding: 30px 20px;
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(34, 197, 94, 0.05) 100%);
+  border-top: 1px solid rgba(34, 197, 94, 0.3);
+  border-bottom: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+.statusContent {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+.statusIcon {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #22c55e;
+  border-radius: 50%;
+  font-size: 24px;
+  color: white;
+  font-weight: bold;
+}
+
+.statusText {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.statusLabel {
+  font-size: 1rem;
+  color: rgba(229, 229, 229, 0.7);
+}
+
+.statusValue {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #22c55e;
+}
+
+.statusDate {
+  font-size: 0.95rem;
+  color: rgba(229, 229, 229, 0.6);
+  padding-left: 30px;
+  border-left: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Section Styling */
+.sectionHeading {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.sectionTitle {
+  font-family: "Montserrat", sans-serif;
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #e5e5e5;
+  margin-bottom: 15px;
+}
+
+.sectionDecoration {
+  width: 80px;
+  height: 4px;
+  background: linear-gradient(90deg, #e6bb84, #22c55e);
+  margin: 0 auto 20px;
+  border-radius: 2px;
+}
+
+.sectionSubtitle {
+  font-size: 1.05rem;
+  color: rgba(229, 229, 229, 0.7);
+  max-width: 550px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* Funding Section */
+.fundingSection {
+  position: relative;
+  z-index: 1;
+  padding: 80px 20px;
+}
+
+.fundingContent {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.fundingCard {
+  padding: 40px;
+  background: rgba(26, 26, 46, 0.7);
+  border: 1px solid rgba(230, 187, 132, 0.3);
+  border-radius: 20px;
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.fundingIcon {
+  font-size: 3.5rem;
+  margin-bottom: 20px;
+}
+
+.fundingTitle {
+  font-family: "Montserrat", sans-serif;
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #e5e5e5;
+  margin-bottom: 20px;
+}
+
+.fundingDescription {
+  font-size: 1.1rem;
+  color: rgba(229, 229, 229, 0.8);
+  line-height: 1.7;
+  max-width: 700px;
+  margin: 0 auto 25px;
+}
+
+.fundingDescription strong {
+  color: #e6bb84;
+}
+
+.nonprofitBadge {
+  display: inline-block;
+  padding: 10px 24px;
+  background: rgba(34, 197, 94, 0.15);
+  border: 1px solid rgba(34, 197, 94, 0.4);
+  border-radius: 30px;
+  color: #22c55e;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.fundingFlow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.flowStep {
+  flex: 1;
+  min-width: 200px;
+  max-width: 250px;
+  padding: 25px;
+  background: rgba(26, 26, 46, 0.6);
+  border: 1px solid rgba(230, 187, 132, 0.2);
+  border-radius: 16px;
+  text-align: center;
+}
+
+.flowIcon {
+  font-size: 2.5rem;
+  margin-bottom: 15px;
+}
+
+.flowLabel {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #e5e5e5;
+  margin-bottom: 8px;
+}
+
+.flowDescription {
+  font-size: 0.85rem;
+  color: rgba(229, 229, 229, 0.6);
+  line-height: 1.5;
+}
+
+.flowArrow {
+  font-size: 2rem;
+  color: #e6bb84;
+  font-weight: bold;
+}
+
+/* Distribution Section */
+.distributionSection {
+  position: relative;
+  z-index: 1;
+  padding: 80px 20px;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.distributionContent {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.distributionStep {
+  display: flex;
+  align-items: flex-start;
+  gap: 25px;
+  padding: 30px;
+  background: rgba(26, 26, 46, 0.6);
+  border: 1px solid rgba(121, 40, 202, 0.2);
+  border-radius: 16px;
+  transition: all 0.3s ease;
+}
+
+.distributionStep:hover {
+  border-color: rgba(121, 40, 202, 0.5);
+  transform: translateX(8px);
+}
+
+.distributionNumber {
+  flex-shrink: 0;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #7928ca 0%, #e62739 100%);
+  border-radius: 50%;
+  font-size: 22px;
+  font-weight: 800;
+  color: #fff;
+}
+
+.distributionInfo {
+  flex: 1;
+}
+
+.distributionTitle {
+  font-family: "Montserrat", sans-serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #e5e5e5;
+  margin-bottom: 8px;
+}
+
+.distributionDescription {
+  font-size: 0.95rem;
+  color: rgba(229, 229, 229, 0.75);
+  line-height: 1.6;
+}
+
+/* Audits Table Section */
+.auditsSection {
+  position: relative;
+  z-index: 1;
+  padding: 80px 20px;
+}
+
+.auditsTable {
+  max-width: 1000px;
+  margin: 0 auto;
+  border: 1px solid rgba(230, 187, 132, 0.3);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.tableHeader {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 2fr;
+  background: rgba(230, 187, 132, 0.15);
+  padding: 18px 25px;
+  border-bottom: 1px solid rgba(230, 187, 132, 0.3);
+}
+
+.tableHeaderCell {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #e6bb84;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.tableRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 2fr;
+  padding: 20px 25px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  transition: background 0.2s ease;
+}
+
+.tableRow:last-child {
+  border-bottom: none;
+}
+
+.tableRow:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.tableRow.completed {
+  background: rgba(34, 197, 94, 0.05);
+}
+
+.tableRow.upcoming {
+  background: rgba(230, 187, 132, 0.03);
+}
+
+.tableCell {
+  font-size: 0.95rem;
+  color: rgba(229, 229, 229, 0.85);
+  display: flex;
+  align-items: center;
+}
+
+.quarterLabel {
+  font-weight: 700;
+  color: #e5e5e5;
+}
+
+.statusBadge {
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.statusCompleted {
+  background: rgba(34, 197, 94, 0.2);
+  color: #22c55e;
+  border: 1px solid rgba(34, 197, 94, 0.4);
+}
+
+.statusUpcoming {
+  background: rgba(230, 187, 132, 0.15);
+  color: #e6bb84;
+  border: 1px solid rgba(230, 187, 132, 0.3);
+}
+
+/* Commitment Section */
+.commitmentSection {
+  position: relative;
+  z-index: 1;
+  padding: 80px 20px;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.commitmentContent {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.commitmentTitle {
+  font-family: "Montserrat", sans-serif;
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #e5e5e5;
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.commitmentGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 25px;
+}
+
+.commitmentCard {
+  padding: 30px;
+  background: rgba(26, 26, 46, 0.6);
+  border: 1px solid rgba(230, 187, 132, 0.2);
+  border-radius: 16px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.commitmentCard:hover {
+  transform: translateY(-5px);
+  border-color: rgba(230, 187, 132, 0.5);
+}
+
+.commitmentIcon {
+  font-size: 2.5rem;
+  margin-bottom: 18px;
+}
+
+.commitmentCardTitle {
+  font-family: "Montserrat", sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #e5e5e5;
+  margin-bottom: 12px;
+}
+
+.commitmentCardDescription {
+  font-size: 0.9rem;
+  color: rgba(229, 229, 229, 0.7);
+  line-height: 1.5;
+}
+
+/* Call to Action */
+.ctaSection {
+  position: relative;
+  z-index: 1;
+  padding: 100px 20px;
+  text-align: center;
+}
+
+.ctaContent {
+  max-width: 650px;
+  margin: 0 auto;
+}
+
+.ctaTitle {
+  font-family: "Montserrat", sans-serif;
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #e5e5e5;
+  margin-bottom: 20px;
+}
+
+.ctaDescription {
+  font-size: 1.1rem;
+  color: rgba(229, 229, 229, 0.8);
+  line-height: 1.7;
+  margin-bottom: 35px;
+}
+
+.ctaButtons {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.primaryButton {
+  display: inline-block;
+  padding: 16px 36px;
+  background: linear-gradient(135deg, #e6bb84 0%, #22c55e 100%);
+  color: #0d0d1a;
+  font-weight: 700;
+  font-size: 1rem;
+  text-decoration: none;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.primaryButton:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 35px rgba(230, 187, 132, 0.3);
+}
+
+.secondaryButton {
+  display: inline-block;
+  padding: 16px 36px;
+  background: transparent;
+  color: #e5e5e5;
+  font-weight: 600;
+  font-size: 1rem;
+  text-decoration: none;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+.secondaryButton:hover {
+  border-color: #e6bb84;
+  color: #e6bb84;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .commitmentGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .tableHeader,
+  .tableRow {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+  .tableHeaderCell:last-child,
+  .tableCell:last-child {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .heroTitle {
+    font-size: 2.5rem;
+  }
+  .statusContent {
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+  }
+  .statusDate {
+    padding-left: 0;
+    border-left: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    padding-top: 15px;
+  }
+  .fundingFlow {
+    flex-direction: column;
+  }
+  .flowArrow {
+    transform: rotate(90deg);
+  }
+  .flowStep {
+    max-width: 100%;
+  }
+  .distributionStep {
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+  }
+  .tableHeader,
+  .tableRow {
+    grid-template-columns: 1fr 1fr;
+  }
+  .tableHeaderCell:nth-child(2),
+  .tableCell:nth-child(2) {
+    display: none;
+  }
+  .commitmentGrid {
+    grid-template-columns: 1fr;
+  }
+  .sectionTitle {
+    font-size: 1.8rem;
+  }
+  .ctaTitle {
+    font-size: 1.8rem;
+  }
+  .ctaButtons {
+    flex-direction: column;
+    align-items: center;
+  }
+}

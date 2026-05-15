@@ -118,7 +118,7 @@ const allGames: Game[] = [
     level: "Beginner",
     description:
       "A nature-based exploration game where students become the new owners of a broken-down insectarium. Players explore real-world ecosystems to catch up to 220 real-life bugs, each with fun facts and humor built into every codex entry. The game teaches entomology, biology, ecology, and environmental science.",
-    logo: "/images/games/BugAndSeek_logo.jpg",
+    logo: "/images/games/new_bugandseek.png",
     color: "#4ade80",
     tutorialLink: null,
   },
@@ -140,7 +140,7 @@ const allGames: Game[] = [
     level: "Intermediate",
     description:
       "A story-driven STEM adventure game where players step into a neon digital world as User, a self-aware program fighting to escape a controlled system. Through fast-paced racing, circuit repair, tank battles, structural puzzles, energy rerouting, and coding challenges, players learn real physics, engineering, and computer science concepts. The game spans 11 connected levels, each introducing new mechanics and STEM ideas.",
-    logo: "/images/games/DigitalFrontier_logo.png",
+    logo: "/images/games/new_digial_frontier.png",
     color: "#00d4ff",
     tutorialLink: null,
   },
@@ -162,7 +162,7 @@ const allGames: Game[] = [
     level: "Intermediate",
     description:
       "A strategic history-based card game that resembles Pokémon in appearance and Risk in gameplay mechanics. All cards are based on historical figures, events, and places. Players earn iPlay coins for time spent in the game and can purchase additional decks using their earned coins.",
-    logo: "/images/games/HistoricalConquest_logo.jpg",
+    logo: "/images/games/new_historical-conquest.png",
     color: "#e62739",
     tutorialLink: null,
   },
@@ -173,7 +173,7 @@ const allGames: Game[] = [
     level: "Beginner-Advanced",
     description:
       "The cutting-edge online encyclopedia where students don't just look up people, places, and events—they talk to them. Thanks to built-in AI, students can ask questions, receive narrative responses from virtual historical figures, explore linked sources, and dive into compelling stories tied to each topic. Makes history conversational and exploratory.",
-    logo: "/images/games/HuntThePast_logo.jpg",
+    logo: "/images/games/new_huntthepast.png",
     color: "#f59e0b",
     tutorialLink: null,
   },
@@ -184,7 +184,7 @@ const allGames: Game[] = [
     level: "Intermediate-Advanced",
     description:
       "Take action in your community—helping neighbors, running local events, cleaning parks, or mentoring younger kids—and every hour you serve earns you iPlay coins. These coins can be used in the Xogos Gaming Platform to unlock games, characters, and gear—or convert into real scholarships that fund your future!",
-    logo: "/images/games/iServVolunteer_logo.jpg",
+    logo: "/images/games/new_iserv_volunteer.png",
     color: "#22c55e",
     tutorialLink: null,
   },
@@ -195,7 +195,7 @@ const allGames: Game[] = [
     level: "Intermediate",
     description:
       "A fast-paced quiz game that tests and improves historical knowledge through quick-fire questions, timed challenges, and competitive multiplayer modes. Perfect for classroom use or independent learning with engaging rapid-fire gameplay.",
-    logo: "/images/games/LightningRound_logo.png",
+    logo: "/images/games/new_lightning_round.png",
     color: "#fbbf24",
     tutorialLink: null,
   },
@@ -217,7 +217,7 @@ const allGames: Game[] = [
     level: "Intermediate",
     description:
       "Build your medieval kingdom while mastering math skills through strategic resource management and castle building. Players solve increasingly complex math problems to acquire resources, build structures, and defend their kingdoms from rivals.",
-    logo: "/images/games/TotallyMedieval_logo.png",
+    logo: "/images/games/new_totally-medieval.png",
     color: "#7928ca",
     tutorialLink: null,
   },
@@ -458,6 +458,53 @@ export default function HomePage() {
           </p>
         </section>
 
+        {/* Game Select Section - Now above Active Incentives */}
+        <section className={styles.gameSelectSection}>
+          <div className={styles.gameSelectContent}>
+            <div className={styles.gameSelectText}>
+              <h2 className={styles.sectionTitle}>
+                <span className={styles.titleIcon}>🕹️</span>
+                SELECT YOUR GAME
+              </h2>
+              <p className={styles.gameSelectDescription}>
+                Explore our collection of educational games designed to make learning fun and rewarding. Each game teaches valuable skills while letting students earn iPlay coins toward scholarships.
+              </p>
+              <Link href="/games" className={styles.learnMoreBtn}>
+                View All Games →
+              </Link>
+            </div>
+            <div className={styles.gameSelectGrid}>
+              {displayedGames.map((game, index) => (
+                <div
+                  key={game.id}
+                  className={`${styles.gameCard} ${activeGameIndex === index ? styles.active : ""}`}
+                  onClick={() => handleGameClick(game)}
+                  style={{ "--glow-color": game.color } as React.CSSProperties}
+                >
+                  <div className={styles.gameImageWrapper}>
+                    <Image
+                      src={game.logo}
+                      alt={game.title}
+                      fill
+                      className={styles.gameImage}
+                    />
+                    <div className={styles.gameOverlay}>
+                      <span className={styles.playIcon}>▶</span>
+                    </div>
+                  </div>
+                  <div className={styles.gameInfo}>
+                    <div className={styles.gameSubject}>{game.subject}</div>
+                    <h3 className={styles.gameTitle}>{game.title}</h3>
+                    <div className={styles.gameStats}>
+                      <span className={styles.levelBadgeSmall}>{game.level}</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
         {/* Active Incentive Programs Section */}
         <section className={styles.activeIncentiveSection}>
           <div className={styles.sectionHeading}>
@@ -466,7 +513,7 @@ export default function HomePage() {
               ACTIVE INCENTIVE PROGRAMS
             </h2>
             <p className={styles.sectionSubtitle}>
-              We believe students shouldn&apos;t be on screens all day. That&apos;s why Xogos runs on a simple subscription model with no ads, no microtransactions, and no tricks to keep kids glued to devices. Instead, we incentivize real-world growth through programs that reward getting off the screen.
+              We believe students shouldn&apos;t be on screens all day. That&apos;s why Xogos runs on a simple subscription model with no ads, no microtransactions, and no tricks to keep kids glued to devices. Instead, we incentivize real-world growth through programs that reward getting off the screen. And more of these incentives are coming.
             </p>
           </div>
           <div className={styles.incentiveGrid}>
@@ -509,74 +556,74 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Free Elective Classes Section */}
+        {/* Free Elective Classes Section - Images left, text right */}
         <section className={styles.electiveClassesSection}>
-          <div className={styles.sectionHeading}>
-            <h2 className={styles.sectionTitle}>
-              <span className={styles.titleIcon}>📚</span>
-              FREE ELECTIVE CLASSES
-            </h2>
-            <p className={styles.sectionSubtitle}>
-              With a Xogos subscription, students gain access to dozens of hands-on elective classes that teach real-world skills—from cooking and astronomy to wilderness survival and personal finance. These aren&apos;t screen-based games; they&apos;re experiences that build confidence, knowledge, and life skills.
-            </p>
-          </div>
-          <div className={styles.electiveGrid}>
-            <Link href="/classes" className={styles.electiveCard}>
-              <Image
-                src="/images/programs/survival_academy.png"
-                alt="Survival Academy"
-                width={150}
-                height={150}
-                className={styles.electiveLogo}
-              />
-              <span className={styles.electiveLabel}>Survival Academy</span>
-            </Link>
-            <Link href="/classes" className={styles.electiveCard}>
-              <Image
-                src="/images/programs/debt_free_millionaire_investor.png"
-                alt="Debt Free Millionaire Investor"
-                width={150}
-                height={150}
-                className={styles.electiveLogo}
-              />
-              <span className={styles.electiveLabel}>DFM Investor</span>
-            </Link>
-            <Link href="/classes" className={styles.electiveCard}>
-              <Image
-                src="/images/programs/starfall_academy.png"
-                alt="StarFall Academy"
-                width={150}
-                height={150}
-                className={styles.electiveLogo}
-              />
-              <span className={styles.electiveLabel}>StarFall Academy</span>
-            </Link>
-            <Link href="/classes" className={styles.electiveCard}>
-              <Image
-                src="/images/programs/kitchenlab_academy.png"
-                alt="KitchenLab Academy"
-                width={150}
-                height={150}
-                className={styles.electiveLogo}
-              />
-              <span className={styles.electiveLabel}>KitchenLab Academy</span>
-            </Link>
-          </div>
-          <div className={styles.electiveCta}>
-            <Link href="/classes" className={styles.learnMoreBtn}>
-              Explore All Classes →
-            </Link>
+          <div className={styles.electiveContent}>
+            <div className={styles.electiveGrid}>
+              <Link href="/classes" className={styles.electiveCard}>
+                <Image
+                  src="/images/programs/survival_academy.png"
+                  alt="Survival Academy"
+                  width={150}
+                  height={150}
+                  className={styles.electiveLogo}
+                />
+                <span className={styles.electiveLabel}>Survival Academy</span>
+              </Link>
+              <Link href="/classes" className={styles.electiveCard}>
+                <Image
+                  src="/images/programs/debt_free_millionaire_investor.png"
+                  alt="Debt Free Millionaire Investor"
+                  width={150}
+                  height={150}
+                  className={styles.electiveLogo}
+                />
+                <span className={styles.electiveLabel}>DFM Investor</span>
+              </Link>
+              <Link href="/classes" className={styles.electiveCard}>
+                <Image
+                  src="/images/programs/starfall_academy.png"
+                  alt="StarFall Academy"
+                  width={150}
+                  height={150}
+                  className={styles.electiveLogo}
+                />
+                <span className={styles.electiveLabel}>StarFall Academy</span>
+              </Link>
+              <Link href="/classes" className={styles.electiveCard}>
+                <Image
+                  src="/images/programs/kitchenlab_academy.png"
+                  alt="KitchenLab Academy"
+                  width={150}
+                  height={150}
+                  className={styles.electiveLogo}
+                />
+                <span className={styles.electiveLabel}>KitchenLab Academy</span>
+              </Link>
+            </div>
+            <div className={styles.electiveText}>
+              <h2 className={styles.sectionTitle}>
+                <span className={styles.titleIcon}>📚</span>
+                FREE ELECTIVE CLASSES
+              </h2>
+              <p className={styles.electiveDescription}>
+                With a Xogos subscription, students gain access to dozens of hands-on elective classes that teach real-world skills—from cooking and astronomy to wilderness survival and personal finance. These aren&apos;t screen-based games; they&apos;re online classes that give students more reason to get off the screen and experience these classes in the real-world. Not theoretical classes but real-life. These are experiences that build confidence, knowledge, and life skills.
+              </p>
+              <Link href="/classes" className={styles.learnMoreBtn}>
+                Explore All Classes →
+              </Link>
+            </div>
           </div>
         </section>
 
-        {/* Scholarship Program Section */}
+        {/* Scholarship Program Section - Title centered above both */}
         <section className={styles.scholarshipSection}>
+          <h2 className={styles.scholarshipTitleCentered}>
+            <span className={styles.titleIcon}>🎓</span>
+            TURN COINS INTO COLLEGE
+          </h2>
           <div className={styles.scholarshipContent}>
             <div className={styles.scholarshipText}>
-              <h2 className={styles.scholarshipTitle}>
-                <span className={styles.titleIcon}>🎓</span>
-                TURN COINS INTO COLLEGE
-              </h2>
               <p className={styles.scholarshipDescription}>
                 Every iPlay coin earned through gameplay, academic achievements, and real-world activities has real value. Students earn coins by playing educational games, maintaining good grades, volunteering in their communities, and staying physically active. These coins can be spent on in-game upgrades and digital benefits—or saved and converted into actual scholarship funds for universities, trade schools, and certificate programs. We&apos;re not just gamifying education; we&apos;re funding futures.
               </p>
@@ -598,9 +645,6 @@ export default function HomePage() {
                   <span className={styles.scholarshipStatText}>Convert to scholarships</span>
                 </div>
               </div>
-              <Link href="/scholarships" className={styles.scholarshipBtn}>
-                Learn About Scholarships →
-              </Link>
             </div>
             <div className={styles.scholarshipVisual}>
               <Image
@@ -610,44 +654,10 @@ export default function HomePage() {
                 height={300}
                 className={styles.scholarshipImage}
               />
+              <Link href="/scholarships" className={styles.scholarshipBtn}>
+                Learn About Scholarships →
+              </Link>
             </div>
-          </div>
-        </section>
-
-        {/* Game Select Section */}
-        <section className={styles.gameSelectSection}>
-          <h2 className={styles.sectionTitle}>
-            <span className={styles.titleIcon}>🕹️</span>
-            SELECT YOUR GAME
-          </h2>
-          <div className={styles.gameCarousel}>
-            {displayedGames.map((game, index) => (
-              <div
-                key={game.id}
-                className={`${styles.gameCard} ${activeGameIndex === index ? styles.active : ""}`}
-                onClick={() => handleGameClick(game)}
-                style={{ "--glow-color": game.color } as React.CSSProperties}
-              >
-                <div className={styles.gameImageWrapper}>
-                  <Image
-                    src={game.logo}
-                    alt={game.title}
-                    fill
-                    className={styles.gameImage}
-                  />
-                  <div className={styles.gameOverlay}>
-                    <span className={styles.playIcon}>▶</span>
-                  </div>
-                </div>
-                <div className={styles.gameInfo}>
-                  <div className={styles.gameSubject}>{game.subject}</div>
-                  <h3 className={styles.gameTitle}>{game.title}</h3>
-                  <div className={styles.gameStats}>
-                    <span className={styles.levelBadgeSmall}>{game.level}</span>
-                  </div>
-                </div>
-              </div>
-            ))}
           </div>
         </section>
 
@@ -699,7 +709,7 @@ export default function HomePage() {
                 </div>
                 <div className={styles.eventDateItem}>
                   <span className={styles.eventDateLabel}>Ends</span>
-                  <span className={styles.eventDateValue}>Feb 28, 2026</span>
+                  <span className={styles.eventDateValue}>Feb 28, 2027</span>
                 </div>
               </div>
               <div className={styles.eventReward}>
@@ -793,57 +803,6 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* How It Works Section */}
-        <section className={styles.howItWorksSection}>
-          <div className={styles.sectionHeading}>
-            <h2 className={styles.sectionTitle}>
-              <span className={styles.titleIcon}>🎯</span>
-              HOW IT WORKS
-            </h2>
-            <p className={styles.sectionSubtitle}>
-              Our three-step process makes it easy to turn educational
-              achievements into future opportunities.
-            </p>
-          </div>
-          <div className={styles.stepsContainer}>
-            <div className={styles.step}>
-              <div className={styles.stepNumber}>1</div>
-              <div className={styles.stepContent}>
-                <h3 className={styles.stepTitle}>Play Educational Games</h3>
-                <p className={styles.stepDescription}>
-                  Engage with our collection of fun, interactive games designed
-                  to build knowledge and skills across multiple subject areas.
-                  Each achievement is verified through our secure blockchain
-                  technology.
-                </p>
-              </div>
-            </div>
-            <div className={styles.step}>
-              <div className={styles.stepNumber}>2</div>
-              <div className={styles.stepContent}>
-                <h3 className={styles.stepTitle}>Save & Multiply Rewards</h3>
-                <p className={styles.stepDescription}>
-                  As you earn iPlay tokens through educational achievements, you
-                  can save them in the Xogos Bank where they grow through our
-                  multiplier system. The longer you save, the more your tokens
-                  grow – up to 2x after 180 days.
-                </p>
-              </div>
-            </div>
-            <div className={styles.step}>
-              <div className={styles.stepNumber}>3</div>
-              <div className={styles.stepContent}>
-                <h3 className={styles.stepTitle}>Convert to Scholarships</h3>
-                <p className={styles.stepDescription}>
-                  Transform your accumulated tokens into real scholarship funds
-                  through our transparent conversion system. Your educational
-                  achievements directly contribute to your academic future.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
         {/* CTA Section */}
         <section className={styles.ctaSection}>
           <div className={styles.ctaContent}>
@@ -860,15 +819,6 @@ export default function HomePage() {
               <span>🏅 HIGH SCORE TODAY: 15,750 XP</span>
             </div>
           </div>
-        </section>
-
-        {/* Financial Dashboard Access - Bottom of Page */}
-        <section className={styles.financialAccessSection}>
-          <Link href="/finance" className={styles.financialAccessBtn}>
-            <span className={styles.financialIcon}>📊</span>
-            <span className={styles.financialText}>Financial Dashboard</span>
-            <span className={styles.financialBadge}>Audit Committee</span>
-          </Link>
         </section>
 
         {/* Game Details Modal */}

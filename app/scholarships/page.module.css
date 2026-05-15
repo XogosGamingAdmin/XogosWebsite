@@ -1,0 +1,630 @@
+.scholarshipsPage {
+  position: relative;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0d0d1a 0%, #1a1a2e 50%, #16213e 100%);
+  overflow: hidden;
+}
+
+/* Background */
+.pageBackground {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.gridPattern {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(230, 39, 57, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(230, 39, 57, 0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
+}
+
+.bgGlow1 {
+  position: absolute;
+  top: 10%;
+  left: 10%;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(230, 39, 57, 0.15) 0%, transparent 70%);
+  filter: blur(60px);
+}
+
+.bgGlow2 {
+  position: absolute;
+  top: 50%;
+  right: 10%;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(121, 40, 202, 0.15) 0%, transparent 70%);
+  filter: blur(80px);
+}
+
+.bgGlow3 {
+  position: absolute;
+  bottom: 20%;
+  left: 30%;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(230, 187, 132, 0.1) 0%, transparent 70%);
+  filter: blur(50px);
+}
+
+/* Hero Section */
+.heroSection {
+  position: relative;
+  z-index: 1;
+  padding: 140px 20px 80px;
+  text-align: center;
+}
+
+.heroContent {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.heroBadge {
+  display: inline-block;
+  padding: 10px 24px;
+  background: rgba(230, 39, 57, 0.1);
+  border: 1px solid rgba(230, 39, 57, 0.3);
+  border-radius: 30px;
+  color: #e62739;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 30px;
+}
+
+.heroTitle {
+  font-family: "Montserrat", sans-serif;
+  font-size: 3.5rem;
+  font-weight: 900;
+  color: #e5e5e5;
+  margin-bottom: 25px;
+  line-height: 1.1;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.heroTitle.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.highlightText {
+  background: linear-gradient(135deg, #e62739 0%, #7928ca 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.heroSubtitle {
+  font-size: 1.25rem;
+  color: rgba(229, 229, 229, 0.8);
+  line-height: 1.7;
+  max-width: 650px;
+  margin: 0 auto;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.8s ease 0.2s, transform 0.8s ease 0.2s;
+}
+
+.heroSubtitle.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Section Styling */
+.sectionHeading {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.sectionTitle {
+  font-family: "Montserrat", sans-serif;
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #e5e5e5;
+  margin-bottom: 15px;
+}
+
+.sectionDecoration {
+  width: 80px;
+  height: 4px;
+  background: linear-gradient(90deg, #e62739, #7928ca);
+  margin: 0 auto 20px;
+  border-radius: 2px;
+}
+
+.sectionSubtitle {
+  font-size: 1.1rem;
+  color: rgba(229, 229, 229, 0.7);
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* How It Works Section */
+.howItWorksSection {
+  position: relative;
+  z-index: 1;
+  padding: 80px 20px;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.stepsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.step {
+  display: flex;
+  align-items: flex-start;
+  gap: 30px;
+  padding: 35px;
+  background: rgba(26, 26, 46, 0.6);
+  border: 1px solid rgba(230, 39, 57, 0.2);
+  border-radius: 16px;
+  transition: all 0.3s ease;
+}
+
+.step:hover {
+  border-color: rgba(230, 39, 57, 0.5);
+  transform: translateX(10px);
+}
+
+.stepNumber {
+  flex-shrink: 0;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #e62739 0%, #7928ca 100%);
+  border-radius: 50%;
+  font-size: 26px;
+  font-weight: 900;
+  color: #fff;
+  box-shadow: 0 0 30px rgba(230, 39, 57, 0.4);
+}
+
+.stepContent {
+  flex: 1;
+}
+
+.stepTitle {
+  font-family: "Montserrat", sans-serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #e5e5e5;
+  margin-bottom: 12px;
+}
+
+.stepDescription {
+  font-size: 1rem;
+  color: rgba(229, 229, 229, 0.75);
+  line-height: 1.7;
+}
+
+/* Coin Value Section */
+.coinValueSection {
+  position: relative;
+  z-index: 1;
+  padding: 80px 20px;
+}
+
+.coinValueContent {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 60px;
+  max-width: 1100px;
+  margin: 0 auto;
+  align-items: center;
+}
+
+.coinValueTitle {
+  font-family: "Montserrat", sans-serif;
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #e5e5e5;
+  margin-bottom: 20px;
+}
+
+.coinValueDescription {
+  font-size: 1.1rem;
+  color: rgba(229, 229, 229, 0.8);
+  line-height: 1.7;
+  margin-bottom: 30px;
+}
+
+.coinEquation {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  padding: 25px 35px;
+  background: rgba(26, 26, 46, 0.8);
+  border: 1px solid rgba(230, 187, 132, 0.3);
+  border-radius: 16px;
+}
+
+.equationItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.equationValue {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #e6bb84;
+}
+
+.equationLabel {
+  font-size: 0.85rem;
+  color: rgba(229, 229, 229, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.equationEquals {
+  font-size: 2rem;
+  font-weight: 700;
+  color: rgba(229, 229, 229, 0.5);
+}
+
+.exampleBox {
+  margin-top: 25px;
+  padding: 25px;
+  background: rgba(230, 187, 132, 0.1);
+  border: 1px solid rgba(230, 187, 132, 0.3);
+  border-radius: 16px;
+}
+
+.exampleTitle {
+  font-family: "Montserrat", sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #e6bb84;
+  margin-bottom: 12px;
+}
+
+.exampleText {
+  font-size: 1rem;
+  color: rgba(229, 229, 229, 0.85);
+  line-height: 1.7;
+}
+
+.exampleText strong {
+  color: #22c55e;
+}
+
+.coinValueVisual {
+  display: flex;
+  justify-content: center;
+}
+
+.coinImage {
+  width: 100%;
+  max-width: 350px;
+  height: auto;
+  border-radius: 20px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+}
+
+/* Earning Section */
+.earningSection {
+  position: relative;
+  z-index: 1;
+  padding: 80px 20px;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.earningGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 25px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.earningCard {
+  padding: 30px;
+  background: rgba(26, 26, 46, 0.6);
+  border: 1px solid rgba(230, 39, 57, 0.2);
+  border-radius: 16px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.earningCard:hover {
+  transform: translateY(-8px);
+  border-color: rgba(230, 39, 57, 0.5);
+  box-shadow: 0 15px 40px rgba(230, 39, 57, 0.15);
+}
+
+.earningIcon {
+  font-size: 3rem;
+  margin-bottom: 20px;
+}
+
+.earningTitle {
+  font-family: "Montserrat", sans-serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #e5e5e5;
+  margin-bottom: 12px;
+}
+
+.earningDescription {
+  font-size: 0.95rem;
+  color: rgba(229, 229, 229, 0.7);
+  line-height: 1.6;
+}
+
+/* Multiplier Section */
+.multiplierSection {
+  position: relative;
+  z-index: 1;
+  padding: 80px 20px;
+}
+
+.multiplierContent {
+  max-width: 700px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.multiplierTitle {
+  font-family: "Montserrat", sans-serif;
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #e5e5e5;
+  margin-bottom: 20px;
+}
+
+.multiplierDescription {
+  font-size: 1.1rem;
+  color: rgba(229, 229, 229, 0.8);
+  line-height: 1.7;
+  margin-bottom: 40px;
+}
+
+.multiplierTable {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.multiplierRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 30px;
+  background: rgba(26, 26, 46, 0.6);
+  border: 1px solid rgba(121, 40, 202, 0.3);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.multiplierRow:hover {
+  border-color: rgba(121, 40, 202, 0.6);
+  transform: translateX(5px);
+}
+
+.multiplierDays {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #e5e5e5;
+}
+
+.multiplierBonus {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #7928ca;
+}
+
+/* Transparency Section */
+.transparencySection {
+  position: relative;
+  z-index: 1;
+  padding: 80px 20px;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.transparencyGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.transparencyCard {
+  padding: 35px;
+  background: rgba(26, 26, 46, 0.6);
+  border: 1px solid rgba(230, 187, 132, 0.2);
+  border-radius: 16px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.transparencyCard:hover {
+  transform: translateY(-5px);
+  border-color: rgba(230, 187, 132, 0.5);
+}
+
+.transparencyIcon {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+}
+
+.transparencyTitle {
+  font-family: "Montserrat", sans-serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #e5e5e5;
+  margin-bottom: 12px;
+}
+
+.transparencyDescription {
+  font-size: 0.95rem;
+  color: rgba(229, 229, 229, 0.7);
+  line-height: 1.6;
+}
+
+.auditLink {
+  text-align: center;
+  margin-top: 40px;
+}
+
+.auditLinkBtn {
+  display: inline-block;
+  color: #e6bb84;
+  font-weight: 600;
+  font-size: 1rem;
+  text-decoration: none;
+  padding: 12px 24px;
+  border: 2px solid rgba(230, 187, 132, 0.4);
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+.auditLinkBtn:hover {
+  background: rgba(230, 187, 132, 0.1);
+  border-color: #e6bb84;
+}
+
+/* Call to Action */
+.ctaSection {
+  position: relative;
+  z-index: 1;
+  padding: 100px 20px;
+  text-align: center;
+}
+
+.ctaContent {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.ctaTitle {
+  font-family: "Montserrat", sans-serif;
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #e5e5e5;
+  margin-bottom: 20px;
+}
+
+.ctaDescription {
+  font-size: 1.1rem;
+  color: rgba(229, 229, 229, 0.8);
+  line-height: 1.7;
+  margin-bottom: 35px;
+}
+
+.ctaButtons {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.primaryButton {
+  display: inline-block;
+  padding: 16px 36px;
+  background: linear-gradient(135deg, #e62739 0%, #7928ca 100%);
+  color: white;
+  font-weight: 700;
+  font-size: 1rem;
+  text-decoration: none;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.primaryButton:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 35px rgba(230, 39, 57, 0.4);
+}
+
+.secondaryButton {
+  display: inline-block;
+  padding: 16px 36px;
+  background: transparent;
+  color: #e5e5e5;
+  font-weight: 600;
+  font-size: 1rem;
+  text-decoration: none;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+.secondaryButton:hover {
+  border-color: #e62739;
+  color: #e62739;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .earningGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .transparencyGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .heroTitle {
+    font-size: 2.5rem;
+  }
+  .heroSubtitle {
+    font-size: 1.1rem;
+  }
+  .step {
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+  }
+  .coinValueContent {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  .coinValueVisual {
+    order: -1;
+  }
+  .coinEquation {
+    flex-direction: column;
+    gap: 20px;
+  }
+  .earningGrid {
+    grid-template-columns: 1fr;
+  }
+  .transparencyGrid {
+    grid-template-columns: 1fr;
+  }
+  .sectionTitle {
+    font-size: 2rem;
+  }
+  .ctaTitle {
+    font-size: 2rem;
+  }
+  .ctaButtons {
+    flex-direction: column;
+    align-items: center;
+  }
+}

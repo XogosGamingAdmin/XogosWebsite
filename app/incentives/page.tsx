@@ -108,49 +108,7 @@ export default function IncentivesPage() {
           </Container>
         </section>
 
-        {/* How It Works */}
-        <section className={styles.howItWorksSection}>
-          <Container>
-            <div className={styles.howItWorksContent}>
-              <h2 className={styles.howItWorksTitle}>How Active Incentives Work</h2>
-              <div className={styles.stepsGrid}>
-                <div className={styles.stepCard}>
-                  <div className={styles.stepNumber}>1</div>
-                  <h3 className={styles.stepTitle}>Choose Your Activity</h3>
-                  <p className={styles.stepDescription}>
-                    Select from community service or physical activity programs
-                  </p>
-                </div>
-                <div className={styles.stepArrow}>→</div>
-                <div className={styles.stepCard}>
-                  <div className={styles.stepNumber}>2</div>
-                  <h3 className={styles.stepTitle}>Get Active</h3>
-                  <p className={styles.stepDescription}>
-                    Volunteer in your community or complete fitness activities
-                  </p>
-                </div>
-                <div className={styles.stepArrow}>→</div>
-                <div className={styles.stepCard}>
-                  <div className={styles.stepNumber}>3</div>
-                  <h3 className={styles.stepTitle}>Earn iPlay Coins</h3>
-                  <p className={styles.stepDescription}>
-                    Your real-world efforts are rewarded with digital currency
-                  </p>
-                </div>
-                <div className={styles.stepArrow}>→</div>
-                <div className={styles.stepCard}>
-                  <div className={styles.stepNumber}>4</div>
-                  <h3 className={styles.stepTitle}>Fund Your Future</h3>
-                  <p className={styles.stepDescription}>
-                    Convert coins into scholarships for your education
-                  </p>
-                </div>
-              </div>
-            </div>
-          </Container>
-        </section>
-
-        {/* Programs Section */}
+        {/* Programs Section - Now above How It Works */}
         <section className={styles.programsSection}>
           <Container>
             <div className={styles.sectionHeading}>
@@ -207,6 +165,48 @@ export default function IncentivesPage() {
           </Container>
         </section>
 
+        {/* How It Works */}
+        <section className={styles.howItWorksSection}>
+          <Container>
+            <div className={styles.howItWorksContent}>
+              <h2 className={styles.howItWorksTitle}>How Active Incentives Work</h2>
+              <div className={styles.stepsGrid}>
+                <div className={styles.stepCard}>
+                  <div className={styles.stepNumber}>1</div>
+                  <h3 className={styles.stepTitle}>Choose Your Activity</h3>
+                  <p className={styles.stepDescription}>
+                    Select from community service or physical activity programs
+                  </p>
+                </div>
+                <div className={styles.stepArrow}>→</div>
+                <div className={styles.stepCard}>
+                  <div className={styles.stepNumber}>2</div>
+                  <h3 className={styles.stepTitle}>Get Active</h3>
+                  <p className={styles.stepDescription}>
+                    Volunteer in your community or complete fitness activities
+                  </p>
+                </div>
+                <div className={styles.stepArrow}>→</div>
+                <div className={styles.stepCard}>
+                  <div className={styles.stepNumber}>3</div>
+                  <h3 className={styles.stepTitle}>Earn iPlay Coins</h3>
+                  <p className={styles.stepDescription}>
+                    Your real-world efforts are rewarded with digital currency
+                  </p>
+                </div>
+                <div className={styles.stepArrow}>→</div>
+                <div className={styles.stepCard}>
+                  <div className={styles.stepNumber}>4</div>
+                  <h3 className={styles.stepTitle}>Fund Your Future</h3>
+                  <p className={styles.stepDescription}>
+                    Convert coins into scholarships for your education
+                  </p>
+                </div>
+              </div>
+            </div>
+          </Container>
+        </section>
+
         {/* Impact Stats */}
         <section className={styles.statsSection}>
           <Container>
@@ -218,8 +218,8 @@ export default function IncentivesPage() {
               </div>
               <div className={styles.statCard}>
                 <div className={styles.statIcon}>💰</div>
-                <div className={styles.statValue}>$0.10</div>
-                <div className={styles.statLabel}>Per Coin Value</div>
+                <div className={styles.statValue}>Quarterly</div>
+                <div className={styles.statLabel}>Fund Distribution</div>
               </div>
               <div className={styles.statCard}>
                 <div className={styles.statIcon}>🎓</div>

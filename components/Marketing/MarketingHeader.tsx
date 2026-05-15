@@ -60,6 +60,12 @@ export function MarketingHeader({
               <Link href="/games" className={styles.navLink}>
                 Games
               </Link>
+              <Link href="/classes" className={styles.navLink}>
+                Classes
+              </Link>
+              <Link href="/incentives" className={styles.navLink}>
+                Incentives
+              </Link>
               <Link href="/about" className={styles.navLink}>
                 About Us
               </Link>
