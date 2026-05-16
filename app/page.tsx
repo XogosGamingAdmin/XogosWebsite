@@ -107,6 +107,7 @@ interface Game {
   logo: string;
   color: string;
   tutorialLink: string | null;
+  videoId?: string;
 }
 
 // All games data
@@ -121,6 +122,7 @@ const allGames: Game[] = [
     logo: "/images/games/new_bugandseek.png",
     color: "#4ade80",
     tutorialLink: null,
+    videoId: "edXjP7znaI4",
   },
   {
     id: "debt-free-millionaire",
@@ -143,6 +145,7 @@ const allGames: Game[] = [
     logo: "/images/games/new_digial_frontier.png",
     color: "#00d4ff",
     tutorialLink: null,
+    videoId: "Ep3ZhAFmLp8",
   },
   {
     id: "exploration-library",
@@ -154,6 +157,7 @@ const allGames: Game[] = [
     logo: "/images/games/ExplorationLibrary_logo.png",
     color: "#a855f7",
     tutorialLink: null,
+    videoId: "V9vLVN-oiec",
   },
   {
     id: "historical-conquest",
@@ -176,17 +180,7 @@ const allGames: Game[] = [
     logo: "/images/games/new_huntthepast.png",
     color: "#f59e0b",
     tutorialLink: null,
-  },
-  {
-    id: "iserv-volunteer",
-    title: "iServ Volunteer",
-    subject: "Community Service",
-    level: "Intermediate-Advanced",
-    description:
-      "Take action in your community—helping neighbors, running local events, cleaning parks, or mentoring younger kids—and every hour you serve earns you iPlay coins. These coins can be used in the Xogos Gaming Platform to unlock games, characters, and gear—or convert into real scholarships that fund your future!",
-    logo: "/images/games/new_iserv_volunteer.png",
-    color: "#22c55e",
-    tutorialLink: null,
+    videoId: "898Gw-sQVC0",
   },
   {
     id: "lightning-round",
@@ -198,6 +192,7 @@ const allGames: Game[] = [
     logo: "/images/games/new_lightning_round.png",
     color: "#fbbf24",
     tutorialLink: null,
+    videoId: "7lPyLazH2Jw",
   },
   {
     id: "monster-math",
@@ -209,6 +204,7 @@ const allGames: Game[] = [
     logo: "/images/games/MonsterMath_logo.png",
     color: "#22c55e",
     tutorialLink: null,
+    videoId: "RF0Gyyni6jE",
   },
   {
     id: "totally-medieval",
@@ -220,6 +216,7 @@ const allGames: Game[] = [
     logo: "/images/games/new_totally-medieval.png",
     color: "#7928ca",
     tutorialLink: null,
+    videoId: "JPCvcnIoRUs",
   },
 ];
 
@@ -458,16 +455,52 @@ export default function HomePage() {
           </p>
         </section>
 
+        {/* Play + Learn = Earn Intro Section */}
+        <section className={styles.playLearnEarnIntro}>
+          <div className={styles.pleIntroContent}>
+            <h2 className={styles.pleIntroTitle}>
+              <span className={styles.heroPlay}>PLAY</span>
+              <span className={styles.plePlus}>+</span>
+              <span className={styles.heroLearn}>LEARN</span>
+              <span className={styles.pleEquals}>=</span>
+              <span className={styles.heroEarn}>EARN</span>
+            </h2>
+            <div className={styles.pleColumns}>
+              <div className={styles.pleColumn}>
+                <h3 className={styles.heroPlay}>PLAY</h3>
+                <p className={styles.pleDescription}>
+                  Imagine a platform where kids can be kids, be safe, and have fun online with friends and family, while they play games and learn.
+                </p>
+              </div>
+              <div className={styles.pleColumn}>
+                <h3 className={styles.heroLearn}>LEARN</h3>
+                <p className={styles.pleDescription}>
+                  Imagine a platform where students have access to dozens of elective classes where they can learn what they want, especially those that prepare them for the future.
+                </p>
+              </div>
+              <div className={styles.pleColumn}>
+                <h3 className={styles.heroEarn}>EARN</h3>
+                <p className={styles.pleDescription}>
+                  Imagine a place where students could earn scholarships through their own merit on and off the screen, for universities and trade schools.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Game Select Section - Now above Active Incentives */}
         <section className={styles.gameSelectSection}>
           <div className={styles.gameSelectContent}>
             <div className={styles.gameSelectText}>
+              <div className={styles.sectionKeywordCenter}>
+                <span className={styles.heroPlay}>PLAY</span>
+              </div>
               <h2 className={styles.sectionTitle}>
                 <span className={styles.titleIcon}>🕹️</span>
                 SELECT YOUR GAME
               </h2>
               <p className={styles.gameSelectDescription}>
-                Explore our collection of educational games designed to make learning fun and rewarding. Each game teaches valuable skills while letting students earn iPlay coins toward scholarships.
+                In our platform students can explore our collection of educational games designed to make learning fun and rewarding. Each game teaches valuable skills while letting students earn coins toward further gameplay and/or scholarships.
               </p>
               <Link href="/games" className={styles.learnMoreBtn}>
                 View All Games →
@@ -502,57 +535,6 @@ export default function HomePage() {
                 </div>
               ))}
             </div>
-          </div>
-        </section>
-
-        {/* Active Incentive Programs Section */}
-        <section className={styles.activeIncentiveSection}>
-          <div className={styles.sectionHeading}>
-            <h2 className={styles.sectionTitle}>
-              <span className={styles.titleIcon}>🌟</span>
-              ACTIVE INCENTIVE PROGRAMS
-            </h2>
-            <p className={styles.sectionSubtitle}>
-              We believe students shouldn&apos;t be on screens all day. That&apos;s why Xogos runs on a simple subscription model with no ads, no microtransactions, and no tricks to keep kids glued to devices. Instead, we incentivize real-world growth through programs that reward getting off the screen. And more of these incentives are coming.
-            </p>
-          </div>
-          <div className={styles.incentiveGrid}>
-            <Link href="/incentives" className={styles.incentiveCard}>
-              <div className={styles.incentiveLogoWrapper}>
-                <Image
-                  src="/images/games/new_iserv_volunteer.png"
-                  alt="iServ Volunteering"
-                  width={200}
-                  height={200}
-                  className={styles.incentiveLogo}
-                />
-              </div>
-              <h3 className={styles.incentiveTitle}>iServ Volunteering</h3>
-              <p className={styles.incentiveDescription}>
-                Earn coins through community service with local non-profits
-              </p>
-            </Link>
-            <Link href="/incentives" className={styles.incentiveCard}>
-              <div className={styles.incentiveLogoWrapper}>
-                <Image
-                  src="/images/games/new_pryde_gym.png"
-                  alt="Pryde Gym"
-                  width={200}
-                  height={200}
-                  className={styles.incentiveLogo}
-                />
-                <div className={styles.comingSoonOverlay}>Coming Soon - End of 2026</div>
-              </div>
-              <h3 className={styles.incentiveTitle}>Pryde Gym</h3>
-              <p className={styles.incentiveDescription}>
-                Earn coins through physical activity and fitness challenges
-              </p>
-            </Link>
-          </div>
-          <div className={styles.incentiveCta}>
-            <Link href="/incentives" className={styles.learnMoreBtn}>
-              Learn More About Active Incentives →
-            </Link>
           </div>
         </section>
 
@@ -602,12 +584,15 @@ export default function HomePage() {
               </Link>
             </div>
             <div className={styles.electiveText}>
+              <div className={styles.sectionKeywordCenter}>
+                <span className={styles.heroLearn}>LEARN</span>
+              </div>
               <h2 className={styles.sectionTitle}>
                 <span className={styles.titleIcon}>📚</span>
                 FREE ELECTIVE CLASSES
               </h2>
               <p className={styles.electiveDescription}>
-                With a Xogos subscription, students gain access to dozens of hands-on elective classes that teach real-world skills—from cooking and astronomy to wilderness survival and personal finance. These aren&apos;t screen-based games; they&apos;re online classes that give students more reason to get off the screen and experience these classes in the real-world. Not theoretical classes but real-life. These are experiences that build confidence, knowledge, and life skills.
+                With a Xogos subscription, students gain access to dozens of online, and yet still hands-on, elective classes that teach real-world skills—from cooking and astronomy to wilderness survival and personal finance. These aren&apos;t screen-based games; they&apos;re online classes that give students more reason to get off the screen and experience these classes in the real-world. Not theoretical classes but real-life applications. These are experiences that build confidence, knowledge, and life skills.
               </p>
               <Link href="/classes" className={styles.learnMoreBtn}>
                 Explore All Classes →
@@ -616,9 +601,64 @@ export default function HomePage() {
           </div>
         </section>
 
+        {/* Active Incentive Programs Section */}
+        <section className={styles.activeIncentiveSection}>
+          <div className={styles.sectionHeading}>
+            <div className={styles.sectionKeywordCenter}>
+              <span className={styles.heroEarn}>EARN</span>
+            </div>
+            <h2 className={styles.sectionTitle}>
+              <span className={styles.titleIcon}>🌟</span>
+              ACTIVE INCENTIVE PROGRAMS
+            </h2>
+            <p className={styles.sectionSubtitle}>
+              We believe students shouldn&apos;t be on screens all day. That&apos;s why Xogos runs on a simple subscription model with no ads, no microtransactions, and no tricks to keep kids glued to devices. Instead, we incentivize real-world growth through programs that reward getting off the screen. These coins they can also convert to scholarships as they grow up on Xogos.
+            </p>
+          </div>
+          <div className={styles.incentiveGrid}>
+            <Link href="/incentives" className={styles.incentiveCard}>
+              <div className={styles.incentiveLogoWrapper}>
+                <Image
+                  src="/images/games/new_iserv_volunteer.png"
+                  alt="iServ Volunteering"
+                  width={200}
+                  height={200}
+                  className={styles.incentiveLogo}
+                />
+              </div>
+              <h3 className={styles.incentiveTitle}>iServ Volunteering</h3>
+              <p className={styles.incentiveDescription}>
+                Earn coins through community service with local non-profits
+              </p>
+            </Link>
+            <Link href="/incentives" className={styles.incentiveCard}>
+              <div className={styles.incentiveLogoWrapper}>
+                <Image
+                  src="/images/games/new_pryde_gym.png"
+                  alt="Pryde Gym"
+                  width={200}
+                  height={200}
+                  className={styles.incentiveLogo}
+                />
+                <div className={styles.comingSoonOverlay}>Coming Soon - End of 2026</div>
+              </div>
+              <h3 className={styles.incentiveTitle}>Pryde Gym</h3>
+              <p className={styles.incentiveDescription}>
+                Earn coins through physical activity and fitness challenges
+              </p>
+            </Link>
+          </div>
+          <div className={styles.incentiveCta}>
+            <Link href="/incentives" className={styles.learnMoreBtn}>
+              Learn More About Active Incentives →
+            </Link>
+          </div>
+        </section>
+
         {/* Scholarship Program Section - Title centered above both */}
         <section className={styles.scholarshipSection}>
           <h2 className={styles.scholarshipTitleCentered}>
+            <span className={styles.heroEarn}>EARN</span>
             <span className={styles.titleIcon}>🎓</span>
             TURN COINS INTO COLLEGE
           </h2>
@@ -861,19 +901,32 @@ export default function HomePage() {
                 <p className={styles.gameModalDescription}>
                   {selectedGame.description}
                 </p>
-                <div className={styles.gameModalActions}>
-                  {selectedGame.tutorialLink ? (
-                    <Link
-                      href={selectedGame.tutorialLink}
-                      className={styles.gameModalTutorialBtn}
-                    >
-                      Watch Tutorial
-                    </Link>
+
+                {/* Video Player */}
+                <div className={styles.videoSection}>
+                  <h3 className={styles.videoSectionTitle}>Watch Tutorial</h3>
+                  {selectedGame.videoId ? (
+                    <div className={styles.videoContainer}>
+                      <iframe
+                        src={`https://www.youtube-nocookie.com/embed/${selectedGame.videoId}?rel=0&modestbranding=1&showinfo=0&fs=1&disablekb=1&iv_load_policy=3`}
+                        title={`${selectedGame.title} Tutorial`}
+                        allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                        className={styles.videoPlayer}
+                      ></iframe>
+                      {/* Overlays to block YouTube links */}
+                      <div className={styles.videoBlockerTop}></div>
+                      <div className={styles.videoBlockerBottom}></div>
+                    </div>
                   ) : (
-                    <span className={styles.gameModalTutorialComingSoon}>
-                      Tutorial Coming Soon
-                    </span>
+                    <div className={styles.videoComingSoon}>
+                      <span className={styles.videoComingSoonIcon}>🎬</span>
+                      <span>Video Coming Soon</span>
+                    </div>
                   )}
+                </div>
+
+                <div className={styles.gameModalActions}>
                   <Link href="/games" className={styles.gameModalPlayBtn}>
                     View All Games
                   </Link>

@@ -586,6 +586,106 @@
   letter-spacing: 1px;
 }
 
+/* Play + Learn = Earn Intro Section */
+.playLearnEarnIntro {
+  position: relative;
+  z-index: 1;
+  padding: 80px 40px;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.4) 0%, rgba(26, 26, 46, 0.6) 100%);
+}
+
+.pleIntroContent {
+  max-width: 1100px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.pleIntroTitle {
+  font-size: 56px;
+  font-weight: 900;
+  line-height: 1.2;
+  margin-bottom: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.plePlus,
+.pleEquals {
+  font-size: 48px;
+  font-weight: 900;
+  color: rgba(229, 229, 229, 0.6);
+}
+
+.pleColumns {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+}
+
+.pleColumn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.pleColumn h3 {
+  font-size: 36px;
+  font-weight: 900;
+}
+
+.pleDescription {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: rgba(229, 229, 229, 0.8);
+  max-width: 320px;
+}
+
+/* Section Keyword styling */
+.sectionKeyword {
+  margin-bottom: 15px;
+}
+
+.sectionKeyword span {
+  font-size: 42px;
+  font-weight: 900;
+}
+
+.sectionKeywordCenter {
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.sectionKeywordCenter span {
+  font-size: 42px;
+  font-weight: 900;
+}
+
+@media (max-width: 768px) {
+  .pleIntroTitle {
+    font-size: 36px;
+    gap: 12px;
+  }
+  .plePlus,
+  .pleEquals {
+    font-size: 30px;
+  }
+  .pleColumns {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+  .pleColumn h3 {
+    font-size: 28px;
+  }
+  .sectionKeyword span,
+  .sectionKeywordCenter span {
+    font-size: 32px;
+  }
+}
+
 /* Active Incentive Programs Section */
 .activeIncentiveSection {
   position: relative;
@@ -1668,6 +1768,79 @@
 .gameModalPlayBtn:hover {
   background: rgba(230, 187, 132, 0.1);
   border-color: rgba(230, 187, 132, 0.5);
+}
+
+/* Video Section in Modal */
+.videoSection {
+  margin: 25px 0;
+}
+
+.videoSectionTitle {
+  font-size: 16px;
+  font-weight: 700;
+  color: #e5e5e5;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.videoContainer {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%;
+  background: #000;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.videoPlayer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.videoBlockerTop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 70px;
+  background: transparent;
+  z-index: 10;
+}
+
+.videoBlockerBottom {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 150px;
+  height: 50px;
+  background: transparent;
+  z-index: 10;
+}
+
+.videoComingSoon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  padding: 40px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px dashed rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+}
+
+.videoComingSoonIcon {
+  font-size: 40px;
+}
+
+.videoComingSoon span:last-child {
+  font-size: 14px;
+  color: rgba(229, 229, 229, 0.6);
+  font-weight: 600;
 }
 
 /* Responsive */
