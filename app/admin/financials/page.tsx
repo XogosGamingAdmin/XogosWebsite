@@ -9,6 +9,7 @@ import {
   ADMIN_STATISTICS_URL,
   DASHBOARD_HOME_URL,
 } from "@/constants";
+import { deleteFinancials } from "@/lib/actions/deleteFinancials";
 import { getFinancials } from "@/lib/actions/getFinancials";
 import { updateFinancials } from "@/lib/actions/updateFinancials";
 import { Button } from "@/primitives/Button";
@@ -188,7 +189,11 @@ export default function FinancialsPage() {
 
         {/* Historical Data Display */}
         <div className={styles.trendsSection}>
-          <TrendsDisplay type="financials" limit={10} />
+          <TrendsDisplay
+            type="financials"
+            limit={10}
+            onDelete={deleteFinancials}
+          />
         </div>
       </div>
     </div>

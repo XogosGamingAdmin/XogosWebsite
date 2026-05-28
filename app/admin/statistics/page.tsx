@@ -9,6 +9,7 @@ import {
   ADMIN_GROUPS_URL,
   DASHBOARD_HOME_URL,
 } from "@/constants";
+import { deleteStatistics } from "@/lib/actions/deleteStatistics";
 import { getStatistics } from "@/lib/actions/getStatistics";
 import { updateStatistics } from "@/lib/actions/updateStatistics";
 import { Button } from "@/primitives/Button";
@@ -149,7 +150,11 @@ export default function StatisticsPage() {
 
         {/* Historical Data Display */}
         <div className={styles.trendsSection}>
-          <TrendsDisplay type="statistics" limit={10} />
+          <TrendsDisplay
+            type="statistics"
+            limit={10}
+            onDelete={deleteStatistics}
+          />
         </div>
       </div>
     </div>

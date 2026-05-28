@@ -317,6 +317,13 @@ export const db = {
   },
 
   /**
+   * Delete a statistics record by ID
+   */
+  async deleteStatistics(id: number) {
+    await query(`DELETE FROM xogos_statistics WHERE id = $1`, [id]);
+  },
+
+  /**
    * Get latest Xogos financials
    */
   async getFinancials() {
@@ -390,6 +397,13 @@ export const db = {
       ]
     );
     return result.rows[0];
+  },
+
+  /**
+   * Delete a financials record by ID
+   */
+  async deleteFinancials(id: number) {
+    await query(`DELETE FROM xogos_financials WHERE id = $1`, [id]);
   },
 
   // ============ PAGE VISITS FUNCTIONS ============

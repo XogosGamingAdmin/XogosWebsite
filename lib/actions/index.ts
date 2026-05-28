@@ -24,9 +24,11 @@ export * from "./updateUserAccess";
 // Board database actions
 export * from "./getStatistics";
 export * from "./updateStatistics";
+export * from "./deleteStatistics";
 export * from "./getStatisticsHistory";
 export * from "./getFinancials";
 export * from "./updateFinancials";
+export * from "./deleteFinancials";
 export * from "./getFinancialsHistory";
 export * from "./getChecklists";
 export * from "./getAllChecklists";

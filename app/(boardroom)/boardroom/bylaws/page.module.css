@@ -85,7 +85,7 @@
 
 .hero {
   text-align: center;
-  margin-bottom: 4rem;
+  margin-bottom: 3rem;
 }
 
 .title {
@@ -100,66 +100,226 @@
 }
 
 .subtitle {
-  font-size: 1.25rem;
+  font-size: 1.125rem;
   color: rgba(229, 229, 229, 0.8);
   max-width: 500px;
   margin: 0 auto;
 }
 
-.placeholder {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 400px;
+/* Content Sections */
+.content {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.section {
   background: rgba(26, 26, 46, 0.6);
   backdrop-filter: blur(10px);
   border-radius: 16px;
   border: 1px solid rgba(255, 255, 255, 0.08);
-  text-align: center;
-  padding: 3rem;
-}
-
-.placeholderIcon {
-  font-size: 4rem;
+  padding: 2rem;
   margin-bottom: 1.5rem;
 }
 
-.placeholderTitle {
+.sectionTitle {
   font-family: "Montserrat", sans-serif;
-  font-size: 1.75rem;
+  font-size: 1.5rem;
   font-weight: 600;
-  color: #e5e5e5;
+  color: #f59e0b;
+  margin: 0 0 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.sectionContent p {
+  color: rgba(229, 229, 229, 0.9);
+  line-height: 1.7;
   margin: 0 0 1rem;
 }
 
-.placeholderText {
-  font-size: 1rem;
-  color: rgba(229, 229, 229, 0.7);
-  margin: 0;
-  max-width: 400px;
+.sectionContent p:last-child {
+  margin-bottom: 0;
 }
 
+.subsectionTitle {
+  font-family: "Montserrat", sans-serif;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #e5e5e5;
+  margin: 1.5rem 0 1rem;
+}
+
+/* Highlight Box */
+.highlight {
+  background: rgba(245, 158, 11, 0.1);
+  border-left: 4px solid #f59e0b;
+  padding: 1rem 1.25rem;
+  border-radius: 0 8px 8px 0;
+  margin: 1rem 0;
+  color: rgba(229, 229, 229, 0.95);
+}
+
+/* Lists */
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.list li {
+  position: relative;
+  padding-left: 1.5rem;
+  margin-bottom: 0.75rem;
+  color: rgba(229, 229, 229, 0.85);
+  line-height: 1.6;
+}
+
+.list li:last-child {
+  margin-bottom: 0;
+}
+
+.list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.6rem;
+  width: 6px;
+  height: 6px;
+  background: #f59e0b;
+  border-radius: 50%;
+}
+
+/* Key Points Grid */
+.keyPoints {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.keyPoint {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 1rem;
+  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.keyLabel {
+  display: block;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: rgba(229, 229, 229, 0.6);
+  margin-bottom: 0.5rem;
+}
+
+.keyValue {
+  display: block;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #f59e0b;
+}
+
+/* Roles List */
+.rolesList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.role {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  padding: 0.75rem 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.roleTitle {
+  font-weight: 600;
+  color: #e5e5e5;
+  min-width: 180px;
+}
+
+.roleDesc {
+  color: rgba(229, 229, 229, 0.7);
+  flex: 1;
+}
+
+/* Duties Grid */
+.dutiesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.duty {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  padding: 1.25rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.duty h4 {
+  font-family: "Montserrat", sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #f59e0b;
+  margin: 0 0 0.5rem;
+}
+
+.duty p {
+  font-size: 0.875rem;
+  color: rgba(229, 229, 229, 0.8);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  padding: 2rem;
+  color: rgba(229, 229, 229, 0.5);
+  font-size: 0.875rem;
+}
+
+.footer p {
+  margin: 0;
+}
+
+/* Responsive */
 @media (max-width: 768px) {
   .container {
     padding: 100px 0 60px;
   }
 
   .title {
-    font-size: 2.5rem;
+    font-size: 2.25rem;
   }
 
-  .placeholder {
-    min-height: 300px;
-    padding: 2rem;
+  .section {
+    padding: 1.5rem;
   }
 
-  .placeholderIcon {
-    font-size: 3rem;
+  .sectionTitle {
+    font-size: 1.25rem;
   }
 
-  .placeholderTitle {
-    font-size: 1.5rem;
+  .keyPoints {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .roleTitle {
+    min-width: 100%;
+  }
+
+  .dutiesGrid {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -169,6 +329,14 @@
   }
 
   .title {
-    font-size: 2rem;
+    font-size: 1.75rem;
+  }
+
+  .section {
+    padding: 1.25rem;
+  }
+
+  .keyPoints {
+    grid-template-columns: 1fr;
   }
 }

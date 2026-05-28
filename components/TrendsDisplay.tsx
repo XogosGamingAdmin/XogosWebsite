@@ -28,15 +28,21 @@ interface FinancialRecord {
 interface TrendsDisplayProps {
   type: "statistics" | "financials";
   limit?: number;
+  onDelete?: (id: number) => Promise<{ error?: { message: string } }>;
 }
 
-export function TrendsDisplay({ type, limit = 10 }: TrendsDisplayProps) {
+export function TrendsDisplay({
+  type,
+  limit = 10,
+  onDelete,
+}: TrendsDisplayProps) {
   const [statsHistory, setStatsHistory] = useState<StatRecord[]>([]);
   const [financialsHistory, setFinancialsHistory] = useState<FinancialRecord[]>(
     []
   );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [deletingId, setDeletingId] = useState<number | null>(null);
 
   useEffect(() => {
     async function loadHistory() {
@@ -70,6 +76,29 @@ export function TrendsDisplay({ type, limit = 10 }: TrendsDisplayProps) {
 
     loadHistory();
   }, [type, limit]);
+
+  const handleDelete = async (id: number) => {
+    if (!onDelete) return;
+
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this record? This action cannot be undone."
+    );
+    if (!confirmed) return;
+
+    setDeletingId(id);
+    const result = await onDelete(id);
+
+    if (result.error) {
+      alert(`Error: ${result.error.message}`);
+    } else {
+      if (type === "statistics") {
+        setStatsHistory((prev) => prev.filter((r) => r.id !== id));
+      } else {
+        setFinancialsHistory((prev) => prev.filter((r) => r.id !== id));
+      }
+    }
+    setDeletingId(null);
+  };
 
   if (loading) {
     return <div className={styles.loading}>Loading trends...</div>;
@@ -107,6 +136,7 @@ export function TrendsDisplay({ type, limit = 10 }: TrendsDisplayProps) {
                 <th>Active Users</th>
                 <th>Total Hours</th>
                 <th>Updated By</th>
+                {onDelete && <th>Actions</th>}
               </tr>
             </thead>
             <tbody>
@@ -123,6 +153,18 @@ export function TrendsDisplay({ type, limit = 10 }: TrendsDisplayProps) {
                     {record.totalHours.toLocaleString()}
                   </td>
                   <td className={styles.emailCell}>{record.updatedBy}</td>
+                  {onDelete && (
+                    <td>
+                      <button
+                        onClick={() => handleDelete(record.id)}
+                        disabled={deletingId === record.id}
+                        className={styles.deleteButton}
+                        title="Delete this record"
+                      >
+                        {deletingId === record.id ? "..." : "×"}
+                      </button>
+                    </td>
+                  )}
                 </tr>
               ))}
             </tbody>
@@ -140,6 +182,7 @@ export function TrendsDisplay({ type, limit = 10 }: TrendsDisplayProps) {
                 <th>Yearly Pay</th>
                 <th>Lifetime</th>
                 <th>Updated By</th>
+                {onDelete && <th>Actions</th>}
               </tr>
             </thead>
             <tbody>
@@ -162,6 +205,18 @@ export function TrendsDisplay({ type, limit = 10 }: TrendsDisplayProps) {
                     {record.lifetimeMembers}
                   </td>
                   <td className={styles.emailCell}>{record.updatedBy}</td>
+                  {onDelete && (
+                    <td>
+                      <button
+                        onClick={() => handleDelete(record.id)}
+                        disabled={deletingId === record.id}
+                        className={styles.deleteButton}
+                        title="Delete this record"
+                      >
+                        {deletingId === record.id ? "..." : "×"}
+                      </button>
+                    </td>
+                  )}
                 </tr>
               ))}
             </tbody>
