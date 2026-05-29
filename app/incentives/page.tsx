@@ -54,7 +54,7 @@ export default function IncentivesPage() {
         "Get active, get rewarded! Pryde Gym transforms physical fitness into an adventure where every workout earns you iPlay coins. Track your activities, complete fitness challenges, join team sports, and watch your rewards grow as you build healthy habits. Whether you're running, swimming, playing basketball, or hitting the gym—your physical efforts count toward scholarships.",
       imagePath: "/images/games/new_pryde_gym.png",
       status: "coming-soon",
-      comingSoonDate: "End of 2026",
+      comingSoonDate: "2026",
       features: [
         "Track multiple activity types",
         "Earn coins for exercise time",
@@ -128,7 +128,7 @@ export default function IncentivesPage() {
                 >
                   {program.status === "coming-soon" && (
                     <div className={styles.comingSoonBanner}>
-                      Coming Soon - {program.comingSoonDate}
+                      Coming {program.comingSoonDate}
                     </div>
                   )}
                   <div className={styles.programImageContainer}>
@@ -213,8 +213,8 @@ export default function IncentivesPage() {
             <div className={styles.statsGrid}>
               <div className={styles.statCard}>
                 <div className={styles.statIcon}>🎯</div>
-                <div className={styles.statValue}>1 Hour</div>
-                <div className={styles.statLabel}>= 1 iPlay Coin</div>
+                <div className={styles.statValuePurple}>Convert Coins</div>
+                <div className={styles.statLabelSmall}>from Savings</div>
               </div>
               <div className={styles.statCard}>
                 <div className={styles.statIcon}>💰</div>
@@ -246,7 +246,7 @@ export default function IncentivesPage() {
                 toward their future education.
               </p>
               <div className={styles.ctaButtons}>
-                <Link href="/membership" className={styles.primaryButton}>
+                <Link href="https://www.xogosgaming.com" className={styles.primaryButton}>
                   Get Started
                 </Link>
                 <Link href="/games" className={styles.secondaryButton}>
@@ -313,7 +313,7 @@ export default function IncentivesPage() {
                 <div className={styles.programModalActions}>
                   {activeProgram.status === "active" ? (
                     <Link
-                      href="/membership"
+                      href="https://www.xogosgaming.com"
                       className={styles.modalPrimaryButton}
                     >
                       Join This Program

@@ -151,7 +151,7 @@ export default function PanicAttackPage() {
                 <div
                   className={`${styles.heroActions} ${isLoaded ? styles.visible : ""}`}
                 >
-                  <Link href="/membership" className={styles.primaryButton}>
+                  <Link href="https://www.xogosgaming.com" className={styles.primaryButton}>
                     Start Playing
                   </Link>
                   <Link href="#safety" className={styles.secondaryButton}>
@@ -383,7 +383,7 @@ export default function PanicAttackPage() {
                 better mental wellness today.
               </p>
               <div className={styles.ctaButtons}>
-                <Link href="/membership" className={styles.primaryButton}>
+                <Link href="https://www.xogosgaming.com" className={styles.primaryButton}>
                   Start Your Journey
                 </Link>
                 <Link href="/games" className={styles.secondaryButton}>

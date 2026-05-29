@@ -294,7 +294,7 @@ export default function ClassesPage() {
                 earning rewards toward their future education.
               </p>
               <div className={styles.ctaButtons}>
-                <Link href="/membership" className={styles.primaryButton}>
+                <Link href="https://www.xogosgaming.com" className={styles.primaryButton}>
                   Enroll Now
                 </Link>
                 <Link href="/games" className={styles.secondaryButton}>
@@ -355,7 +355,7 @@ export default function ClassesPage() {
 
                 <div className={styles.programModalActions}>
                   <Link
-                    href="/membership"
+                    href="https://www.xogosgaming.com"
                     className={styles.modalPrimaryButton}
                   >
                     Enroll in This Class

@@ -55,12 +55,6 @@ const siteStructure = {
           description: "Frequently asked questions",
         },
         {
-          name: "/membership",
-          label: "Membership",
-          type: "page",
-          description: "Membership plans",
-        },
-        {
           name: "/scholarships",
           label: "Scholarships",
           type: "page",

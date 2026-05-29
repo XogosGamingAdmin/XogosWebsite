@@ -573,7 +573,7 @@ export default function ForumPage() {
               <Link href="/signin" className={styles.primaryButton}>
                 Sign In
               </Link>
-              <Link href="/membership" className={styles.secondaryButton}>
+              <Link href="https://www.xogosgaming.com" className={styles.secondaryButton}>
                 Create Account
               </Link>
             </div>

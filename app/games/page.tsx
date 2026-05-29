@@ -484,7 +484,7 @@ export default function GamesPage() {
                 real scholarship opportunities.
               </p>
               <div className={styles.ctaButtons}>
-                <Link href="/membership" className={styles.primaryButton}>
+                <Link href="https://www.xogosgaming.com" className={styles.primaryButton}>
                   Join Now
                 </Link>
                 <Link href="/scholarships" className={styles.secondaryButton}>

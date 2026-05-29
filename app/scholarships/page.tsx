@@ -279,7 +279,7 @@ export default function ScholarshipsPage() {
                 future education through gameplay and real-world activities.
               </p>
               <div className={styles.ctaButtons}>
-                <Link href="/membership" className={styles.primaryButton}>
+                <Link href="https://www.xogosgaming.com" className={styles.primaryButton}>
                   Get Started
                 </Link>
                 <Link href="/games" className={styles.secondaryButton}>

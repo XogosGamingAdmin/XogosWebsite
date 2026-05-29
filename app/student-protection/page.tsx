@@ -119,7 +119,7 @@ export default function StudentProtectionPage() {
       fullDescription:
         "Students can only connect with people they already know in real life. Family is automatic, but may be blocked temporarily. Friends can join by three means: 1. Join an organization (Scouts, Trail Life, 4H, NHS, etc.) where all students can be connected in local groups, 2. Classroom—those in the same classroom may join with other classmates, 3. A friend request may be sent but expires in 10 minutes. Remember, parents can see who their kids are connected to and should start discussions with their students. There's no 'discover users' feature, no public profiles to browse, and no way for strangers to find or contact students.",
       details: [
-        "All friend requests require parent approval",
+        "All friend requests require student approval",
         "No public user directory or search",
         "Classroom connections verified by teachers",
         "Family connections verified through parent accounts",

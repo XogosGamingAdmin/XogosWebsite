@@ -45,7 +45,7 @@ export function MarketingFooter({
               <Link href="/games" className={styles.footerLink}>
                 Games
               </Link>
-              <Link href="/membership" className={styles.footerLink}>
+              <Link href="https://www.xogosgaming.com" className={styles.footerLink}>
                 Membership
               </Link>
               <Link href="/scholarships" className={styles.footerLink}>
