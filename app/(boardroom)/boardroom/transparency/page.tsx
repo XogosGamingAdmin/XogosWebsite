@@ -190,25 +190,29 @@ export default function TransparencyPage() {
         <div className={styles.legend}>
           <h3 className={styles.legendTitle}>Legend</h3>
           <div className={styles.legendItems}>
-            <div className={styles.legendItem}>
-              <span className={`${styles.attendanceStatus} ${styles.fullTime}`}>Full Time</span>
-              <span>Attended entire meeting</span>
+            <div className={styles.legendRow}>
+              <div className={styles.legendItem}>
+                <span className={`${styles.attendanceStatus} ${styles.fullTime}`}>Full Time</span>
+                <span>Attended entire meeting</span>
+              </div>
+              <div className={styles.legendItem}>
+                <span className={`${styles.attendanceStatus} ${styles.partTime}`}>Part Time</span>
+                <span>Attended part of meeting</span>
+              </div>
+              <div className={styles.legendItem}>
+                <span className={`${styles.attendanceStatus} ${styles.absent}`}>Absent</span>
+                <span>Did not attend</span>
+              </div>
             </div>
-            <div className={styles.legendItem}>
-              <span className={`${styles.attendanceStatus} ${styles.partTime}`}>Part Time</span>
-              <span>Attended part of meeting</span>
-            </div>
-            <div className={styles.legendItem}>
-              <span className={`${styles.attendanceStatus} ${styles.absent}`}>Absent</span>
-              <span>Did not attend</span>
-            </div>
-            <div className={styles.legendItem}>
-              <span className={styles.badge}>📋</span>
-              <span>Prepared (with initiatives)</span>
-            </div>
-            <div className={styles.legendItem}>
-              <span className={styles.badge}>📹</span>
-              <span>In-Person (video was on)</span>
+            <div className={styles.legendRow}>
+              <div className={styles.legendItem}>
+                <span className={styles.badge}>📋</span>
+                <span>Prepared (with initiatives)</span>
+              </div>
+              <div className={styles.legendItem}>
+                <span className={styles.badge}>📹</span>
+                <span>In-Person (video was on)</span>
+              </div>
             </div>
           </div>
         </div>
