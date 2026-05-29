@@ -235,6 +235,7 @@ export default function HomePage() {
   const [activeGameIndex, setActiveGameIndex] = useState(0);
   const [screenImage, setScreenImage] = useState("/images/XogosLogo.png");
   const [totalMembers, setTotalMembers] = useState(0);
+  const [playersLearning, setPlayersLearning] = useState(0);
   const [displayedGames, setDisplayedGames] = useState<Game[]>([]);
   const [selectedGame, setSelectedGame] = useState<Game | null>(null);
 
@@ -253,6 +254,9 @@ export default function HomePage() {
         if (data.totalMembers) {
           setTotalMembers(data.totalMembers);
         }
+        if (data.playersLearning) {
+          setPlayersLearning(data.playersLearning);
+        }
       } catch (error) {
         console.error("Error fetching stats:", error);
       }
@@ -261,7 +265,7 @@ export default function HomePage() {
   }, []);
 
   const stats = [
-    { value: 524, suffix: "", label: "Players Learning" },
+    { value: playersLearning, suffix: "", label: "Players Learning" },
     { value: 13, suffix: "", label: "Educational Games" },
     { value: 15, suffix: "", label: "Free Online Classes" },
     { value: 98, suffix: "%", label: "Fun Rating" },
