@@ -181,7 +181,6 @@ export function TrendsDisplay({
                 <th>Monthly Pay</th>
                 <th>Yearly Pay</th>
                 <th>Lifetime</th>
-                <th>Updated By</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -204,7 +203,6 @@ export function TrendsDisplay({
                   <td className={styles.numberCell}>
                     {record.lifetimeMembers}
                   </td>
-                  <td className={styles.emailCell}>{record.updatedBy}</td>
                   <td>
                     <button
                       onClick={() => handleDelete(record.id)}
