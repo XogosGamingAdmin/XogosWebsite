@@ -261,9 +261,9 @@ export default function HomePage() {
   }, []);
 
   const stats = [
-    { value: 301, suffix: "", label: "Players Learning" },
+    { value: 524, suffix: "", label: "Players Learning" },
     { value: 13, suffix: "", label: "Educational Games" },
-    { value: 58, suffix: " So Far", label: "Coins Earned" },
+    { value: 15, suffix: "", label: "Free Online Classes" },
     { value: 98, suffix: "%", label: "Fun Rating" },
   ];
 
@@ -451,7 +451,7 @@ export default function HomePage() {
             ))}
           </div>
           <p className={styles.statsSubline}>
-            Relaunch of Xogos Gaming Platform - January 26
+            Welcome Back Players. Welcome to our New Relaunch. Welcome to an Amazing Platform
           </p>
         </section>
 
@@ -467,19 +467,16 @@ export default function HomePage() {
             </h2>
             <div className={styles.pleColumns}>
               <div className={styles.pleColumn}>
-                <h3 className={styles.heroPlay}>PLAY</h3>
                 <p className={styles.pleDescription}>
                   Imagine a platform where kids can be kids, be safe, and have fun online with friends and family, while they play games and learn.
                 </p>
               </div>
               <div className={styles.pleColumn}>
-                <h3 className={styles.heroLearn}>LEARN</h3>
                 <p className={styles.pleDescription}>
                   Imagine a platform where students have access to dozens of elective classes where they can learn what they want, especially those that prepare them for the future.
                 </p>
               </div>
               <div className={styles.pleColumn}>
-                <h3 className={styles.heroEarn}>EARN</h3>
                 <p className={styles.pleDescription}>
                   Imagine a place where students could earn scholarships through their own merit on and off the screen, for universities and trade schools.
                 </p>
@@ -490,11 +487,12 @@ export default function HomePage() {
 
         {/* Game Select Section - Now above Active Incentives */}
         <section className={styles.gameSelectSection}>
+          <div className={styles.sectionHeader}>
+            <span className={`${styles.sectionKeywordLarge} ${styles.heroPlay}`}>PLAY</span>
+            <div className={`${styles.sectionUnderline} ${styles.sectionUnderlinePlay}`}></div>
+          </div>
           <div className={styles.gameSelectContent}>
             <div className={styles.gameSelectText}>
-              <div className={styles.sectionKeywordCenter}>
-                <span className={styles.heroPlay}>PLAY</span>
-              </div>
               <h2 className={styles.sectionTitle}>
                 <span className={styles.titleIcon}>🕹️</span>
                 SELECT YOUR GAME
@@ -538,8 +536,49 @@ export default function HomePage() {
           </div>
         </section>
 
+        {/* Learn From Playing Games Section */}
+        <section className={styles.learnFromGamesSection}>
+          <div className={styles.sectionHeader}>
+            <span className={`${styles.sectionKeywordLarge} ${styles.heroLearn}`}>LEARN</span>
+            <div className={`${styles.sectionUnderline} ${styles.sectionUnderlineLearn}`}></div>
+          </div>
+          <div className={styles.learnFromGamesContent}>
+            <h2 className={styles.sectionTitle}>
+              <span className={styles.titleIcon}>🎯</span>
+              LEARN FROM PLAYING GAMES
+            </h2>
+            <p className={styles.learnFromGamesDescription}>
+              We believe in games that are <strong>70% fun</strong> and only <strong>30% educational</strong>.
+              Why? Because the more students enjoy playing, the more they&apos;ll keep coming back.
+              And every time they play, they learn a little bit more. It&apos;s not about cramming
+              education down their throats—it&apos;s about making learning so enjoyable that they
+              don&apos;t even realize they&apos;re doing it.
+            </p>
+            <div className={styles.learnFromGamesStats}>
+              <div className={styles.learnFromGamesStat}>
+                <span className={styles.statPercent}>70%</span>
+                <span className={styles.statDesc}>Pure Fun</span>
+              </div>
+              <div className={styles.learnFromGamesPlus}>+</div>
+              <div className={styles.learnFromGamesStat}>
+                <span className={styles.statPercent}>30%</span>
+                <span className={styles.statDesc}>Education</span>
+              </div>
+              <div className={styles.learnFromGamesEquals}>=</div>
+              <div className={styles.learnFromGamesStat}>
+                <span className={styles.statPercent}>100%</span>
+                <span className={styles.statDesc}>Engagement</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Free Elective Classes Section - Images left, text right */}
         <section className={styles.electiveClassesSection}>
+          <div className={styles.sectionHeader}>
+            <span className={`${styles.sectionKeywordLarge} ${styles.heroLearn}`}>LEARN</span>
+            <div className={`${styles.sectionUnderline} ${styles.sectionUnderlineLearn}`}></div>
+          </div>
           <div className={styles.electiveContent}>
             <div className={styles.electiveGrid}>
               <Link href="/classes" className={styles.electiveCard}>
@@ -584,9 +623,6 @@ export default function HomePage() {
               </Link>
             </div>
             <div className={styles.electiveText}>
-              <div className={styles.sectionKeywordCenter}>
-                <span className={styles.heroLearn}>LEARN</span>
-              </div>
               <h2 className={styles.sectionTitle}>
                 <span className={styles.titleIcon}>📚</span>
                 FREE ELECTIVE CLASSES
@@ -603,10 +639,11 @@ export default function HomePage() {
 
         {/* Active Incentive Programs Section */}
         <section className={styles.activeIncentiveSection}>
+          <div className={styles.sectionHeader}>
+            <span className={`${styles.sectionKeywordLarge} ${styles.heroEarn}`}>EARN</span>
+            <div className={`${styles.sectionUnderline} ${styles.sectionUnderlineEarn}`}></div>
+          </div>
           <div className={styles.sectionHeading}>
-            <div className={styles.sectionKeywordCenter}>
-              <span className={styles.heroEarn}>EARN</span>
-            </div>
             <h2 className={styles.sectionTitle}>
               <span className={styles.titleIcon}>🌟</span>
               ACTIVE INCENTIVE PROGRAMS
@@ -698,6 +735,69 @@ export default function HomePage() {
                 Learn About Scholarships →
               </Link>
             </div>
+          </div>
+        </section>
+
+        {/* Student Security Section */}
+        <section className={styles.studentSecuritySection}>
+          <div className={styles.sectionHeading}>
+            <h2 className={styles.sectionTitle}>
+              <span className={styles.titleIcon}>🛡️</span>
+              STUDENT PROTECTION
+            </h2>
+            <p className={styles.sectionSubtitle}>
+              We prioritize the security and safety of every child on our platform.
+              Here&apos;s how we protect our students.
+            </p>
+          </div>
+          <div className={styles.securityGrid}>
+            <div className={styles.securityCard}>
+              <div className={styles.securityIcon}>👨‍👩‍👧</div>
+              <h3 className={styles.securityTitle}>Parent Linked Accounts</h3>
+              <p className={styles.securityDescription}>
+                Every parent gets a linked account to monitor and manage their child&apos;s activity
+              </p>
+            </div>
+            <div className={styles.securityCard}>
+              <div className={styles.securityIcon}>✓</div>
+              <h3 className={styles.securityTitle}>Know Our Customers</h3>
+              <p className={styles.securityDescription}>
+                We verify every user to ensure a safe community of real families
+              </p>
+            </div>
+            <div className={styles.securityCard}>
+              <div className={styles.securityIcon}>🔒</div>
+              <h3 className={styles.securityTitle}>Software Safeguards</h3>
+              <p className={styles.securityDescription}>
+                Advanced security measures protect accounts and personal information
+              </p>
+            </div>
+            <div className={styles.securityCard}>
+              <div className={styles.securityIcon}>🚫</div>
+              <h3 className={styles.securityTitle}>No In-Game Chats</h3>
+              <p className={styles.securityDescription}>
+                No open chat features that could expose children to strangers
+              </p>
+            </div>
+            <div className={styles.securityCard}>
+              <div className={styles.securityIcon}>👶</div>
+              <h3 className={styles.securityTitle}>Ages 6-19 Only</h3>
+              <p className={styles.securityDescription}>
+                Everyone on Xogos is between 6-19 (excluding parents and teachers)
+              </p>
+            </div>
+            <div className={styles.securityCard}>
+              <div className={styles.securityIcon}>👥</div>
+              <h3 className={styles.securityTitle}>Known Connections Only</h3>
+              <p className={styles.securityDescription}>
+                Students only interact with people they already know
+              </p>
+            </div>
+          </div>
+          <div className={styles.securityCta}>
+            <Link href="/student-protection" className={styles.securityBtn}>
+              Learn More About Our Safety Measures →
+            </Link>
           </div>
         </section>
 

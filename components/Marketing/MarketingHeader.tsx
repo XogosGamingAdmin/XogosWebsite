@@ -66,6 +66,9 @@ export function MarketingHeader({
               <Link href="/incentives" className={styles.navLink}>
                 Incentives
               </Link>
+              <Link href="/student-protection" className={styles.navLink}>
+                Student Protection
+              </Link>
               <Link href="/about" className={styles.navLink}>
                 About Us
               </Link>
