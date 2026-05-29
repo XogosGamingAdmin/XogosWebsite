@@ -643,44 +643,44 @@ export default function HomePage() {
             <span className={`${styles.sectionKeywordLarge} ${styles.heroEarn}`}>EARN</span>
             <div className={`${styles.sectionUnderline} ${styles.sectionUnderlineEarn}`}></div>
           </div>
-          <div className={styles.sectionHeading}>
-            <h2 className={styles.sectionTitle}>
-              <span className={styles.titleIcon}>🌟</span>
-              ACTIVE INCENTIVE PROGRAMS
-            </h2>
-            <p className={styles.sectionSubtitle}>
-              We believe students shouldn&apos;t be on screens all day. That&apos;s why Xogos runs on a simple subscription model with no ads, no microtransactions, and no tricks to keep kids glued to devices. Instead, we incentivize real-world growth through programs that reward getting off the screen. These coins they can also convert to scholarships as they grow up on Xogos.
-            </p>
-          </div>
-          <div className={styles.incentiveGridStacked}>
-            <Link href="/incentives" className={styles.incentiveCardSmall}>
-              <Image
-                src="/images/games/new_iserv_volunteer.png"
-                alt="iServ Volunteering"
-                width={120}
-                height={120}
-                className={styles.incentiveLogoSmall}
-              />
-              <span className={styles.incentiveLabelSmall}>iServ Volunteering</span>
-            </Link>
-            <Link href="/incentives" className={styles.incentiveCardSmall}>
-              <div className={styles.incentiveImageWrapper}>
+          <div className={styles.incentiveContent}>
+            <div className={styles.incentiveText}>
+              <h2 className={styles.sectionTitle}>
+                <span className={styles.titleIcon}>🌟</span>
+                ACTIVE INCENTIVE PROGRAMS
+              </h2>
+              <p className={styles.incentiveDescription}>
+                We believe students shouldn&apos;t be on screens all day. That&apos;s why Xogos runs on a simple subscription model with no ads, no microtransactions, and no tricks to keep kids glued to devices. Instead, we incentivize real-world growth through programs that reward getting off the screen. These coins they can also convert to scholarships as they grow up on Xogos.
+              </p>
+              <Link href="/incentives" className={styles.learnMoreBtn}>
+                Learn More About Active Incentives →
+              </Link>
+            </div>
+            <div className={styles.incentiveGrid}>
+              <Link href="/incentives" className={styles.incentiveCard}>
                 <Image
-                  src="/images/games/new_pryde_gym.png"
-                  alt="Pryde Gym"
-                  width={120}
-                  height={120}
-                  className={styles.incentiveLogoSmall}
+                  src="/images/games/new_iserv_volunteer.png"
+                  alt="iServ Volunteering"
+                  width={150}
+                  height={150}
+                  className={styles.incentiveLogo}
                 />
-                <div className={styles.comingSoonOverlaySmall}>Coming 2026</div>
-              </div>
-              <span className={styles.incentiveLabelSmall}>Pryde Gym</span>
-            </Link>
-          </div>
-          <div className={styles.incentiveCta}>
-            <Link href="/incentives" className={styles.learnMoreBtn}>
-              Learn More About Active Incentives →
-            </Link>
+                <span className={styles.incentiveLabel}>iServ Volunteering</span>
+              </Link>
+              <Link href="/incentives" className={styles.incentiveCard}>
+                <div className={styles.incentiveImageWrapper}>
+                  <Image
+                    src="/images/games/new_pryde_gym.png"
+                    alt="Pryde Gym"
+                    width={150}
+                    height={150}
+                    className={styles.incentiveLogo}
+                  />
+                  <div className={styles.comingSoonOverlay}>Coming 2026</div>
+                </div>
+                <span className={styles.incentiveLabel}>Pryde Gym</span>
+              </Link>
+            </div>
           </div>
         </section>
 
@@ -732,94 +732,94 @@ export default function HomePage() {
 
         {/* Student Security Section */}
         <section className={styles.studentSecuritySection}>
-          <div className={styles.sectionHeading}>
-            <h2 className={styles.sectionTitle}>
-              <span className={styles.titleIcon}>🛡️</span>
-              STUDENT PROTECTION
-            </h2>
-            <p className={styles.sectionSubtitle}>
-              We prioritize the security and safety of every student on our platform.
-              Here&apos;s how we protect them.
-            </p>
-          </div>
-          <div className={styles.securityGrid}>
-            <div className={styles.securityCardSmall}>
-              <div className={styles.securityImageWrapper}>
-                <Image
-                  src="/images/security/parent-linked.png"
-                  alt="Parent Linked Accounts"
-                  width={80}
-                  height={80}
-                  className={styles.securityImage}
-                />
-              </div>
-              <h3 className={styles.securityTitleSmall}>Parent Linked Accounts</h3>
+          <div className={styles.securityContent}>
+            <div className={styles.securityText}>
+              <h2 className={styles.sectionTitle}>
+                <span className={styles.titleIcon}>🛡️</span>
+                STUDENT PROTECTION
+              </h2>
+              <p className={styles.securityDescription}>
+                We prioritize the security and safety of every student on our platform.
+                Here&apos;s how we protect them.
+              </p>
+              <Link href="/student-protection" className={styles.securityBtn}>
+                Learn More About Our Safety Measures →
+              </Link>
             </div>
-            <div className={styles.securityCardSmall}>
-              <div className={styles.securityImageWrapper}>
-                <Image
-                  src="/images/security/know-customers.png"
-                  alt="Know Our Customers"
-                  width={80}
-                  height={80}
-                  className={styles.securityImage}
-                />
+            <div className={styles.securityGrid}>
+              <div className={styles.securityCard}>
+                <div className={styles.securityImageWrapper}>
+                  <Image
+                    src="/images/security/parent-linked.png"
+                    alt="Parent Linked Accounts"
+                    width={120}
+                    height={120}
+                    className={styles.securityImage}
+                  />
+                </div>
+                <h3 className={styles.securityTitle}>Parent Linked Accounts</h3>
               </div>
-              <h3 className={styles.securityTitleSmall}>Know Our Customers</h3>
-            </div>
-            <div className={styles.securityCardSmall}>
-              <div className={styles.securityImageWrapper}>
-                <Image
-                  src="/images/security/software-safeguards.png"
-                  alt="Software Safeguards"
-                  width={80}
-                  height={80}
-                  className={styles.securityImage}
-                />
+              <div className={styles.securityCard}>
+                <div className={styles.securityImageWrapper}>
+                  <Image
+                    src="/images/security/know-customers.png"
+                    alt="Know Our Customers"
+                    width={120}
+                    height={120}
+                    className={styles.securityImage}
+                  />
+                </div>
+                <h3 className={styles.securityTitle}>Know Our Customers</h3>
               </div>
-              <h3 className={styles.securityTitleSmall}>Software Safeguards</h3>
-            </div>
-            <div className={styles.securityCardSmall}>
-              <div className={styles.securityImageWrapper}>
-                <Image
-                  src="/images/security/no-chat.png"
-                  alt="No In-Game Chats"
-                  width={80}
-                  height={80}
-                  className={styles.securityImage}
-                />
+              <div className={styles.securityCard}>
+                <div className={styles.securityImageWrapper}>
+                  <Image
+                    src="/images/security/software-safeguards.png"
+                    alt="Software Safeguards"
+                    width={120}
+                    height={120}
+                    className={styles.securityImage}
+                  />
+                </div>
+                <h3 className={styles.securityTitle}>Software Safeguards</h3>
               </div>
-              <h3 className={styles.securityTitleSmall}>No In-Game Chats</h3>
-            </div>
-            <div className={styles.securityCardSmall}>
-              <div className={styles.securityImageWrapper}>
-                <Image
-                  src="/images/security/age-restricted.png"
-                  alt="Ages 6-19 Only"
-                  width={80}
-                  height={80}
-                  className={styles.securityImage}
-                />
+              <div className={styles.securityCard}>
+                <div className={styles.securityImageWrapper}>
+                  <Image
+                    src="/images/security/no-chat.png"
+                    alt="No In-Game Chats"
+                    width={120}
+                    height={120}
+                    className={styles.securityImage}
+                  />
+                </div>
+                <h3 className={styles.securityTitle}>No In-Game Chats</h3>
               </div>
-              <h3 className={styles.securityTitleSmall}>Ages 6-19 Only</h3>
-            </div>
-            <div className={styles.securityCardSmall}>
-              <div className={styles.securityImageWrapper}>
-                <Image
-                  src="/images/security/known-connections.png"
-                  alt="Known Connections Only"
-                  width={80}
-                  height={80}
-                  className={styles.securityImage}
-                />
+              <div className={styles.securityCard}>
+                <div className={styles.securityImageWrapper}>
+                  <Image
+                    src="/images/security/age-restricted.png"
+                    alt="Ages 6-19 Only"
+                    width={120}
+                    height={120}
+                    className={styles.securityImage}
+                  />
+                </div>
+                <h3 className={styles.securityTitle}>Ages 6-19 Only</h3>
               </div>
-              <h3 className={styles.securityTitleSmall}>Known Connections Only</h3>
+              <div className={styles.securityCard}>
+                <div className={styles.securityImageWrapper}>
+                  <Image
+                    src="/images/security/known-connections.png"
+                    alt="Known Connections Only"
+                    width={120}
+                    height={120}
+                    className={styles.securityImage}
+                  />
+                </div>
+                <h3 className={styles.securityTitle}>Known Connections Only</h3>
+              </div>
             </div>
-          </div>
-          <div className={styles.securityCta}>
-            <Link href="/student-protection" className={styles.securityBtn}>
-              Learn More About Our Safety Measures →
-            </Link>
           </div>
         </section>
 

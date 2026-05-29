@@ -27,6 +27,18 @@
   gap: 12px;
 }
 
+.chartContainer {
+  margin-bottom: 10px;
+}
+
+.chartTitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  margin: 0 0 10px 0;
+  text-align: center;
+}
+
 .stats {
   display: grid;
   grid-template-columns: repeat(2, 1fr);

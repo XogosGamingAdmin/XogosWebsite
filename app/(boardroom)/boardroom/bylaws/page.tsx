@@ -39,10 +39,11 @@ export default function BylawsPage() {
                 physical well-being.
               </p>
               <p>
-                Through the innovative use of cryptocurrency within our games,
-                we strive to enhance accessibility and inclusivity, enabling
-                players to convert in-game achievements into educational
-                opportunities, including scholarships.
+                Through the innovative use of technology within our games,
+                platform, and evergreen funding programs, we strive to enhance
+                accessibility and inclusivity, enabling players to convert
+                in-game achievements into educational opportunities, including
+                scholarships.
               </p>
               <div className={styles.highlight}>
                 <strong>Core Commitment:</strong> We hold the safety and
@@ -84,9 +85,9 @@ export default function BylawsPage() {
                   </span>
                 </div>
                 <div className={styles.role}>
-                  <span className={styles.roleTitle}>Crypto & Exchanges</span>
+                  <span className={styles.roleTitle}>Technology</span>
                   <span className={styles.roleDesc}>
-                    Manages digital currency integration and compliance
+                    Manages technology and evergreen programs to fund scholarships
                   </span>
                 </div>
                 <div className={styles.role}>
@@ -251,10 +252,6 @@ export default function BylawsPage() {
                   for GAAP compliance
                 </li>
                 <li>
-                  <strong>Cryptocurrency Audit:</strong> Platform code and
-                  ledger audited for all iPlay and iServ coin transactions
-                </li>
-                <li>
                   Audit Committee (3+ members not in day-to-day management)
                   oversees process
                 </li>
@@ -289,7 +286,7 @@ export default function BylawsPage() {
                 local, state, federal, and international levels.
               </p>
               <div className={styles.highlight}>
-                <strong>Cryptocurrency Focus:</strong> Particular attention to
+                <strong>Evergreen Funding Focus:</strong> Particular attention to
                 SEC, FinCEN, and international financial regulations governing
                 digital currencies.
               </div>
