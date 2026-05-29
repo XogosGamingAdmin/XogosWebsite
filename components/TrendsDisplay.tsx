@@ -123,7 +123,7 @@ export function TrendsDisplay({
   return (
     <div className={styles.trendsContainer}>
       <h3 className={styles.title}>
-        {type === "statistics" ? "Statistics History" : "Financials History"}
+        {type === "statistics" ? "Statistics History" : "Financial History"}
       </h3>
 
       {type === "statistics" ? (
@@ -182,7 +182,7 @@ export function TrendsDisplay({
                 <th>Yearly Pay</th>
                 <th>Lifetime</th>
                 <th>Updated By</th>
-                {onDelete && <th>Actions</th>}
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -205,18 +205,16 @@ export function TrendsDisplay({
                     {record.lifetimeMembers}
                   </td>
                   <td className={styles.emailCell}>{record.updatedBy}</td>
-                  {onDelete && (
-                    <td>
-                      <button
-                        onClick={() => handleDelete(record.id)}
-                        disabled={deletingId === record.id}
-                        className={styles.deleteButton}
-                        title="Delete this record"
-                      >
-                        {deletingId === record.id ? "..." : "×"}
-                      </button>
-                    </td>
-                  )}
+                  <td>
+                    <button
+                      onClick={() => handleDelete(record.id)}
+                      disabled={deletingId === record.id || !onDelete}
+                      className={styles.deleteButton}
+                      title="Delete this record"
+                    >
+                      {deletingId === record.id ? "..." : "×"}
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>
