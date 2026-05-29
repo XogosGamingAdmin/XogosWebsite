@@ -102,7 +102,7 @@ const generateTimelineData = () => {
       {
         title: "Secure Student Wallet Systems",
         description:
-          "Enhancing security, user experience, and age-appropriate features in the Xogos wallet for children's accounts.",
+          "Enhancing security, user experience, and age-appropriate features in the Xogos wallet for student accounts.",
         owner: "Terrance Gatsby",
         status: "Planning",
       },

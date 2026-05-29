@@ -746,52 +746,82 @@ export default function HomePage() {
               STUDENT PROTECTION
             </h2>
             <p className={styles.sectionSubtitle}>
-              We prioritize the security and safety of every child on our platform.
-              Here&apos;s how we protect our students.
+              We prioritize the security and safety of every student on our platform.
+              Here&apos;s how we protect them.
             </p>
           </div>
           <div className={styles.securityGrid}>
-            <div className={styles.securityCard}>
-              <div className={styles.securityIcon}>👨‍👩‍👧</div>
-              <h3 className={styles.securityTitle}>Parent Linked Accounts</h3>
-              <p className={styles.securityDescription}>
-                Every parent gets a linked account to monitor and manage their child&apos;s activity
-              </p>
+            <div className={styles.securityCardSmall}>
+              <div className={styles.securityImageWrapper}>
+                <Image
+                  src="/images/security/parent-linked.png"
+                  alt="Parent Linked Accounts"
+                  width={80}
+                  height={80}
+                  className={styles.securityImage}
+                />
+              </div>
+              <h3 className={styles.securityTitleSmall}>Parent Linked Accounts</h3>
             </div>
-            <div className={styles.securityCard}>
-              <div className={styles.securityIcon}>✓</div>
-              <h3 className={styles.securityTitle}>Know Our Customers</h3>
-              <p className={styles.securityDescription}>
-                We verify every user to ensure a safe community of real families
-              </p>
+            <div className={styles.securityCardSmall}>
+              <div className={styles.securityImageWrapper}>
+                <Image
+                  src="/images/security/know-customers.png"
+                  alt="Know Our Customers"
+                  width={80}
+                  height={80}
+                  className={styles.securityImage}
+                />
+              </div>
+              <h3 className={styles.securityTitleSmall}>Know Our Customers</h3>
             </div>
-            <div className={styles.securityCard}>
-              <div className={styles.securityIcon}>🔒</div>
-              <h3 className={styles.securityTitle}>Software Safeguards</h3>
-              <p className={styles.securityDescription}>
-                Advanced security measures protect accounts and personal information
-              </p>
+            <div className={styles.securityCardSmall}>
+              <div className={styles.securityImageWrapper}>
+                <Image
+                  src="/images/security/software-safeguards.png"
+                  alt="Software Safeguards"
+                  width={80}
+                  height={80}
+                  className={styles.securityImage}
+                />
+              </div>
+              <h3 className={styles.securityTitleSmall}>Software Safeguards</h3>
             </div>
-            <div className={styles.securityCard}>
-              <div className={styles.securityIcon}>🚫</div>
-              <h3 className={styles.securityTitle}>No In-Game Chats</h3>
-              <p className={styles.securityDescription}>
-                No open chat features that could expose children to strangers
-              </p>
+            <div className={styles.securityCardSmall}>
+              <div className={styles.securityImageWrapper}>
+                <Image
+                  src="/images/security/no-chat.png"
+                  alt="No In-Game Chats"
+                  width={80}
+                  height={80}
+                  className={styles.securityImage}
+                />
+              </div>
+              <h3 className={styles.securityTitleSmall}>No In-Game Chats</h3>
             </div>
-            <div className={styles.securityCard}>
-              <div className={styles.securityIcon}>👶</div>
-              <h3 className={styles.securityTitle}>Ages 6-19 Only</h3>
-              <p className={styles.securityDescription}>
-                Everyone on Xogos is between 6-19 (excluding parents and teachers)
-              </p>
+            <div className={styles.securityCardSmall}>
+              <div className={styles.securityImageWrapper}>
+                <Image
+                  src="/images/security/age-restricted.png"
+                  alt="Ages 6-19 Only"
+                  width={80}
+                  height={80}
+                  className={styles.securityImage}
+                />
+              </div>
+              <h3 className={styles.securityTitleSmall}>Ages 6-19 Only</h3>
             </div>
-            <div className={styles.securityCard}>
-              <div className={styles.securityIcon}>👥</div>
-              <h3 className={styles.securityTitle}>Known Connections Only</h3>
-              <p className={styles.securityDescription}>
-                Students only interact with people they already know
-              </p>
+            <div className={styles.securityCardSmall}>
+              <div className={styles.securityImageWrapper}>
+                <Image
+                  src="/images/security/known-connections.png"
+                  alt="Known Connections Only"
+                  width={80}
+                  height={80}
+                  className={styles.securityImage}
+                />
+              </div>
+              <h3 className={styles.securityTitleSmall}>Known Connections Only</h3>
             </div>
           </div>
           <div className={styles.securityCta}>

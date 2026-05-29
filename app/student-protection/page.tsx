@@ -30,9 +30,9 @@ export default function StudentProtectionPage() {
       icon: "👨‍👩‍👧",
       title: "Every Parent Gets a Linked Account",
       shortDescription:
-        "Parents have full visibility and control over their child's gaming experience.",
+        "Parents have full visibility and control over their student's gaming experience.",
       fullDescription:
-        "When a student signs up for Xogos, their parent or guardian automatically receives a linked parent account. This isn't optional—it's required. Parents can see what games their children play, how much time they spend, what they're learning, and the coins they've earned. They can set time limits, approve friend connections, and receive weekly progress reports.",
+        "When a student signs up for Xogos, their parent or guardian automatically receives a linked parent account. This isn't optional—it's required. Parents can see what games their students play, how much time they spend, what they're learning, and the coins they've earned. They can set time limits, approve friend connections, and receive weekly progress reports.",
       details: [
         "Real-time activity monitoring dashboard",
         "Customizable time limits and play schedules",
@@ -83,7 +83,7 @@ export default function StudentProtectionPage() {
       shortDescription:
         "Zero open chat features means zero opportunities for predatory behavior.",
       fullDescription:
-        "We made a deliberate choice: no open chat features. Period. Many incidents involving children online happen through chat systems where strangers can initiate conversations. By eliminating this vector entirely, we remove the primary way predators contact children online. Students can still collaborate on learning activities through structured, monitored systems that don't allow private messaging.",
+        "We made a deliberate choice: no open chat features. Period. Many incidents involving students online happen through chat systems where strangers can initiate conversations. By eliminating this vector entirely, we remove the primary way predators contact students online. Students can still collaborate on learning activities through structured, monitored systems that don't allow private messaging.",
       details: [
         "No direct messaging between users",
         "No public chat rooms or forums",
@@ -100,11 +100,11 @@ export default function StudentProtectionPage() {
       shortDescription:
         "Our platform is exclusively for students, with verified adults limited to parents and teachers.",
       fullDescription:
-        "Xogos is built exclusively for students aged 6-19. The only adults on the platform are verified parents (who can only see their own children's accounts) and verified teachers (who undergo background checks). There are no random adults, no influencers, no content creators trying to build audiences. Just students learning and growing together.",
+        "Xogos is built exclusively for students aged 6-19. The only adults on the platform are verified parents (who can only see their own student's accounts) and verified teachers (who undergo background checks). There are no random adults, no influencers, no content creators trying to build audiences. Just students learning and growing together.",
       details: [
         "Strict age verification during signup",
         "Adults limited to verified parents and teachers only",
-        "Parents can only access their own children's data",
+        "Parents can only access their own student's data",
         "Teachers undergo background checks before approval",
         "Regular age verification audits",
         "Immediate removal of any adult misrepresenting their role",
@@ -178,7 +178,7 @@ export default function StudentProtectionPage() {
                     </li>
                     <li className={styles.differenceNegative}>
                       <span className={styles.xMark}>✗</span>
-                      Monetize children through ads and purchases
+                      Monetize students through ads and purchases
                     </li>
                     <li className={styles.differenceNegative}>
                       <span className={styles.xMark}>✗</span>
@@ -230,7 +230,7 @@ export default function StudentProtectionPage() {
                   We Don&apos;t Monetize Your Students
                 </h2>
                 <p className={styles.noMonetizationDescription}>
-                  Most platforms treat children as products—showing them ads, pushing
+                  Most platforms treat students as products—showing them ads, pushing
                   microtransactions, and selling their data. We took a different path.
                   Xogos runs on a simple, transparent subscription model. No ads. No
                   in-app purchases. No selling data. No tricks to keep kids glued to screens.
@@ -303,7 +303,7 @@ export default function StudentProtectionPage() {
         <section className={styles.ctaSection}>
           <Container>
             <div className={styles.ctaContent}>
-              <h2 className={styles.ctaTitle}>Ready to Give Your Child a Safe Place to Learn?</h2>
+              <h2 className={styles.ctaTitle}>Ready to Give Your Student a Safe Place to Learn?</h2>
               <p className={styles.ctaText}>
                 Join thousands of families who trust Xogos to provide a secure,
                 educational gaming experience.

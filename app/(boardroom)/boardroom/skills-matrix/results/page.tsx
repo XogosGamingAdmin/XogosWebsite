@@ -48,7 +48,7 @@ const skillCategories: SkillCategory[] = [
   {
     name: "Youth Protection & Data Privacy",
     color: "#f59e0b",
-    skills: ["Child Online Protection", "Student Data Privacy", "Responsible Gaming Practices", "Identity Verification", "Digital Citizenship"],
+    skills: ["Student Online Protection", "Student Data Privacy", "Responsible Gaming Practices", "Identity Verification", "Digital Citizenship"],
   },
   {
     name: "Scholarship & Financial Education",

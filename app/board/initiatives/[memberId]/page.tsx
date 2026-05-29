@@ -106,7 +106,7 @@ const staticBoardMembers = [
       {
         title: "Secure Student Wallet Systems",
         description:
-          "Enhance security, user experience, and age-appropriate features in the Xogos wallet, ensuring children's accounts stay safe from external threats.",
+          "Enhance security, user experience, and age-appropriate features in the Xogos wallet, ensuring student accounts stay safe from external threats.",
         objectives: [
           "Add multi-signature or parental oversight features",
           "Automate compliance checks for suspicious activity",

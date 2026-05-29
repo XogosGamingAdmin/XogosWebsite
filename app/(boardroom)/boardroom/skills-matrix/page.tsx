@@ -51,7 +51,7 @@ const defaultSkillCategories: SkillCategory[] = [
     name: "Youth Protection & Data Privacy",
     color: "#f59e0b",
     skills: [
-      { id: "childprotection", name: "Child Online Protection", description: "COPPA and safety measures" },
+      { id: "studentprotection", name: "Student Online Protection", description: "COPPA and safety measures" },
       { id: "dataprivacy", name: "Student Data Privacy", description: "FERPA and data protection" },
       { id: "gaming", name: "Responsible Gaming Practices", description: "Ethical gaming principles" },
       { id: "identity", name: "Identity Verification", description: "Age and identity verification" },
