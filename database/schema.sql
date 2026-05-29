@@ -239,6 +239,29 @@ ON CONFLICT (user_id) DO NOTHING;
 -- NOTE: Default statistics and financials rows are NOT inserted automatically
 -- They should only be created manually by authorized admins via the admin panel
 
+-- Board Meetings Table
+CREATE TABLE IF NOT EXISTS board_meetings (
+  id SERIAL PRIMARY KEY,
+  meeting_date DATE NOT NULL,
+  meeting_name TEXT NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  created_by TEXT NOT NULL
+);
+
+-- Meeting Attendance Table
+CREATE TABLE IF NOT EXISTS meeting_attendance (
+  id SERIAL PRIMARY KEY,
+  meeting_id INTEGER REFERENCES board_meetings(id) ON DELETE CASCADE,
+  member_name TEXT NOT NULL,
+  member_email TEXT NOT NULL,
+  attendance TEXT NOT NULL CHECK (attendance IN ('absent', 'half_time', 'full_time')),
+  prepared BOOLEAN DEFAULT FALSE,
+  in_person BOOLEAN DEFAULT FALSE,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  UNIQUE(meeting_id, member_email)
+);
+
 -- Create indexes for better performance
 CREATE INDEX IF NOT EXISTS idx_rss_subscriptions_user_id ON rss_subscriptions(user_id);
 CREATE INDEX IF NOT EXISTS idx_checklist_user_id ON checklist_items(user_id);

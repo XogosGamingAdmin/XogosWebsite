@@ -30,6 +30,14 @@ const menuItems = [
     color: "#2dd4bf",
   },
   {
+    id: "transparency",
+    title: "Transparency",
+    description: "As per bylaws, we need to make sure board members come prepared and attend regularly",
+    href: "/boardroom/transparency",
+    icon: "👁️",
+    color: "#22c55e",
+  },
+  {
     id: "bylaws",
     title: "ByLaws",
     description: "Corporate bylaws and governance documents",

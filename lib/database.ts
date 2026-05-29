@@ -1507,6 +1507,116 @@ export const db = {
     );
     return result.rows;
   },
+
+  // ============ BOARD MEETINGS & ATTENDANCE FUNCTIONS ============
+
+  /**
+   * Get all board meetings
+   */
+  async getMeetings() {
+    const result = await query(
+      `SELECT id, meeting_date, meeting_name, created_at, created_by
+       FROM board_meetings
+       ORDER BY meeting_date DESC`
+    );
+    return result.rows;
+  },
+
+  /**
+   * Get a specific meeting by ID
+   */
+  async getMeetingById(id: number) {
+    const result = await query(
+      `SELECT id, meeting_date, meeting_name, created_at, created_by
+       FROM board_meetings
+       WHERE id = $1`,
+      [id]
+    );
+    return result.rows[0];
+  },
+
+  /**
+   * Create a new meeting
+   */
+  async createMeeting(meetingDate: string, meetingName: string, createdBy: string) {
+    const result = await query(
+      `INSERT INTO board_meetings (meeting_date, meeting_name, created_by)
+       VALUES ($1, $2, $3)
+       RETURNING id, meeting_date, meeting_name, created_at, created_by`,
+      [meetingDate, meetingName, createdBy]
+    );
+    return result.rows[0];
+  },
+
+  /**
+   * Delete a meeting
+   */
+  async deleteMeeting(id: number) {
+    await query(`DELETE FROM board_meetings WHERE id = $1`, [id]);
+  },
+
+  /**
+   * Get attendance for a meeting
+   */
+  async getAttendanceByMeeting(meetingId: number) {
+    const result = await query(
+      `SELECT id, meeting_id, member_name, member_email, attendance, prepared, in_person, created_at, updated_at
+       FROM meeting_attendance
+       WHERE meeting_id = $1
+       ORDER BY member_name`,
+      [meetingId]
+    );
+    return result.rows;
+  },
+
+  /**
+   * Get all attendance records with meeting info
+   */
+  async getAllAttendance() {
+    const result = await query(
+      `SELECT
+         ma.id, ma.meeting_id, ma.member_name, ma.member_email,
+         ma.attendance, ma.prepared, ma.in_person,
+         bm.meeting_date, bm.meeting_name
+       FROM meeting_attendance ma
+       JOIN board_meetings bm ON ma.meeting_id = bm.id
+       ORDER BY bm.meeting_date DESC, ma.member_name`
+    );
+    return result.rows;
+  },
+
+  /**
+   * Upsert attendance record
+   */
+  async upsertAttendance(
+    meetingId: number,
+    memberName: string,
+    memberEmail: string,
+    attendance: string,
+    prepared: boolean,
+    inPerson: boolean
+  ) {
+    const result = await query(
+      `INSERT INTO meeting_attendance (meeting_id, member_name, member_email, attendance, prepared, in_person)
+       VALUES ($1, $2, $3, $4, $5, $6)
+       ON CONFLICT (meeting_id, member_email)
+       DO UPDATE SET
+         attendance = $4,
+         prepared = $5,
+         in_person = $6,
+         updated_at = NOW()
+       RETURNING *`,
+      [meetingId, memberName, memberEmail, attendance, prepared, inPerson]
+    );
+    return result.rows[0];
+  },
+
+  /**
+   * Delete attendance record
+   */
+  async deleteAttendance(id: number) {
+    await query(`DELETE FROM meeting_attendance WHERE id = $1`, [id]);
+  },
 };
 
 export default pool;
