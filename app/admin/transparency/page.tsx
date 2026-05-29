@@ -19,7 +19,7 @@ interface Meeting {
 interface AttendanceRecord {
   memberName: string;
   memberEmail: string;
-  attendance: "absent" | "half_time" | "full_time";
+  attendance: "absent" | "part_time" | "full_time";
   prepared: boolean;
   inPerson: boolean;
 }
@@ -84,7 +84,7 @@ export default function AdminTransparencyPage() {
         data[record.memberEmail] = {
           memberName: record.memberName,
           memberEmail: record.memberEmail,
-          attendance: record.attendance as "absent" | "half_time" | "full_time",
+          attendance: record.attendance as "absent" | "part_time" | "full_time",
           prepared: record.prepared,
           inPerson: record.inPerson,
         };
@@ -287,7 +287,7 @@ export default function AdminTransparencyPage() {
                             }}
                           >
                             <option value="absent">Absent</option>
-                            <option value="half_time">Half Time</option>
+                            <option value="part_time">Part Time</option>
                             <option value="full_time">Full Time</option>
                           </select>
                         </td>

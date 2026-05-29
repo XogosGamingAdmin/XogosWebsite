@@ -19,7 +19,7 @@ interface AttendanceRecord {
   meetingId: number;
   memberName: string;
   memberEmail: string;
-  attendance: "absent" | "half_time" | "full_time";
+  attendance: "absent" | "part_time" | "full_time";
   prepared: boolean;
   inPerson: boolean;
   meetingDate: string;
@@ -71,8 +71,8 @@ export default function TransparencyPage() {
     switch (value) {
       case "full_time":
         return "Full Time";
-      case "half_time":
-        return "Half Time";
+      case "part_time":
+        return "Part Time";
       case "absent":
         return "Absent";
       default:
@@ -84,8 +84,8 @@ export default function TransparencyPage() {
     switch (value) {
       case "full_time":
         return styles.fullTime;
-      case "half_time":
-        return styles.halfTime;
+      case "part_time":
+        return styles.partTime;
       case "absent":
         return styles.absent;
       default:
@@ -195,7 +195,7 @@ export default function TransparencyPage() {
               <span>Attended entire meeting</span>
             </div>
             <div className={styles.legendItem}>
-              <span className={`${styles.attendanceStatus} ${styles.halfTime}`}>Half Time</span>
+              <span className={`${styles.attendanceStatus} ${styles.partTime}`}>Part Time</span>
               <span>Attended part of meeting</span>
             </div>
             <div className={styles.legendItem}>

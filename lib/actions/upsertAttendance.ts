@@ -8,7 +8,7 @@ interface AttendanceData {
   meetingId: number;
   memberName: string;
   memberEmail: string;
-  attendance: "absent" | "half_time" | "full_time";
+  attendance: "absent" | "part_time" | "full_time";
   prepared: boolean;
   inPerson: boolean;
 }
