@@ -195,11 +195,11 @@ export function TrendsDisplay({
                   <td className={styles.moneyCell}>
                     ${record.expenses.toLocaleString()}
                   </td>
-                  <td className={styles.moneyCell}>
-                    ${record.monthlyPayments.toLocaleString()}
+                  <td className={styles.numberCell}>
+                    {record.monthlyPayments.toLocaleString()}
                   </td>
-                  <td className={styles.moneyCell}>
-                    ${record.yearlyPayments.toLocaleString()}
+                  <td className={styles.numberCell}>
+                    {record.yearlyPayments.toLocaleString()}
                   </td>
                   <td className={styles.numberCell}>
                     {record.lifetimeMembers}
