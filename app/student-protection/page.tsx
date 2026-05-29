@@ -32,12 +32,12 @@ export default function StudentProtectionPage() {
       shortDescription:
         "Parents have full visibility and control over their student's gaming experience.",
       fullDescription:
-        "When a student signs up for Xogos, their parent or guardian automatically receives a linked parent account. This isn't optional—it's required. Parents can see what games their students play, how much time they spend, what they're learning, and the coins they've earned. They can set time limits, approve friend connections, and receive weekly progress reports.",
+        "When a student gets signed up for Xogos, their parent or guardian automatically receives a linked parent or teacher account. This isn't optional—it's required. Parents can see what games their students play, how much time they spend, what they're learning, and who they are chatting with in the platform itself. They can set time limits, start discussions with their students about who they are talking with, and join them in the games their students are playing.",
       details: [
         "Real-time activity monitoring dashboard",
         "Customizable time limits and play schedules",
-        "Weekly progress reports delivered via email",
-        "Ability to approve or deny all friend connections",
+        "Join your students in their games",
+        "Compete Against Your Students: Are You Smarter than your 3rd Grader?",
         "Direct access to academic achievement data",
         "One-click account pause for any situation",
       ],
@@ -83,7 +83,7 @@ export default function StudentProtectionPage() {
       shortDescription:
         "Zero open chat features means zero opportunities for predatory behavior.",
       fullDescription:
-        "We made a deliberate choice: no open chat features. Period. Many incidents involving students online happen through chat systems where strangers can initiate conversations. By eliminating this vector entirely, we remove the primary way predators contact students online. Students can still collaborate on learning activities through structured, monitored systems that don't allow private messaging.",
+        "We made a deliberate choice: no open chat features. Period. Many incidents involving students online happen through chat systems where strangers can initiate conversations. By eliminating this vector entirely, we remove the primary way predators contact students online. While there are no in-game chats, students can still collaborate through our platform chat which allows them to stay connected.",
       details: [
         "No direct messaging between users",
         "No public chat rooms or forums",
@@ -95,7 +95,7 @@ export default function StudentProtectionPage() {
     },
     {
       id: "age-restricted",
-      icon: "👶",
+      icon: "🧑‍🎓",
       title: "Everyone is Between 6-19",
       shortDescription:
         "Our platform is exclusively for students, with verified adults limited to parents and teachers.",
@@ -117,7 +117,7 @@ export default function StudentProtectionPage() {
       shortDescription:
         "No strangers. Students connect only with classmates, friends, and family.",
       fullDescription:
-        "Students can only connect with people they already know in real life. Friend requests require parent approval, and we encourage connections through school classrooms where teachers have verified all participants. There's no 'discover users' feature, no public profiles to browse, and no way for strangers to find or contact students.",
+        "Students can only connect with people they already know in real life. Family is automatic, but may be blocked temporarily. Friends can join by three means: 1. Join an organization (Scouts, Trail Life, 4H, NHS, etc.) where all students can be connected in local groups, 2. Classroom—those in the same classroom may join with other classmates, 3. A friend request may be sent but expires in 10 minutes. Remember, parents can see who their kids are connected to and should start discussions with their students. There's no 'discover users' feature, no public profiles to browse, and no way for strangers to find or contact students.",
       details: [
         "All friend requests require parent approval",
         "No public user directory or search",
@@ -150,9 +150,35 @@ export default function StudentProtectionPage() {
               </div>
               <h1 className={styles.heroTitle}>Student Protection</h1>
               <p className={styles.heroSubtitle}>
-                We&apos;re not just another gaming platform. We&apos;re the safest place for kids
+                We&apos;re not just another gaming platform. We&apos;re the safest place for students
                 to play and learn online. Here&apos;s how we&apos;re different from everyone else.
               </p>
+            </div>
+          </Container>
+        </section>
+
+        {/* Message to Students Section */}
+        <section className={styles.studentMessageSection}>
+          <Container>
+            <div className={styles.studentMessageContent}>
+              <div className={styles.studentMessageIcon}>🎮</div>
+              <h2 className={styles.studentMessageTitle}>A Message to Our Students</h2>
+              <p className={styles.studentMessageText}>
+                Hey there! We know there are a lot of gaming websites out there that look fun and exciting.
+                But here&apos;s something important you should know: some of those places can be dangerous.
+                There are people online called predators—adults who pretend to be kids or act friendly,
+                but they actually want to hurt young people like you.
+              </p>
+              <p className={styles.studentMessageText}>
+                <strong>That&apos;s exactly why we built Xogos the way we did.</strong> Every safeguard
+                on this page exists to keep YOU safe while you have fun and learn. You can play games,
+                connect with your real friends and classmates, and earn coins for scholarships—all
+                without worrying about strangers trying to contact you. We&apos;ve got your back.
+              </p>
+              <div className={styles.studentMessageHighlight}>
+                <span className={styles.highlightIcon}>💪</span>
+                <span>Play safe. Learn lots. Have fun with friends you actually know!</span>
+              </div>
             </div>
           </Container>
         </section>
@@ -239,26 +265,26 @@ export default function StudentProtectionPage() {
                   <strong>Instead, we incentivize them to get off the screen.</strong> Our
                   active incentive programs reward students for volunteering in their
                   communities, staying physically active, and achieving academic goals
-                  in the real world. The coins they earn can be converted to actual
+                  in the real world. The coins they earn can be used in their games or converted to actual
                   scholarships for their future education.
                 </p>
               </div>
               <div className={styles.noMonetizationVisual}>
                 <div className={styles.incentiveItem}>
-                  <span className={styles.incentiveIcon}>🤝</span>
-                  <span>Earn coins for volunteering</span>
-                </div>
-                <div className={styles.incentiveItem}>
-                  <span className={styles.incentiveIcon}>🏃</span>
-                  <span>Earn coins for physical activity</span>
+                  <span className={styles.incentiveIcon}>🎮</span>
+                  <span>Earn Coins by Playing Games</span>
                 </div>
                 <div className={styles.incentiveItem}>
                   <span className={styles.incentiveIcon}>📚</span>
-                  <span>Earn coins for good grades</span>
+                  <span>Earn Coins for Getting Good Grades</span>
+                </div>
+                <div className={styles.incentiveItem}>
+                  <span className={styles.incentiveIcon}>🌳</span>
+                  <span>Earn Coins for Doing Things Off-Screen</span>
                 </div>
                 <div className={styles.incentiveItem}>
                   <span className={styles.incentiveIcon}>🎓</span>
-                  <span>Convert coins to scholarships</span>
+                  <span>Use Coins in Games or Convert to Scholarships</span>
                 </div>
               </div>
             </div>

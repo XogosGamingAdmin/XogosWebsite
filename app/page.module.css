@@ -740,6 +740,67 @@
   margin: 0 auto;
 }
 
+.incentiveGridStacked {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  max-width: 200px;
+  margin: 0 auto;
+}
+
+.incentiveCardSmall {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 15px;
+  background: rgba(26, 26, 46, 0.6);
+  border-radius: 16px;
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.incentiveCardSmall:hover {
+  transform: translateY(-5px);
+  border-color: rgba(139, 92, 246, 0.6);
+  box-shadow: 0 15px 30px rgba(139, 92, 246, 0.15);
+}
+
+.incentiveLogoSmall {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-bottom: 10px;
+}
+
+.incentiveImageWrapper {
+  position: relative;
+}
+
+.incentiveLabelSmall {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #e5e5e5;
+  text-align: center;
+}
+
+.comingSoonOverlaySmall {
+  position: absolute;
+  bottom: 10px;
+  left: 0;
+  right: 0;
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: white;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 4px;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-radius: 0 0 12px 12px;
+}
+
 .incentiveCard {
   display: flex;
   flex-direction: column;

@@ -652,37 +652,29 @@ export default function HomePage() {
               We believe students shouldn&apos;t be on screens all day. That&apos;s why Xogos runs on a simple subscription model with no ads, no microtransactions, and no tricks to keep kids glued to devices. Instead, we incentivize real-world growth through programs that reward getting off the screen. These coins they can also convert to scholarships as they grow up on Xogos.
             </p>
           </div>
-          <div className={styles.incentiveGrid}>
-            <Link href="/incentives" className={styles.incentiveCard}>
-              <div className={styles.incentiveLogoWrapper}>
-                <Image
-                  src="/images/games/new_iserv_volunteer.png"
-                  alt="iServ Volunteering"
-                  width={200}
-                  height={200}
-                  className={styles.incentiveLogo}
-                />
-              </div>
-              <h3 className={styles.incentiveTitle}>iServ Volunteering</h3>
-              <p className={styles.incentiveDescription}>
-                Earn coins through community service with local non-profits
-              </p>
+          <div className={styles.incentiveGridStacked}>
+            <Link href="/incentives" className={styles.incentiveCardSmall}>
+              <Image
+                src="/images/games/new_iserv_volunteer.png"
+                alt="iServ Volunteering"
+                width={120}
+                height={120}
+                className={styles.incentiveLogoSmall}
+              />
+              <span className={styles.incentiveLabelSmall}>iServ Volunteering</span>
             </Link>
-            <Link href="/incentives" className={styles.incentiveCard}>
-              <div className={styles.incentiveLogoWrapper}>
+            <Link href="/incentives" className={styles.incentiveCardSmall}>
+              <div className={styles.incentiveImageWrapper}>
                 <Image
                   src="/images/games/new_pryde_gym.png"
                   alt="Pryde Gym"
-                  width={200}
-                  height={200}
-                  className={styles.incentiveLogo}
+                  width={120}
+                  height={120}
+                  className={styles.incentiveLogoSmall}
                 />
-                <div className={styles.comingSoonOverlay}>Coming Soon - End of 2026</div>
+                <div className={styles.comingSoonOverlaySmall}>Coming 2026</div>
               </div>
-              <h3 className={styles.incentiveTitle}>Pryde Gym</h3>
-              <p className={styles.incentiveDescription}>
-                Earn coins through physical activity and fitness challenges
-              </p>
+              <span className={styles.incentiveLabelSmall}>Pryde Gym</span>
             </Link>
           </div>
           <div className={styles.incentiveCta}>
