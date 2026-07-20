@@ -31,9 +31,12 @@ module.exports = {
     DATABASE_SSL: process.env.DATABASE_SSL,
     // Liveblocks
     LIVEBLOCKS_SECRET_KEY: process.env.LIVEBLOCKS_SECRET_KEY,
+    // Supabase Storage
+    NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
+    SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY,
   },
   images: {
-    domains: ["liveblocks.io", "static.wixstatic.com"],
+    domains: ["liveblocks.io", "static.wixstatic.com", "bqeurqjjrcrbrtsgmnlp.supabase.co"],
   },
   webpack: (config, { isServer }) => {
     if (!isServer) {
