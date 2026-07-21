@@ -234,7 +234,10 @@ export default function BlogPage() {
   useEffect(() => {
     async function loadPosts() {
       try {
-        const response = await fetch("/api/blog");
+        // Add cache-busting to ensure fresh data
+        const response = await fetch("/api/blog", {
+          cache: "no-store",
+        });
         const result = await response.json();
 
         if (result.data && result.data.length > 0) {

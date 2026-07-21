@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
 import generatedPosts from "@/data/generated-posts.json";
 
+// Disable caching for this route - always fetch fresh data
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 interface BlogPost {
   id: string;
   title: string;
@@ -110,7 +114,14 @@ export async function GET() {
       featured: post.featured,
     }));
 
-    return NextResponse.json({ data: previews });
+    return NextResponse.json(
+      { data: previews },
+      {
+        headers: {
+          "Cache-Control": "no-store, no-cache, must-revalidate",
+        },
+      }
+    );
   } catch (error) {
     console.error("Error listing blog posts:", error);
     return NextResponse.json(
