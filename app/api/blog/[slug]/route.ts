@@ -109,6 +109,22 @@ function calculateReadTime(content: string): string {
   return `${minutes} min read`;
 }
 
+// Helper to convert plain text with paragraphs to HTML
+function convertPlainTextToHtml(content: string): string {
+  const hasHtmlTags =
+    /<(p|div|h[1-6]|ul|ol|li|blockquote|pre|table|br)\b/i.test(content);
+  if (hasHtmlTags) return content;
+
+  const paragraphs = content
+    .split(/\n\s*\n/)
+    .map((p) => p.trim())
+    .filter((p) => p.length > 0);
+
+  return paragraphs
+    .map((paragraph) => `<p>${paragraph.replace(/\n/g, "<br>")}</p>`)
+    .join("\n\n");
+}
+
 // PUT - Update an existing blog post
 export async function PUT(
   request: NextRequest,
@@ -140,7 +156,10 @@ export async function PUT(
       );
     }
 
-    const readTime = calculateReadTime(content);
+    // Convert plain text to HTML if needed (preserves paragraphs from pasted text)
+    const processedContent = convertPlainTextToHtml(content);
+
+    const readTime = calculateReadTime(processedContent);
     const publishedAt = new Date().toLocaleDateString("en-US", {
       year: "numeric",
       month: "long",
@@ -164,8 +183,9 @@ export async function PUT(
         [
           slug,
           title,
-          excerpt || content.replace(/<[^>]*>/g, "").substring(0, 200) + "...",
-          content,
+          excerpt ||
+            processedContent.replace(/<[^>]*>/g, "").substring(0, 200) + "...",
+          processedContent,
           author || "Zack Edwards",
           "/images/board/zack.png",
           "Content Creator",

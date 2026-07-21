@@ -645,7 +645,52 @@ export const config = {
 
 ## Session History
 
-### Latest Session: July 20, 2026
+### Latest Session: July 21, 2026
+
+#### Work Completed
+
+1. **Fixed Blog Post Ordering (Newest First)**
+   - Issue: New blog posts weren't appearing at the top of the blog page
+   - Root cause: The API merged DB posts with static posts without re-sorting by date
+   - Solution: Added server-side sorting in `app/api/blog/route.ts` using a date parsing helper
+
+2. **Fixed Blog Post Link Preview Images (Open Graph)**
+   - Issue: When sharing blog post links, the image didn't show up in the preview
+   - Root cause: Blog post page was a client component (`"use client"`) which doesn't support `generateMetadata`
+   - Solution: Restructured the blog post page into:
+     - `page.tsx` - Server component with `generateMetadata` for OG tags (title, description, image)
+     - `BlogPostClient.tsx` - Client component for interactivity
+   - Now properly exports Open Graph metadata including the post's image, title, and description
+
+3. **Fixed Paragraph Preservation from Pasted Text**
+   - Issue: When pasting plain text into the Content field, paragraph breaks were lost
+   - Root cause: The content was stored as-is without HTML formatting
+   - Solution: Added `convertPlainTextToHtml()` helper that:
+     - Detects if content already has HTML tags (p, div, h1-h6, ul, ol, etc.)
+     - If plain text, splits on double newlines and wraps each paragraph in `<p>` tags
+     - Converts single newlines within paragraphs to `<br>` tags
+   - Applied to both create (`/api/blog/create`) and update (`/api/blog/[slug]`) routes
+
+#### Files Modified
+- `app/api/blog/route.ts` - Added date sorting for combined posts
+- `app/blog/[slug]/page.tsx` - Converted to server component with `generateMetadata`
+- `app/blog/[slug]/BlogPostClient.tsx` - New client component extracted from page
+- `app/api/blog/create/route.ts` - Added plain text to HTML conversion
+- `app/api/blog/[slug]/route.ts` - Added plain text to HTML conversion for updates
+
+#### Architecture Notes
+- **OG Metadata**: The `generateMetadata` function fetches the post server-side and returns proper Open Graph tags including the image URL (converted to absolute URL for external use)
+- **Plain Text Detection**: The converter checks for HTML block-level tags (`<p>`, `<div>`, `<h1-h6>`, `<ul>`, `<ol>`, etc.) to determine if content is already HTML
+- **Paragraph Splitting**: Uses regex `/\n\s*\n/` to split on double newlines (paragraph breaks)
+
+#### Pending
+- Push changes to main and verify on production
+- Test by creating a new blog post with pasted plain text content
+- Test sharing a blog post link to verify OG image appears
+
+---
+
+### Previous Session: July 20, 2026
 
 #### Work Completed
 
@@ -1031,5 +1076,5 @@ CREATE INDEX IF NOT EXISTS idx_board_skills_category ON board_skills(skill_categ
 
 ---
 
-*Last updated: July 20, 2026*
+*Last updated: July 21, 2026*
 *Maintained by: Development Team*

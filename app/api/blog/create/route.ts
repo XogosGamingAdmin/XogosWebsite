@@ -20,6 +20,35 @@ function calculateReadTime(content: string): string {
   return `${minutes} min read`;
 }
 
+// Helper to convert plain text with paragraphs to HTML
+// Detects if content is plain text (no HTML block tags) and converts paragraph breaks to <p> tags
+function convertPlainTextToHtml(content: string): string {
+  // Check if content already has HTML block-level tags
+  const hasHtmlTags =
+    /<(p|div|h[1-6]|ul|ol|li|blockquote|pre|table|br)\b/i.test(content);
+
+  if (hasHtmlTags) {
+    // Content already has HTML, return as-is
+    return content;
+  }
+
+  // Content is plain text - convert paragraph breaks to <p> tags
+  // Split on double newlines (paragraph breaks)
+  const paragraphs = content
+    .split(/\n\s*\n/)
+    .map((p) => p.trim())
+    .filter((p) => p.length > 0);
+
+  // Wrap each paragraph in <p> tags, preserving single line breaks as <br>
+  const htmlParagraphs = paragraphs.map((paragraph) => {
+    // Convert single newlines within a paragraph to <br>
+    const withBreaks = paragraph.replace(/\n/g, "<br>");
+    return `<p>${withBreaks}</p>`;
+  });
+
+  return htmlParagraphs.join("\n\n");
+}
+
 // POST - Create a new blog post
 export async function POST(request: NextRequest) {
   try {
@@ -48,6 +77,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Convert plain text to HTML if needed (preserves paragraphs from pasted text)
+    const processedContent = convertPlainTextToHtml(content);
+
     // Generate slug and other fields
     const id = slugify(title);
     const publishedAt = new Date().toLocaleDateString("en-US", {
@@ -55,15 +87,16 @@ export async function POST(request: NextRequest) {
       month: "long",
       day: "numeric",
     });
-    const readTime = calculateReadTime(content);
+    const readTime = calculateReadTime(processedContent);
 
     // Create the new post object
     const newPost = {
       id,
       title,
       excerpt:
-        excerpt || content.replace(/<[^>]*>/g, "").substring(0, 200) + "...",
-      content,
+        excerpt ||
+        processedContent.replace(/<[^>]*>/g, "").substring(0, 200) + "...",
+      content: processedContent,
       author: {
         name: author || "Zack Edwards",
         avatar: "/images/board/zack.png",

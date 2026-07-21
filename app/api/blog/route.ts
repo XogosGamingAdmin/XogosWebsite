@@ -67,6 +67,13 @@ async function getDbPosts(): Promise<BlogPost[]> {
   }
 }
 
+// Helper to parse date strings like "July 21, 2026" or "November 20, 2024"
+function parsePublishedDate(dateStr: string): Date {
+  const parsed = new Date(dateStr);
+  // If parsing fails, return a very old date so it sorts to the bottom
+  return isNaN(parsed.getTime()) ? new Date(0) : parsed;
+}
+
 // GET - List all blog posts (without full content for listing)
 export async function GET() {
   try {
@@ -79,6 +86,13 @@ export async function GET() {
       ...dbPosts,
       ...staticPosts.filter((p) => !dbPostIds.has(p.id)),
     ];
+
+    // Sort all posts by publishedAt date (newest first)
+    allPosts.sort((a, b) => {
+      const dateA = parsePublishedDate(a.publishedAt);
+      const dateB = parsePublishedDate(b.publishedAt);
+      return dateB.getTime() - dateA.getTime();
+    });
 
     // Return posts without the full content field to keep response small
     const previews = allPosts.map((post) => ({

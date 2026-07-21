@@ -229,7 +229,6 @@ export default function BlogPage() {
     staticBlogPostPreviews
   );
   const [categories, setCategories] = useState<string[]>(baseCategories);
-  const [loading, setLoading] = useState(true);
 
   // Load posts from API on mount
   useEffect(() => {
@@ -239,47 +238,37 @@ export default function BlogPage() {
         const result = await response.json();
 
         if (result.data && result.data.length > 0) {
-          // Merge static posts with API posts, avoiding duplicates by ID
-          const staticIds = new Set(staticBlogPostPreviews.map((p) => p.id));
-          const newPosts = result.data.filter(
-            (p: BlogPostPreview) => !staticIds.has(p.id)
-          );
-          const mergedPosts = [...staticBlogPostPreviews, ...newPosts];
-
-          // Sort by date (newest first)
-          mergedPosts.sort((a, b) => {
-            const dateA = new Date(a.publishedAt);
-            const dateB = new Date(b.publishedAt);
-            return dateB.getTime() - dateA.getTime();
-          });
-
-          setAllPosts(mergedPosts);
+          // Use API data directly - it's already sorted by date (newest first)
+          // The API merges DB posts with static posts and sorts them
+          setAllPosts(result.data);
 
           // Update categories based on all posts
-          const allCategories = new Set(mergedPosts.map((p) => p.category));
+          const allCategories = new Set(
+            result.data.map((p: BlogPostPreview) => p.category)
+          );
           const sortedCategories = ["All", ...Array.from(allCategories).sort()];
           setCategories(sortedCategories);
         }
       } catch (error) {
         console.error("Error loading blog posts:", error);
-      } finally {
-        setLoading(false);
       }
     }
     loadPosts();
   }, []);
 
-  // Get featured post
-  const featuredPost = allPosts.find((post) => post.featured);
+  // Featured post is always the newest (first in sorted list)
+  const featuredPost = allPosts.length > 0 ? allPosts[0] : null;
 
-  // Filter posts based on category and search
-  const filteredPosts = allPosts.filter((post) => {
+  // Filter posts based on category and search (exclude the featured post)
+  const filteredPosts = allPosts.filter((post, index) => {
+    // Skip the first post (featured)
+    if (index === 0) return false;
     const matchesCategory =
       activeCategory === "All" || post.category === activeCategory;
     const matchesSearch =
       post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       post.excerpt.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesCategory && matchesSearch && !post.featured;
+    return matchesCategory && matchesSearch;
   });
 
   return (
