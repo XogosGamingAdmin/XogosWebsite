@@ -645,7 +645,262 @@ export const config = {
 
 ## Session History
 
-### Latest Session: May 14, 2026
+### Latest Session: July 20, 2026
+
+#### Work Completed
+
+1. **Fixed Blog Image Upload to Supabase Storage**
+   - Issue: "Failed to upload image" error when uploading images in `/admin/posts`
+   - Root cause: Supabase environment variables were not exposed in `next.config.js`
+   - Solution: Added `NEXT_PUBLIC_SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` to the `env` config in `next.config.js`
+
+2. **Created `blog_images` Table in Supabase**
+   - Table was missing from the Supabase database
+   - Created table with proper schema for storing image metadata
+
+3. **Improved Error Handling in Image Upload API**
+   - Added specific error messages to `app/api/blog/images/upload/route.ts`
+   - Now returns detailed errors: missing env vars, storage errors, database errors
+
+4. **Added Supabase Domain to Image Config**
+   - Added `bqeurqjjrcrbrtsgmnlp.supabase.co` to allowed image domains in `next.config.js`
+
+#### Environment Variables Required in AWS Amplify
+
+Make sure these are set in Amplify → App settings → Environment variables:
+
+| Variable | Description |
+|----------|-------------|
+| `NEXT_PUBLIC_SUPABASE_URL` | `https://bqeurqjjrcrbrtsgmnlp.supabase.co` |
+| `SUPABASE_SERVICE_ROLE_KEY` | Service role key from Supabase Dashboard → Settings → API |
+
+**Important:** These variables MUST also be listed in `next.config.js` under the `env` section, or they won't be available to the Next.js runtime on Amplify.
+
+#### Database Changes Required
+
+Run this SQL in Supabase SQL Editor (already done):
+
+```sql
+-- Blog Images Table
+DROP TABLE IF EXISTS blog_images;
+
+CREATE TABLE blog_images (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  storage_path TEXT NOT NULL,
+  public_url TEXT NOT NULL,
+  original_filename TEXT NOT NULL,
+  file_size INTEGER NOT NULL,
+  mime_type TEXT NOT NULL,
+  alt_text TEXT,
+  uploaded_by TEXT NOT NULL,
+  post_id TEXT,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+CREATE INDEX idx_blog_images_post_id ON blog_images(post_id);
+CREATE INDEX idx_blog_images_orphaned ON blog_images(post_id) WHERE post_id IS NULL;
+CREATE INDEX idx_blog_images_created_at ON blog_images(created_at DESC);
+```
+
+#### Supabase Storage Setup
+
+1. Go to Supabase Dashboard → Storage
+2. Create bucket: `blog-images` (if not exists)
+3. Set bucket to **Public**
+4. Allowed MIME types: `image/jpeg, image/png, image/webp, image/gif`
+5. Max file size: 5MB
+
+#### Key Commits
+```
+3462004 - Add detailed error messages to image upload API
+3f511a2 - Add Supabase environment variables to Next.js config
+```
+
+#### Files Modified
+- `next.config.js` - Added Supabase env vars and image domain
+- `app/api/blog/images/upload/route.ts` - Added detailed error messages
+
+#### Pending
+- Test image upload after Amplify redeploys with the new config
+- Confirm images persist and display correctly in blog posts
+
+---
+
+### Previous Session: May 29-30, 2026
+
+#### Work Completed
+
+1. **Homepage Layout Redesign**
+   - Active Incentive Programs: Changed to text-left, images-right layout (matching Classes section)
+   - Student Protection: Changed to text-left, 2x3 image grid on right
+   - Special Events: Made event cards smaller and more compact
+   - Players Learning stat now pulls dynamically from database (Admin Statistics → Accounts field)
+
+2. **Student Protection Page Updates**
+   - Changed "parent approval" to "student approval"
+   - Replaced all `/membership` links with `https://www.xogosgaming.com`
+
+3. **Incentives Page Updates**
+   - Changed Pryde Gym banner from "Coming Soon - End of 2026" to "Coming 2026"
+   - Changed "1 Hour = 1 iPlay Coin" stat to "Convert Coins from Savings"
+
+4. **ByLaws Page Updates** (`/boardroom/bylaws`)
+   - Renamed "Crypto & Exchanges" board role to "Technology"
+   - Updated description: "Manages technology and evergreen programs to fund scholarships"
+   - Removed "Cryptocurrency Audit" requirement
+   - Changed "Cryptocurrency Focus" to "Evergreen Funding Focus"
+   - Updated mission statement to reference "technology" instead of "cryptocurrency"
+
+5. **Board Dashboard Financials Card**
+   - Added line chart showing Revenue vs Expenses trends over time
+   - Financial numbers now appear below the graph
+
+6. **Admin Financials History**
+   - Removed "Updated By" column, replaced with "Actions" column
+   - Added delete button (×) for each row
+   - Changed Monthly Pay and Yearly Pay columns to plain numbers (no $ sign)
+
+7. **Board Transparency Feature** (NEW)
+   - New page at `/boardroom/transparency` - view meeting attendance records
+   - Admin page at `/admin/transparency` - create meetings and edit attendance
+   - Tracks for each board member per meeting:
+     - Attendance: Absent, Part Time, Full Time
+     - Prepared: checkbox (had initiatives ready)
+     - In-Person: checkbox (video was on)
+   - Only Zack can edit; all board members can view
+   - Legend with centered badges on two rows
+
+8. **Security Images**
+   - Moved 6 security images from `/extra` to `/public/images/security/`
+
+#### Database Changes Required
+
+Run these SQL commands in Supabase SQL Editor:
+
+```sql
+-- Board Transparency Tables
+CREATE TABLE IF NOT EXISTS board_meetings (
+  id SERIAL PRIMARY KEY,
+  meeting_date DATE NOT NULL,
+  meeting_name TEXT NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  created_by TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS meeting_attendance (
+  id SERIAL PRIMARY KEY,
+  meeting_id INTEGER REFERENCES board_meetings(id) ON DELETE CASCADE,
+  member_name TEXT NOT NULL,
+  member_email TEXT NOT NULL,
+  attendance TEXT NOT NULL CHECK (attendance IN ('absent', 'part_time', 'full_time')),
+  prepared BOOLEAN DEFAULT FALSE,
+  in_person BOOLEAN DEFAULT FALSE,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  UNIQUE(meeting_id, member_email)
+);
+```
+
+#### New Files Created
+- `app/(boardroom)/boardroom/transparency/page.tsx` - Public transparency view
+- `app/(boardroom)/boardroom/transparency/page.module.css` - Transparency styles
+- `app/admin/transparency/page.tsx` - Admin attendance editor
+- `lib/actions/getMeetings.ts` - Get all meetings
+- `lib/actions/createMeeting.ts` - Create new meeting (admin only)
+- `lib/actions/deleteMeeting.ts` - Delete meeting (admin only)
+- `lib/actions/getAttendance.ts` - Get attendance records
+- `lib/actions/upsertAttendance.ts` - Save attendance (admin only)
+
+#### Key Commits
+```
+38a1186 - Make Players Learning stat dynamic from admin statistics
+eff9ed5 - Add Board Transparency feature for tracking meeting attendance
+8503cd0 - Rename Half Time to Part Time, center legend badges
+16607e3 - Center legend items and move Prepared/In-Person to second row
+```
+
+#### Architecture Notes
+- **Public Stats API** (`/api/public-stats`) now returns both `totalMembers` and `playersLearning`
+- **Transparency Access Control**: Uses `canUpdateStatistics()` from `lib/auth/admin.ts` (Zack only)
+- **Attendance Options**: `absent`, `part_time`, `full_time` (note: code uses underscores, display shows "Part Time")
+
+#### Pending
+- Google Ad tag integration (user will provide the code)
+
+---
+
+### Previous Session: May 16, 2026
+
+#### Work Completed
+
+1. **Scholarships Page** (`/scholarships`) - Complete redesign
+   - Removed fixed $0.10/coin value
+   - Added quarterly distribution model explanation
+   - Each quarter: Innovate the Future announces fundraising total, students convert coins into a pot, each student receives percentage based on their share of converted coins
+   - Example: If $5,000 raised and 10 students each convert 10 coins (100 total), each gets 10% = $500
+   - Updated transparency section: digital tracking in Xogos Bank, quarterly FDIC-secured audits
+
+2. **Audit Results Page** (`/audits`) - New page created
+   - Changed Q3 2026 audit from August to July
+   - Updated 4-step distribution process: Fundraising → Students Convert Coins → Proportional Distribution → Verification & Tracking
+   - Added audit timeline with Q1-Q4 2026 schedule
+
+3. **Classes Page** (`/classes`) - Major updates
+   - Added "15 Classes launching by end of July 2026!" banner
+   - Listed upcoming classes: Personal Finance, Journalism, Game Design, Business, Marine Biology
+   - New "Earn Coins While You Learn" section with examples:
+     - KitchenLab Academy: Submit recipes with photos = earn coins
+     - Journalism: Submit article = 1 coin, article published = 5 coins
+
+4. **Active Incentives Page** (`/incentives`) - Section reorder
+   - Moved "Active Incentive Programs" section above "How Active Incentives Work"
+   - Updated stat from "$0.10 Per Coin Value" to "Quarterly Fund Distribution"
+
+5. **Games Page** (`/games`) - YouTube video integration
+   - Added embedded YouTube players in game modals
+   - Privacy-enhanced: youtube-nocookie.com with rel=0, modestbranding=1, disablekb=1
+   - Added overlay blockers to prevent clicking YouTube links:
+     - Top blocker (70px) - blocks title/channel/share links
+     - Bottom-right blocker (150x50px) - blocks YouTube logo
+   - Video IDs added for: Digital Frontier, Totally Medieval, Bug and Seek, Monster Math, Body Battle, Exploration Library, Hunt the Past, Lightning Round, Medical Diagnosis, GeoTag
+   - Games without videos show "Video Coming Soon": Debt-Free Millionaire, Historical Conquest, iServ, Shakespeare's Conspiracy, TimeQuest
+
+6. **Header Navigation** - Added new links
+   - Added "Classes" link to `/classes`
+   - Added "Incentives" link to `/incentives`
+
+7. **Footer Navigation** - Added Audit Results link
+
+8. **Homepage** (`/`) - Play + Learn = Earn redesign
+   - New intro section with "PLAY + LEARN = EARN" headline
+   - Three columns explaining Play (safe gaming), Learn (elective classes), Earn (scholarships)
+   - Added PLAY/LEARN/EARN keywords above corresponding sections
+   - Removed iServ from games rotation
+   - Added YouTube video players in game modals with link blockers
+   - Reordered: Free Elective Classes now after Select Your Game
+   - Updated text throughout sections
+
+#### Key Commits
+```
+78a0f84 - Add Play+Learn=Earn intro section, video players in game modals
+752b223 - Add scholarships/audits pages, YouTube videos, nav updates
+ab86ebb - Add Classes and Incentives pages, update homepage and games with new images
+```
+
+#### New Files Created
+- `app/scholarships/page.tsx` - Scholarship program page
+- `app/scholarships/page.module.css` - Scholarship styles
+- `app/audits/page.tsx` - Audit results page
+- `app/audits/page.module.css` - Audit page styles
+
+#### Architecture Notes
+- **YouTube Embedding:** Uses youtube-nocookie.com for privacy-enhanced mode
+- **Link Blocking:** Transparent overlay divs intercept clicks on YouTube branding/links
+- **Coin System:** No fixed $ value per coin - proportional quarterly distribution based on total raised funds and coins converted
+
+---
+
+### Previous Session: May 14, 2026
 
 #### Work Completed
 
@@ -776,5 +1031,5 @@ CREATE INDEX IF NOT EXISTS idx_board_skills_category ON board_skills(skill_categ
 
 ---
 
-*Last updated: May 14, 2026*
+*Last updated: July 20, 2026*
 *Maintained by: Development Team*
