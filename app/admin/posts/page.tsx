@@ -56,6 +56,42 @@ export default function AdminPostsPage() {
   const [author, setAuthor] = useState("Zack Edwards");
   const [imageUrl, setImageUrl] = useState("/images/XogosLogo.png");
   const [uploadedImageId, setUploadedImageId] = useState<string | null>(null);
+  const [scheduledDate, setScheduledDate] = useState("");
+
+  // Reference for the content textarea
+  const contentRef = React.useRef<HTMLTextAreaElement>(null);
+
+  // Rich text formatting helpers
+  const wrapSelection = (before: string, after: string) => {
+    const textarea = contentRef.current;
+    if (!textarea) return;
+
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const selectedText = content.substring(start, end);
+    const newContent =
+      content.substring(0, start) +
+      before +
+      selectedText +
+      after +
+      content.substring(end);
+    setContent(newContent);
+
+    // Restore cursor position after the inserted text
+    setTimeout(() => {
+      textarea.focus();
+      textarea.setSelectionRange(start + before.length, end + before.length);
+    }, 0);
+  };
+
+  const formatBold = () => wrapSelection("<strong>", "</strong>");
+  const formatItalic = () => wrapSelection("<em>", "</em>");
+  const formatUnderline = () => wrapSelection("<u>", "</u>");
+  const formatHeading = () => wrapSelection("<h3>", "</h3>");
+  const formatColor = (color: string) =>
+    wrapSelection(`<span style="color: ${color}">`, "</span>");
+  const formatSize = (size: string) =>
+    wrapSelection(`<span style="font-size: ${size}">`, "</span>");
 
   // Fetch existing posts from blog API
   useEffect(() => {
@@ -106,15 +142,20 @@ export default function AdminPostsPage() {
           author,
           imageUrl,
           imageId: uploadedImageId,
+          scheduledDate: scheduledDate || null,
         }),
       });
 
       const data = await res.json();
 
       if (res.ok) {
+        const isScheduled =
+          scheduledDate && new Date(scheduledDate) > new Date();
         setMessage({
           type: "success",
-          text: `Post created! View at /blog/${data.id}`,
+          text: isScheduled
+            ? `Post scheduled for ${new Date(scheduledDate).toLocaleDateString()}! View at /blog/${data.id}`
+            : `Post created! View at /blog/${data.id}`,
         });
         // Reset form
         setTitle("");
@@ -122,6 +163,7 @@ export default function AdminPostsPage() {
         setContent("");
         setImageUrl("/images/XogosLogo.png");
         setUploadedImageId(null);
+        setScheduledDate("");
         // Refresh posts list
         const postsRes = await fetch("/api/blog");
         if (postsRes.ok) {
@@ -263,25 +305,120 @@ export default function AdminPostsPage() {
             </div>
 
             <div className={styles.formGroup}>
-              <label htmlFor="content">Content * (HTML supported)</label>
+              <label htmlFor="scheduledDate">
+                Schedule Post (leave empty to publish now)
+              </label>
+              <input
+                id="scheduledDate"
+                type="datetime-local"
+                value={scheduledDate}
+                onChange={(e) => setScheduledDate(e.target.value)}
+                min={new Date().toISOString().slice(0, 16)}
+                className={styles.dateInput}
+              />
+              {scheduledDate && (
+                <span className={styles.scheduledInfo}>
+                  Will be published on{" "}
+                  {new Date(scheduledDate).toLocaleDateString("en-US", {
+                    weekday: "long",
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                    hour: "numeric",
+                    minute: "2-digit",
+                  })}
+                </span>
+              )}
+            </div>
+
+            <div className={styles.formGroup}>
+              <label htmlFor="content">Content *</label>
+              <div className={styles.editorToolbar}>
+                <button
+                  type="button"
+                  onClick={formatBold}
+                  className={styles.toolbarButton}
+                  title="Bold"
+                >
+                  <strong>B</strong>
+                </button>
+                <button
+                  type="button"
+                  onClick={formatItalic}
+                  className={styles.toolbarButton}
+                  title="Italic"
+                >
+                  <em>I</em>
+                </button>
+                <button
+                  type="button"
+                  onClick={formatUnderline}
+                  className={styles.toolbarButton}
+                  title="Underline"
+                >
+                  <u>U</u>
+                </button>
+                <button
+                  type="button"
+                  onClick={formatHeading}
+                  className={styles.toolbarButton}
+                  title="Heading"
+                >
+                  H3
+                </button>
+                <span className={styles.toolbarDivider}></span>
+                <select
+                  onChange={(e) => {
+                    if (e.target.value) formatColor(e.target.value);
+                    e.target.value = "";
+                  }}
+                  className={styles.toolbarSelect}
+                  title="Text Color"
+                  defaultValue=""
+                >
+                  <option value="" disabled>
+                    Color
+                  </option>
+                  <option value="#e62739">Red</option>
+                  <option value="#7928ca">Purple</option>
+                  <option value="#e6bb84">Gold</option>
+                  <option value="#22c55e">Green</option>
+                  <option value="#3b82f6">Blue</option>
+                  <option value="#ffffff">White</option>
+                </select>
+                <select
+                  onChange={(e) => {
+                    if (e.target.value) formatSize(e.target.value);
+                    e.target.value = "";
+                  }}
+                  className={styles.toolbarSelect}
+                  title="Font Size"
+                  defaultValue=""
+                >
+                  <option value="" disabled>
+                    Size
+                  </option>
+                  <option value="0.875rem">Small</option>
+                  <option value="1rem">Normal</option>
+                  <option value="1.25rem">Large</option>
+                  <option value="1.5rem">X-Large</option>
+                  <option value="2rem">Huge</option>
+                </select>
+              </div>
               <textarea
                 id="content"
+                ref={contentRef}
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
                 rows={15}
                 required
-                placeholder="Write your post content here. HTML is supported:
+                placeholder="Write your post content here. Select text and use the toolbar above to format.
 
-<h3><strong>Section Title</strong></h3>
+You can also paste plain text with paragraphs - they will be preserved automatically.
 
-<p>Your paragraph text goes here.</p>
-
-<p>Another paragraph with more content.</p>
-
-<ul>
-  <li>Bullet point 1</li>
-  <li>Bullet point 2</li>
-</ul>"
+Or use HTML directly:
+<h3>Section Title</h3>
+<p>Your paragraph text goes here.</p>"
               />
             </div>
 

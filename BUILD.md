@@ -683,10 +683,33 @@ export const config = {
 - **Plain Text Detection**: The converter checks for HTML block-level tags (`<p>`, `<div>`, `<h1-h6>`, `<ul>`, `<ol>`, etc.) to determine if content is already HTML
 - **Paragraph Splitting**: Uses regex `/\n\s*\n/` to split on double newlines (paragraph breaks)
 
+4. **Added Rich Text Editor Toolbar**
+   - Added formatting buttons: Bold, Italic, Underline, Heading
+   - Added Color dropdown: Red, Purple, Gold, Green, Blue, White
+   - Added Size dropdown: Small, Normal, Large, X-Large, Huge
+   - Select text and click a button to wrap it in HTML tags
+
+5. **Added Post Scheduling**
+   - New "Schedule Post" date/time picker in the create form
+   - Posts scheduled for the future won't appear on the blog until that date
+   - Immediate publish if no date selected
+
+#### Database Changes Required
+
+Run this SQL in Supabase SQL Editor to add the scheduling column:
+
+```sql
+-- Add scheduled_at column to blog_posts table
+ALTER TABLE blog_posts ADD COLUMN IF NOT EXISTS scheduled_at TIMESTAMP WITH TIME ZONE;
+
+-- Create index for efficient filtering
+CREATE INDEX IF NOT EXISTS idx_blog_posts_scheduled_at ON blog_posts(scheduled_at);
+```
+
 #### Pending
-- Push changes to main and verify on production
-- Test by creating a new blog post with pasted plain text content
-- Test sharing a blog post link to verify OG image appears
+- Test creating a new blog post with the rich text editor
+- Test scheduling a post for a future date
+- Verify OG images appear in link previews
 
 ---
 

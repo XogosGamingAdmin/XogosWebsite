@@ -368,3 +368,92 @@
 .postsSection::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.3);
 }
+
+/* Rich Text Editor Toolbar */
+.editorToolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  padding: 0.5rem;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: none;
+  border-radius: 8px 8px 0 0;
+  margin-bottom: -1px;
+}
+
+.toolbarButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+  color: #e5e5e5;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.toolbarButton:hover {
+  background: rgba(230, 39, 57, 0.3);
+  border-color: #e62739;
+  color: white;
+}
+
+.toolbarDivider {
+  width: 1px;
+  height: 24px;
+  background: rgba(255, 255, 255, 0.15);
+  margin: 0 0.25rem;
+  align-self: center;
+}
+
+.toolbarSelect {
+  height: 32px;
+  padding: 0 0.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+  color: #e5e5e5;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.toolbarSelect:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.toolbarSelect:focus {
+  outline: none;
+  border-color: #e62739;
+}
+
+/* Date Input */
+.dateInput {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  font-size: 0.9375rem;
+  color: #e5e5e5;
+  font-family: inherit;
+  transition: all 0.3s ease;
+  color-scheme: dark;
+}
+
+.dateInput:focus {
+  outline: none;
+  border-color: #e62739;
+  box-shadow: 0 0 0 2px rgba(230, 39, 57, 0.2);
+}
+
+.scheduledInfo {
+  font-size: 0.8125rem;
+  color: #22c55e;
+  margin-top: 0.25rem;
+}

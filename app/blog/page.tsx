@@ -243,10 +243,13 @@ export default function BlogPage() {
           setAllPosts(result.data);
 
           // Update categories based on all posts
-          const allCategories = new Set(
+          const allCategories = new Set<string>(
             result.data.map((p: BlogPostPreview) => p.category)
           );
-          const sortedCategories = ["All", ...Array.from(allCategories).sort()];
+          const sortedCategories: string[] = [
+            "All",
+            ...Array.from(allCategories).sort(),
+          ];
           setCategories(sortedCategories);
         }
       } catch (error) {

@@ -111,6 +111,7 @@ CREATE TABLE IF NOT EXISTS blog_posts (
   read_time TEXT NOT NULL DEFAULT '1 min read',
   image_url TEXT DEFAULT '/images/fullLogo.jpeg',
   featured BOOLEAN DEFAULT false,
+  scheduled_at TIMESTAMP WITH TIME ZONE,  -- NULL = published now, future date = scheduled
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 

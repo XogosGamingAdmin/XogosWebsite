@@ -67,8 +67,16 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { title, excerpt, content, category, author, imageUrl, imageId } =
-      body;
+    const {
+      title,
+      excerpt,
+      content,
+      category,
+      author,
+      imageUrl,
+      imageId,
+      scheduledDate,
+    } = body;
 
     if (!title || !content) {
       return NextResponse.json(
@@ -82,7 +90,14 @@ export async function POST(request: NextRequest) {
 
     // Generate slug and other fields
     const id = slugify(title);
-    const publishedAt = new Date().toLocaleDateString("en-US", {
+
+    // Determine publish date - use scheduled date if provided and in the future
+    const scheduledDateTime = scheduledDate ? new Date(scheduledDate) : null;
+    const isScheduledForFuture =
+      scheduledDateTime && scheduledDateTime > new Date();
+    const publishedAt = (
+      isScheduledForFuture ? scheduledDateTime : new Date()
+    ).toLocaleDateString("en-US", {
       year: "numeric",
       month: "long",
       day: "numeric",
@@ -113,15 +128,16 @@ export async function POST(request: NextRequest) {
     try {
       const { query } = await import("@/lib/database");
       await query(
-        `INSERT INTO blog_posts (id, title, excerpt, content, author_name, author_avatar, author_role, category, published_at, read_time, image_url, featured, created_at)
-           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, NOW())
+        `INSERT INTO blog_posts (id, title, excerpt, content, author_name, author_avatar, author_role, category, published_at, read_time, image_url, featured, scheduled_at, created_at)
+           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, NOW())
            ON CONFLICT (id) DO UPDATE SET
              title = EXCLUDED.title,
              excerpt = EXCLUDED.excerpt,
              content = EXCLUDED.content,
              author_name = EXCLUDED.author_name,
              category = EXCLUDED.category,
-             image_url = EXCLUDED.image_url`,
+             image_url = EXCLUDED.image_url,
+             scheduled_at = EXCLUDED.scheduled_at`,
         [
           newPost.id,
           newPost.title,
@@ -135,6 +151,7 @@ export async function POST(request: NextRequest) {
           newPost.readTime,
           newPost.imageUrl,
           newPost.featured,
+          isScheduledForFuture ? scheduledDateTime.toISOString() : null,
         ]
       );
 

@@ -21,13 +21,15 @@ interface BlogPost {
 const staticPosts = generatedPosts as BlogPost[];
 
 // Helper to fetch admin-created posts from database
+// Only returns posts that are not scheduled for the future
 async function getDbPosts(): Promise<BlogPost[]> {
   try {
     const { query } = await import("@/lib/database");
     const result = await query(
       `SELECT id, title, excerpt, content, author_name, author_avatar, author_role,
-              category, published_at, read_time, image_url, featured
+              category, published_at, read_time, image_url, featured, scheduled_at
        FROM blog_posts
+       WHERE scheduled_at IS NULL OR scheduled_at <= NOW()
        ORDER BY created_at DESC`
     );
     return result.rows.map(
@@ -44,6 +46,7 @@ async function getDbPosts(): Promise<BlogPost[]> {
         read_time: string;
         image_url: string;
         featured: boolean;
+        scheduled_at: string | null;
       }) => ({
         id: row.id,
         title: row.title,
