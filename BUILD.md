@@ -645,7 +645,7 @@ export const config = {
 
 ## Session History
 
-### Latest Session: July 21, 2026
+### Latest Session: July 21-22, 2026
 
 #### Work Completed
 
@@ -671,18 +671,6 @@ export const config = {
      - Converts single newlines within paragraphs to `<br>` tags
    - Applied to both create (`/api/blog/create`) and update (`/api/blog/[slug]`) routes
 
-#### Files Modified
-- `app/api/blog/route.ts` - Added date sorting for combined posts
-- `app/blog/[slug]/page.tsx` - Converted to server component with `generateMetadata`
-- `app/blog/[slug]/BlogPostClient.tsx` - New client component extracted from page
-- `app/api/blog/create/route.ts` - Added plain text to HTML conversion
-- `app/api/blog/[slug]/route.ts` - Added plain text to HTML conversion for updates
-
-#### Architecture Notes
-- **OG Metadata**: The `generateMetadata` function fetches the post server-side and returns proper Open Graph tags including the image URL (converted to absolute URL for external use)
-- **Plain Text Detection**: The converter checks for HTML block-level tags (`<p>`, `<div>`, `<h1-h6>`, `<ul>`, `<ol>`, etc.) to determine if content is already HTML
-- **Paragraph Splitting**: Uses regex `/\n\s*\n/` to split on double newlines (paragraph breaks)
-
 4. **Added Rich Text Editor Toolbar**
    - Added formatting buttons: Bold, Italic, Underline, Heading
    - Added Color dropdown: Red, Purple, Gold, Green, Blue, White
@@ -693,10 +681,36 @@ export const config = {
    - New "Schedule Post" date/time picker in the create form
    - Posts scheduled for the future won't appear on the blog until that date
    - Immediate publish if no date selected
+   - Database column `scheduled_at` added to `blog_posts` table
 
-#### Database Changes Required
+6. **Fixed Newest Post as Featured Article**
+   - Issue: The featured article was hardcoded to a specific post with `featured: true`
+   - Solution: Changed logic so the first post in the sorted list (newest) is always featured
+   - Removed dependency on the `featured` boolean flag for display
 
-Run this SQL in Supabase SQL Editor to add the scheduling column:
+7. **Fixed Blog Caching Issues**
+   - Issue: New posts weren't appearing even after database had them
+   - Root cause: Next.js was caching the API response at the edge/CDN level
+   - Solution: 
+     - Added `export const dynamic = "force-dynamic"` to API route
+     - Added `Cache-Control: no-store` headers to API response
+     - Added `cache: "no-store"` option to fetch call on blog page
+   - Blog now always fetches fresh data from the database
+
+#### Files Modified
+- `app/api/blog/route.ts` - Date sorting, cache control, dynamic rendering
+- `app/blog/page.tsx` - Newest-first featured logic, cache-busting fetch
+- `app/blog/[slug]/page.tsx` - Server component with `generateMetadata`
+- `app/blog/[slug]/BlogPostClient.tsx` - New client component for interactivity
+- `app/api/blog/create/route.ts` - Plain text conversion, scheduling support
+- `app/api/blog/[slug]/route.ts` - Plain text conversion for updates
+- `app/admin/posts/page.tsx` - Rich text toolbar, schedule date picker
+- `app/admin/posts/page.module.css` - Toolbar and date input styles
+- `database/schema.sql` - Added `scheduled_at` column to blog_posts
+
+#### Database Changes (Already Applied)
+
+The following SQL was run in Supabase:
 
 ```sql
 -- Add scheduled_at column to blog_posts table
@@ -706,10 +720,24 @@ ALTER TABLE blog_posts ADD COLUMN IF NOT EXISTS scheduled_at TIMESTAMP WITH TIME
 CREATE INDEX IF NOT EXISTS idx_blog_posts_scheduled_at ON blog_posts(scheduled_at);
 ```
 
+#### Architecture Notes
+- **OG Metadata**: The `generateMetadata` function fetches the post server-side and returns proper Open Graph tags including the image URL (converted to absolute URL for external use)
+- **Plain Text Detection**: The converter checks for HTML block-level tags (`<p>`, `<div>`, `<h1-h6>`, `<ul>`, `<ol>`, etc.) to determine if content is already HTML
+- **Caching**: Blog API uses `dynamic = "force-dynamic"` to bypass Next.js static generation and always query the database
+- **Featured Post**: Always the first item in the date-sorted list, not based on a `featured` flag
+- **Scheduling**: Posts with `scheduled_at` in the future are filtered out by the SQL query `WHERE scheduled_at IS NULL OR scheduled_at <= NOW()`
+
+#### Key Commits
+```
+4c1c88b - Fix blog caching - force fresh data on every request
+19684bf - Add rich text editor, post scheduling, fix TypeScript error
+05d9bd4 - Fix blog post display: newest post as featured, OG images, paragraph preservation
+```
+
 #### Pending
-- Test creating a new blog post with the rich text editor
+- Verify new blog posts appear correctly on production after hard refresh
+- Test the rich text editor formatting buttons
 - Test scheduling a post for a future date
-- Verify OG images appear in link previews
 
 ---
 
@@ -1099,5 +1127,5 @@ CREATE INDEX IF NOT EXISTS idx_board_skills_category ON board_skills(skill_categ
 
 ---
 
-*Last updated: July 21, 2026*
+*Last updated: July 22, 2026*
 *Maintained by: Development Team*
