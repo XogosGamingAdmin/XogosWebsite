@@ -58,3 +58,22 @@ SETUP_GUIDE.md
 WHAT_I_BUILT.md
 database/AWS_RDS_SETUP.md
 Gaming/**/*.md
+
+# ----------------------------------------------------------------------------
+# Internal documentation — kept locally, not published to GitHub.
+# None of these are read at build or runtime; the deploy does not need them.
+# Paths are anchored with a leading slash on purpose:
+#   /docs/  = the root markdown folder (ignored)
+#   app/docs/ = a real Next.js route (NOT ignored)
+# Blog posts under content/posts/*.md are build inputs and stay tracked.
+# ----------------------------------------------------------------------------
+/BUILD.md
+/README.md
+/STRIPE_SETUP.md
+/docs/
+/database/README.md
+/database/SETUP.md
+
+# Env templates. Real .env files are already covered by .env / .env.* above;
+# these example files are documentation, not deploy inputs.
+.env.example
