@@ -556,9 +556,9 @@ Financial Dashboard reflects changes
 Board members read PDFs in a two-page book reader, highlight passages, comment
 on them, and reply to each other in thread.
 
-> **⚠️ SETUP REQUIRED BEFORE THIS WORKS.** The code is deployed but the feature
-> will error until both steps below are done. See *Setup* at the end of this
-> section.
+> **⚠️ STATUS: one setup step outstanding.** The code is deployed and the
+> database tables exist, but the `board-documents` storage bucket has not been
+> created yet, so uploads will fail. See *Setup* at the end of this section.
 
 **How it works:**
 - **Reader** — `BookReader.tsx` renders two pages side by side as an open book, with a flip animation, arrow-key paging, and page-turn buttons. Built on `react-pdf` (pdf.js). The worker is self-hosted at `public/pdf.worker.min.mjs` — deliberately not a CDN.
@@ -585,17 +585,33 @@ on them, and reply to each other in thread.
 - `database/document-reviewer-schema.sql`
 - `lib/auth/documents.ts`
 
-#### Setup (must be done once, in Supabase)
+#### Setup (one-time, in Supabase)
 
-**1. Create the tables.** Run `database/document-reviewer-schema.sql` in the
-Supabase SQL Editor. It creates `board_documents`, `document_highlights`,
-`document_comments`, and `document_deletion_log`.
+**1. Create the tables. — ✅ DONE August 7, 2026.**
+`database/document-reviewer-schema.sql` was run in the Supabase SQL Editor and
+returned "Success. No rows returned" (the expected result for DDL). It created
+`board_documents`, `document_highlights`, `document_comments`, and
+`document_deletion_log`. The file is idempotent (`IF NOT EXISTS` throughout), so
+re-running it is safe.
 
-**2. Create the storage bucket.** Supabase Dashboard → Storage → New bucket:
-- Name: `board-documents`
-- Public: **NO** — this must stay private
+To confirm the tables exist:
+```sql
+SELECT table_name FROM information_schema.tables
+WHERE table_schema = 'public'
+  AND table_name IN ('board_documents', 'document_highlights',
+                     'document_comments', 'document_deletion_log');
+```
+
+**2. Create the storage bucket. — ⬜ NOT DONE YET (blocks the feature).**
+Supabase Dashboard → Storage → New bucket:
+- Name: `board-documents` (exact, lowercase, hyphenated)
+- Public: **NO** — leave the public toggle off. A public bucket would make board
+  documents readable by URL without signing in, which defeats the whole design.
 - Allowed MIME types: `application/pdf`
 - File size limit: 50 MB
+
+Until this bucket exists, uploads fail with a storage error and the reader has
+nothing to open. Everything else is in place.
 
 No new environment variables are needed; it reuses the existing
 `NEXT_PUBLIC_SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, and `DATABASE_*` vars.
@@ -759,7 +775,7 @@ export const config = {
 
 ## Session History
 
-### Latest Session: August 5-7, 2026 — New Homepage Shipped
+### Latest Session: August 5-7, 2026 — New Homepage + Document Reviewer
 
 #### TL;DR for the next developer
 
@@ -768,7 +784,12 @@ arcade page — it is now **"Arcade 2.0 Supercharged"**, an audience-aware page
 built for homeschool families and educators. It is **live in production**
 (pushed to `main`, commit `44c4f91`).
 
-Three things that will surprise you if nobody tells you:
+The session also added a **Document Reviewer** to the board-secured area
+(`/boardroom/document-reviewer`) — a two-page PDF reader with highlighting,
+comments, and threaded replies. It is deployed but **one setup step is
+outstanding**; see *Document Reviewer added* below.
+
+Four things that will surprise you if nobody tells you:
 
 1. **`app/designs/` is untracked and local-only.** It holds the 5 design
    concepts and an archive of the old homepage. It was deliberately NOT
@@ -779,15 +800,22 @@ Three things that will surprise you if nobody tells you:
    became the homepage. The two were kept in sync manually. If you edit the
    homepage, either re-sync design5 or delete the design lab.
 3. **Never run `npx next build` while `next dev` is running** — see *Gotchas*.
+4. **The Document Reviewer is deployed but not yet usable.** Its storage bucket
+   does not exist, and nothing about it has been tested against a real
+   database. Do not assume it works because it shipped.
 
 #### What is live now
 
-Pushed to `main` (auto-deploys to https://www.xogosgaming.com via Amplify):
+Pushed to `main` (auto-deploys to https://www.xogosgaming.com via Amplify),
+newest last:
 
 | Commit | What |
 |--------|------|
 | `587b92a` | Prettier formatting only — 26 files reformatted by `npm run lint`. Line wrapping, no behavior change. Isolated so it does not muddy the feature diff. |
 | `44c4f91` | The new homepage, `/games` additions, social share image, 10 new images. |
+| `1dba193` | BUILD.md rewritten as a handoff record. |
+| `b7ac3c7` | `/parent-guide` page, Sign In moved to the footer, hero CTA reorder. |
+| `3c161e4` | Document Reviewer (board-secured PDF reader). |
 
 #### The new homepage (`app/page.tsx`, `app/page.module.css`)
 
@@ -872,7 +900,8 @@ could be indexed. To ship it anyway, `git add app/designs/` — it builds clean.
 
 #### Post-launch refinements (August 7, later in the day)
 
-Committed after the initial launch push — **verify these are deployed**:
+Commit `b7ac3c7`. **Confirmed live in production** — `/parent-guide` and the
+updated homepage were both verified serving on www.xogosgaming.com.
 
 - **New page: `/parent-guide`** (`app/parent-guide/page.tsx` + `page.module.css`). A long-form page selling the platform to parents and educators: the pitch, Play/Learn/Earn explained in depth, elective classes, off-screen incentives, a safety section, how coins convert to scholarships, pricing, and an expandable FAQ. It uses the homepage palette but calmer — larger type, more whitespace, fewer animations, because it is meant to be read. Four separate links point to `/student-protection`, including a dedicated CTA.
 - **The "Parent's Guide" buttons now link to `/parent-guide`** instead of `/student-protection` (hero CTA in the Homeschool Parent view, and the final "READY PLAYER ONE?" CTA). A footer link was also added under Platform.
@@ -918,24 +947,54 @@ Life of a City `6cwoINDCuN4`, Debate Arena `klRAotCaK9M`, Turbo Type
 Monster Math `rgP4ryHnZgY`, Bug and Seek `tH1npwYQkUM`, Totally Medieval
 `KM30p99cjPk`, Lightning Round `0krDj6C9du0`, Exploration Library `Gzv3I_oA33Y`.
 
-#### Document Reviewer added (August 7)
+#### Document Reviewer added (August 7) — commit `3c161e4`
 
-New board-secured feature — see **Feature Documentation → 9. Document Reviewer**
-for how it works. **It requires a one-time Supabase setup (SQL + storage
-bucket) before it will function**; the setup steps are in that section.
+New board-secured feature at `/boardroom/document-reviewer`, reachable from a
+new **📖 Document Reviewer** card in the Board Room menu. Board members read
+PDFs in a two-page book reader, highlight passages (100-char cap), comment on
+them (500-char cap), and reply to each other in thread. Admins upload, hide/
+restore, and delete. See **Feature Documentation → 9. Document Reviewer** for
+the full mechanics.
 
-Built and verified to compile, but **the runtime path is untested**: the local
-environment has no database credentials and the feature requires a signed-in
-board member, so upload → read → highlight → comment → reply has not been
-exercised against a real database. Test it on production after running the
-setup.
+**Where this stands right now — read this first:**
+
+| Step | Status |
+|------|--------|
+| Code written, built, pushed | ✅ commit `3c161e4` |
+| Deployed to production | ✅ verified — the site and `/pdf.worker.min.mjs` are serving |
+| Database tables created | ✅ SQL run in Supabase Aug 7 |
+| `board-documents` storage bucket | ⬜ **NOT CREATED — this blocks the feature** |
+| End-to-end test (upload → highlight → comment → reply) | ⬜ **never run** |
+
+**The runtime path has never been exercised.** The local environment has no
+database credentials and the feature requires a signed-in board member, so
+nothing beyond "it compiles and returns 401 to anonymous callers" has been
+proven. The first real upload is genuinely the first test. If it fails, the
+error message identifies which of the three moving parts is unhappy: the
+storage bucket, the database, or the auth check.
+
+**New dependency:** `react-pdf@9.1.1` → `pdfjs-dist@4.4.168`. Both
+`package-lock.json` and `yarn.lock` were updated. The pdf.js worker is
+committed at `public/pdf.worker.min.mjs` (1.3 MB) and **must stay version-
+matched to the installed `pdfjs-dist`** — if the reader ever goes blank after a
+dependency bump, re-copy it (command in Feature Documentation → 9).
+
+**Design decisions worth knowing before you change anything here:**
+- *Hide vs delete.* Hiding is the intended everyday action — reversible, destroys nothing. Delete is deliberately awkward (type `DELETE`, read a warning, "Hide Instead" offered first) because board material may be under a retention obligation. Do not "simplify" that flow.
+- *Why a streaming endpoint instead of a public URL.* Board documents must not be reachable without a session, so the bucket is private and `/api/documents/[id]/file` is the only door. Making the bucket public would be a one-line change that quietly breaks confidentiality.
+- *The three-layer caps.* 100/500 characters are enforced in the UI, the API, and as database `CHECK` constraints. The UI layer is convenience; the database layer is the one that actually holds.
+- *The "no AI" requirement, honestly stated.* Nothing is sent to any external or AI service, there is no download button, no public URL, and responses are `no-store` + `noindex`. But an authorized reader whose browser renders the document can still screenshot or copy it. This is need-to-know access control, not DRM — do not describe it to the board as something stronger than it is.
 
 #### Where we left off / next steps
 
-Verify on production first:
+**START HERE — the one thing blocking a finished feature:**
+- [ ] **Create the `board-documents` storage bucket in Supabase** (private, `application/pdf`, 50 MB). The Document Reviewer is deployed and its tables exist, but uploads fail without the bucket. Steps in Feature Documentation → 9 → Setup.
+- [ ] **Then test the Document Reviewer end to end** at `/boardroom/document-reviewer`: upload a PDF → highlight a phrase → comment → reply → page forward/back → try a >100-character selection (should warn, not save) → Hide → Restore. This flow has never been run against a real database, so treat the first attempt as a real test, not a formality.
+
+Verify on production:
 - [ ] **Players Learning** stat shows the real number, not the "500+" fallback (confirms `/api/public-stats` is reachable).
 - [ ] Social preview when sharing the URL (it will use the new arcade art, cropped from square).
-- [ ] Interactive sections on a real phone — cartridges, quest log, power meter.
+- [ ] Interactive sections on a real phone — cartridges, quest log, power meter, and the two-page reader (it stacks to one page per row below 760px).
 
 Then, in rough priority order:
 - [ ] **Regenerate the OG image at 1200×630** so social previews are not cropped.
@@ -944,7 +1003,7 @@ Then, in rough priority order:
 - [ ] **No parent + student on a laptop video exists** on the channel — the homepage uses a generated still instead. Real footage would be the strongest asset for the parent audience and needs to be filmed or licensed.
 - [ ] **Decide the fate of `app/designs/`** — commit it, delete it, or leave it local. While it exists, homepage edits should be mirrored to `design5` or the two will silently diverge.
 - [ ] The Player Reviews are clearly labeled sample quotes. Replace them with real testimonials when available. The same applies to the Parent's Guide, which currently makes no testimonial claims at all — real parent quotes would strengthen it.
-- [ ] **Document Reviewer setup**: run `database/document-reviewer-schema.sql` and create the private `board-documents` bucket, then test upload → highlight → comment → reply end to end.
+- [ ] **Document Reviewer follow-ups once it is working**: no way yet to edit or delete an individual highlight/comment (only whole documents), no notification when someone replies to your comment, and no pagination on the document library — all fine at board scale, worth revisiting if usage grows.
 - [ ] The Parent's Guide FAQ answers were written from existing site copy (scholarships, student protection, classes). Have someone who knows the business confirm the specifics, especially the coin-conversion explanation and the age-19 cutoff.
 
 ---
@@ -1431,5 +1490,5 @@ CREATE INDEX IF NOT EXISTS idx_board_skills_category ON board_skills(skill_categ
 
 ---
 
-*Last updated: August 7, 2026 — new homepage ("Arcade 2.0 Supercharged") shipped to production*
+*Last updated: August 7, 2026 — new homepage shipped; Document Reviewer deployed, pending its storage bucket*
 *Maintained by: Development Team*
