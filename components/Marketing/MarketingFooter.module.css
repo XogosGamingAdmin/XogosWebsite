@@ -183,6 +183,28 @@
   color: #e62739;
 }
 
+/* Board / staff sign-in, moved out of the header so the marketing nav stays
+   focused on families */
+.footerSignInButton {
+  padding: 7px 18px;
+  border: 1px solid rgba(229, 229, 229, 0.25);
+  border-radius: 20px;
+  color: rgba(229, 229, 229, 0.75);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+  transition:
+    border-color 0.3s ease,
+    color 0.3s ease,
+    background 0.3s ease;
+}
+
+.footerSignInButton:hover {
+  border-color: #e62739;
+  background: rgba(230, 39, 57, 0.12);
+  color: #fff;
+}
+
 @media (max-width: 768px) {
   .footerContent {
     flex-direction: column;

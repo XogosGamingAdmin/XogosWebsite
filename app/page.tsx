@@ -351,7 +351,7 @@ const audienceContent: Record<Audience, AudienceContent> = {
       },
     ],
     primaryCta: { label: "Explore Classes", href: "/classes" },
-    secondaryCta: { label: "Parent's Guide", href: "/student-protection" },
+    secondaryCta: { label: "Parent's Guide", href: "/parent-guide" },
   },
   educator: {
     playerName: "Educator",
@@ -1519,9 +1519,9 @@ export default function HomePage() {
             <p className={styles.parentExpandedText}>
               You set the pace. Your kids pick electives they&apos;re excited
               about, play games mapped to core subjects, and earn coins for the
-              things you already value—good grades, service, and staying
-              active. No ads ever, no tricks to keep them glued to a device,
-              and every account is linked to yours.
+              things you already value—good grades, service, and staying active.
+              No ads ever, no tricks to keep them glued to a device, and every
+              account is linked to yours.
             </p>
           ) : audience === "educator" ? (
             <p className={styles.parentExpandedText}>
@@ -2114,16 +2114,6 @@ export default function HomePage() {
               </span>
             </h1>
 
-            <button
-              type="button"
-              className={styles.insertCoin}
-              onClick={handleInsertCoin}
-            >
-              <span className={styles.insertCoinSlot}>▮</span>
-              INSERT COIN TO START
-              <span className={styles.insertCoinSlot}>▮</span>
-            </button>
-
             {/* Choose Your Player */}
             <div className={styles.playerSelect}>
               <div className={styles.playerSelectLabel}>
@@ -2207,6 +2197,16 @@ export default function HomePage() {
                 </Link>
               )}
             </div>
+
+            <button
+              type="button"
+              className={styles.insertCoin}
+              onClick={handleInsertCoin}
+            >
+              <span className={styles.insertCoinSlot}>▮</span>
+              INSERT COIN TO START
+              <span className={styles.insertCoinSlot}>▮</span>
+            </button>
           </div>
         </section>
 
@@ -2265,7 +2265,7 @@ export default function HomePage() {
               >
                 Start Playing
               </a>
-              <Link href="/student-protection" className={styles.ctaBtnAlt}>
+              <Link href="/parent-guide" className={styles.ctaBtnAlt}>
                 Parent&apos;s Guide
               </Link>
             </div>

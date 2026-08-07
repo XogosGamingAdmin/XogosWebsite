@@ -45,6 +45,9 @@ export function MarketingFooter({
               <Link href="/games" className={styles.footerLink}>
                 Games
               </Link>
+              <Link href="/parent-guide" className={styles.footerLink}>
+                Parent&apos;s Guide
+              </Link>
               <Link
                 href="https://www.xogosgaming.com"
                 className={styles.footerLink}
@@ -147,6 +150,9 @@ export function MarketingFooter({
             </Link>
             <Link href="/terms" className={styles.legalLink}>
               Terms of Use
+            </Link>
+            <Link href="/signin" className={styles.footerSignInButton}>
+              Sign In
             </Link>
           </div>
         </div>

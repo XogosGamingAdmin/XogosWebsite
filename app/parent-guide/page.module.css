@@ -1,0 +1,882 @@
+/* ---------------------------------------------------------------------------
+   Parent's Guide — long-form sales page for parents and educators.
+   Uses the homepage arcade palette but calmer: more whitespace, larger type,
+   fewer animations, since this page is meant to be read.
+--------------------------------------------------------------------------- */
+
+.page {
+  position: relative;
+  min-height: 100vh;
+  background: linear-gradient(180deg, #0d0d1a 0%, #1a1a2e 55%, #0d0d1a 100%);
+  color: #e5e5e5;
+  overflow: hidden;
+}
+
+.gridBackground {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(121, 40, 202, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(230, 39, 57, 0.05) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.page > section {
+  position: relative;
+  z-index: 1;
+}
+
+/* ------------------------------- Hero ---------------------------------- */
+
+.hero {
+  padding: 70px 40px 50px;
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+.heroInner {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 56px;
+  align-items: center;
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity 0.7s ease,
+    transform 0.7s ease;
+}
+
+.heroInner.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.eyebrow {
+  display: inline-block;
+  margin-bottom: 18px;
+  padding: 7px 16px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  color: #e6bb84;
+  border: 1px solid rgba(230, 187, 132, 0.4);
+  border-radius: 999px;
+  background: rgba(230, 187, 132, 0.08);
+}
+
+.heroTitle {
+  font-size: 52px;
+  font-weight: 900;
+  line-height: 1.08;
+  margin-bottom: 22px;
+  color: #fff;
+  text-shadow: 0 0 32px rgba(121, 40, 202, 0.35);
+}
+
+.heroSubtitle {
+  font-size: 19px;
+  line-height: 1.72;
+  color: rgba(229, 229, 229, 0.82);
+  margin-bottom: 32px;
+  max-width: 620px;
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.heroPhotoWrap {
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 22px 55px rgba(0, 0, 0, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.heroPhoto {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ------------------------------ Buttons -------------------------------- */
+
+.primaryBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 15px 32px;
+  background: linear-gradient(135deg, #e62739 0%, #7928ca 100%);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 800;
+  text-decoration: none;
+  border-radius: 12px;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.primaryBtn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 32px rgba(230, 39, 57, 0.4);
+}
+
+.secondaryBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 15px 30px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #e5e5e5;
+  font-size: 15px;
+  font-weight: 700;
+  text-decoration: none;
+  border-radius: 12px;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.secondaryBtn:hover {
+  border-color: #e6bb84;
+  background: rgba(230, 187, 132, 0.1);
+  transform: translateY(-3px);
+}
+
+.textLink {
+  display: inline-block;
+  color: #e6bb84;
+  font-weight: 700;
+  font-size: 15px;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.textLink:hover {
+  color: #fff;
+}
+
+/* ---------------------------- Section basics --------------------------- */
+
+.sectionHeading {
+  max-width: 760px;
+  margin: 0 auto 44px;
+  text-align: center;
+}
+
+.sectionTitle {
+  font-size: 34px;
+  font-weight: 900;
+  line-height: 1.2;
+  color: #fff;
+  margin-bottom: 14px;
+}
+
+.sectionSubtitle {
+  font-size: 17px;
+  line-height: 1.7;
+  color: rgba(229, 229, 229, 0.7);
+}
+
+.bodyText {
+  font-size: 17px;
+  line-height: 1.75;
+  color: rgba(229, 229, 229, 0.8);
+  margin-bottom: 18px;
+}
+
+/* ------------------------------- Pitch --------------------------------- */
+
+.pitchSection {
+  padding: 30px 40px 60px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.pitchCard {
+  padding: 38px 42px;
+  border-left: 4px solid #e62739;
+  border-radius: 0 18px 18px 0;
+  background: linear-gradient(
+    90deg,
+    rgba(230, 39, 57, 0.1) 0%,
+    rgba(255, 255, 255, 0.03) 100%
+  );
+}
+
+.pitchTitle {
+  font-size: 26px;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 16px;
+}
+
+.pitchText {
+  font-size: 17px;
+  line-height: 1.78;
+  color: rgba(229, 229, 229, 0.82);
+}
+
+/* -------------------------- Play / Learn / Earn ------------------------ */
+
+.stepsSection {
+  padding: 60px 40px;
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 26px;
+}
+
+.stepCard {
+  padding: 32px 28px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 18px;
+  transition:
+    transform 0.25s ease,
+    border-color 0.25s ease;
+}
+
+.stepCard:hover {
+  transform: translateY(-6px);
+  border-color: rgba(230, 187, 132, 0.4);
+}
+
+.stepHeader {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.stepNumber {
+  font-size: 15px;
+  font-weight: 800;
+  color: rgba(229, 229, 229, 0.35);
+  letter-spacing: 0.1em;
+}
+
+.stepKeyword {
+  font-size: 26px;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+}
+
+.accentRed {
+  color: #e62739;
+  text-shadow: 0 0 18px rgba(230, 39, 57, 0.5);
+}
+
+.accentPurple {
+  color: #a855f7;
+  text-shadow: 0 0 18px rgba(121, 40, 202, 0.5);
+}
+
+.accentGold {
+  color: #e6bb84;
+  text-shadow: 0 0 18px rgba(230, 187, 132, 0.5);
+}
+
+.stepTitle {
+  font-size: 20px;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.35;
+  margin-bottom: 14px;
+}
+
+.stepBody {
+  font-size: 15px;
+  line-height: 1.7;
+  color: rgba(229, 229, 229, 0.75);
+  margin-bottom: 20px;
+}
+
+.stepPoints {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.stepPoints li {
+  position: relative;
+  padding-left: 24px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: rgba(229, 229, 229, 0.85);
+}
+
+.stepPoints li::before {
+  content: "▸";
+  position: absolute;
+  left: 0;
+  color: #e6bb84;
+}
+
+/* ------------------------------ Electives ------------------------------ */
+
+.electiveSection {
+  padding: 60px 40px;
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+.electiveContent {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 50px;
+  align-items: center;
+}
+
+.electiveGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+}
+
+.electiveCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 22px 16px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  text-decoration: none;
+  transition:
+    transform 0.25s ease,
+    border-color 0.25s ease;
+}
+
+.electiveCard:hover {
+  transform: translateY(-5px);
+  border-color: rgba(121, 40, 202, 0.6);
+}
+
+.electiveLogo {
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.electiveLabel {
+  font-size: 13px;
+  font-weight: 700;
+  color: rgba(229, 229, 229, 0.9);
+  text-align: center;
+}
+
+/* ------------------------------ Incentives ----------------------------- */
+
+.incentiveSection {
+  padding: 60px 40px;
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+.incentiveGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.incentiveCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 14px;
+  padding: 30px 24px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 18px;
+  text-decoration: none;
+  transition:
+    transform 0.25s ease,
+    border-color 0.25s ease;
+}
+
+.incentiveCard:hover {
+  transform: translateY(-6px);
+  border-color: rgba(230, 187, 132, 0.45);
+}
+
+.incentiveImageWrap {
+  position: relative;
+}
+
+.incentiveLogo {
+  border-radius: 14px;
+  object-fit: cover;
+}
+
+.incentiveEmoji {
+  font-size: 62px;
+  line-height: 130px;
+}
+
+.comingSoon {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 4px 12px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: #0d0d1a;
+  background: #e6bb84;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.incentiveTitle {
+  font-size: 18px;
+  font-weight: 800;
+  color: #fff;
+}
+
+.incentiveText {
+  font-size: 14px;
+  line-height: 1.65;
+  color: rgba(229, 229, 229, 0.72);
+}
+
+/* -------------------------------- Safety ------------------------------- */
+
+.safetySection {
+  padding: 60px 40px;
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+.safetyInner {
+  padding: 44px 42px;
+  background: linear-gradient(
+    135deg,
+    rgba(121, 40, 202, 0.12) 0%,
+    rgba(255, 255, 255, 0.03) 100%
+  );
+  border: 1px solid rgba(121, 40, 202, 0.35);
+  border-radius: 22px;
+  text-align: center;
+}
+
+.safetyHeading {
+  max-width: 760px;
+  margin: 0 auto 36px;
+}
+
+.safetyShield {
+  display: block;
+  font-size: 42px;
+  margin-bottom: 14px;
+}
+
+.safetyGrid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 20px;
+  margin-bottom: 34px;
+}
+
+.safetyBadge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.safetyImage {
+  border-radius: 12px;
+  object-fit: contain;
+}
+
+.safetyLabel {
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.4;
+  color: rgba(229, 229, 229, 0.8);
+  text-align: center;
+}
+
+.safetyCta {
+  display: inline-flex;
+  align-items: center;
+  padding: 15px 32px;
+  background: rgba(121, 40, 202, 0.25);
+  border: 1px solid rgba(168, 85, 247, 0.7);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 800;
+  text-decoration: none;
+  border-radius: 12px;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.safetyCta:hover {
+  background: rgba(121, 40, 202, 0.45);
+  transform: translateY(-3px);
+}
+
+/* ----------------------------- Scholarships ---------------------------- */
+
+.scholarshipSection {
+  padding: 60px 40px;
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+.scholarshipContent {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 50px;
+  align-items: center;
+}
+
+.scholarshipLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 26px;
+  margin-top: 8px;
+}
+
+.scholarshipVisual {
+  display: flex;
+  justify-content: center;
+}
+
+.scholarshipImage {
+  width: 100%;
+  height: auto;
+  max-width: 400px;
+  filter: drop-shadow(0 14px 34px rgba(230, 187, 132, 0.25));
+}
+
+/* ------------------------------- Pricing ------------------------------- */
+
+.pricingSection {
+  padding: 60px 40px;
+  max-width: 1080px;
+  margin: 0 auto;
+}
+
+.pricingRow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+}
+
+.priceCard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 34px 24px 28px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 18px;
+  text-align: center;
+}
+
+.priceFeatured {
+  border-color: rgba(121, 40, 202, 0.7);
+  box-shadow: 0 0 26px rgba(121, 40, 202, 0.2);
+}
+
+.priceLifetime {
+  border-color: rgba(230, 187, 132, 0.6);
+  box-shadow: 0 0 26px rgba(230, 187, 132, 0.16);
+}
+
+.priceFlag {
+  position: absolute;
+  top: -13px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 5px 14px;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  color: #0d0d1a;
+  background: linear-gradient(135deg, #e6bb84 0%, #fbbf24 100%);
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.priceFeatured .priceFlag {
+  background: linear-gradient(135deg, #a855f7 0%, #7928ca 100%);
+  color: #fff;
+}
+
+.priceTier {
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.2em;
+  color: rgba(229, 229, 229, 0.6);
+}
+
+.priceAmount {
+  font-size: 46px;
+  font-weight: 900;
+  line-height: 1.1;
+  color: #fff;
+}
+
+.pricePeriod {
+  font-size: 13px;
+  color: rgba(229, 229, 229, 0.6);
+  margin-bottom: 16px;
+}
+
+.priceBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 13px 20px;
+  background: linear-gradient(135deg, #e62739 0%, #7928ca 100%);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 800;
+  text-decoration: none;
+  border-radius: 10px;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.priceLifetime .priceBtn {
+  background: linear-gradient(135deg, #e6bb84 0%, #c98d4e 100%);
+  color: #0d0d1a;
+}
+
+.priceBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.4);
+}
+
+.pricingNote {
+  margin-top: 22px;
+  text-align: center;
+  font-size: 14px;
+  color: rgba(230, 187, 132, 0.85);
+}
+
+/* --------------------------------- FAQ --------------------------------- */
+
+.faqSection {
+  padding: 60px 40px;
+  max-width: 880px;
+  margin: 0 auto;
+}
+
+.faqList {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.faqItem {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  overflow: hidden;
+  transition: border-color 0.25s ease;
+}
+
+.faqOpen {
+  border-color: rgba(230, 187, 132, 0.45);
+}
+
+.faqQuestion {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  width: 100%;
+  padding: 20px 24px;
+  background: none;
+  border: none;
+  color: #fff;
+  font-family: inherit;
+  font-size: 17px;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+}
+
+.faqToggle {
+  flex-shrink: 0;
+  font-size: 24px;
+  font-weight: 400;
+  color: #e6bb84;
+  line-height: 1;
+}
+
+.faqAnswer {
+  padding: 0 24px 22px;
+  font-size: 16px;
+  line-height: 1.75;
+  color: rgba(229, 229, 229, 0.78);
+}
+
+/* ------------------------------ Final CTA ------------------------------ */
+
+.ctaSection {
+  padding: 40px 40px 90px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.ctaCard {
+  padding: 52px 44px;
+  text-align: center;
+  background: linear-gradient(
+    135deg,
+    rgba(230, 39, 57, 0.14) 0%,
+    rgba(121, 40, 202, 0.14) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 22px;
+}
+
+.ctaTitle {
+  font-size: 34px;
+  font-weight: 900;
+  color: #fff;
+  margin-bottom: 14px;
+}
+
+.ctaText {
+  font-size: 17px;
+  line-height: 1.7;
+  color: rgba(229, 229, 229, 0.8);
+  max-width: 620px;
+  margin: 0 auto 30px;
+}
+
+.ctaButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: center;
+}
+
+/* ------------------------------ Responsive ----------------------------- */
+
+@media (max-width: 1024px) {
+  .heroInner {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+
+  .heroPhotoWrap {
+    max-width: 460px;
+  }
+
+  .steps,
+  .incentiveGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .electiveContent,
+  .scholarshipContent {
+    grid-template-columns: 1fr;
+    gap: 34px;
+  }
+
+  .safetyGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .pricingRow {
+    grid-template-columns: 1fr;
+    max-width: 420px;
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 640px) {
+  .hero,
+  .pitchSection,
+  .stepsSection,
+  .electiveSection,
+  .incentiveSection,
+  .safetySection,
+  .scholarshipSection,
+  .pricingSection,
+  .faqSection,
+  .ctaSection {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .heroTitle {
+    font-size: 34px;
+  }
+
+  .heroSubtitle {
+    font-size: 17px;
+  }
+
+  .sectionTitle {
+    font-size: 26px;
+  }
+
+  .pitchCard,
+  .safetyInner,
+  .ctaCard {
+    padding: 28px 22px;
+  }
+
+  .safetyGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .electiveGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .faqQuestion {
+    font-size: 16px;
+    padding: 17px 18px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .heroInner {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .stepCard:hover,
+  .electiveCard:hover,
+  .incentiveCard:hover,
+  .primaryBtn:hover,
+  .secondaryBtn:hover,
+  .safetyCta:hover,
+  .priceBtn:hover {
+    transform: none;
+  }
+}
