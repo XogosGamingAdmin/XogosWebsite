@@ -80,9 +80,9 @@ export const metadata: Metadata = {
       "Educational games for K-12 students, homeschoolers, parents, and teachers. Learn history, personal finance, science, and math through engaging gameplay.",
     images: [
       {
-        url: "/images/XogosLogo.png",
-        width: 1200,
-        height: 630,
+        url: "/images/og-homepage.png",
+        width: 1024,
+        height: 1024,
         alt: "Xogos Gaming - Play, Learn, Earn",
       },
     ],
@@ -95,7 +95,7 @@ export const metadata: Metadata = {
       "Xogos Gaming | Educational Games for K-12 Students, Homeschool & Teachers",
     description:
       "Educational games for K-12 students, homeschoolers, parents, and teachers. Learn history, personal finance, science, and math through engaging gameplay.",
-    images: ["/images/XogosLogo.png"],
+    images: ["/images/og-homepage.png"],
   },
   category: "Education",
   classification: "Educational Games",

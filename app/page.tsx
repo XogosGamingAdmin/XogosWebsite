@@ -2,12 +2,806 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { PageTracker } from "@/components/Analytics";
 import { MarketingLayout } from "@/layouts/Marketing/Marketing";
 import styles from "./page.module.css";
 
-// Stat Card component with animated counter
+// ---------------------------------------------------------------------------
+// Types
+// ---------------------------------------------------------------------------
+
+type Audience = "student" | "parent" | "educator";
+
+type SectionKey =
+  | "games"
+  | "cartridges"
+  | "quests"
+  | "power"
+  | "stats"
+  | "homeschool"
+  | "reviews"
+  | "scholarship"
+  | "pricing";
+
+type Day = "MON" | "TUE" | "WED" | "THU" | "FRI";
+
+type AchievementId =
+  | "insert-coin"
+  | "first-coin"
+  | "quest-master"
+  | "cartridge-collector"
+  | "identity-explorer"
+  | "power-surge";
+
+interface Game {
+  id: string;
+  title: string;
+  subject: string;
+  level: string;
+  description: string;
+  logo: string;
+  color: string;
+  videoId?: string;
+}
+
+interface Benefit {
+  icon: string;
+  title: string;
+  description: string;
+}
+
+interface CtaLink {
+  label: string;
+  href: string;
+  /** true when the link leaves this site (e.g. the myXogos play portal) */
+  external?: boolean;
+}
+
+interface AudienceContent {
+  playerName: string;
+  playerIcon: string;
+  playerImage: string;
+  playerTagline: string;
+  heroSubtitle: string;
+  benefitsTitle: string;
+  benefits: Benefit[];
+  primaryCta: CtaLink;
+  secondaryCta: CtaLink;
+}
+
+interface DailyQuest {
+  id: string;
+  label: string;
+  emoji: string;
+  coins: number;
+}
+
+interface LessonItem {
+  time: string;
+  subject: string;
+  activity: string;
+  isXogos: boolean;
+  coins?: string;
+}
+
+interface Cartridge {
+  subject: string;
+  emoji: string;
+  color: string;
+  hint: string;
+  games: Game[];
+}
+
+interface Achievement {
+  id: AchievementId;
+  icon: string;
+  title: string;
+  description: string;
+}
+
+interface Toast {
+  key: number;
+  achievement: Achievement;
+}
+
+interface ConfettiPiece {
+  id: number;
+  left: number;
+  delay: number;
+  duration: number;
+  color: string;
+  drift: number;
+  spin: number;
+  size: number;
+  isCoin: boolean;
+}
+
+interface Review {
+  quote: string;
+  name: string;
+  player: string;
+  accent: "red" | "purple" | "gold";
+  avatar: string;
+}
+
+// ---------------------------------------------------------------------------
+// Games data (mirrors app/page.tsx)
+// ---------------------------------------------------------------------------
+
+const allGames: Game[] = [
+  {
+    id: "bug-and-seek",
+    title: "Bug and Seek",
+    subject: "Science",
+    level: "Beginner",
+    description:
+      "A nature-based exploration game where students become the new owners of a broken-down insectarium. Players explore real-world ecosystems to catch up to 220 real-life bugs, each with fun facts and humor built into every codex entry. The game teaches entomology, biology, ecology, and environmental science.",
+    logo: "/images/games/new_bugandseek.png",
+    color: "#4ade80",
+    videoId: "edXjP7znaI4",
+  },
+  {
+    id: "splunker",
+    title: "Splunker",
+    subject: "Science",
+    level: "Beginner-Intermediate",
+    description:
+      "Dig deep. Discover everything. Splunker is an epic 2D exploration and mining adventure where players dig through massive cave systems, uncover hidden treasures, mine valuable resources, and survive mysterious underground environments—all while learning about geology, mining, Earth science, environmental science, and the incredible processes that shaped our planet. A growing world of new biomes, underground ecosystems, hidden civilizations, and rare minerals expands with every update. Grab your pickaxe, light your torch—the underground has never been this much fun!",
+    logo: "/images/games/Splunker.png",
+    color: "#f97316",
+    videoId: "uSYO-wM6t90",
+  },
+  {
+    id: "debt-free-millionaire",
+    title: "Debt-Free Millionaire",
+    subject: "Financial Literacy",
+    level: "Advanced",
+    description:
+      "A personal finance and career simulation that teaches financial literacy through practical scenarios. Players explore career paths, learn about budgeting, debt management, and wealth-building, earning iPlay coins as their in-game avatar reaches different savings milestones.",
+    logo: "/images/games/DebtFreeMillionaire_logo.jpg",
+    color: "#e6bb84",
+  },
+  {
+    id: "digital-frontier",
+    title: "Digital Frontier",
+    subject: "STEM",
+    level: "Intermediate",
+    description:
+      "A story-driven STEM adventure game where players step into a neon digital world as User, a self-aware program fighting to escape a controlled system. Through fast-paced racing, circuit repair, tank battles, structural puzzles, energy rerouting, and coding challenges, players learn real physics, engineering, and computer science concepts.",
+    logo: "/images/games/new_digial_frontier.png",
+    color: "#00d4ff",
+    videoId: "Ep3ZhAFmLp8",
+  },
+  {
+    id: "exploration-library",
+    title: "Exploration Library",
+    subject: "Literature",
+    level: "Beginner-Advanced",
+    description:
+      "A revolutionary approach to classic literature that transforms passive reading into active discovery. Experience Treasure Island, Swiss Family Robinson, and Pride and Prejudice through multiple character perspectives, with modern retellings or original Victorian prose, text-to-speech, and vocabulary help.",
+    logo: "/images/games/ExplorationLibrary_logo.png",
+    color: "#a855f7",
+    videoId: "V9vLVN-oiec",
+  },
+  {
+    id: "historical-conquest",
+    title: "Historical Conquest",
+    subject: "History",
+    level: "Intermediate",
+    description:
+      "A strategic history-based card game that resembles Pokemon in appearance and Risk in gameplay mechanics. All cards are based on historical figures, events, and places. Players earn iPlay coins for time spent in the game and can purchase additional decks using their earned coins.",
+    logo: "/images/games/new_historical-conquest.png",
+    color: "#e62739",
+    videoId: "OUg4Bu6AbnI",
+  },
+  {
+    id: "hunt-the-past",
+    title: "Hunt the Past",
+    subject: "History",
+    level: "Beginner-Advanced",
+    description:
+      "The cutting-edge online encyclopedia where students don't just look up people, places, and events—they talk to them. Thanks to built-in AI, students can ask questions, receive narrative responses from virtual historical figures, explore linked sources, and dive into compelling stories tied to each topic.",
+    logo: "/images/games/new_huntthepast.png",
+    color: "#f59e0b",
+    videoId: "898Gw-sQVC0",
+  },
+  {
+    id: "lightning-round",
+    title: "Lightning Round",
+    subject: "History",
+    level: "Intermediate",
+    description:
+      "A fast-paced quiz game that tests and improves historical knowledge through quick-fire questions, timed challenges, and competitive multiplayer modes. Perfect for classroom use or independent learning with engaging rapid-fire gameplay.",
+    logo: "/images/games/new_lightning_round.png",
+    color: "#fbbf24",
+    videoId: "7lPyLazH2Jw",
+  },
+  {
+    id: "monster-math",
+    title: "Monster Math",
+    subject: "Mathematics",
+    level: "Beginner-Intermediate",
+    description:
+      "A thrilling test of brains and reflexes where learning meets survival. Play as the fearless Green Monster, racing to devour correct numbers while avoiding the hungry Red Monster. Every level ramps up with tougher math problems—multiples, factors, primes, and equations.",
+    logo: "/images/games/MonsterMath_logo.png",
+    color: "#22c55e",
+    videoId: "RF0Gyyni6jE",
+  },
+  {
+    id: "totally-medieval",
+    title: "Totally Medieval",
+    subject: "Mathematics",
+    level: "Intermediate",
+    description:
+      "Build your medieval kingdom while mastering math skills through strategic resource management and castle building. Players solve increasingly complex math problems to acquire resources, build structures, and defend their kingdoms from rivals.",
+    logo: "/images/games/new_totally-medieval.png",
+    color: "#7928ca",
+    videoId: "JPCvcnIoRUs",
+  },
+  {
+    id: "body-battle",
+    title: "Body Battle",
+    subject: "Science",
+    level: "Intermediate",
+    description:
+      "An action-packed health science adventure where players command the body's immune system against invading pathogens. Learn about anatomy, the immune response, bacteria, viruses, and how the human body defends itself. Battle through organs and systems while mastering real medical concepts.",
+    logo: "/images/games/new_body_battle.png",
+    color: "#fb7185",
+    videoId: "uUiOOmIVAwg",
+  },
+  {
+    id: "timequest",
+    title: "TimeQuest",
+    subject: "History",
+    level: "Intermediate",
+    description:
+      "Travel through time to experience history firsthand! Visit ancient civilizations, witness pivotal moments, and interact with historical figures across different eras. Complete missions that teach cause and effect, historical context, and the interconnected nature of world events.",
+    logo: "/images/games/new_timequest.png",
+    color: "#38bdf8",
+  },
+];
+
+const subjects: string[] = [
+  "All",
+  ...Array.from(new Set(allGames.map((g) => g.subject))),
+];
+
+const gamesBySubject = (subject: string): Game[] =>
+  allGames.filter((g) => g.subject === subject);
+
+// ---------------------------------------------------------------------------
+// Audience content
+// ---------------------------------------------------------------------------
+
+const audienceContent: Record<Audience, AudienceContent> = {
+  student: {
+    playerName: "Student",
+    playerIcon: "🎮",
+    playerImage: "/images/players/player-student.png",
+    playerTagline: "Play games. Stack coins.",
+    heroSubtitle:
+      "Play games that are actually fun, level up your skills without even noticing, and stack iPlay coins you can turn into real scholarship money. Yes, really.",
+    benefitsTitle: "PLAYER PERKS",
+    benefits: [
+      {
+        icon: "🕹️",
+        title: "Games That Are Actually Fun",
+        description:
+          "70% fun, 30% education. No boring worksheets in disguise—real games you'll want to keep playing.",
+      },
+      {
+        icon: "🪙",
+        title: "Earn iPlay Coins",
+        description:
+          "Every game session, high grade, volunteer hour, and workout earns coins toward your future.",
+      },
+      {
+        icon: "🏆",
+        title: "Level Up In Real Life",
+        description:
+          "Coins convert into real scholarship funds for college, trade school, or certificate programs.",
+      },
+      {
+        icon: "🎁",
+        title: "Special Events",
+        description:
+          "Seasonal events, hidden codes, and bonus challenges drop extra coins all year long.",
+      },
+    ],
+    primaryCta: {
+      label: "Start Playing",
+      href: "https://www.myXogos.com",
+      external: true,
+    },
+    secondaryCta: { label: "How To Play", href: "/about" },
+  },
+  parent: {
+    playerName: "Homeschool Parent",
+    playerIcon: "🏠",
+    playerImage: "/images/players/player-parent.png",
+    playerTagline: "Curriculum, safety, scholarships.",
+    heroSubtitle:
+      "A safe, ad-free platform where your kids play genuinely educational games, take real-world elective classes, balance their screen time with off-screen rewards, and earn iPlay coins that convert into real scholarship funds.",
+    benefitsTitle: "WHY HOMESCHOOL FAMILIES CHOOSE XOGOS",
+    benefits: [
+      {
+        icon: "📚",
+        title: "Electives That Count",
+        description:
+          "Dozens of free elective classes—cooking, astronomy, wilderness survival, personal finance—that slot right into your homeschool day.",
+      },
+      {
+        icon: "🛡️",
+        title: "Safe By Design",
+        description:
+          "Parent-linked accounts, no in-game chat with strangers, no ads, no microtransactions. Ages 6-19 only.",
+      },
+      {
+        icon: "⚖️",
+        title: "Screen-Time Balance",
+        description:
+          "Off-screen incentives reward volunteering, exercise, and hands-on learning—not endless scrolling.",
+      },
+      {
+        icon: "🎓",
+        title: "Scholarships From Merit",
+        description:
+          "Coins your kids earn convert quarterly into real scholarship funds for universities and trade schools.",
+      },
+    ],
+    primaryCta: { label: "Explore Classes", href: "/classes" },
+    secondaryCta: { label: "Parent's Guide", href: "/student-protection" },
+  },
+  educator: {
+    playerName: "Educator",
+    playerIcon: "🏫",
+    playerImage: "/images/players/player-educator.png",
+    playerTagline: "Classroom-ready learning.",
+    heroSubtitle:
+      "Curriculum-aligned games and electives your students will actually ask to play—wrapped in the safety controls, oversight, and structure your classroom requires.",
+    benefitsTitle: "BUILT FOR YOUR CLASSROOM",
+    benefits: [
+      {
+        icon: "🧭",
+        title: "Curriculum Aligned",
+        description:
+          "Games reinforce core subjects—math, history, science, literature, STEM, and financial literacy.",
+      },
+      {
+        icon: "🖥️",
+        title: "Classroom Ready",
+        description:
+          "Quiz modes like Lightning Round work for whole-class play or independent practice stations.",
+      },
+      {
+        icon: "🔍",
+        title: "Oversight & Safety",
+        description:
+          "Linked adult accounts, software safeguards, and known-connections-only policies keep students protected.",
+      },
+      {
+        icon: "🌟",
+        title: "Motivation Built In",
+        description:
+          "The iPlay coin economy gives students a real, tangible reason to engage with the material.",
+      },
+    ],
+    primaryCta: { label: "See The Games", href: "/games" },
+    secondaryCta: { label: "Safety Measures", href: "/student-protection" },
+  },
+};
+
+const sectionOrder: Record<Audience, SectionKey[]> = {
+  student: [
+    "games",
+    "cartridges",
+    "power",
+    "quests",
+    "stats",
+    "homeschool",
+    "reviews",
+    "scholarship",
+    "pricing",
+  ],
+  parent: [
+    "quests",
+    "homeschool",
+    "power",
+    "cartridges",
+    "games",
+    "reviews",
+    "scholarship",
+    "pricing",
+    "stats",
+  ],
+  educator: [
+    "games",
+    "cartridges",
+    "stats",
+    "quests",
+    "homeschool",
+    "reviews",
+    "scholarship",
+    "pricing",
+    "power",
+  ],
+};
+
+// ---------------------------------------------------------------------------
+// Power meter daily quests (Design 3 reward chart, arcade-ified)
+// ---------------------------------------------------------------------------
+
+const dailyQuests: DailyQuest[] = [
+  { id: "game", label: "Played a learning game", emoji: "🎮", coins: 3 },
+  { id: "grades", label: "Get Good Grades", emoji: "📝", coins: 5 },
+  { id: "volunteer", label: "Volunteered an hour", emoji: "🤝", coins: 4 },
+  {
+    id: "outside",
+    label: "Exercised or played outside",
+    emoji: "🌳",
+    coins: 2,
+  },
+  { id: "elective", label: "Elective Classes", emoji: "🧑‍🍳", coins: 3 },
+];
+
+const METER_MAX = dailyQuests.reduce((sum, quest) => sum + quest.coins, 0);
+
+// ---------------------------------------------------------------------------
+// Weekly Quest Log (Design 3 lesson planner, arcade-ified)
+// ---------------------------------------------------------------------------
+
+const days: Day[] = ["MON", "TUE", "WED", "THU", "FRI"];
+
+const lessonPlans: Record<Day, LessonItem[]> = {
+  MON: [
+    {
+      time: "9:00",
+      subject: "Math",
+      activity: "Fractions workbook, pages 12-14",
+      isXogos: false,
+    },
+    {
+      time: "10:00",
+      subject: "Math",
+      activity: "Monster Math — race to Level 10",
+      isXogos: true,
+      coins: "30 min · earns coins",
+    },
+    {
+      time: "11:00",
+      subject: "Reading",
+      activity: "Read-aloud on the couch",
+      isXogos: false,
+    },
+    {
+      time: "1:00",
+      subject: "Elective",
+      activity: "KitchenLab Academy — bake & measure",
+      isXogos: true,
+      coins: "hands-on class",
+    },
+  ],
+  TUE: [
+    {
+      time: "9:00",
+      subject: "Writing",
+      activity: "Journal entry + copywork",
+      isXogos: false,
+    },
+    {
+      time: "10:00",
+      subject: "History",
+      activity: "Historical Conquest card battle",
+      isXogos: true,
+      coins: "30 min · earns coins",
+    },
+    {
+      time: "11:00",
+      subject: "History",
+      activity: "Ask Hunt the Past about the topic you drew",
+      isXogos: true,
+      coins: "earns coins",
+    },
+    {
+      time: "2:00",
+      subject: "P.E.",
+      activity: "Bike ride or park day with the co-op",
+      isXogos: false,
+    },
+  ],
+  WED: [
+    {
+      time: "9:00",
+      subject: "Science",
+      activity: "Backyard bug hunt with magnifying glass",
+      isXogos: false,
+    },
+    {
+      time: "10:00",
+      subject: "Science",
+      activity: "Bug and Seek — log your finds in the codex",
+      isXogos: true,
+      coins: "30 min · earns coins",
+    },
+    {
+      time: "11:30",
+      subject: "Math",
+      activity: "Totally Medieval — build the granary",
+      isXogos: true,
+      coins: "earns coins",
+    },
+    {
+      time: "1:00",
+      subject: "Service",
+      activity: "iServ volunteering at the food pantry",
+      isXogos: true,
+      coins: "off-screen · earns coins",
+    },
+  ],
+  THU: [
+    {
+      time: "9:00",
+      subject: "Literature",
+      activity: "Exploration Library — Treasure Island, ch. 4",
+      isXogos: true,
+      coins: "earns coins",
+    },
+    {
+      time: "10:00",
+      subject: "Literature",
+      activity: "Narration + discussion over snacks",
+      isXogos: false,
+    },
+    {
+      time: "11:00",
+      subject: "STEM",
+      activity: "Digital Frontier — circuit repair level",
+      isXogos: true,
+      coins: "30 min · earns coins",
+    },
+    {
+      time: "1:00",
+      subject: "Elective",
+      activity: "StarFall Academy — evening sky prep",
+      isXogos: true,
+      coins: "hands-on class",
+    },
+  ],
+  FRI: [
+    {
+      time: "9:00",
+      subject: "Life Skills",
+      activity: "Debt-Free Millionaire — budget your avatar's month",
+      isXogos: true,
+      coins: "earns coins",
+    },
+    {
+      time: "10:00",
+      subject: "Review",
+      activity: "Lightning Round family quiz showdown",
+      isXogos: true,
+      coins: "earns coins",
+    },
+    {
+      time: "11:00",
+      subject: "Free Study",
+      activity: "Library trip & project time",
+      isXogos: false,
+    },
+    {
+      time: "1:00",
+      subject: "Elective",
+      activity: "Survival Academy — knots & shelter building",
+      isXogos: true,
+      coins: "hands-on class",
+    },
+  ],
+};
+
+// ---------------------------------------------------------------------------
+// Subject cartridges (Design 3 flashcards, arcade-ified)
+// ---------------------------------------------------------------------------
+
+// Lightning Round is a rapid-fire quiz that spans every subject, so it loads
+// onto every cartridge rather than only its own.
+const LIGHTNING_ROUND_ID = "lightning-round";
+
+const cartridgeGames = (subject: string): Game[] => {
+  const games = gamesBySubject(subject);
+  if (games.some((game) => game.id === LIGHTNING_ROUND_ID)) {
+    return games;
+  }
+  const lightningRound = allGames.find(
+    (game) => game.id === LIGHTNING_ROUND_ID
+  );
+  return lightningRound ? [...games, lightningRound] : games;
+};
+
+const cartridgeDefs: Omit<Cartridge, "games" | "hint">[] = [
+  { subject: "Mathematics", emoji: "➗", color: "#22c55e" },
+  { subject: "History", emoji: "🏛️", color: "#e62739" },
+  { subject: "Science", emoji: "🔬", color: "#4ade80" },
+  { subject: "Literature", emoji: "📖", color: "#a855f7" },
+  { subject: "STEM", emoji: "🤖", color: "#00d4ff" },
+  { subject: "Financial Literacy", emoji: "🪙", color: "#e6bb84" },
+];
+
+const cartridges: Cartridge[] = cartridgeDefs.map((def) => {
+  const games = cartridgeGames(def.subject);
+  return {
+    ...def,
+    games,
+    hint: `${games.length} GAME${games.length === 1 ? "" : "S"} LOADED`,
+  };
+});
+
+// ---------------------------------------------------------------------------
+// Player reviews (Design 3 sticky notes, arcade-ified)
+// ---------------------------------------------------------------------------
+
+const reviews: Review[] = [
+  {
+    quote:
+      "Our co-op uses the elective classes as our Friday enrichment block. The kids think it's a treat — I count it as school.",
+    name: "Sarah, homeschooling 3 kids in Ohio",
+    player: "PLAYER 1",
+    accent: "gold",
+    avatar: "/images/players/review-2.png",
+  },
+  {
+    quote:
+      "My history-hater begged for one more round of Historical Conquest. I quietly added it to the transcript.",
+    name: "Marcus, dad & part-time teacher",
+    player: "PLAYER 2",
+    accent: "red",
+    avatar: "/images/players/review-3.png",
+  },
+  {
+    quote:
+      "The coins made our reward chart real. She watches her scholarship balance the way I watch my garden.",
+    name: "Denise, second-generation homeschooler",
+    player: "PLAYER 3",
+    accent: "purple",
+    avatar: "/images/players/review-1.png",
+  },
+];
+
+// ---------------------------------------------------------------------------
+// Achievements
+// ---------------------------------------------------------------------------
+
+const achievementCatalog: Record<AchievementId, Achievement> = {
+  "insert-coin": {
+    id: "insert-coin",
+    icon: "🕹️",
+    title: "INSERT COIN",
+    description: "You pressed start. Welcome to the arcade.",
+  },
+  "first-coin": {
+    id: "first-coin",
+    icon: "🪙",
+    title: "FIRST COIN GET",
+    description: "You earned your very first iPlay coin.",
+  },
+  "quest-master": {
+    id: "quest-master",
+    icon: "📋",
+    title: "QUEST MASTER",
+    description: "Every daily quest checked off. Legendary.",
+  },
+  "cartridge-collector": {
+    id: "cartridge-collector",
+    icon: "📼",
+    title: "CARTRIDGE COLLECTOR",
+    description: "Flipped three subject cartridges.",
+  },
+  "identity-explorer": {
+    id: "identity-explorer",
+    icon: "🎭",
+    title: "TRIPLE IDENTITY",
+    description: "Tried all three player types.",
+  },
+  "power-surge": {
+    id: "power-surge",
+    icon: "⚡",
+    title: "POWER SURGE",
+    description: "Charged the scholarship meter to 100%.",
+  },
+};
+
+const achievementIds: AchievementId[] = [
+  "insert-coin",
+  "first-coin",
+  "quest-master",
+  "cartridge-collector",
+  "identity-explorer",
+  "power-surge",
+];
+
+// ---------------------------------------------------------------------------
+// Ticker + floating coins
+// ---------------------------------------------------------------------------
+
+const tickerItems: string[] = [
+  "★ Emma earned 5 coins in Monster Math",
+  "★ New class unlocked: KitchenLab Academy",
+  "★ Liam beat the circuit-repair level in Digital Frontier",
+  "★ The Hansen family filled their coin jar",
+  "★ Ava converted saved coins into her scholarship fund",
+  "★ Historical Conquest family tournament this Friday",
+  "★ Noah logged 2 iServ volunteer hours",
+  "★ StarFall Academy stargazing night — new session open",
+  "★ Sofia hit a 12-answer streak in Lightning Round",
+  "★ New codex entry: the Atlas beetle joins Bug and Seek",
+];
+
+interface FloatingCoin {
+  id: number;
+  left: string;
+  top: string;
+  delay: string;
+  duration: string;
+  size: string;
+}
+
+const floatingCoins: FloatingCoin[] = [
+  { id: 1, left: "6%", top: "16%", delay: "0s", duration: "7s", size: "30px" },
+  {
+    id: 2,
+    left: "14%",
+    top: "62%",
+    delay: "1.4s",
+    duration: "9s",
+    size: "22px",
+  },
+  {
+    id: 3,
+    left: "88%",
+    top: "22%",
+    delay: "0.6s",
+    duration: "8s",
+    size: "34px",
+  },
+  {
+    id: 4,
+    left: "80%",
+    top: "68%",
+    delay: "2.2s",
+    duration: "7.5s",
+    size: "24px",
+  },
+  {
+    id: 5,
+    left: "93%",
+    top: "48%",
+    delay: "3s",
+    duration: "10s",
+    size: "18px",
+  },
+  {
+    id: 6,
+    left: "4%",
+    top: "40%",
+    delay: "1s",
+    duration: "8.5s",
+    size: "20px",
+  },
+];
+
+const confettiColors: string[] = [
+  "#e62739",
+  "#9d5cff",
+  "#e6bb84",
+  "#00d4ff",
+  "#22c55e",
+  "#fbbf24",
+];
+
+// ---------------------------------------------------------------------------
+// Stat card with animated count-up
+// ---------------------------------------------------------------------------
+
 function StatCard({
   value,
   suffix,
@@ -66,194 +860,55 @@ function StatCard({
   );
 }
 
-// SVG Icons for features
-const GameIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
-    fill="currentColor"
-  >
-    <path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm4.5 2c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4-3c-.83 0-1.5-.67-1.5-1.5S18.67 9 19.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z" />
-  </svg>
-);
-
-const LearnIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
-    fill="currentColor"
-  >
-    <path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72L12 15l5-2.73v3.72z" />
-  </svg>
-);
-
-const EarnIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
-    fill="currentColor"
-  >
-    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1.41 16.09V20h-2.67v-1.93c-1.71-.36-3.16-1.46-3.27-3.4h1.96c.1 1.05.82 1.87 2.65 1.87 1.96 0 2.4-.98 2.4-1.59 0-.83-.44-1.61-2.67-2.14-2.48-.6-4.18-1.62-4.18-3.67 0-1.72 1.39-2.84 3.11-3.21V4h2.67v1.95c1.86.45 2.79 1.86 2.85 3.39H14.3c-.05-1.11-.64-1.87-2.22-1.87-1.5 0-2.4.68-2.4 1.64 0 .84.65 1.39 2.67 1.91s4.18 1.39 4.18 3.91c-.01 1.83-1.38 2.83-3.12 3.16z" />
-  </svg>
-);
-
-// Game type definition
-interface Game {
-  id: string;
-  title: string;
-  subject: string;
-  level: string;
-  description: string;
-  logo: string;
-  color: string;
-  tutorialLink: string | null;
-  videoId?: string;
-}
-
-// All games data
-const allGames: Game[] = [
-  {
-    id: "bug-and-seek",
-    title: "Bug and Seek",
-    subject: "Science",
-    level: "Beginner",
-    description:
-      "A nature-based exploration game where students become the new owners of a broken-down insectarium. Players explore real-world ecosystems to catch up to 220 real-life bugs, each with fun facts and humor built into every codex entry. The game teaches entomology, biology, ecology, and environmental science.",
-    logo: "/images/games/new_bugandseek.png",
-    color: "#4ade80",
-    tutorialLink: null,
-    videoId: "edXjP7znaI4",
-  },
-  {
-    id: "debt-free-millionaire",
-    title: "Debt-Free Millionaire",
-    subject: "Financial Literacy",
-    level: "Advanced",
-    description:
-      "A personal finance and career simulation that teaches financial literacy through practical scenarios. Players explore career paths, learn about budgeting, debt management, and wealth-building, earning iPlay coins as their in-game avatar reaches different savings milestones.",
-    logo: "/images/games/DebtFreeMillionaire_logo.jpg",
-    color: "#e6bb84",
-    tutorialLink: null,
-  },
-  {
-    id: "digital-frontier",
-    title: "Digital Frontier",
-    subject: "STEM",
-    level: "Intermediate",
-    description:
-      "A story-driven STEM adventure game where players step into a neon digital world as User, a self-aware program fighting to escape a controlled system. Through fast-paced racing, circuit repair, tank battles, structural puzzles, energy rerouting, and coding challenges, players learn real physics, engineering, and computer science concepts. The game spans 11 connected levels, each introducing new mechanics and STEM ideas.",
-    logo: "/images/games/new_digial_frontier.png",
-    color: "#00d4ff",
-    tutorialLink: null,
-    videoId: "Ep3ZhAFmLp8",
-  },
-  {
-    id: "exploration-library",
-    title: "Exploration Library",
-    subject: "Literature",
-    level: "Beginner-Advanced",
-    description:
-      "A revolutionary approach to classic literature that transforms passive reading into active discovery. Experience Treasure Island, Swiss Family Robinson, and Pride and Prejudice through multiple character perspectives. Students can access modern retellings or original Victorian prose, with text-to-speech and vocabulary help. Each chapter offers four unique perspectives written in different narrative styles.",
-    logo: "/images/games/ExplorationLibrary_logo.png",
-    color: "#a855f7",
-    tutorialLink: null,
-    videoId: "V9vLVN-oiec",
-  },
-  {
-    id: "historical-conquest",
-    title: "Historical Conquest",
-    subject: "History",
-    level: "Intermediate",
-    description:
-      "A strategic history-based card game that resembles Pokémon in appearance and Risk in gameplay mechanics. All cards are based on historical figures, events, and places. Players earn iPlay coins for time spent in the game and can purchase additional decks using their earned coins.",
-    logo: "/images/games/new_historical-conquest.png",
-    color: "#e62739",
-    tutorialLink: null,
-  },
-  {
-    id: "hunt-the-past",
-    title: "Hunt the Past",
-    subject: "History",
-    level: "Beginner-Advanced",
-    description:
-      "The cutting-edge online encyclopedia where students don't just look up people, places, and events—they talk to them. Thanks to built-in AI, students can ask questions, receive narrative responses from virtual historical figures, explore linked sources, and dive into compelling stories tied to each topic. Makes history conversational and exploratory.",
-    logo: "/images/games/new_huntthepast.png",
-    color: "#f59e0b",
-    tutorialLink: null,
-    videoId: "898Gw-sQVC0",
-  },
-  {
-    id: "lightning-round",
-    title: "Lightning Round",
-    subject: "History",
-    level: "Intermediate",
-    description:
-      "A fast-paced quiz game that tests and improves historical knowledge through quick-fire questions, timed challenges, and competitive multiplayer modes. Perfect for classroom use or independent learning with engaging rapid-fire gameplay.",
-    logo: "/images/games/new_lightning_round.png",
-    color: "#fbbf24",
-    tutorialLink: null,
-    videoId: "7lPyLazH2Jw",
-  },
-  {
-    id: "monster-math",
-    title: "Monster Math",
-    subject: "Mathematics",
-    level: "Beginner-Intermediate",
-    description:
-      "A thrilling test of brains and reflexes where learning meets survival. Play as the fearless Green Monster, racing to devour correct numbers while avoiding the hungry Red Monster. Every level ramps up with tougher math problems—multiples, factors, primes, and equations. Reaching Level 10 earns 1 iPlay coin toward scholarships!",
-    logo: "/images/games/MonsterMath_logo.png",
-    color: "#22c55e",
-    tutorialLink: null,
-    videoId: "RF0Gyyni6jE",
-  },
-  {
-    id: "totally-medieval",
-    title: "Totally Medieval",
-    subject: "Mathematics",
-    level: "Intermediate",
-    description:
-      "Build your medieval kingdom while mastering math skills through strategic resource management and castle building. Players solve increasingly complex math problems to acquire resources, build structures, and defend their kingdoms from rivals.",
-    logo: "/images/games/new_totally-medieval.png",
-    color: "#7928ca",
-    tutorialLink: null,
-    videoId: "JPCvcnIoRUs",
-  },
-];
-
-// Fisher-Yates shuffle algorithm
-function shuffleArray<T>(array: T[]): T[] {
-  const shuffled = [...array];
-  for (let i = shuffled.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-  }
-  return shuffled;
-}
+// ---------------------------------------------------------------------------
+// Page
+// ---------------------------------------------------------------------------
 
 export default function HomePage() {
   const [isLoaded, setIsLoaded] = useState(false);
-  const [activeGameIndex, setActiveGameIndex] = useState(0);
-  const [screenImage, setScreenImage] = useState("/images/XogosLogo.png");
-  const [totalMembers, setTotalMembers] = useState(0);
-  const [playersLearning, setPlayersLearning] = useState(0);
-  const [displayedGames, setDisplayedGames] = useState<Game[]>([]);
+  const [playersLearning, setPlayersLearning] = useState<number>(0);
+  const [audience, setAudience] = useState<Audience>("parent");
+  const [activeSubject, setActiveSubject] = useState<string>("All");
   const [selectedGame, setSelectedGame] = useState<Game | null>(null);
+
+  // Power meter + daily quests
+  const [questsDone, setQuestsDone] = useState<Set<string>>(new Set());
+  const [lastGain, setLastGain] = useState<{
+    amount: number;
+    id: number;
+  } | null>(null);
+  const [combo, setCombo] = useState<number>(0);
+  const [shaking, setShaking] = useState<boolean>(false);
+
+  // Weekly quest log
+  const [activeDay, setActiveDay] = useState<Day>("TUE");
+
+  // Subject cartridges
+  const [flippedCartridges, setFlippedCartridges] = useState<Set<string>>(
+    new Set()
+  );
+
+  // Achievements + toasts + confetti
+  const [unlocked, setUnlocked] = useState<Set<AchievementId>>(new Set());
+  const [toasts, setToasts] = useState<Toast[]>([]);
+  const [confetti, setConfetti] = useState<ConfettiPiece[]>([]);
+  const [hudOpen, setHudOpen] = useState<boolean>(false);
+
+  const unlockedRef = useRef<Set<AchievementId>>(new Set());
+  const visitedAudiencesRef = useRef<Set<Audience>>(new Set(["parent"]));
+  const flippedEverRef = useRef<Set<string>>(new Set());
+  const meterWasFullRef = useRef<boolean>(false);
+  const comboTimerRef = useRef<number | null>(null);
+  const confettiTimerRef = useRef<number | null>(null);
 
   useEffect(() => {
     setIsLoaded(true);
 
-    // Randomly select 4 games to display
-    const shuffled = shuffleArray(allGames);
-    setDisplayedGames(shuffled.slice(0, 4));
-
-    // Fetch member stats from API
+    // Players Learning is maintained in Admin → Statistics (Accounts field)
     async function fetchMemberStats() {
       try {
         const response = await fetch("/api/public-stats");
         const data = await response.json();
-        if (data.totalMembers) {
-          setTotalMembers(data.totalMembers);
-        }
         if (data.playersLearning) {
           setPlayersLearning(data.playersLearning);
         }
@@ -264,737 +919,1380 @@ export default function HomePage() {
     fetchMemberStats();
   }, []);
 
+  useEffect(() => {
+    return () => {
+      if (comboTimerRef.current) window.clearTimeout(comboTimerRef.current);
+      if (confettiTimerRef.current)
+        window.clearTimeout(confettiTimerRef.current);
+    };
+  }, []);
+
+  // -------------------------------------------------------------------------
+  // Achievement + FX helpers
+  // -------------------------------------------------------------------------
+
+  const unlock = useCallback((id: AchievementId): void => {
+    if (unlockedRef.current.has(id)) return;
+    unlockedRef.current.add(id);
+    setUnlocked(new Set(unlockedRef.current));
+    const toastKey = Date.now() + Math.random();
+    setToasts((prev) => [
+      ...prev,
+      { key: toastKey, achievement: achievementCatalog[id] },
+    ]);
+    window.setTimeout(() => {
+      setToasts((prev) => prev.filter((t) => t.key !== toastKey));
+    }, 4600);
+  }, []);
+
+  const fireConfetti = useCallback((withCoins: boolean): void => {
+    const pieces: ConfettiPiece[] = Array.from({ length: 60 }, (_, i) => ({
+      id: Date.now() + i,
+      left: Math.random() * 100,
+      delay: Math.random() * 0.4,
+      duration: 2 + Math.random() * 1.6,
+      color: confettiColors[i % confettiColors.length],
+      drift: Math.random() * 160 - 80,
+      spin: Math.random() * 720 - 360,
+      size: 6 + Math.random() * 8,
+      isCoin: withCoins && i % 6 === 0,
+    }));
+    setConfetti(pieces);
+    if (confettiTimerRef.current) {
+      window.clearTimeout(confettiTimerRef.current);
+    }
+    confettiTimerRef.current = window.setTimeout(() => setConfetti([]), 4200);
+  }, []);
+
+  // -------------------------------------------------------------------------
+  // Derived coin math
+  // -------------------------------------------------------------------------
+
+  const questCoins: number = dailyQuests.reduce(
+    (sum, quest) => (questsDone.has(quest.id) ? sum + quest.coins : sum),
+    0
+  );
+  const totalCoins = questCoins;
+  const meterPercent = Math.min((totalCoins / METER_MAX) * 100, 100);
+  const meterFull = totalCoins >= METER_MAX;
+  const allQuestsDone = questsDone.size === dailyQuests.length;
+
+  const rank: string = meterFull
+    ? "SCHOLAR"
+    : totalCoins >= 12
+      ? "CHAMPION"
+      : totalCoins >= 5
+        ? "PLAYER"
+        : "ROOKIE";
+
+  // First coin achievement
+  useEffect(() => {
+    if (totalCoins > 0) {
+      unlock("first-coin");
+    }
+  }, [totalCoins, unlock]);
+
+  // All daily quests complete → confetti + achievement
+  useEffect(() => {
+    if (allQuestsDone) {
+      unlock("quest-master");
+      fireConfetti(true);
+    }
+  }, [allQuestsDone, unlock, fireConfetti]);
+
+  // Meter full → confetti + screen shake + achievement
+  useEffect(() => {
+    if (meterFull && !meterWasFullRef.current) {
+      meterWasFullRef.current = true;
+      unlock("power-surge");
+      fireConfetti(false);
+      setShaking(true);
+      const timer = window.setTimeout(() => setShaking(false), 650);
+      return () => window.clearTimeout(timer);
+    }
+    if (!meterFull) {
+      meterWasFullRef.current = false;
+    }
+    return undefined;
+  }, [meterFull, unlock, fireConfetti]);
+
+  // -------------------------------------------------------------------------
+  // Handlers
+  // -------------------------------------------------------------------------
+
+  const handleAudience = (key: Audience): void => {
+    setAudience(key);
+    visitedAudiencesRef.current.add(key);
+    if (visitedAudiencesRef.current.size === 3) {
+      unlock("identity-explorer");
+    }
+  };
+
+  const toggleQuest = (id: string): void => {
+    const quest = dailyQuests.find((q) => q.id === id);
+    const isChecking = !questsDone.has(id);
+    if (isChecking && quest) {
+      setLastGain({ amount: quest.coins, id: Date.now() });
+      setCombo((current) => current + 1);
+      if (comboTimerRef.current) {
+        window.clearTimeout(comboTimerRef.current);
+      }
+      comboTimerRef.current = window.setTimeout(() => setCombo(0), 2000);
+    }
+    setQuestsDone((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+      return next;
+    });
+  };
+
+  const toggleCartridge = (subject: string): void => {
+    flippedEverRef.current.add(subject);
+    if (flippedEverRef.current.size >= 3) {
+      unlock("cartridge-collector");
+    }
+    setFlippedCartridges((prev) => {
+      const next = new Set(prev);
+      if (next.has(subject)) {
+        next.delete(subject);
+      } else {
+        next.add(subject);
+      }
+      return next;
+    });
+  };
+
+  const handleInsertCoin = (): void => {
+    fireConfetti(true);
+    unlock("insert-coin");
+    const cabinet = document.getElementById("game-cabinet");
+    if (cabinet) {
+      cabinet.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  const resetMeter = (): void => {
+    setQuestsDone(new Set());
+    setLastGain(null);
+    setCombo(0);
+  };
+
+  const content = audienceContent[audience];
+
+  const filteredGames =
+    activeSubject === "All"
+      ? allGames
+      : allGames.filter((game) => game.subject === activeSubject);
+
   const stats = [
-    { value: playersLearning, suffix: "", label: "Players Learning" },
-    { value: 13, suffix: "", label: "Educational Games" },
-    { value: 15, suffix: "", label: "Free Online Classes" },
+    playersLearning > 0
+      ? { value: playersLearning, suffix: "", label: "Players Learning" }
+      : { value: 500, suffix: "+", label: "Players Learning" },
+    { value: 18, suffix: "", label: "Educational Games" },
+    { value: 15, suffix: "", label: "Free Elective Classes" },
     { value: 98, suffix: "%", label: "Fun Rating" },
   ];
 
-  const handleGameClick = (game: Game) => {
-    setSelectedGame(game);
+  // -------------------------------------------------------------------------
+  // Sections (rendered in audience-specific order)
+  // -------------------------------------------------------------------------
+
+  const gamesSection = (
+    <section className={styles.gamesSection} id="game-cabinet">
+      <div className={styles.sectionHeading}>
+        <span className={`${styles.sectionKeyword} ${styles.neonRed}`}>
+          PLAY
+        </span>
+        <h2 className={styles.sectionTitle}>
+          <span className={styles.titleIcon}>🕹️</span>
+          THE GAME CABINET
+        </h2>
+        <p className={styles.sectionSubtitle}>
+          {audience === "parent"
+            ? "Every title teaches a real subject. Filter by what your kids are studying this week."
+            : audience === "educator"
+              ? "Filter the library by subject to find titles that fit your lesson plan."
+              : "Pick a subject, pick a game, press start."}
+        </p>
+      </div>
+
+      <div className={styles.filterChips}>
+        {subjects.map((subject) => (
+          <button
+            key={subject}
+            type="button"
+            className={`${styles.filterChip} ${
+              activeSubject === subject ? styles.filterChipActive : ""
+            }`}
+            onClick={() => setActiveSubject(subject)}
+          >
+            {subject}
+          </button>
+        ))}
+      </div>
+
+      <div className={styles.gamesGrid}>
+        {filteredGames.map((game) => (
+          <button
+            key={game.id}
+            type="button"
+            className={styles.gameCard}
+            onClick={() => setSelectedGame(game)}
+            style={{ "--glow-color": game.color } as React.CSSProperties}
+          >
+            <div className={styles.gameImageWrapper}>
+              <Image
+                src={game.logo}
+                alt={game.title}
+                fill
+                className={styles.gameImage}
+              />
+              <div className={styles.gameOverlay}>
+                <span className={styles.playIcon}>▶</span>
+              </div>
+            </div>
+            <div className={styles.gameInfo}>
+              <span className={styles.gameSubject}>{game.subject}</span>
+              <h3 className={styles.gameTitle}>{game.title}</h3>
+              <span className={styles.gameLevel}>{game.level}</span>
+            </div>
+          </button>
+        ))}
+      </div>
+
+      <div className={styles.sectionFooterLink}>
+        <Link href="/games" className={styles.outlineBtn}>
+          View All Games →
+        </Link>
+      </div>
+    </section>
+  );
+
+  const cartridgesSection = (
+    <section className={styles.cartridgeSection}>
+      <div className={styles.sectionHeading}>
+        <span className={`${styles.sectionKeyword} ${styles.neonPurple}`}>
+          PLAY
+        </span>
+        <h2 className={styles.sectionTitle}>
+          <span className={styles.titleIcon}>📼</span>
+          SUBJECT CARTRIDGES
+        </h2>
+        <p className={styles.sectionSubtitle}>
+          Every subject is a cartridge. Flip one over to see which games are
+          loaded on it — collect and flip three to unlock an achievement.
+        </p>
+      </div>
+
+      <div className={styles.cartridgeGrid}>
+        {cartridges.map((card) => {
+          const isFlipped = flippedCartridges.has(card.subject);
+          return (
+            <button
+              key={card.subject}
+              type="button"
+              className={`${styles.cartridge} ${
+                isFlipped ? styles.cartridgeFlipped : ""
+              }`}
+              onClick={() => toggleCartridge(card.subject)}
+              aria-pressed={isFlipped}
+              aria-label={`Flip ${card.subject} cartridge`}
+              style={{ "--cart-color": card.color } as React.CSSProperties}
+            >
+              <span className={styles.cartridgeInner}>
+                <span className={styles.cartridgeFront}>
+                  <span className={styles.cartridgeRidges}></span>
+                  <span className={styles.cartridgeLabel}>
+                    <span className={styles.cartridgeEmoji}>{card.emoji}</span>
+                    <span className={styles.cartridgeSubject}>
+                      {card.subject}
+                    </span>
+                    <span className={styles.cartridgeHint}>{card.hint}</span>
+                  </span>
+                  <span className={styles.cartridgeFlipTag}>TAP TO FLIP ↻</span>
+                </span>
+                <span className={styles.cartridgeBack}>
+                  <span className={styles.cartridgeBackTitle}>
+                    {card.subject}
+                  </span>
+                  {card.games.map((game) => (
+                    <span key={game.id} className={styles.cartGame}>
+                      <span className={styles.cartGameLogo}>
+                        <Image
+                          src={game.logo}
+                          alt={game.title}
+                          fill
+                          className={styles.cartGameImage}
+                          sizes="44px"
+                        />
+                      </span>
+                      <span className={styles.cartGameText}>
+                        <span className={styles.cartGameTitle}>
+                          {game.title}
+                        </span>
+                        <span className={styles.cartGameLevel}>
+                          {game.level}
+                        </span>
+                      </span>
+                    </span>
+                  ))}
+                  <span className={styles.cartridgeFlipTagBack}>
+                    TAP TO FLIP BACK ↺
+                  </span>
+                </span>
+              </span>
+            </button>
+          );
+        })}
+      </div>
+    </section>
+  );
+
+  const questsSection = (
+    <section className={styles.questLogSection}>
+      <div className={styles.questLogPanel}>
+        <div className={styles.questLogScanlines}></div>
+        <div className={styles.sectionHeading}>
+          <span className={`${styles.sectionKeyword} ${styles.neonPurple}`}>
+            LEARN
+          </span>
+          <h2 className={styles.sectionTitle}>
+            <span className={styles.titleIcon}>🗓️</span>
+            WEEKLY QUEST LOG
+          </h2>
+          <p className={styles.sectionSubtitle}>
+            A sample homeschool week with Xogos slotted in. Select a level
+            (a.k.a. a day) — glowing rows are Xogos quests that earn coins, the
+            rest is your regular curriculum.
+          </p>
+        </div>
+
+        <div
+          className={styles.dayTabs}
+          role="tablist"
+          aria-label="Weekly quest log days"
+        >
+          {days.map((day) => (
+            <button
+              key={day}
+              type="button"
+              role="tab"
+              aria-selected={activeDay === day}
+              className={`${styles.dayTab} ${
+                activeDay === day ? styles.dayTabActive : ""
+              }`}
+              onClick={() => setActiveDay(day)}
+            >
+              <span className={styles.dayTabLevel}>LV</span>
+              {day}
+            </button>
+          ))}
+        </div>
+
+        <ul className={styles.questList} key={activeDay}>
+          {lessonPlans[activeDay].map((item, index) => (
+            <li
+              key={`${activeDay}-${index}`}
+              className={`${styles.questItem} ${
+                item.isXogos ? styles.questItemXogos : ""
+              }`}
+              style={
+                { "--row-delay": `${index * 0.07}s` } as React.CSSProperties
+              }
+            >
+              <span className={styles.questTime}>{item.time}</span>
+              <span className={styles.questBody}>
+                <span className={styles.questSubject}>{item.subject}</span>
+                <span className={styles.questActivity}>{item.activity}</span>
+              </span>
+              {item.isXogos ? (
+                <span className={styles.questCoin}>🪙 {item.coins}</span>
+              ) : (
+                <span className={styles.questOffline}>your curriculum</span>
+              )}
+            </li>
+          ))}
+        </ul>
+
+        <p className={styles.questFootnote}>
+          ▸ Xogos quests slot into any rhythm — morning basket, loop schedule,
+          or afternoon quiet time. Swap freely; the coins still count.
+        </p>
+      </div>
+    </section>
+  );
+
+  const powerSection = (
+    <section className={styles.powerSection}>
+      <div className={styles.sectionHeading}>
+        <span className={`${styles.sectionKeyword} ${styles.neonGold}`}>
+          EARN
+        </span>
+        <h2 className={styles.sectionTitle}>
+          <span className={styles.titleIcon}>⚡</span>
+          SCHOLARSHIP POWER-UP METER
+        </h2>
+        <p className={styles.sectionSubtitle}>
+          Check off today&apos;s quests to see how everyday effort—on screen and
+          off—charges the scholarship meter with iPlay coins. Complete them all
+          for a surprise.
+        </p>
+      </div>
+
+      <div className={styles.powerPanel}>
+        <div className={styles.powerLeft}>
+          <h3 className={styles.powerColumnTitle}>
+            <span>📋</span> DAILY QUEST CHECKLIST
+          </h3>
+          <div className={styles.questChecklist}>
+            {dailyQuests.map((quest) => {
+              const isDone = questsDone.has(quest.id);
+              return (
+                <button
+                  key={quest.id}
+                  type="button"
+                  className={`${styles.checkItem} ${
+                    isDone ? styles.checkItemDone : ""
+                  }`}
+                  onClick={() => toggleQuest(quest.id)}
+                  aria-pressed={isDone}
+                >
+                  <span className={styles.checkBox}>{isDone ? "✓" : ""}</span>
+                  <span className={styles.checkEmoji}>{quest.emoji}</span>
+                  <span className={styles.checkLabel}>{quest.label}</span>
+                  <span className={styles.checkCoins}>+{quest.coins} 🪙</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        <div className={styles.powerMeterWrap}>
+          <div className={styles.coinCounter}>
+            <span className={styles.coinCounterIcon}>🪙</span>
+            <span className={styles.coinCounterValue}>{totalCoins}</span>
+            <span className={styles.coinCounterLabel}>iPlay Coins</span>
+            {lastGain && (
+              <span key={lastGain.id} className={styles.coinFloat}>
+                +{lastGain.amount}
+              </span>
+            )}
+            {combo >= 2 && (
+              <span key={`combo-${combo}`} className={styles.comboBadge}>
+                x{combo} COMBO!
+              </span>
+            )}
+          </div>
+
+          <div className={styles.coinJar} aria-hidden="true">
+            {dailyQuests
+              .filter((quest) => questsDone.has(quest.id))
+              .map((quest, questIndex) =>
+                Array.from({ length: quest.coins }).map((_, i) => (
+                  <span
+                    key={`${quest.id}-${i}`}
+                    className={styles.jarCoin}
+                    style={
+                      {
+                        "--coin-delay": `${i * 0.12}s`,
+                        "--coin-x": `${((questIndex * 37 + i * 23) % 76) - 38}px`,
+                      } as React.CSSProperties
+                    }
+                  >
+                    🪙
+                  </span>
+                ))
+              )}
+            <span className={styles.coinJarLabel}>
+              {questCoins > 0
+                ? `${questCoins} from today's quests`
+                : "quest coins land here"}
+            </span>
+          </div>
+
+          <div className={styles.powerMeter}>
+            <div
+              className={`${styles.powerFill} ${
+                meterFull ? styles.powerFillFull : ""
+              }`}
+              style={{ width: `${meterPercent}%` }}
+            >
+              <div className={styles.powerShine}></div>
+            </div>
+            <span className={styles.powerText}>
+              {meterFull
+                ? "POWER UP! SCHOLARSHIP BOOST UNLOCKED"
+                : `${Math.floor(meterPercent)}% CHARGED`}
+            </span>
+          </div>
+
+          <div className={styles.rankRow}>
+            <span className={styles.rankLabel}>RANK</span>
+            <span
+              className={`${styles.rankValue} ${
+                meterFull ? styles.rankValueMax : ""
+              }`}
+            >
+              {rank}
+            </span>
+            <span className={styles.rankTrack}>
+              ROOKIE → PLAYER → CHAMPION → SCHOLAR
+            </span>
+          </div>
+
+          <p className={styles.powerNote}>
+            Every quarter, students can convert saved iPlay coins into real
+            scholarship funds for universities, trade schools, and certificate
+            programs. The more they play, learn, and do, the more their future
+            fund grows.
+          </p>
+
+          <div className={styles.powerActions}>
+            <button
+              type="button"
+              className={styles.resetBtn}
+              onClick={resetMeter}
+            >
+              ↺ Reset Demo
+            </button>
+            <Link href="/scholarships" className={styles.outlineBtn}>
+              How Scholarships Work →
+            </Link>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+
+  const statsSection = (
+    <section className={styles.statsSection}>
+      <div className={styles.statsGrid}>
+        {stats.map((stat) => (
+          <StatCard
+            key={stat.label}
+            value={stat.value}
+            suffix={stat.suffix}
+            label={stat.label}
+          />
+        ))}
+      </div>
+      <p className={styles.statsSubline}>
+        One subscription. No ads. No microtransactions. Just play, learn, and
+        earn.
+      </p>
+    </section>
+  );
+
+  const homeschoolSection = (
+    <section className={styles.homeschoolSection}>
+      <div className={styles.sectionHeading}>
+        <span className={`${styles.sectionKeyword} ${styles.neonPurple}`}>
+          LEARN
+        </span>
+        <h2 className={styles.sectionTitle}>
+          <span className={styles.titleIcon}>🏠</span>
+          BUILT FOR HOMESCHOOL FAMILIES
+        </h2>
+        <p className={styles.sectionSubtitle}>
+          Xogos isn&apos;t just games. It&apos;s daily electives, real-world
+          skill-building, and rewards for getting off the screen—designed to fit
+          the way homeschool families actually learn.
+        </p>
+      </div>
+
+      <div className={styles.familyBanner}>
+        <div className={styles.familyPhotoWrap}>
+          <Image
+            src="/images/homeschool-family.png"
+            alt="A parent and student exploring Xogos together on a laptop at the kitchen table"
+            width={460}
+            height={460}
+            className={styles.familyPhoto}
+          />
+        </div>
+        <div className={styles.familyCopy}>
+          {audience === "parent" ? (
+            <p className={styles.parentExpandedText}>
+              You set the pace. Your kids pick electives they&apos;re excited
+              about, play games mapped to core subjects, and earn coins for the
+              things you already value—good grades, service, and staying
+              active. No ads ever, no tricks to keep them glued to a device,
+              and every account is linked to yours.
+            </p>
+          ) : audience === "educator" ? (
+            <p className={styles.parentExpandedText}>
+              Built to slot into the school day or the co-op block. Every title
+              maps to a real subject, accounts stay linked to a trusted adult,
+              and there are no ads or microtransactions competing for your
+              students&apos; attention.
+            </p>
+          ) : (
+            <p className={styles.parentExpandedText}>
+              Play the games you actually want to play, take the classes that
+              sound fun, and stack up coins the whole time. Your family can see
+              your progress—and those coins go toward your future.
+            </p>
+          )}
+          <div className={styles.familyStamp}>
+            <span className={styles.familyStampIcon}>🛡️</span>
+            Ages 6&ndash;19 · Parent-linked accounts · No ads, ever
+          </div>
+        </div>
+      </div>
+
+      <div className={styles.homeschoolGrid}>
+        <div className={styles.homeschoolBlock}>
+          <h3 className={styles.blockTitle}>
+            <span className={styles.blockIcon}>📚</span>
+            Free Elective Classes
+          </h3>
+          <p className={styles.blockText}>
+            Hands-on classes that push learning into the real world—not more
+            screen time. Real-life applications, not theory.
+          </p>
+          <div className={styles.electiveGrid}>
+            <Link href="/classes" className={styles.electiveCard}>
+              <Image
+                src="/images/programs/survival_academy.png"
+                alt="Survival Academy"
+                width={120}
+                height={120}
+                className={styles.electiveLogo}
+              />
+              <span className={styles.electiveLabel}>Survival Academy</span>
+            </Link>
+            <Link href="/classes" className={styles.electiveCard}>
+              <Image
+                src="/images/programs/debt_free_millionaire_investor.png"
+                alt="Debt Free Millionaire Investor"
+                width={120}
+                height={120}
+                className={styles.electiveLogo}
+              />
+              <span className={styles.electiveLabel}>DFM Investor</span>
+            </Link>
+            <Link href="/classes" className={styles.electiveCard}>
+              <Image
+                src="/images/programs/starfall_academy.png"
+                alt="StarFall Academy"
+                width={120}
+                height={120}
+                className={styles.electiveLogo}
+              />
+              <span className={styles.electiveLabel}>StarFall Academy</span>
+            </Link>
+            <Link href="/classes" className={styles.electiveCard}>
+              <Image
+                src="/images/programs/kitchenlab_academy.png"
+                alt="KitchenLab Academy"
+                width={120}
+                height={120}
+                className={styles.electiveLogo}
+              />
+              <span className={styles.electiveLabel}>KitchenLab Academy</span>
+            </Link>
+          </div>
+        </div>
+
+        <div className={styles.homeschoolBlock}>
+          <h3 className={styles.blockTitle}>
+            <span className={styles.blockIcon}>🌤️</span>
+            Off-Screen Incentives
+          </h3>
+          <p className={styles.blockText}>
+            We reward what happens away from the screen. Volunteering and
+            physical activity earn coins too.
+          </p>
+          <div className={styles.incentiveGrid}>
+            <Link href="/incentives" className={styles.incentiveCard}>
+              <Image
+                src="/images/games/new_iserv_volunteer.png"
+                alt="iServ Volunteering"
+                width={130}
+                height={130}
+                className={styles.incentiveLogo}
+              />
+              <span className={styles.incentiveLabel}>iServ Volunteering</span>
+            </Link>
+            <Link href="/incentives" className={styles.incentiveCard}>
+              <div className={styles.incentiveImageWrapper}>
+                <Image
+                  src="/images/games/new_pryde_gym.png"
+                  alt="Pryde Gym"
+                  width={130}
+                  height={130}
+                  className={styles.incentiveLogo}
+                />
+                <div className={styles.comingSoonOverlay}>Coming 2026</div>
+              </div>
+              <span className={styles.incentiveLabel}>Pryde Gym</span>
+            </Link>
+          </div>
+          <Link href="/incentives" className={styles.outlineBtnSmall}>
+            About Active Incentives →
+          </Link>
+        </div>
+      </div>
+
+      <div className={styles.trustBar}>
+        <div className={styles.trustBarHeading}>
+          <span className={styles.trustShield}>🛡️</span>
+          <span>STUDENT PROTECTION, STANDARD ON EVERY ACCOUNT</span>
+        </div>
+        <div className={styles.trustBadges}>
+          <div className={styles.trustBadge}>
+            <Image
+              src="/images/security/parent-linked.png"
+              alt="Parent Linked Accounts"
+              width={72}
+              height={72}
+              className={styles.trustImage}
+            />
+            <span>Parent Linked Accounts</span>
+          </div>
+          <div className={styles.trustBadge}>
+            <Image
+              src="/images/security/know-customers.png"
+              alt="Know Our Customers"
+              width={72}
+              height={72}
+              className={styles.trustImage}
+            />
+            <span>Know Our Customers</span>
+          </div>
+          <div className={styles.trustBadge}>
+            <Image
+              src="/images/security/software-safeguards.png"
+              alt="Software Safeguards"
+              width={72}
+              height={72}
+              className={styles.trustImage}
+            />
+            <span>Software Safeguards</span>
+          </div>
+          <div className={styles.trustBadge}>
+            <Image
+              src="/images/security/no-chat.png"
+              alt="No In-Game Chats"
+              width={72}
+              height={72}
+              className={styles.trustImage}
+            />
+            <span>No In-Game Chats</span>
+          </div>
+          <div className={styles.trustBadge}>
+            <Image
+              src="/images/security/age-restricted.png"
+              alt="Ages 6-19 Only"
+              width={72}
+              height={72}
+              className={styles.trustImage}
+            />
+            <span>Ages 6-19 Only</span>
+          </div>
+          <div className={styles.trustBadge}>
+            <Image
+              src="/images/security/known-connections.png"
+              alt="Known Connections Only"
+              width={72}
+              height={72}
+              className={styles.trustImage}
+            />
+            <span>Known Connections Only</span>
+          </div>
+        </div>
+        <Link href="/student-protection" className={styles.outlineBtnSmall}>
+          Our Safety Measures →
+        </Link>
+      </div>
+    </section>
+  );
+
+  const reviewsSection = (
+    <section className={styles.reviewsSection}>
+      <div className={styles.sectionHeading}>
+        <span className={`${styles.sectionKeyword} ${styles.neonGold}`}>
+          HIGH SCORES
+        </span>
+        <h2 className={styles.sectionTitle}>
+          <span className={styles.titleIcon}>🏅</span>
+          PLAYER REVIEWS
+        </h2>
+        <p className={styles.sectionSubtitle}>
+          Straight from the homeschool leaderboard — real-style notes from the
+          parents running the show.
+        </p>
+      </div>
+      <div className={styles.reviewGrid}>
+        {reviews.map((review) => (
+          <figure
+            key={review.player}
+            className={`${styles.reviewCard} ${
+              review.accent === "red"
+                ? styles.reviewRed
+                : review.accent === "purple"
+                  ? styles.reviewPurple
+                  : styles.reviewGold
+            }`}
+          >
+            <div className={styles.reviewTopBar}>
+              <span className={styles.reviewAvatar}>
+                <Image
+                  src={review.avatar}
+                  alt=""
+                  width={56}
+                  height={56}
+                  className={styles.reviewAvatarImage}
+                />
+              </span>
+              <span className={styles.reviewPlayer}>{review.player}</span>
+              <span className={styles.reviewStars}>★★★★★</span>
+            </div>
+            <blockquote className={styles.reviewQuote}>
+              &quot;{review.quote}&quot;
+            </blockquote>
+            <figcaption className={styles.reviewName}>
+              — {review.name}
+            </figcaption>
+          </figure>
+        ))}
+      </div>
+      <p className={styles.reviewDisclaimer}>
+        Sample reviews for illustration — your family&apos;s high score goes
+        here next.
+      </p>
+    </section>
+  );
+
+  const scholarshipSection = (
+    <section className={styles.scholarshipSection}>
+      <div className={styles.sectionHeading}>
+        <span className={`${styles.sectionKeyword} ${styles.neonGold}`}>
+          EARN
+        </span>
+        <h2 className={styles.sectionTitle}>
+          <span className={styles.titleIcon}>🎓</span>
+          TURN COINS INTO COLLEGE
+        </h2>
+      </div>
+      <div className={styles.scholarshipContent}>
+        <div className={styles.scholarshipText}>
+          <p className={styles.scholarshipDescription}>
+            Every iPlay coin earned through gameplay, academic achievements, and
+            real-world activities has real value. Coins can be spent on in-game
+            upgrades and digital benefits—or saved and converted quarterly into
+            actual scholarship funds for universities, trade schools, and
+            certificate programs. We&apos;re not just gamifying education;
+            we&apos;re funding futures.
+          </p>
+          <ul className={styles.scholarshipList}>
+            <li>
+              <span className={styles.scholarshipListIcon}>🎮</span>
+              Earn through gameplay
+            </li>
+            <li>
+              <span className={styles.scholarshipListIcon}>📝</span>
+              Bonus for good grades
+            </li>
+            <li>
+              <span className={styles.scholarshipListIcon}>🏃</span>
+              Rewards for real-world activity
+            </li>
+            <li>
+              <span className={styles.scholarshipListIcon}>🎓</span>
+              Convert to scholarships
+            </li>
+          </ul>
+          <Link href="/scholarships" className={styles.primaryBtn}>
+            Learn About Scholarships →
+          </Link>
+        </div>
+        <div className={styles.scholarshipVisual}>
+          <Image
+            src="/images/coin-to-diploma.png"
+            alt="Coins converting to scholarships"
+            width={420}
+            height={315}
+            className={styles.scholarshipImage}
+          />
+        </div>
+      </div>
+    </section>
+  );
+
+  const pricingSection = (
+    <section className={styles.pricingSection}>
+      <div className={styles.sectionHeading}>
+        <span className={`${styles.sectionKeyword} ${styles.neonGold}`}>
+          JOIN
+        </span>
+        <h2 className={styles.sectionTitle}>
+          <span className={styles.titleIcon}>🪙</span>
+          SELECT YOUR PASS
+        </h2>
+        <p className={styles.pricingSubtitle}>
+          One membership unlocks everything &mdash; every game, every elective
+          class, and every coin earned toward scholarships. No ads. No
+          microtransactions. Ever.
+        </p>
+      </div>
+      <div className={styles.pricingGrid}>
+        <div className={styles.pricingCard}>
+          <div className={styles.pricingTier}>MONTHLY</div>
+          <div className={styles.pricingPrice}>
+            <span className={styles.pricingCurrency}>$</span>
+            <span className={styles.pricingAmount}>7</span>
+            <span className={styles.pricingPeriod}>/month</span>
+          </div>
+          <p className={styles.pricingTagline}>
+            Insert a coin each month. Cancel anytime.
+          </p>
+          <ul className={styles.pricingFeatures}>
+            <li>All educational games</li>
+            <li>All free elective classes</li>
+            <li>Earn coins toward scholarships</li>
+            <li>Full parent dashboard &amp; safety controls</li>
+          </ul>
+          <a
+            href="https://www.myXogos.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.pricingBtn}
+          >
+            Start Monthly
+          </a>
+        </div>
+
+        <div className={`${styles.pricingCard} ${styles.pricingPopular}`}>
+          <div className={styles.pricingBadge}>2 MONTHS FREE</div>
+          <div className={styles.pricingTier}>YEARLY</div>
+          <div className={styles.pricingPrice}>
+            <span className={styles.pricingCurrency}>$</span>
+            <span className={styles.pricingAmount}>70</span>
+            <span className={styles.pricingPeriod}>/year</span>
+          </div>
+          <p className={styles.pricingTagline}>
+            A full year of Play, Learn, Earn for the price of ten months.
+          </p>
+          <ul className={styles.pricingFeatures}>
+            <li>Everything in Monthly</li>
+            <li>Save $14 every year</li>
+            <li>One payment, zero interruptions</li>
+            <li>Perfect for the school year &amp; summer</li>
+          </ul>
+          <a
+            href="https://www.historicalconquest.com/xogos-gaming"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.pricingBtn}
+          >
+            Go Yearly
+          </a>
+        </div>
+
+        <div className={`${styles.pricingCard} ${styles.pricingLifetime}`}>
+          <div className={styles.pricingBadge}>2026 LAUNCH SPECIAL</div>
+          <div className={styles.pricingTier}>LIFETIME</div>
+          <div className={styles.pricingPrice}>
+            <span className={styles.pricingCurrency}>$</span>
+            <span className={styles.pricingAmount}>150</span>
+            <span className={styles.pricingPeriod}>one time</span>
+          </div>
+          <p className={styles.pricingTagline}>
+            One payment covers their entire childhood &mdash; up to 19 years of
+            age.
+          </p>
+          <ul className={styles.pricingFeatures}>
+            <li>Everything in Yearly</li>
+            <li>Membership until age 19</li>
+            <li>Every new game &amp; class we release</li>
+            <li>Years of coin-earning toward scholarships</li>
+          </ul>
+          <p className={styles.pricingPromoNote}>
+            <span className={styles.pricingPromoIcon}>🎉</span>
+            Available in 2026 only &mdash; a special promotion celebrating the
+            opening of Xogos Gaming this year.
+          </p>
+          <a
+            href="https://www.historicalconquest.com/xogos-gaming"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.pricingBtn}
+          >
+            Unlock Lifetime
+          </a>
+        </div>
+      </div>
+    </section>
+  );
+
+  const sections: Record<SectionKey, React.ReactElement> = {
+    games: gamesSection,
+    cartridges: cartridgesSection,
+    quests: questsSection,
+    power: powerSection,
+    stats: statsSection,
+    homeschool: homeschoolSection,
+    reviews: reviewsSection,
+    scholarship: scholarshipSection,
+    pricing: pricingSection,
   };
 
-  const closeModal = () => {
-    setSelectedGame(null);
-  };
-
-  const features = [
-    {
-      icon: <GameIcon />,
-      title: "Engaging Gameplay",
-      description:
-        "Fun, interactive games that make learning enjoyable while building important skills across various subjects.",
-    },
-    {
-      icon: <LearnIcon />,
-      title: "Educational Content",
-      description:
-        "Curriculum-aligned material that reinforces classroom learning and expands knowledge in key areas.",
-    },
-    {
-      icon: <EarnIcon />,
-      title: "Reward System",
-      description:
-        "Earn coins that can be saved and converted into scholarship funds for future education.",
-    },
-  ];
+  // -------------------------------------------------------------------------
 
   return (
     <MarketingLayout>
       <PageTracker pagePath="/" pageName="Homepage" />
-      <div className={styles.arcadePage}>
-        {/* Animated Background */}
+      <div
+        className={`${styles.arcadePage} ${shaking ? styles.screenShake : ""}`}
+      >
+        {/* Achievement HUD */}
+        <div className={styles.hud}>
+          <button
+            type="button"
+            className={styles.hudButton}
+            onClick={() => setHudOpen((prev) => !prev)}
+            aria-expanded={hudOpen}
+            aria-label="Toggle achievements panel"
+          >
+            <span className={styles.hudTrophy}>🏆</span>
+            <span className={styles.hudCount}>
+              {unlocked.size}/{achievementIds.length}
+            </span>
+            <span className={styles.hudDivider}>·</span>
+            <span className={styles.hudRank}>{rank}</span>
+          </button>
+          {hudOpen && (
+            <div className={styles.hudPanel}>
+              <div className={styles.hudPanelTitle}>ACHIEVEMENTS</div>
+              {achievementIds.map((id) => {
+                const achievement = achievementCatalog[id];
+                const isUnlocked = unlocked.has(id);
+                return (
+                  <div
+                    key={id}
+                    className={`${styles.hudRow} ${
+                      isUnlocked ? styles.hudRowUnlocked : ""
+                    }`}
+                  >
+                    <span className={styles.hudRowIcon}>
+                      {isUnlocked ? achievement.icon : "🔒"}
+                    </span>
+                    <span className={styles.hudRowText}>
+                      <span className={styles.hudRowTitle}>
+                        {achievement.title}
+                      </span>
+                      <span className={styles.hudRowDesc}>
+                        {isUnlocked ? achievement.description : "???"}
+                      </span>
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+
+        {/* Achievement toasts */}
+        <div className={styles.toastStack} aria-live="polite">
+          {toasts.map((toast) => (
+            <div key={toast.key} className={styles.toast}>
+              <div className={styles.toastShine}></div>
+              <span className={styles.toastIcon}>{toast.achievement.icon}</span>
+              <span className={styles.toastText}>
+                <span className={styles.toastHeading}>
+                  ACHIEVEMENT UNLOCKED
+                </span>
+                <span className={styles.toastTitle}>
+                  {toast.achievement.title}
+                </span>
+                <span className={styles.toastDesc}>
+                  {toast.achievement.description}
+                </span>
+              </span>
+            </div>
+          ))}
+        </div>
+
+        {/* Confetti burst */}
+        {confetti.length > 0 && (
+          <div className={styles.confettiLayer} aria-hidden="true">
+            {confetti.map((piece) => (
+              <span
+                key={piece.id}
+                className={`${styles.confettiPiece} ${
+                  piece.isCoin ? styles.confettiCoin : ""
+                }`}
+                style={
+                  {
+                    left: `${piece.left}%`,
+                    "--cf-delay": `${piece.delay}s`,
+                    "--cf-duration": `${piece.duration}s`,
+                    "--cf-color": piece.color,
+                    "--cf-drift": `${piece.drift}px`,
+                    "--cf-spin": `${piece.spin}deg`,
+                    "--cf-size": `${piece.size}px`,
+                  } as React.CSSProperties
+                }
+              >
+                {piece.isCoin ? "🪙" : ""}
+              </span>
+            ))}
+          </div>
+        )}
+
+        {/* Animated background */}
         <div className={styles.gridBackground}>
+          <div className={styles.starfield}></div>
+          <div className={styles.starfieldFar}></div>
           <div className={styles.gridLines}></div>
           <div className={styles.glowOrbs}></div>
         </div>
 
-        {/* Hero Section */}
+        {/* Hero */}
         <section className={styles.hero}>
-          <div className={styles.heroContent}>
+          {floatingCoins.map((coin) => (
+            <span
+              key={coin.id}
+              className={styles.floatingCoin}
+              aria-hidden="true"
+              style={
+                {
+                  left: coin.left,
+                  top: coin.top,
+                  fontSize: coin.size,
+                  "--float-delay": coin.delay,
+                  "--float-duration": coin.duration,
+                } as React.CSSProperties
+              }
+            >
+              🪙
+            </span>
+          ))}
+
+          <div
+            className={`${styles.heroInner} ${isLoaded ? styles.visible : ""}`}
+          >
             <div className={styles.levelBadge}>
               <span className={styles.levelIcon}>⭐</span>
-              <span>LEVEL UP YOUR EDUCATION</span>
+              <span>ARCADE 2.0 SUPERCHARGED · LEVEL UP YOUR EDUCATION</span>
             </div>
-            <h1
-              className={`${styles.heroTitle} ${isLoaded ? styles.visible : ""}`}
-            >
-              <span className={styles.heroPlay}>PLAY.</span>
-              <span className={styles.heroLearn}>LEARN.</span>
-              <span className={styles.heroEarn}>EARN.</span>
-            </h1>
-            <p className={styles.heroSubtitle}>
-              Xogos combines engaging gameplay with meaningful education,
-              allowing students to earn rewards that convert into real
-              scholarship opportunities.
-            </p>
-            <div className={styles.heroActions}>
-              <Link href="/games" className={styles.primaryBtn}>
-                <span className={styles.btnIcon}>🎮</span>
-                Check Out Games
-              </Link>
-              <Link href="/about" className={styles.secondaryBtn}>
-                <span className={styles.btnIcon}>📖</span>
-                HOW TO PLAY
-              </Link>
-            </div>
-            <div className={styles.xpBar}>
-              <div className={styles.xpFill} style={{ width: "65%" }}></div>
-              <span className={styles.xpText}>
-                6,500 / 10,000 XP to Next Level
-              </span>
-            </div>
-          </div>
 
-          {/* Game Boy Visual */}
-          <div
-            className={`${styles.heroVisual} ${isLoaded ? styles.visible : ""}`}
-          >
-            <div className={styles.gameBoyContainer}>
-              <div className={styles.gameBoyBody}>
-                {/* Top Section */}
-                <div className={styles.gameBoyTop}>
-                  <div className={styles.speakerGrill}>
-                    {Array.from({ length: 6 }).map((_, i) => (
-                      <div key={i} className={styles.speakerHole}></div>
-                    ))}
-                  </div>
-                  <div className={styles.nintendoLogo}>XOGOS</div>
-                </div>
-
-                {/* Screen Section */}
-                <div className={styles.screenSection}>
-                  <div className={styles.screenBezel}>
-                    <div className={styles.screenInner}>
-                      <div className={styles.gameScreen}>
-                        <div className={styles.screenReflection}></div>
-                        <div className={styles.logoDisplay}>
-                          <Image
-                            src={screenImage}
-                            alt="Game Screen"
-                            fill
-                            className={styles.gameLogo}
-                            priority
-                          />
-                        </div>
-                        <div className={styles.scanlines}></div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className={styles.screenLabel}>XOGOS GAMING</div>
-                </div>
-
-                {/* Controls Section */}
-                <div className={styles.controlsSection}>
-                  {/* D-Pad */}
-                  <div className={styles.dpadContainer}>
-                    <div className={styles.dpad}>
-                      <div
-                        className={`${styles.dpadButton} ${styles.dpadUp}`}
-                      ></div>
-                      <div
-                        className={`${styles.dpadButton} ${styles.dpadRight}`}
-                      ></div>
-                      <div
-                        className={`${styles.dpadButton} ${styles.dpadDown}`}
-                      ></div>
-                      <div
-                        className={`${styles.dpadButton} ${styles.dpadLeft}`}
-                      ></div>
-                      <div className={styles.dpadCenter}></div>
-                    </div>
-                  </div>
-
-                  {/* Action Buttons */}
-                  <div className={styles.actionButtons}>
-                    <div
-                      className={styles.actionButton}
-                      onClick={() =>
-                        setScreenImage("/images/games/TotallyMedieval.jpg")
-                      }
-                    >
-                      <span>A</span>
-                    </div>
-                    <div
-                      className={styles.actionButton}
-                      onClick={() =>
-                        setScreenImage("/images/games/DebtFreeMil.jpg")
-                      }
-                    >
-                      <span>B</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Bottom Section */}
-                <div className={styles.gameBoyBottom}>
-                  <div className={styles.selectStart}>
-                    <div className={styles.miniButton}></div>
-                    <span className={styles.buttonLabel}>SELECT</span>
-                    <div className={styles.miniButton}></div>
-                    <span className={styles.buttonLabel}>START</span>
-                  </div>
-                  <div className={styles.powerLed}></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Stats Section */}
-        <section className={styles.statsSection}>
-          <div className={styles.statsGrid}>
-            {stats.map((stat, index) => (
-              <StatCard
-                key={index}
-                value={stat.value}
-                suffix={stat.suffix}
-                label={stat.label}
-              />
-            ))}
-          </div>
-          <p className={styles.statsSubline}>
-            Welcome Back Players. Welcome to our New Relaunch. Welcome to an Amazing Platform
-          </p>
-        </section>
-
-        {/* Play + Learn = Earn Intro Section */}
-        <section className={styles.playLearnEarnIntro}>
-          <div className={styles.pleIntroContent}>
-            <h2 className={styles.pleIntroTitle}>
-              <span className={styles.heroPlay}>PLAY</span>
-              <span className={styles.plePlus}>+</span>
-              <span className={styles.heroLearn}>LEARN</span>
-              <span className={styles.pleEquals}>=</span>
-              <span className={styles.heroEarn}>EARN</span>
-            </h2>
-            <div className={styles.pleColumns}>
-              <div className={styles.pleColumn}>
-                <p className={styles.pleDescription}>
-                  Imagine a platform where kids can be kids, be safe, and have fun online with friends and family, while they play games and learn.
-                </p>
-              </div>
-              <div className={styles.pleColumn}>
-                <p className={styles.pleDescription}>
-                  Imagine a platform where students have access to dozens of elective classes where they can learn what they want, especially those that prepare them for the future.
-                </p>
-              </div>
-              <div className={styles.pleColumn}>
-                <p className={styles.pleDescription}>
-                  Imagine a place where students could earn scholarships through their own merit on and off the screen, for universities and trade schools.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Game Select Section - Now above Active Incentives */}
-        <section className={styles.gameSelectSection}>
-          <div className={styles.sectionHeader}>
-            <span className={`${styles.sectionKeywordLarge} ${styles.heroPlay}`}>PLAY</span>
-            <div className={`${styles.sectionUnderline} ${styles.sectionUnderlinePlay}`}></div>
-          </div>
-          <div className={styles.gameSelectContent}>
-            <div className={styles.gameSelectText}>
-              <h2 className={styles.sectionTitle}>
-                <span className={styles.titleIcon}>🕹️</span>
-                SELECT YOUR GAME
-              </h2>
-              <p className={styles.gameSelectDescription}>
-                In our platform students can explore our collection of educational games designed to make learning fun and rewarding. Each game teaches valuable skills while letting students earn coins toward further gameplay and/or scholarships.
-              </p>
-              <Link href="/games" className={styles.learnMoreBtn}>
-                View All Games →
-              </Link>
-            </div>
-            <div className={styles.gameSelectGrid}>
-              {displayedGames.map((game, index) => (
-                <div
-                  key={game.id}
-                  className={`${styles.gameCard} ${activeGameIndex === index ? styles.active : ""}`}
-                  onClick={() => handleGameClick(game)}
-                  style={{ "--glow-color": game.color } as React.CSSProperties}
-                >
-                  <div className={styles.gameImageWrapper}>
-                    <Image
-                      src={game.logo}
-                      alt={game.title}
-                      fill
-                      className={styles.gameImage}
-                    />
-                    <div className={styles.gameOverlay}>
-                      <span className={styles.playIcon}>▶</span>
-                    </div>
-                  </div>
-                  <div className={styles.gameInfo}>
-                    <div className={styles.gameSubject}>{game.subject}</div>
-                    <h3 className={styles.gameTitle}>{game.title}</h3>
-                    <div className={styles.gameStats}>
-                      <span className={styles.levelBadgeSmall}>{game.level}</span>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Learn From Playing Games Section */}
-        <section className={styles.learnFromGamesSection}>
-          <div className={styles.sectionHeader}>
-            <span className={`${styles.sectionKeywordLarge} ${styles.heroLearn}`}>LEARN</span>
-            <div className={`${styles.sectionUnderline} ${styles.sectionUnderlineLearn}`}></div>
-          </div>
-          <div className={styles.learnFromGamesContent}>
-            <h2 className={styles.sectionTitle}>
-              <span className={styles.titleIcon}>🎯</span>
-              LEARN FROM PLAYING GAMES
-            </h2>
-            <p className={styles.learnFromGamesDescription}>
-              We believe in games that are <strong>70% fun</strong> and only <strong>30% educational</strong>.
-              Why? Because the more students enjoy playing, the more they&apos;ll keep coming back.
-              And every time they play, they learn a little bit more. It&apos;s not about cramming
-              education down their throats—it&apos;s about making learning so enjoyable that they
-              don&apos;t even realize they&apos;re doing it.
-            </p>
-            <div className={styles.learnFromGamesStats}>
-              <div className={styles.learnFromGamesStat}>
-                <span className={styles.statPercent}>70%</span>
-                <span className={styles.statDesc}>Pure Fun</span>
-              </div>
-              <div className={styles.learnFromGamesPlus}>+</div>
-              <div className={styles.learnFromGamesStat}>
-                <span className={styles.statPercent}>30%</span>
-                <span className={styles.statDesc}>Education</span>
-              </div>
-              <div className={styles.learnFromGamesEquals}>=</div>
-              <div className={styles.learnFromGamesStat}>
-                <span className={styles.statPercent}>100%</span>
-                <span className={styles.statDesc}>Engagement</span>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Free Elective Classes Section - Images left, text right */}
-        <section className={styles.electiveClassesSection}>
-          <div className={styles.sectionHeader}>
-            <span className={`${styles.sectionKeywordLarge} ${styles.heroLearn}`}>LEARN</span>
-            <div className={`${styles.sectionUnderline} ${styles.sectionUnderlineLearn}`}></div>
-          </div>
-          <div className={styles.electiveContent}>
-            <div className={styles.electiveGrid}>
-              <Link href="/classes" className={styles.electiveCard}>
-                <Image
-                  src="/images/programs/survival_academy.png"
-                  alt="Survival Academy"
-                  width={150}
-                  height={150}
-                  className={styles.electiveLogo}
-                />
-                <span className={styles.electiveLabel}>Survival Academy</span>
-              </Link>
-              <Link href="/classes" className={styles.electiveCard}>
-                <Image
-                  src="/images/programs/debt_free_millionaire_investor.png"
-                  alt="Debt Free Millionaire Investor"
-                  width={150}
-                  height={150}
-                  className={styles.electiveLogo}
-                />
-                <span className={styles.electiveLabel}>DFM Investor</span>
-              </Link>
-              <Link href="/classes" className={styles.electiveCard}>
-                <Image
-                  src="/images/programs/starfall_academy.png"
-                  alt="StarFall Academy"
-                  width={150}
-                  height={150}
-                  className={styles.electiveLogo}
-                />
-                <span className={styles.electiveLabel}>StarFall Academy</span>
-              </Link>
-              <Link href="/classes" className={styles.electiveCard}>
-                <Image
-                  src="/images/programs/kitchenlab_academy.png"
-                  alt="KitchenLab Academy"
-                  width={150}
-                  height={150}
-                  className={styles.electiveLogo}
-                />
-                <span className={styles.electiveLabel}>KitchenLab Academy</span>
-              </Link>
-            </div>
-            <div className={styles.electiveText}>
-              <h2 className={styles.sectionTitle}>
-                <span className={styles.titleIcon}>📚</span>
-                FREE ELECTIVE CLASSES
-              </h2>
-              <p className={styles.electiveDescription}>
-                With a Xogos subscription, students gain access to dozens of online, and yet still hands-on, elective classes that teach real-world skills—from cooking and astronomy to wilderness survival and personal finance. These aren&apos;t screen-based games; they&apos;re online classes that give students more reason to get off the screen and experience these classes in the real-world. Not theoretical classes but real-life applications. These are experiences that build confidence, knowledge, and life skills.
-              </p>
-              <Link href="/classes" className={styles.learnMoreBtn}>
-                Explore All Classes →
-              </Link>
-            </div>
-          </div>
-        </section>
-
-        {/* Active Incentive Programs Section */}
-        <section className={styles.activeIncentiveSection}>
-          <div className={styles.sectionHeader}>
-            <span className={`${styles.sectionKeywordLarge} ${styles.heroEarn}`}>EARN</span>
-            <div className={`${styles.sectionUnderline} ${styles.sectionUnderlineEarn}`}></div>
-          </div>
-          <div className={styles.incentiveContent}>
-            <div className={styles.incentiveText}>
-              <h2 className={styles.sectionTitle}>
-                <span className={styles.titleIcon}>🌟</span>
-                ACTIVE INCENTIVE PROGRAMS
-              </h2>
-              <p className={styles.incentiveDescription}>
-                We believe students shouldn&apos;t be on screens all day. That&apos;s why Xogos runs on a simple subscription model with no ads, no microtransactions, and no tricks to keep kids glued to devices. Instead, we incentivize real-world growth through programs that reward getting off the screen. These coins they can also convert to scholarships as they grow up on Xogos.
-              </p>
-              <Link href="/incentives" className={styles.learnMoreBtn}>
-                Learn More About Active Incentives →
-              </Link>
-            </div>
-            <div className={styles.incentiveGrid}>
-              <Link href="/incentives" className={styles.incentiveCard}>
-                <Image
-                  src="/images/games/new_iserv_volunteer.png"
-                  alt="iServ Volunteering"
-                  width={150}
-                  height={150}
-                  className={styles.incentiveLogo}
-                />
-                <span className={styles.incentiveLabel}>iServ Volunteering</span>
-              </Link>
-              <Link href="/incentives" className={styles.incentiveCard}>
-                <div className={styles.incentiveImageWrapper}>
-                  <Image
-                    src="/images/games/new_pryde_gym.png"
-                    alt="Pryde Gym"
-                    width={150}
-                    height={150}
-                    className={styles.incentiveLogo}
-                  />
-                  <div className={styles.comingSoonOverlay}>Coming 2026</div>
-                </div>
-                <span className={styles.incentiveLabel}>Pryde Gym</span>
-              </Link>
-            </div>
-          </div>
-        </section>
-
-        {/* Scholarship Program Section - Title centered above both */}
-        <section className={styles.scholarshipSection}>
-          <h2 className={styles.scholarshipTitleCentered}>
-            <span className={styles.heroEarn}>EARN</span>
-            <span className={styles.titleIcon}>🎓</span>
-            TURN COINS INTO COLLEGE
-          </h2>
-          <div className={styles.scholarshipContent}>
-            <div className={styles.scholarshipText}>
-              <p className={styles.scholarshipDescription}>
-                Every iPlay coin earned through gameplay, academic achievements, and real-world activities has real value. Students earn coins by playing educational games, maintaining good grades, volunteering in their communities, and staying physically active. These coins can be spent on in-game upgrades and digital benefits—or saved and converted into actual scholarship funds for universities, trade schools, and certificate programs. We&apos;re not just gamifying education; we&apos;re funding futures.
-              </p>
-              <div className={styles.scholarshipStats}>
-                <div className={styles.scholarshipStat}>
-                  <span className={styles.scholarshipStatIcon}>🎮</span>
-                  <span className={styles.scholarshipStatText}>Earn through gameplay</span>
-                </div>
-                <div className={styles.scholarshipStat}>
-                  <span className={styles.scholarshipStatIcon}>📝</span>
-                  <span className={styles.scholarshipStatText}>Bonus for good grades</span>
-                </div>
-                <div className={styles.scholarshipStat}>
-                  <span className={styles.scholarshipStatIcon}>🏃</span>
-                  <span className={styles.scholarshipStatText}>Rewards for real-world activity</span>
-                </div>
-                <div className={styles.scholarshipStat}>
-                  <span className={styles.scholarshipStatIcon}>🎓</span>
-                  <span className={styles.scholarshipStatText}>Convert to scholarships</span>
-                </div>
-              </div>
-            </div>
-            <div className={styles.scholarshipVisual}>
+            <div className={styles.coinMascot} aria-hidden="true">
               <Image
-                src="/images/coin-to-diploma.png"
-                alt="Coins converting to scholarships"
-                width={400}
-                height={300}
-                className={styles.scholarshipImage}
+                src="/images/iplay-coin.png"
+                alt=""
+                width={150}
+                height={150}
+                className={styles.coinMascotImage}
+                priority
               />
-              <Link href="/scholarships" className={styles.scholarshipBtn}>
-                Learn About Scholarships →
-              </Link>
             </div>
-          </div>
-        </section>
 
-        {/* Student Security Section */}
-        <section className={styles.studentSecuritySection}>
-          <div className={styles.securityContent}>
-            <div className={styles.securityText}>
-              <h2 className={styles.sectionTitle}>
-                <span className={styles.titleIcon}>🛡️</span>
-                STUDENT PROTECTION
-              </h2>
-              <p className={styles.securityDescription}>
-                We prioritize the security and safety of every student on our platform.
-                Here&apos;s how we protect them.
-              </p>
-              <Link href="/student-protection" className={styles.securityBtn}>
-                Learn More About Our Safety Measures →
-              </Link>
-            </div>
-            <div className={styles.securityGrid}>
-              <div className={styles.securityCard}>
-                <div className={styles.securityImageWrapper}>
-                  <Image
-                    src="/images/security/parent-linked.png"
-                    alt="Parent Linked Accounts"
-                    width={120}
-                    height={120}
-                    className={styles.securityImage}
-                  />
-                </div>
-                <h3 className={styles.securityTitle}>Parent Linked Accounts</h3>
-              </div>
-              <div className={styles.securityCard}>
-                <div className={styles.securityImageWrapper}>
-                  <Image
-                    src="/images/security/know-customers.png"
-                    alt="Know Our Customers"
-                    width={120}
-                    height={120}
-                    className={styles.securityImage}
-                  />
-                </div>
-                <h3 className={styles.securityTitle}>Know Our Customers</h3>
-              </div>
-              <div className={styles.securityCard}>
-                <div className={styles.securityImageWrapper}>
-                  <Image
-                    src="/images/security/software-safeguards.png"
-                    alt="Software Safeguards"
-                    width={120}
-                    height={120}
-                    className={styles.securityImage}
-                  />
-                </div>
-                <h3 className={styles.securityTitle}>Software Safeguards</h3>
-              </div>
-              <div className={styles.securityCard}>
-                <div className={styles.securityImageWrapper}>
-                  <Image
-                    src="/images/security/no-chat.png"
-                    alt="No In-Game Chats"
-                    width={120}
-                    height={120}
-                    className={styles.securityImage}
-                  />
-                </div>
-                <h3 className={styles.securityTitle}>No In-Game Chats</h3>
-              </div>
-              <div className={styles.securityCard}>
-                <div className={styles.securityImageWrapper}>
-                  <Image
-                    src="/images/security/age-restricted.png"
-                    alt="Ages 6-19 Only"
-                    width={120}
-                    height={120}
-                    className={styles.securityImage}
-                  />
-                </div>
-                <h3 className={styles.securityTitle}>Ages 6-19 Only</h3>
-              </div>
-              <div className={styles.securityCard}>
-                <div className={styles.securityImageWrapper}>
-                  <Image
-                    src="/images/security/known-connections.png"
-                    alt="Known Connections Only"
-                    width={120}
-                    height={120}
-                    className={styles.securityImage}
-                  />
-                </div>
-                <h3 className={styles.securityTitle}>Known Connections Only</h3>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Special Events Section */}
-        <section className={styles.specialEventsSection}>
-          <div className={styles.sectionHeading}>
-            <h2 className={styles.sectionTitle}>
-              <span className={styles.titleIcon}>🎁</span>
-              SPECIAL EVENTS
-            </h2>
-            <p className={styles.sectionSubtitle}>
-              Throughout the year, we host special events where you can earn
-              bonus coins! These coins go towards in-game purchases and can even
-              contribute to scholarship funds.
-            </p>
-            <div className={styles.eventsDates}>
-              <span className={styles.dateLabel}>2026 Event Season:</span>
-              <span className={styles.dateRange}>
-                January 1 - December 31, 2026
+            <h1 className={styles.heroTitle}>
+              <span
+                className={`${styles.glitchWord} ${styles.neonRed}`}
+                data-text="PLAY."
+              >
+                PLAY.
               </span>
-            </div>
-          </div>
+              <span
+                className={`${styles.glitchWord} ${styles.neonPurple}`}
+                data-text="LEARN."
+              >
+                LEARN.
+              </span>
+              <span
+                className={`${styles.glitchWord} ${styles.neonGold}`}
+                data-text="EARN."
+              >
+                EARN.
+              </span>
+            </h1>
 
-          <div className={styles.eventsGrid}>
-            {/* Event 1 - Easter Egg Hunt (Active) */}
-            <div className={`${styles.eventCard} ${styles.eventActive}`}>
-              <div className={styles.eventStatus}>
-                <span className={styles.statusDot}></span>
-                ACTIVE NOW
-              </div>
-              <div className={styles.eventIcon}>🥚</div>
-              <h3 className={styles.eventTitle}>Easter Egg Hunt</h3>
-              <p className={styles.eventDescription}>
-                A secret code is hidden somewhere on our website. Find it and
-                earn
-                <strong> 5 FREE coins</strong> when you start playing Xogos!
-              </p>
-              <div className={styles.eventHint}>
-                <span className={styles.hintIcon}>💡</span>
-                <span>
-                  Hint: Explore where our board members share their vision for
-                  the future...
-                </span>
-              </div>
-              <div className={styles.eventDates}>
-                <div className={styles.eventDateItem}>
-                  <span className={styles.eventDateLabel}>Starts</span>
-                  <span className={styles.eventDateValue}>Jan 25, 2026</span>
-                </div>
-                <div className={styles.eventDateItem}>
-                  <span className={styles.eventDateLabel}>Ends</span>
-                  <span className={styles.eventDateValue}>Feb 28, 2027</span>
-                </div>
-              </div>
-              <div className={styles.eventReward}>
-                <span className={styles.rewardIcon}>🪙</span>
-                <span>+5 Coins</span>
-              </div>
-            </div>
+            <button
+              type="button"
+              className={styles.insertCoin}
+              onClick={handleInsertCoin}
+            >
+              <span className={styles.insertCoinSlot}>▮</span>
+              INSERT COIN TO START
+              <span className={styles.insertCoinSlot}>▮</span>
+            </button>
 
-            {/* Event 2 - Coming Soon */}
-            <div className={`${styles.eventCard} ${styles.eventComingSoon}`}>
-              <div className={styles.eventStatus}>
-                <span className={styles.statusDotInactive}></span>
-                COMING SOON
+            {/* Choose Your Player */}
+            <div className={styles.playerSelect}>
+              <div className={styles.playerSelectLabel}>
+                <span className={styles.blinkArrow}>▶</span>
+                CHOOSE YOUR PLAYER
               </div>
-              <div className={styles.eventIcon}>🎮</div>
-              <h3 className={styles.eventTitle}>Summer Challenge</h3>
-              <p className={styles.eventDescription}>
-                A special summer event is being prepared. Stay tuned for
-                exciting challenges and bigger rewards!
-              </p>
-              <div className={styles.eventDates}>
-                <div className={styles.eventDateItem}>
-                  <span className={styles.eventDateLabel}>Starts</span>
-                  <span className={styles.eventDateValue}>Jun 1, 2026</span>
-                </div>
-                <div className={styles.eventDateItem}>
-                  <span className={styles.eventDateLabel}>Ends</span>
-                  <span className={styles.eventDateValue}>Aug 31, 2026</span>
-                </div>
-              </div>
-              <div className={styles.eventReward}>
-                <span className={styles.rewardIcon}>🪙</span>
-                <span>??? Coins</span>
+              <div className={styles.playerCards}>
+                {(Object.keys(audienceContent) as Audience[]).map((key) => (
+                  <button
+                    key={key}
+                    type="button"
+                    className={`${styles.playerCard} ${
+                      audience === key ? styles.playerCardActive : ""
+                    }`}
+                    onClick={() => handleAudience(key)}
+                  >
+                    <span className={styles.playerPortrait}>
+                      <Image
+                        src={audienceContent[key].playerImage}
+                        alt={audienceContent[key].playerName}
+                        width={140}
+                        height={140}
+                        className={styles.playerPortraitImage}
+                      />
+                    </span>
+                    <span className={styles.playerName}>
+                      {audienceContent[key].playerName}
+                    </span>
+                    <span className={styles.playerTagline}>
+                      {audienceContent[key].playerTagline}
+                    </span>
+                    {audience === key && (
+                      <span className={styles.playerSelected}>SELECTED</span>
+                    )}
+                  </button>
+                ))}
               </div>
             </div>
 
-            {/* Event 3 - Coming Soon */}
-            <div className={`${styles.eventCard} ${styles.eventComingSoon}`}>
-              <div className={styles.eventStatus}>
-                <span className={styles.statusDotInactive}></span>
-                COMING SOON
-              </div>
-              <div className={styles.eventIcon}>🎄</div>
-              <h3 className={styles.eventTitle}>Holiday Special</h3>
-              <p className={styles.eventDescription}>
-                End the year with a bang! Our biggest event of the year is
-                coming this holiday season.
-              </p>
-              <div className={styles.eventDates}>
-                <div className={styles.eventDateItem}>
-                  <span className={styles.eventDateLabel}>Starts</span>
-                  <span className={styles.eventDateValue}>Dec 1, 2026</span>
-                </div>
-                <div className={styles.eventDateItem}>
-                  <span className={styles.eventDateLabel}>Ends</span>
-                  <span className={styles.eventDateValue}>Dec 31, 2026</span>
-                </div>
-              </div>
-              <div className={styles.eventReward}>
-                <span className={styles.rewardIcon}>🪙</span>
-                <span>??? Coins</span>
-              </div>
+            <p className={styles.heroSubtitle} key={audience}>
+              {content.heroSubtitle}
+            </p>
+
+            <div className={styles.heroActions}>
+              {content.primaryCta.external ? (
+                <a
+                  href={content.primaryCta.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.primaryBtn}
+                >
+                  <span className={styles.btnIcon}>🎮</span>
+                  {content.primaryCta.label}
+                </a>
+              ) : (
+                <Link
+                  href={content.primaryCta.href}
+                  className={styles.primaryBtn}
+                >
+                  <span className={styles.btnIcon}>🎮</span>
+                  {content.primaryCta.label}
+                </Link>
+              )}
+              {content.secondaryCta.external ? (
+                <a
+                  href={content.secondaryCta.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.secondaryBtn}
+                >
+                  <span className={styles.btnIcon}>📖</span>
+                  {content.secondaryCta.label}
+                </a>
+              ) : (
+                <Link
+                  href={content.secondaryCta.href}
+                  className={styles.secondaryBtn}
+                >
+                  <span className={styles.btnIcon}>📖</span>
+                  {content.secondaryCta.label}
+                </Link>
+              )}
             </div>
           </div>
         </section>
 
-        {/* Why Choose Xogos Section */}
-        <section className={styles.featuresSection}>
-          <div className={styles.sectionHeading}>
-            <h2 className={styles.sectionTitle}>
-              <span className={styles.titleIcon}>✨</span>
-              WHY CHOOSE XOGOS
-            </h2>
-            <p className={styles.sectionSubtitle}>
-              Our platform combines educational value with engaging gameplay to
-              create meaningful learning experiences.
-            </p>
+        {/* Live ticker */}
+        <div className={styles.ticker} aria-hidden="true">
+          <div className={styles.tickerTrack}>
+            {[0, 1].map((copy) => (
+              <div key={copy} className={styles.tickerGroup}>
+                {tickerItems.map((item) => (
+                  <span key={`${copy}-${item}`} className={styles.tickerItem}>
+                    {item}
+                  </span>
+                ))}
+              </div>
+            ))}
           </div>
-          <div className={styles.featuresGrid}>
-            {features.map((feature, index) => (
-              <div key={index} className={styles.featureCard}>
-                <div className={styles.featureIcon}>{feature.icon}</div>
-                <div className={styles.featureContent}>
-                  <h3 className={styles.featureTitle}>{feature.title}</h3>
-                  <p className={styles.featureDescription}>
-                    {feature.description}
-                  </p>
-                </div>
+        </div>
+
+        {/* Tailored benefits panel */}
+        <section className={styles.benefitsSection}>
+          <h2 className={styles.benefitsTitle} key={`title-${audience}`}>
+            {content.benefitsTitle}
+          </h2>
+          <div className={styles.benefitsGrid} key={`grid-${audience}`}>
+            {content.benefits.map((benefit) => (
+              <div key={benefit.title} className={styles.benefitCard}>
+                <span className={styles.benefitIcon}>{benefit.icon}</span>
+                <h3 className={styles.benefitTitle}>{benefit.title}</h3>
+                <p className={styles.benefitDescription}>
+                  {benefit.description}
+                </p>
               </div>
             ))}
           </div>
         </section>
 
-        {/* CTA Section */}
+        {/* Audience-ordered sections */}
+        {sectionOrder[audience].map((key) => (
+          <React.Fragment key={key}>{sections[key]}</React.Fragment>
+        ))}
+
+        {/* Final CTA */}
         <section className={styles.ctaSection}>
           <div className={styles.ctaContent}>
             <h2 className={styles.ctaTitle}>READY PLAYER ONE?</h2>
             <p className={styles.ctaText}>
-              Join thousands of students already leveling up their education
+              Join a platform where kids can be kids, families stay in control,
+              and every coin earned builds a future.
             </p>
             <div className={styles.ctaButtons}>
-              <Link href="/games" className={styles.ctaBtn}>
-                START PLAYING NOW
+              <a
+                href="https://www.myXogos.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.ctaBtn}
+              >
+                Start Playing
+              </a>
+              <Link href="/student-protection" className={styles.ctaBtnAlt}>
+                Parent&apos;s Guide
               </Link>
             </div>
             <div className={styles.highScore}>
-              <span>🏅 HIGH SCORE TODAY: 15,750 XP</span>
+              <span>
+                🏅 {unlocked.size} OF {achievementIds.length} ACHIEVEMENTS
+                UNLOCKED · INSERT CURIOSITY TO CONTINUE
+              </span>
             </div>
           </div>
         </section>
 
-        {/* Game Details Modal */}
+        {/* Game details modal */}
         {selectedGame && (
-          <div className={styles.gameModal} onClick={closeModal}>
+          <div
+            className={styles.gameModal}
+            onClick={() => setSelectedGame(null)}
+          >
             <div
               className={styles.gameModalContent}
               onClick={(e) => e.stopPropagation()}
             >
-              <button className={styles.gameModalClose} onClick={closeModal}>
+              <button
+                type="button"
+                className={styles.gameModalClose}
+                onClick={() => setSelectedGame(null)}
+              >
                 ×
               </button>
               <div className={styles.gameModalHeader}>
@@ -1028,7 +2326,6 @@ export default function HomePage() {
                   {selectedGame.description}
                 </p>
 
-                {/* Video Player */}
                 <div className={styles.videoSection}>
                   <h3 className={styles.videoSectionTitle}>Watch Tutorial</h3>
                   {selectedGame.videoId ? (
@@ -1040,9 +2337,6 @@ export default function HomePage() {
                         allowFullScreen
                         className={styles.videoPlayer}
                       ></iframe>
-                      {/* Overlays to block YouTube links */}
-                      <div className={styles.videoBlockerTop}></div>
-                      <div className={styles.videoBlockerBottom}></div>
                     </div>
                   ) : (
                     <div className={styles.videoComingSoon}>
@@ -1053,7 +2347,7 @@ export default function HomePage() {
                 </div>
 
                 <div className={styles.gameModalActions}>
-                  <Link href="/games" className={styles.gameModalPlayBtn}>
+                  <Link href="/games" className={styles.primaryBtn}>
                     View All Games
                   </Link>
                 </div>

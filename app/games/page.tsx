@@ -146,6 +146,7 @@ export default function GamesPage() {
         "A strategic history-based game that resembles Pokémon in appearance and Risk in gameplay mechanics, with all cards based on historical figures, events, and places. Players earn iPlay coins for time spent in the game and can purchase additional decks using their earned coins.",
       imagePath: "/images/games/new_historical-conquest.png",
       status: "active",
+      videoId: "OUg4Bu6AbnI",
       features: [
         "Strategic card-based gameplay",
         "Real historical figures and events",
@@ -252,6 +253,23 @@ export default function GamesPage() {
         "Elizabethan English learning",
         "Theater history",
         "Poetry and sonnet analysis",
+      ],
+    },
+    {
+      id: "splunker",
+      title: "Splunker",
+      subject: "Science",
+      description:
+        "Dig deep. Discover everything. An epic 2D exploration and mining adventure where players dig through massive cave systems, uncover hidden treasures, mine valuable resources, and survive mysterious underground environments—all while learning about geology, mining, Earth science, environmental science, and the incredible processes that shaped our planet. A growing world of new biomes, underground ecosystems, hidden civilizations, and rare minerals expands with every update.",
+      imagePath: "/images/games/Splunker.png",
+      status: "active",
+      videoId: "uSYO-wM6t90",
+      features: [
+        "Massive cave systems to explore",
+        "Mining and resource gathering",
+        "Geology and Earth science",
+        "Hidden treasures and rare minerals",
+        "Expanding biomes and ecosystems",
       ],
     },
     {
@@ -484,7 +502,10 @@ export default function GamesPage() {
                 real scholarship opportunities.
               </p>
               <div className={styles.ctaButtons}>
-                <Link href="https://www.xogosgaming.com" className={styles.primaryButton}>
+                <Link
+                  href="https://www.xogosgaming.com"
+                  className={styles.primaryButton}
+                >
                   Join Now
                 </Link>
                 <Link href="/scholarships" className={styles.secondaryButton}>

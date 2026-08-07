@@ -645,7 +645,97 @@ export const config = {
 
 ## Session History
 
-### Latest Session: July 21-22, 2026
+### Latest Session: August 5, 2026
+
+#### Work Completed
+
+**Homepage Design Lab — 4 homeschooler-focused homepage concepts (localhost preview only, not yet live)**
+
+Created a design-preview area to test homepage redesigns targeting homeschool families and educators, keeping the Play, Learn, Earn theme. Preview at `http://localhost:3000/designs` (gallery page linking to all four):
+
+1. **`/designs/design1` — "Homeschool Command Center"** (parent-first, warm cream/navy palette): Build-Your-Homeschool-Day planner widget, subject-filterable curriculum map of games, scholarship coin calculator with animated coin jar, safety trust strip, parent testimonials.
+2. **`/designs/design2` — "Adventure Quest Map"** (kid-first, twilight storybook theme): scroll-activated quest path (Play → Learn → Earn → Scholarship stops light up), hidden clickable coin hunt with pouch counter and Quest Complete toast, subject islands revealing games, scroll-progress XP bar, parchment Parents' Guide.
+3. **`/designs/design3` — "The Homeschool Notebook"** (scrapbook/planner aesthetic): flip-card subject flashcards, Mon–Fri interactive lesson planner, sticker-chart reward checklist that drops coins into a jar, polaroid elective cards, washi tape/sticky-note styling.
+4. **`/designs/design4` — "Arcade 2.0: Choose Your Player"** (evolution of current arcade brand): hero audience switcher (Student / Homeschool Parent / Educator) that re-messages the page, scholarship power-up meter, neon subject-filter game grid with video modals, count-up stats.
+
+#### Files Created
+- `app/designs/page.tsx` + `page.module.css` — design gallery index
+- `app/designs/design1..design4/page.tsx` + `page.module.css` — the four variants
+
+#### Architecture Notes
+- All variants are standalone `"use client"` pages wrapped in `MarketingLayout`, with hardcoded stats (no DB/API calls) and no `PageTracker`, so they are safe to preview and won't log analytics.
+- All reuse existing images in `/public/images` and the games data from `app/page.tsx`.
+- `npm run typecheck` passes; all routes verified compiling on the dev server.
+
+**Design 5 added — "Arcade 2.0 Supercharged" (`/designs/design5`), the frontrunner:**
+Zack liked Design 4 (especially the "Choose Your Own Adventure" player switcher) and was also interested in Design 3. Design 5 = Design 4's full structure (audience switcher, subject-filter game grid with video modals, scholarship power-up meter, count-up stats) plus Design 3's homeschool interactives restyled to the arcade theme (Weekly Quest Log Mon–Fri lesson planner, flip-card Subject Cartridges, daily quest checklist feeding coins into the meter, neon parent testimonial cards), plus new excitement: Achievement Unlocked toasts, confetti bursts, INSERT COIN hero prompt, scrolling event ticker marquee.
+
+- Design 5 includes a "SELECT YOUR PASS" pricing section: **$7/month, $70/year (2 months free), $150 lifetime (up to 19 years of age)**; CTAs link to https://www.myXogos.com
+- Design 5 game cabinet expanded to 12 games (3 rows of 4): added **Body Battle**, **TimeQuest**, and new game **Splunker** (2nd card, first row; image `public/images/games/Splunker.png` copied from `/extra`; video uSYO-wM6t90). Science cartridge now holds Bug and Seek + Splunker + Body Battle; History cartridge gained TimeQuest.
+- **Historical Conquest tutorial video added** (OUg4Bu6AbnI) in design5, `app/games/page.tsx`, and `app/page.tsx` — production files changed, goes live on next push.
+- Dev preview runs on port **4321** (port 3000 is reserved for other work): `npm run dev -- -p 4321`
+
+**DESIGN 5 IS NOW THE HOMEPAGE (August 6, 2026)**
+
+Zack selected Design 5. It was promoted to `app/page.tsx` + `app/page.module.css` (design5 files copied over), with homepage-specific changes:
+- Re-added `<PageTracker pagePath="/" pageName="Homepage" />` (design previews deliberately omit it)
+- Removed the "Design 5 · All Designs" corner badge
+- Restored the dynamic **Players Learning** stat from `/api/public-stats` (Admin → Statistics → Accounts), falling back to "500+" if the API returns nothing
+- Component renamed `Design5Page` → `HomePage`
+- Educational Games stat set to **18** (was 13)
+- Pricing: Yearly and Lifetime CTAs now link to `https://www.historicalconquest.com/xogos-gaming`; Monthly still links to `https://www.myXogos.com`
+
+The previous homepage is archived and viewable at **`/designs/original`** (PageTracker removed so it doesn't log visits as "/"). It also remains in git history. `/designs/design5` still exists as a duplicate of the live homepage.
+
+**Splunker added to `/games`** (`app/games/page.tsx`) so "View All Games" matches the homepage cabinet.
+
+Verified: `npm run typecheck` clean, `npx next build` exits 0, all routes 200. The only ESLint error in the repo is pre-existing in `lib/blog/getPosts.ts`, and `next.config.js` sets `eslint.ignoreDuringBuilds: true`, so it does not block deploys.
+
+**AI-generated art added to the homepage (August 6, 2026)**
+
+Nine generated images were copied from `/extra` into `public/images/` and wired into the homepage:
+| Image | Path | Used for |
+|-------|------|----------|
+| Player portraits (3) | `public/images/players/player-{student,parent,educator}.png` | "Choose Your Player" cards — replaced the 🎮/🏠/🏫 emoji with circular pixel-art portraits |
+| Review avatars (3) | `public/images/players/review-{1,2,3}.png` | Player Reviews cards (review-2→Sarah, review-3→Marcus, review-1→Denise) |
+| iPlay coin mascot | `public/images/iplay-coin.png` | Hero, in a circular frame with a gentle bob animation |
+| Homeschool family photo | `public/images/homeschool-family.png` | New two-column banner in "Built for Homeschool Families", with audience-specific copy + a safety stamp |
+| Social share image | `public/images/og-homepage.png` | Replaced the bare logo in `app/layout.tsx` openGraph + twitter metadata |
+
+New CSS classes appended to `app/page.module.css`: `.playerPortrait`, `.coinMascot`, `.familyBanner`, `.familyPhotoWrap`, `.familyCopy`, `.familyStamp`, `.reviewAvatar` (+ responsive and reduced-motion variants).
+
+`app/designs/design5/` was re-synced from the homepage so the preview does not drift (it keeps the design badge and omits PageTracker).
+
+Notes / follow-ups on the art:
+- **The OG image is 1024×1024, not 1200×630.** Facebook/Twitter will crop or letterbox a square. Regenerating at 1200×630 would render better in social previews.
+- The coin mascot has a baked-in gold background (not transparent), so it is displayed inside a circular frame — which reads as an intentional coin disc. A transparent-background version would allow free-floating placement.
+- Source PNGs are 0.5–1.7 MB each; `next/image` resizes them on delivery (review avatars serve at 64px), so page weight is fine, but the repo carries the full-size files.
+
+**Homepage refinements (August 7, 2026)**
+- **Lightning Round now loads on all 6 Subject Cartridges.** It is a cross-subject quiz game, so `cartridgeGames()` appends it to every cartridge (skipping the duplicate on History, its own subject). The cartridges array is now built by mapping `cartridgeDefs`, and the "N GAMES LOADED" hints are **computed from `games.length`** instead of hardcoded, so counts can no longer drift. Current counts: Math 3, History 4, Science 4, Literature 2, STEM 2, Financial Literacy 2.
+- **Lifetime membership marked as a 2026-only promo.** The badge changed from "BEST VALUE" to **"2026 LAUNCH SPECIAL"**, and a dashed-gold note was added inside the card: "Available in 2026 only — a special promotion celebrating the opening of Xogos Gaming this year." New CSS: `.pricingPromoNote`, `.pricingPromoIcon`.
+- **"Start Playing" buttons now go to the play portal** `https://www.myXogos.com` (new tab, `rel="noopener noreferrer"`) instead of `/games` — both the Student-view hero CTA and the final "READY PLAYER ONE?" CTA. `CtaLink` gained an `external?: boolean` flag and the hero renders an `<a>` for external links and a Next `<Link>` for internal ones. Matches the existing convention on `app/games/page.tsx`.
+
+**Gotcha learned this session:** running `npx next build` while `next dev` is running corrupts the dev server's `.next` cache — the browser then 404s on `_next/static/chunks/*`, React never hydrates, and the hero stays invisible at `opacity: 0` (it waits on `isLoaded`). Fix: stop dev, `rm -rf .next`, restart. Always stop the dev server before building.
+
+#### Xogos YouTube channel reference (verified Aug 6, 2026)
+Channel: **Xogos Educational Gaming Platform** — `https://www.youtube.com/channel/UCzT0I4sluqM3Eor8WE7vfag`
+Authoritative video list via YouTube's own RSS feed: `https://www.youtube.com/feeds/videos.xml?channel_id=UCzT0I4sluqM3Eor8WE7vfag`
+(Use `https://www.youtube.com/oembed?url=...&format=json` to verify any video ID before embedding — a wrong ID renders a dead player.)
+
+Recent promo videos NOT yet used on the site include: Classics Games `SJ2eKK0gE-A`, Life of a City `6cwoINDCuN4`, Debate Arena `klRAotCaK9M`, Turbo Type `vtS56-tjnO0`, Xogos Banking/Scholarships `-pYdT1wYXSg`, Time Quest `CoGNW2n37qg`, Body Battle `rYno4aLSEVw`, Medical Diagnosis `RuGAsyLPpJE`, Monster Math `rgP4ryHnZgY`, Bug and Seek `tH1npwYQkUM`, Totally Medieval `KM30p99cjPk`, Lightning Round `0krDj6C9du0`, Exploration Library `Gzv3I_oA33Y`.
+
+#### Pending
+- **Nothing is committed or pushed yet** — the new homepage is local only. Push to `main` triggers the Amplify deploy.
+- Games still without a tutorial video on `/games`: Debt-Free Millionaire, iServ Volunteer, Shakespeare's Conspiracy, TimeQuest (candidate IDs above).
+- No video of a parent + student playing on a laptop was found on the channel — would need to be filmed or licensed as stock.
+- `/games` lists 16 titles while the homepage stat claims 18 Educational Games; channel videos suggest Classics, Life of a City, Debate Arena, and Turbo Type exist but are not yet on the site — adding them would reconcile the count.
+- Zack can generate custom images (player-card avatars for Student/Parent/Educator, mascot art) to slot into the homepage.
+- The `/designs` routes are public if pushed — remove or gate them when no longer needed.
+
+---
+
+### Previous Session: July 21-22, 2026
 
 #### Work Completed
 
