@@ -35,3 +35,12 @@ export function getPublicImageUrl(storagePath: string): string {
  * Storage bucket name for blog images
  */
 export const BLOG_IMAGES_BUCKET = "blog-images";
+
+/**
+ * Storage bucket for board-secured PDFs used by the Document Reviewer.
+ *
+ * This bucket MUST stay private. Files are never linked directly — they are
+ * streamed through /api/documents/[id]/file after an auth check, so a URL
+ * cannot leak a confidential board document to the open internet.
+ */
+export const BOARD_DOCUMENTS_BUCKET = "board-documents";

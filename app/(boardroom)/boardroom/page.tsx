@@ -39,6 +39,15 @@ const menuItems = [
     color: "#22c55e",
   },
   {
+    id: "document-reviewer",
+    title: "Document Reviewer",
+    description:
+      "Read board documents, highlight passages, and comment or reply in thread",
+    href: "/boardroom/document-reviewer",
+    icon: "📖",
+    color: "#e6bb84",
+  },
+  {
     id: "bylaws",
     title: "ByLaws",
     description: "Corporate bylaws and governance documents",

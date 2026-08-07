@@ -32,10 +32,12 @@
 | URL | Description | Access |
 |-----|-------------|--------|
 | `/` | Homepage — "Arcade 2.0 Supercharged" (audience switcher, game cabinet, subject cartridges, quest log, power-up meter, pricing) | Public |
+| `/parent-guide` | Parent's Guide — long-form sales page for parents/educators | Public |
 | `/games` | Games showcase (16 games) | Public |
 | `/blog` | Blog with 700+ posts | Public |
 | `/board` | Board room visualization (public dashboard) | Public |
 | `/boardroom` | Board member menu (6 cards) | Authenticated |
+| `/boardroom/document-reviewer` | PDF book reader with highlights, comments, replies | Authenticated |
 | `/boardroom/skills-matrix` | Skills self-assessment | Authenticated |
 | `/boardroom/skills-matrix/results` | Team skills & gap analysis | Authenticated |
 | `/boardroom/enterprise` | Corporate structure | Authenticated |
@@ -547,6 +549,62 @@ Financial Dashboard reflects changes
 
 **Important:** Keep Liveblocks at version 2.24.4. Version 3.x has initialization bugs.
 
+### 9. Document Reviewer (board-secured)
+
+**Location:** `/boardroom/document-reviewer` — reachable from the Board Room menu
+
+Board members read PDFs in a two-page book reader, highlight passages, comment
+on them, and reply to each other in thread.
+
+> **⚠️ SETUP REQUIRED BEFORE THIS WORKS.** The code is deployed but the feature
+> will error until both steps below are done. See *Setup* at the end of this
+> section.
+
+**How it works:**
+- **Reader** — `BookReader.tsx` renders two pages side by side as an open book, with a flip animation, arrow-key paging, and page-turn buttons. Built on `react-pdf` (pdf.js). The worker is self-hosted at `public/pdf.worker.min.mjs` — deliberately not a CDN.
+- **Highlighting** — select text on either page; the selection is capped at **100 characters** in the UI, again in the API, and again by a `CHECK` constraint in the database. Selecting more shows a warning instead of saving. Highlight rectangles are stored **normalized (0-1)** relative to the page, so they redraw correctly at any zoom or window size.
+- **Comments** — up to **500 characters**, same triple enforcement. Any board member with access can reply to any comment; replies are `document_comments` rows with `parent_comment_id` set.
+- **Confidentiality** — the `board-documents` storage bucket is **private**. Files are streamed through `/api/documents/[id]/file` behind an auth check, served `inline` with `no-store` and `X-Robots-Tag: noindex`. There is no download button and no public URL, and nothing is ever sent to an external or AI service. *Honest limit: this stops casual copying and indexing, but a determined authorized reader can still screenshot or extract text from any document their browser can render. Treat it as need-to-know access control, not DRM.*
+- **Hide vs delete** — **Hide** archives a document (reversible with one click, nothing destroyed). **Delete** is permanent and cascades to every highlight, comment, and reply; it requires typing `DELETE`, warns about the 7-year retention window if it has not passed, offers "Hide Instead," and writes a row to `document_deletion_log` so a record survives the deletion.
+- **Retention** — every document, highlight, and comment row carries `retain_until = created_at + 7 years`.
+
+**Access levels** (`lib/auth/documents.ts`):
+- `canReviewDocuments()` — read, highlight, comment, reply. Union of `AUTHORIZED_EMAILS` and `BOARD_MEMBER_EMAILS`.
+- `canManageDocuments()` — upload, hide/restore, delete. `ADMIN_EMAILS` only.
+
+**Files:**
+- `app/(boardroom)/boardroom/document-reviewer/page.tsx` — library, admin upload, hide/delete modal
+- `app/(boardroom)/boardroom/document-reviewer/BookReader.tsx` — the reader (loaded via `next/dynamic` with `ssr: false`; react-pdf is browser-only)
+- `app/(boardroom)/boardroom/document-reviewer/page.module.css`
+- `app/api/documents/route.ts` — list
+- `app/api/documents/upload/route.ts` — admin upload
+- `app/api/documents/[id]/route.ts` — PATCH hide/restore, DELETE
+- `app/api/documents/[id]/file/route.ts` — authenticated PDF stream
+- `app/api/documents/[id]/highlights/route.ts` — list/create highlights
+- `app/api/highlights/[id]/comments/route.ts` — create comment or reply
+- `database/document-reviewer-schema.sql`
+- `lib/auth/documents.ts`
+
+#### Setup (must be done once, in Supabase)
+
+**1. Create the tables.** Run `database/document-reviewer-schema.sql` in the
+Supabase SQL Editor. It creates `board_documents`, `document_highlights`,
+`document_comments`, and `document_deletion_log`.
+
+**2. Create the storage bucket.** Supabase Dashboard → Storage → New bucket:
+- Name: `board-documents`
+- Public: **NO** — this must stay private
+- Allowed MIME types: `application/pdf`
+- File size limit: 50 MB
+
+No new environment variables are needed; it reuses the existing
+`NEXT_PUBLIC_SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, and `DATABASE_*` vars.
+
+**New dependency:** `react-pdf@9.1.1` (pulls in `pdfjs-dist@4.4.168`). If the
+reader ever renders blank after a dependency bump, re-copy the worker:
+`cp node_modules/pdfjs-dist/build/pdf.worker.min.mjs public/pdf.worker.min.mjs`
+— the version in `/public` must match the installed `pdfjs-dist`.
+
 ### 8. Homepage — "Arcade 2.0 Supercharged"
 
 **Location:** `/` — `app/page.tsx` + `app/page.module.css`
@@ -812,6 +870,21 @@ Deliberately not committed: pushing it would publish six extra pages
 (including rejected concepts) on the production marketing site where they
 could be indexed. To ship it anyway, `git add app/designs/` — it builds clean.
 
+#### Post-launch refinements (August 7, later in the day)
+
+Committed after the initial launch push — **verify these are deployed**:
+
+- **New page: `/parent-guide`** (`app/parent-guide/page.tsx` + `page.module.css`). A long-form page selling the platform to parents and educators: the pitch, Play/Learn/Earn explained in depth, elective classes, off-screen incentives, a safety section, how coins convert to scholarships, pricing, and an expandable FAQ. It uses the homepage palette but calmer — larger type, more whitespace, fewer animations, because it is meant to be read. Four separate links point to `/student-protection`, including a dedicated CTA.
+- **The "Parent's Guide" buttons now link to `/parent-guide`** instead of `/student-protection` (hero CTA in the Homeschool Parent view, and the final "READY PLAYER ONE?" CTA). A footer link was also added under Platform.
+- **"INSERT COIN TO START" moved below the hero CTA buttons** so the two real calls to action come first. Its CSS changed from `margin-bottom: 34px` to `margin-top: 26px` to suit the new position.
+- **Sign In moved out of the header into the footer.** Removed from both the desktop header and the mobile nav in `MarketingHeader.tsx`; added to the footer's bottom bar in `MarketingFooter.tsx` with a new `.footerSignInButton` style. It is a board/staff login, so the marketing nav now stays focused on families. The now-unused `.signInButton` / `.mobileSignInButton` rules remain in `MarketingHeader.module.css` and could be cleaned up.
+
+**CSS Modules gotcha hit while building the page:** a bare element selector
+(`section { ... }`) fails to compile with *"Selector is not pure (pure selectors
+must contain at least one local class or id)"*, and it takes down every page
+sharing that compile pass — `/student-protection` started 500ing too. Scope it
+to a local class instead (`.page > section`).
+
 #### Verification performed
 
 - `npm run typecheck` — clean.
@@ -845,6 +918,18 @@ Life of a City `6cwoINDCuN4`, Debate Arena `klRAotCaK9M`, Turbo Type
 Monster Math `rgP4ryHnZgY`, Bug and Seek `tH1npwYQkUM`, Totally Medieval
 `KM30p99cjPk`, Lightning Round `0krDj6C9du0`, Exploration Library `Gzv3I_oA33Y`.
 
+#### Document Reviewer added (August 7)
+
+New board-secured feature — see **Feature Documentation → 9. Document Reviewer**
+for how it works. **It requires a one-time Supabase setup (SQL + storage
+bucket) before it will function**; the setup steps are in that section.
+
+Built and verified to compile, but **the runtime path is untested**: the local
+environment has no database credentials and the feature requires a signed-in
+board member, so upload → read → highlight → comment → reply has not been
+exercised against a real database. Test it on production after running the
+setup.
+
 #### Where we left off / next steps
 
 Verify on production first:
@@ -858,7 +943,9 @@ Then, in rough priority order:
 - [ ] **Add missing tutorial videos** on `/games`: Debt-Free Millionaire, iServ Volunteer, Shakespeare's Conspiracy, TimeQuest (candidate IDs above).
 - [ ] **No parent + student on a laptop video exists** on the channel — the homepage uses a generated still instead. Real footage would be the strongest asset for the parent audience and needs to be filmed or licensed.
 - [ ] **Decide the fate of `app/designs/`** — commit it, delete it, or leave it local. While it exists, homepage edits should be mirrored to `design5` or the two will silently diverge.
-- [ ] The Player Reviews are clearly labeled sample quotes. Replace them with real testimonials when available.
+- [ ] The Player Reviews are clearly labeled sample quotes. Replace them with real testimonials when available. The same applies to the Parent's Guide, which currently makes no testimonial claims at all — real parent quotes would strengthen it.
+- [ ] **Document Reviewer setup**: run `database/document-reviewer-schema.sql` and create the private `board-documents` bucket, then test upload → highlight → comment → reply end to end.
+- [ ] The Parent's Guide FAQ answers were written from existing site copy (scholarships, student protection, classes). Have someone who knows the business confirm the specifics, especially the coin-conversion explanation and the age-19 cutoff.
 
 ---
 
