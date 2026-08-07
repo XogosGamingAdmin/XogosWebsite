@@ -76,7 +76,11 @@ const SkillsMatrix = () => {
       name: "Youth Protection and Data Privacy",
       color: "#f59e0b",
       skills: [
-        { id: "studentprotection", name: "Student Online Protection", target: 2 },
+        {
+          id: "studentprotection",
+          name: "Student Online Protection",
+          target: 2,
+        },
         { id: "dataprivacy", name: "Student Data Privacy", target: 2 },
         { id: "gaming", name: "Responsible Gaming Practices", target: 1 },
         { id: "identity", name: "Identity Verification", target: 1 },

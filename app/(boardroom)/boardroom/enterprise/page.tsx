@@ -22,7 +22,13 @@ interface Subsidiary {
 const corporateStructure: {
   parent: { name: string; type: string; description: string; color: string };
   subsidiaries: Subsidiary[];
-  nonprofit: { name: string; type: string; description: string; color: string; relationship: string };
+  nonprofit: {
+    name: string;
+    type: string;
+    description: string;
+    color: string;
+    relationship: string;
+  };
 } = {
   parent: {
     name: "Xogos Education",
@@ -69,8 +75,16 @@ const corporateStructure: {
           category: "Engineering",
           url: "www.digitalfrontiergame.com",
         },
-        { name: "iServ", category: "Active Incentives", url: "www.iservapp.org" },
-        { name: "Monster Math", category: "Math", url: "www.monstermathgames.com" },
+        {
+          name: "iServ",
+          category: "Active Incentives",
+          url: "www.iservapp.org",
+        },
+        {
+          name: "Monster Math",
+          category: "Math",
+          url: "www.monstermathgames.com",
+        },
         {
           name: "Totally Medieval",
           category: "Math & History",
@@ -223,7 +237,9 @@ export default function EnterprisePage() {
                               </div>
                             )}
                             {product.comingSoon && (
-                              <div className={styles.comingSoon}>Coming Soon</div>
+                              <div className={styles.comingSoon}>
+                                Coming Soon
+                              </div>
                             )}
                             {product.url && (
                               <div className={styles.productUrl}>
@@ -247,7 +263,9 @@ export default function EnterprisePage() {
                             rel="noopener noreferrer"
                             className={styles.productCard}
                             style={
-                              { "--card-color": sub.color } as React.CSSProperties
+                              {
+                                "--card-color": sub.color,
+                              } as React.CSSProperties
                             }
                           >
                             {cardContent}
@@ -257,7 +275,9 @@ export default function EnterprisePage() {
                             key={pIdx}
                             className={styles.productCard}
                             style={
-                              { "--card-color": sub.color } as React.CSSProperties
+                              {
+                                "--card-color": sub.color,
+                              } as React.CSSProperties
                             }
                           >
                             {cardContent}

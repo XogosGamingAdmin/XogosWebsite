@@ -32,7 +32,8 @@ const menuItems = [
   {
     id: "transparency",
     title: "Transparency",
-    description: "As per bylaws, we need to make sure board members come prepared and attend regularly",
+    description:
+      "As per bylaws, we need to make sure board members come prepared and attend regularly",
     href: "/boardroom/transparency",
     icon: "👁️",
     color: "#22c55e",

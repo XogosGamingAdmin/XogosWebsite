@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
 import { getAttendance } from "@/lib/actions/getAttendance";
 import { getMeetings } from "@/lib/actions/getMeetings";
 import { Container } from "@/primitives/Container";
@@ -61,7 +61,10 @@ export default function TransparencyPage() {
     loadData();
   }, []);
 
-  const getAttendanceForMemberAndMeeting = (memberEmail: string, meetingId: number) => {
+  const getAttendanceForMemberAndMeeting = (
+    memberEmail: string,
+    meetingId: number
+  ) => {
     return attendance.find(
       (a) => a.memberEmail === memberEmail && a.meetingId === meetingId
     );
@@ -110,8 +113,8 @@ export default function TransparencyPage() {
         <div className={styles.hero}>
           <h1 className={styles.title}>Board Transparency</h1>
           <p className={styles.subtitle}>
-            As per bylaws, we track attendance, preparation, and engagement
-            for each board meeting to ensure accountability.
+            As per bylaws, we track attendance, preparation, and engagement for
+            each board meeting to ensure accountability.
           </p>
         </div>
 
@@ -135,7 +138,9 @@ export default function TransparencyPage() {
                   <th className={styles.memberColumn}>Board Member</th>
                   {meetings.map((meeting) => (
                     <th key={meeting.id} className={styles.meetingHeader}>
-                      <div className={styles.meetingName}>{meeting.meetingName}</div>
+                      <div className={styles.meetingName}>
+                        {meeting.meetingName}
+                      </div>
                       <div className={styles.meetingDate}>
                         {new Date(meeting.meetingDate).toLocaleDateString()}
                       </div>
@@ -163,12 +168,18 @@ export default function TransparencyPage() {
                               </span>
                               <div className={styles.badges}>
                                 {record.prepared && (
-                                  <span className={styles.badge} title="Prepared with initiatives">
+                                  <span
+                                    className={styles.badge}
+                                    title="Prepared with initiatives"
+                                  >
                                     📋
                                   </span>
                                 )}
                                 {record.inPerson && (
-                                  <span className={styles.badge} title="Video was on">
+                                  <span
+                                    className={styles.badge}
+                                    title="Video was on"
+                                  >
                                     📹
                                   </span>
                                 )}
@@ -192,15 +203,25 @@ export default function TransparencyPage() {
           <div className={styles.legendItems}>
             <div className={styles.legendRow}>
               <div className={styles.legendItem}>
-                <span className={`${styles.attendanceStatus} ${styles.fullTime}`}>Full Time</span>
+                <span
+                  className={`${styles.attendanceStatus} ${styles.fullTime}`}
+                >
+                  Full Time
+                </span>
                 <span>Attended entire meeting</span>
               </div>
               <div className={styles.legendItem}>
-                <span className={`${styles.attendanceStatus} ${styles.partTime}`}>Part Time</span>
+                <span
+                  className={`${styles.attendanceStatus} ${styles.partTime}`}
+                >
+                  Part Time
+                </span>
                 <span>Attended part of meeting</span>
               </div>
               <div className={styles.legendItem}>
-                <span className={`${styles.attendanceStatus} ${styles.absent}`}>Absent</span>
+                <span className={`${styles.attendanceStatus} ${styles.absent}`}>
+                  Absent
+                </span>
                 <span>Did not attend</span>
               </div>
             </div>

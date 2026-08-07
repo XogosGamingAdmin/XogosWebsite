@@ -15,7 +15,11 @@ export async function createMeeting(meetingDate: string, meetingName: string) {
       };
     }
 
-    const meeting = await db.createMeeting(meetingDate, meetingName, userEmail!);
+    const meeting = await db.createMeeting(
+      meetingDate,
+      meetingName,
+      userEmail!
+    );
     return {
       data: {
         id: meeting.id,

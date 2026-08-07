@@ -10,12 +10,11 @@ export async function GET() {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const [allSkills, statistics, membersWithSkills] =
-      await Promise.all([
-        db.getAllSkillsByEmail(),
-        db.getSkillsStatsByEmail(),
-        db.getMembersWithSkillsByEmail(),
-      ]);
+    const [allSkills, statistics, membersWithSkills] = await Promise.all([
+      db.getAllSkillsByEmail(),
+      db.getSkillsStatsByEmail(),
+      db.getMembersWithSkillsByEmail(),
+    ]);
 
     return NextResponse.json({
       allSkills,

@@ -25,13 +25,15 @@ export default function AuditsPage() {
       quarter: "Q1 2026",
       date: "January 2026",
       status: "completed",
-      details: "First quarterly audit completed. All funds verified and accounted for.",
+      details:
+        "First quarterly audit completed. All funds verified and accounted for.",
     },
     {
       quarter: "Q2 2026",
       date: "April 2026",
       status: "completed",
-      details: "Second quarterly audit completed. 100% compliance with financial reporting standards.",
+      details:
+        "Second quarterly audit completed. 100% compliance with financial reporting standards.",
     },
     {
       quarter: "Q3 2026",
@@ -128,9 +130,12 @@ export default function AuditsPage() {
                 <div className={styles.flowArrow}>→</div>
                 <div className={styles.flowStep}>
                   <div className={styles.flowIcon}>🎓</div>
-                  <div className={styles.flowLabel}>Scholarships Distributed</div>
+                  <div className={styles.flowLabel}>
+                    Scholarships Distributed
+                  </div>
                   <div className={styles.flowDescription}>
-                    Xogos Gaming distributes through merit-based education system
+                    Xogos Gaming distributes through merit-based education
+                    system
                   </div>
                 </div>
               </div>
@@ -142,7 +147,9 @@ export default function AuditsPage() {
         <section className={styles.distributionSection}>
           <Container>
             <div className={styles.sectionHeading}>
-              <h2 className={styles.sectionTitle}>Quarterly Distribution Process</h2>
+              <h2 className={styles.sectionTitle}>
+                Quarterly Distribution Process
+              </h2>
               <div className={styles.sectionDecoration}></div>
               <p className={styles.sectionSubtitle}>
                 How scholarship funds are raised, converted, and verified
@@ -163,35 +170,42 @@ export default function AuditsPage() {
               <div className={styles.distributionStep}>
                 <div className={styles.distributionNumber}>2</div>
                 <div className={styles.distributionInfo}>
-                  <h4 className={styles.distributionTitle}>Students Convert Coins</h4>
+                  <h4 className={styles.distributionTitle}>
+                    Students Convert Coins
+                  </h4>
                   <p className={styles.distributionDescription}>
                     During the quarter, students who have earned iPlay coins
                     through gameplay, classes, and real-world activities can
-                    convert their coins for scholarships. All converted coins
-                    go into a collective pot.
+                    convert their coins for scholarships. All converted coins go
+                    into a collective pot.
                   </p>
                 </div>
               </div>
               <div className={styles.distributionStep}>
                 <div className={styles.distributionNumber}>3</div>
                 <div className={styles.distributionInfo}>
-                  <h4 className={styles.distributionTitle}>Proportional Distribution</h4>
+                  <h4 className={styles.distributionTitle}>
+                    Proportional Distribution
+                  </h4>
                   <p className={styles.distributionDescription}>
                     Each student receives a percentage of the raised funds based
-                    on their share of total coins converted. If you converted 10%
-                    of all coins that quarter, you receive 10% of the funds raised.
+                    on their share of total coins converted. If you converted
+                    10% of all coins that quarter, you receive 10% of the funds
+                    raised.
                   </p>
                 </div>
               </div>
               <div className={styles.distributionStep}>
                 <div className={styles.distributionNumber}>4</div>
                 <div className={styles.distributionInfo}>
-                  <h4 className={styles.distributionTitle}>Verification & Tracking</h4>
+                  <h4 className={styles.distributionTitle}>
+                    Verification & Tracking
+                  </h4>
                   <p className={styles.distributionDescription}>
-                    Your scholarship earnings are tracked digitally in your Xogos
-                    Bank. Our system calculates exactly what we owe each student,
-                    and Innovate the Future is audited to verify they hold that
-                    total amount in FDIC-secured bank accounts.
+                    Your scholarship earnings are tracked digitally in your
+                    Xogos Bank. Our system calculates exactly what we owe each
+                    student, and Innovate the Future is audited to verify they
+                    hold that total amount in FDIC-secured bank accounts.
                   </p>
                 </div>
               </div>
@@ -243,11 +257,15 @@ export default function AuditsPage() {
         <section className={styles.commitmentSection}>
           <Container>
             <div className={styles.commitmentContent}>
-              <h2 className={styles.commitmentTitle}>Our Commitment to Transparency</h2>
+              <h2 className={styles.commitmentTitle}>
+                Our Commitment to Transparency
+              </h2>
               <div className={styles.commitmentGrid}>
                 <div className={styles.commitmentCard}>
                   <div className={styles.commitmentIcon}>📊</div>
-                  <h3 className={styles.commitmentCardTitle}>Regular Reporting</h3>
+                  <h3 className={styles.commitmentCardTitle}>
+                    Regular Reporting
+                  </h3>
                   <p className={styles.commitmentCardDescription}>
                     Quarterly financial reports are published and made available
                     to stakeholders, donors, and the public.
@@ -255,7 +273,9 @@ export default function AuditsPage() {
                 </div>
                 <div className={styles.commitmentCard}>
                   <div className={styles.commitmentIcon}>🔍</div>
-                  <h3 className={styles.commitmentCardTitle}>Independent Audits</h3>
+                  <h3 className={styles.commitmentCardTitle}>
+                    Independent Audits
+                  </h3>
                   <p className={styles.commitmentCardDescription}>
                     All audits are conducted by independent third-party auditors
                     to ensure objectivity and accuracy.
@@ -263,15 +283,19 @@ export default function AuditsPage() {
                 </div>
                 <div className={styles.commitmentCard}>
                   <div className={styles.commitmentIcon}>🔒</div>
-                  <h3 className={styles.commitmentCardTitle}>Secure Tracking</h3>
+                  <h3 className={styles.commitmentCardTitle}>
+                    Secure Tracking
+                  </h3>
                   <p className={styles.commitmentCardDescription}>
-                    Blockchain technology ensures every coin earned and converted
-                    is permanently and transparently recorded.
+                    Blockchain technology ensures every coin earned and
+                    converted is permanently and transparently recorded.
                   </p>
                 </div>
                 <div className={styles.commitmentCard}>
                   <div className={styles.commitmentIcon}>⚖️</div>
-                  <h3 className={styles.commitmentCardTitle}>Legal Compliance</h3>
+                  <h3 className={styles.commitmentCardTitle}>
+                    Legal Compliance
+                  </h3>
                   <p className={styles.commitmentCardDescription}>
                     Full compliance with 501(c)(3) regulations and educational
                     funding requirements.

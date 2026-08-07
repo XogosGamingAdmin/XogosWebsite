@@ -49,7 +49,10 @@ export async function POST(request: Request) {
     const validatedSkills = skills.map((skill) => ({
       skillCategory: String(skill.skillCategory),
       skillName: String(skill.skillName),
-      proficiencyLevel: Math.min(5, Math.max(1, Number(skill.proficiencyLevel))),
+      proficiencyLevel: Math.min(
+        5,
+        Math.max(1, Number(skill.proficiencyLevel))
+      ),
       notes: skill.notes ? String(skill.notes) : undefined,
     }));
 

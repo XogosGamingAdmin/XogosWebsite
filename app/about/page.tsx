@@ -427,7 +427,10 @@ export default function AboutPage() {
                 <Link href="/games" className={styles.primaryButton}>
                   Explore Games
                 </Link>
-                <Link href="https://www.xogosgaming.com" className={styles.secondaryButton}>
+                <Link
+                  href="https://www.xogosgaming.com"
+                  className={styles.secondaryButton}
+                >
                   Join Now
                 </Link>
               </div>

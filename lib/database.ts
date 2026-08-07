@@ -1436,7 +1436,15 @@ export const db = {
        ON CONFLICT (user_email, skill_category, skill_name)
        DO UPDATE SET proficiency_level = $6, notes = $7, user_name = $2, user_avatar = $3, updated_at = NOW()
        RETURNING *`,
-      [userEmail, userName, userAvatar, skillCategory, skillName, proficiencyLevel, notes || null]
+      [
+        userEmail,
+        userName,
+        userAvatar,
+        skillCategory,
+        skillName,
+        proficiencyLevel,
+        notes || null,
+      ]
     );
     return result.rows[0];
   },
@@ -1538,7 +1546,11 @@ export const db = {
   /**
    * Create a new meeting
    */
-  async createMeeting(meetingDate: string, meetingName: string, createdBy: string) {
+  async createMeeting(
+    meetingDate: string,
+    meetingName: string,
+    createdBy: string
+  ) {
     const result = await query(
       `INSERT INTO board_meetings (meeting_date, meeting_name, created_by)
        VALUES ($1, $2, $3)

@@ -63,12 +63,13 @@ export default function ScholarshipsPage() {
                 <div className={styles.stepContent}>
                   <h3 className={styles.stepTitle}>Play Educational Games</h3>
                   <p className={styles.stepDescription}>
-                    Engage with our collection of fun, interactive games designed
-                    to build knowledge and skills across multiple subject areas.
-                    Each achievement is verified through our secure blockchain
-                    technology. Play games like Debt-Free Millionaire, Bug and Seek,
-                    Historical Conquest, and many more while earning iPlay coins
-                    for your educational progress.
+                    Engage with our collection of fun, interactive games
+                    designed to build knowledge and skills across multiple
+                    subject areas. Each achievement is verified through our
+                    secure blockchain technology. Play games like Debt-Free
+                    Millionaire, Bug and Seek, Historical Conquest, and many
+                    more while earning iPlay coins for your educational
+                    progress.
                   </p>
                 </div>
               </div>
@@ -77,11 +78,12 @@ export default function ScholarshipsPage() {
                 <div className={styles.stepContent}>
                   <h3 className={styles.stepTitle}>Save & Multiply Rewards</h3>
                   <p className={styles.stepDescription}>
-                    As you earn iPlay tokens through educational achievements, you
-                    can save them in the Xogos Bank where they grow through our
-                    multiplier system. The longer you save, the more your tokens
-                    grow &ndash; up to 2x after 180 days. This teaches valuable lessons
-                    about saving and compound growth while building your scholarship fund.
+                    As you earn iPlay tokens through educational achievements,
+                    you can save them in the Xogos Bank where they grow through
+                    our multiplier system. The longer you save, the more your
+                    tokens grow &ndash; up to 2x after 180 days. This teaches
+                    valuable lessons about saving and compound growth while
+                    building your scholarship fund.
                   </p>
                 </div>
               </div>
@@ -90,11 +92,12 @@ export default function ScholarshipsPage() {
                 <div className={styles.stepContent}>
                   <h3 className={styles.stepTitle}>Convert to Scholarships</h3>
                   <p className={styles.stepDescription}>
-                    Transform your accumulated tokens into real scholarship funds
-                    through our transparent conversion system. Your educational
-                    achievements directly contribute to your academic future.
-                    Funds can be applied to universities, trade schools, certificate
-                    programs, and other accredited educational institutions.
+                    Transform your accumulated tokens into real scholarship
+                    funds through our transparent conversion system. Your
+                    educational achievements directly contribute to your
+                    academic future. Funds can be applied to universities, trade
+                    schools, certificate programs, and other accredited
+                    educational institutions.
                   </p>
                 </div>
               </div>
@@ -111,21 +114,22 @@ export default function ScholarshipsPage() {
                   Quarterly Scholarship Distribution
                 </h2>
                 <p className={styles.coinValueDescription}>
-                  Each quarter, Innovate the Future announces how much money they
-                  have raised through generous donations. During that quarter,
-                  students convert their earned coins in the Xogos Bank for
-                  scholarships. All converted coins go into a collective pot, and
-                  each student receives a percentage of the raised funds based on
-                  their share of the total coins converted.
+                  Each quarter, Innovate the Future announces how much money
+                  they have raised through generous donations. During that
+                  quarter, students convert their earned coins in the Xogos Bank
+                  for scholarships. All converted coins go into a collective
+                  pot, and each student receives a percentage of the raised
+                  funds based on their share of the total coins converted.
                 </p>
                 <div className={styles.exampleBox}>
                   <h4 className={styles.exampleTitle}>Example Distribution</h4>
                   <p className={styles.exampleText}>
                     If Innovate the Future raises <strong>$5,000</strong> and 10
-                    students each convert <strong>10 coins</strong> (100 total coins
-                    in the pot), each student contributed 10% of the coins. Therefore,
-                    each student receives <strong>10% of $5,000 = $500</strong> in
-                    scholarship funds, which is tracked digitally in their Xogos Bank.
+                    students each convert <strong>10 coins</strong> (100 total
+                    coins in the pot), each student contributed 10% of the
+                    coins. Therefore, each student receives{" "}
+                    <strong>10% of $5,000 = $500</strong> in scholarship funds,
+                    which is tracked digitally in their Xogos Bank.
                   </p>
                 </div>
               </div>
@@ -157,9 +161,9 @@ export default function ScholarshipsPage() {
                 <div className={styles.earningIcon}>🎮</div>
                 <h3 className={styles.earningTitle}>Educational Games</h3>
                 <p className={styles.earningDescription}>
-                  Play our catalog of educational games across subjects like math,
-                  science, history, and financial literacy. Complete levels and
-                  achievements to earn coins.
+                  Play our catalog of educational games across subjects like
+                  math, science, history, and financial literacy. Complete
+                  levels and achievements to earn coins.
                 </p>
               </div>
               <div className={styles.earningCard}>
@@ -203,15 +207,21 @@ export default function ScholarshipsPage() {
               <div className={styles.multiplierTable}>
                 <div className={styles.multiplierRow}>
                   <span className={styles.multiplierDays}>30 Days</span>
-                  <span className={styles.multiplierBonus}>1.1x Multiplier</span>
+                  <span className={styles.multiplierBonus}>
+                    1.1x Multiplier
+                  </span>
                 </div>
                 <div className={styles.multiplierRow}>
                   <span className={styles.multiplierDays}>60 Days</span>
-                  <span className={styles.multiplierBonus}>1.25x Multiplier</span>
+                  <span className={styles.multiplierBonus}>
+                    1.25x Multiplier
+                  </span>
                 </div>
                 <div className={styles.multiplierRow}>
                   <span className={styles.multiplierDays}>90 Days</span>
-                  <span className={styles.multiplierBonus}>1.5x Multiplier</span>
+                  <span className={styles.multiplierBonus}>
+                    1.5x Multiplier
+                  </span>
                 </div>
                 <div className={styles.multiplierRow}>
                   <span className={styles.multiplierDays}>180 Days</span>
@@ -226,10 +236,13 @@ export default function ScholarshipsPage() {
         <section className={styles.transparencySection}>
           <Container>
             <div className={styles.sectionHeading}>
-              <h2 className={styles.sectionTitle}>Full Transparency & Verification</h2>
+              <h2 className={styles.sectionTitle}>
+                Full Transparency & Verification
+              </h2>
               <div className={styles.sectionDecoration}></div>
               <p className={styles.sectionSubtitle}>
-                We believe in complete transparency about how scholarship funds work
+                We believe in complete transparency about how scholarship funds
+                work
               </p>
             </div>
             <div className={styles.transparencyGrid}>
@@ -238,8 +251,8 @@ export default function ScholarshipsPage() {
                 <h3 className={styles.transparencyTitle}>Digital Tracking</h3>
                 <p className={styles.transparencyDescription}>
                   Your scholarship earnings are tracked digitally in your Xogos
-                  Bank, so you can always see exactly how much you&apos;ve earned
-                  toward your future education.
+                  Bank, so you can always see exactly how much you&apos;ve
+                  earned toward your future education.
                 </p>
               </div>
               <div className={styles.transparencyCard}>
@@ -273,13 +286,18 @@ export default function ScholarshipsPage() {
         <section className={styles.ctaSection}>
           <Container>
             <div className={styles.ctaContent}>
-              <h2 className={styles.ctaTitle}>Start Building Your Scholarship Today</h2>
+              <h2 className={styles.ctaTitle}>
+                Start Building Your Scholarship Today
+              </h2>
               <p className={styles.ctaDescription}>
                 Join thousands of students who are already earning toward their
                 future education through gameplay and real-world activities.
               </p>
               <div className={styles.ctaButtons}>
-                <Link href="https://www.xogosgaming.com" className={styles.primaryButton}>
+                <Link
+                  href="https://www.xogosgaming.com"
+                  className={styles.primaryButton}
+                >
                   Get Started
                 </Link>
                 <Link href="/games" className={styles.secondaryButton}>

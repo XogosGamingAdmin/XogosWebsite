@@ -184,9 +184,7 @@ export default function ClassesPage() {
                         ? `${program.description.substring(0, 150)}...`
                         : program.description}
                     </p>
-                    <button className={styles.programButton}>
-                      Learn More
-                    </button>
+                    <button className={styles.programButton}>Learn More</button>
                   </div>
                 </div>
               ))}
@@ -198,10 +196,13 @@ export default function ClassesPage() {
         <section className={styles.earnCoinsSection}>
           <Container>
             <div className={styles.sectionHeading}>
-              <h2 className={styles.sectionTitle}>Earn Coins While You Learn</h2>
+              <h2 className={styles.sectionTitle}>
+                Earn Coins While You Learn
+              </h2>
               <div className={styles.sectionDecoration}></div>
               <p className={styles.sectionSubtitle}>
-                Participate in classes and contribute to earn iPlay coins toward scholarships
+                Participate in classes and contribute to earn iPlay coins toward
+                scholarships
               </p>
             </div>
             <div className={styles.earnExamples}>
@@ -210,8 +211,8 @@ export default function ClassesPage() {
                 <h3 className={styles.earnTitle}>KitchenLab Academy</h3>
                 <p className={styles.earnDescription}>
                   We need great recipes with real photos! For each recipe you
-                  submit with actual pictures you took, you&apos;ll earn iPlay coins.
-                  Help build our recipe database while learning to cook.
+                  submit with actual pictures you took, you&apos;ll earn iPlay
+                  coins. Help build our recipe database while learning to cook.
                 </p>
                 <div className={styles.earnReward}>
                   <span>Submit a recipe with photos</span>
@@ -222,9 +223,10 @@ export default function ClassesPage() {
                 <div className={styles.earnIcon}>📰</div>
                 <h3 className={styles.earnTitle}>Journalism</h3>
                 <p className={styles.earnDescription}>
-                  Practice real journalism skills! Submit articles to earn coins,
-                  and earn even more when your article gets published. Learn to
-                  research, write, and edit like a professional journalist.
+                  Practice real journalism skills! Submit articles to earn
+                  coins, and earn even more when your article gets published.
+                  Learn to research, write, and edit like a professional
+                  journalist.
                 </p>
                 <div className={styles.earnRewards}>
                   <div className={styles.earnReward}>
@@ -239,8 +241,8 @@ export default function ClassesPage() {
               </div>
             </div>
             <p className={styles.earnNote}>
-              Each class offers unique opportunities to contribute and earn.
-              The more you participate, the more you can earn toward your future!
+              Each class offers unique opportunities to contribute and earn. The
+              more you participate, the more you can earn toward your future!
             </p>
           </Container>
         </section>
@@ -255,7 +257,8 @@ export default function ClassesPage() {
                   <div className={styles.benefitIcon}>🎯</div>
                   <h3 className={styles.benefitTitle}>Real Skills</h3>
                   <p className={styles.benefitDescription}>
-                    Learn practical abilities you&apos;ll use throughout your life
+                    Learn practical abilities you&apos;ll use throughout your
+                    life
                   </p>
                 </div>
                 <div className={styles.benefitCard}>
@@ -288,13 +291,18 @@ export default function ClassesPage() {
         <section className={styles.ctaSection}>
           <Container>
             <div className={styles.ctaContent}>
-              <h2 className={styles.ctaTitle}>Ready to Learn Beyond the Screen?</h2>
+              <h2 className={styles.ctaTitle}>
+                Ready to Learn Beyond the Screen?
+              </h2>
               <p className={styles.ctaDescription}>
                 Join thousands of students discovering real-world skills while
                 earning rewards toward their future education.
               </p>
               <div className={styles.ctaButtons}>
-                <Link href="https://www.xogosgaming.com" className={styles.primaryButton}>
+                <Link
+                  href="https://www.xogosgaming.com"
+                  className={styles.primaryButton}
+                >
                   Enroll Now
                 </Link>
                 <Link href="/games" className={styles.secondaryButton}>
@@ -343,7 +351,9 @@ export default function ClassesPage() {
                 </p>
 
                 <div className={styles.programModalFeatures}>
-                  <h3 className={styles.programModalSubtitle}>What You&apos;ll Learn</h3>
+                  <h3 className={styles.programModalSubtitle}>
+                    What You&apos;ll Learn
+                  </h3>
                   <ul className={styles.featuresList}>
                     {activeProgram.features.map((feature, index) => (
                       <li key={index} className={styles.featureItem}>

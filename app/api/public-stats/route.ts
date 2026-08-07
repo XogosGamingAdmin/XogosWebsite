@@ -30,6 +30,9 @@ export async function GET() {
     });
   } catch (error) {
     console.error("Error fetching public stats:", error);
-    return NextResponse.json({ totalMembers: 0, playersLearning: 0 }, { status: 200 });
+    return NextResponse.json(
+      { totalMembers: 0, playersLearning: 0 },
+      { status: 200 }
+    );
   }
 }

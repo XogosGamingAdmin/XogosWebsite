@@ -20,7 +20,9 @@ interface IncentiveProgram {
 
 export default function IncentivesPage() {
   const [isLoaded, setIsLoaded] = useState(false);
-  const [activeProgram, setActiveProgram] = useState<IncentiveProgram | null>(null);
+  const [activeProgram, setActiveProgram] = useState<IncentiveProgram | null>(
+    null
+  );
 
   useEffect(() => {
     setIsLoaded(true);
@@ -156,7 +158,9 @@ export default function IncentivesPage() {
                         : program.description}
                     </p>
                     <button className={styles.programButton}>
-                      {program.status === "active" ? "Learn More" : "Coming Soon"}
+                      {program.status === "active"
+                        ? "Learn More"
+                        : "Coming Soon"}
                     </button>
                   </div>
                 </div>
@@ -169,7 +173,9 @@ export default function IncentivesPage() {
         <section className={styles.howItWorksSection}>
           <Container>
             <div className={styles.howItWorksContent}>
-              <h2 className={styles.howItWorksTitle}>How Active Incentives Work</h2>
+              <h2 className={styles.howItWorksTitle}>
+                How Active Incentives Work
+              </h2>
               <div className={styles.stepsGrid}>
                 <div className={styles.stepCard}>
                   <div className={styles.stepNumber}>1</div>
@@ -246,7 +252,10 @@ export default function IncentivesPage() {
                 toward their future education.
               </p>
               <div className={styles.ctaButtons}>
-                <Link href="https://www.xogosgaming.com" className={styles.primaryButton}>
+                <Link
+                  href="https://www.xogosgaming.com"
+                  className={styles.primaryButton}
+                >
                   Get Started
                 </Link>
                 <Link href="/games" className={styles.secondaryButton}>
@@ -300,7 +309,9 @@ export default function IncentivesPage() {
                 </p>
 
                 <div className={styles.programModalFeatures}>
-                  <h3 className={styles.programModalSubtitle}>Program Features</h3>
+                  <h3 className={styles.programModalSubtitle}>
+                    Program Features
+                  </h3>
                   <ul className={styles.featuresList}>
                     {activeProgram.features.map((feature, index) => (
                       <li key={index} className={styles.featureItem}>

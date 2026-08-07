@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { PageTracker } from "@/components/Analytics";
@@ -131,7 +130,10 @@ export default function StudentProtectionPage() {
 
   return (
     <MarketingLayout>
-      <PageTracker pagePath="/student-protection" pageName="Student Protection" />
+      <PageTracker
+        pagePath="/student-protection"
+        pageName="Student Protection"
+      />
       <div className={styles.page}>
         {/* Background */}
         <div className={styles.background}>
@@ -150,8 +152,9 @@ export default function StudentProtectionPage() {
               </div>
               <h1 className={styles.heroTitle}>Student Protection</h1>
               <p className={styles.heroSubtitle}>
-                We&apos;re not just another gaming platform. We&apos;re the safest place for students
-                to play and learn online. Here&apos;s how we&apos;re different from everyone else.
+                We&apos;re not just another gaming platform. We&apos;re the
+                safest place for students to play and learn online. Here&apos;s
+                how we&apos;re different from everyone else.
               </p>
             </div>
           </Container>
@@ -162,22 +165,33 @@ export default function StudentProtectionPage() {
           <Container>
             <div className={styles.studentMessageContent}>
               <div className={styles.studentMessageIcon}>🎮</div>
-              <h2 className={styles.studentMessageTitle}>A Message to Our Students</h2>
+              <h2 className={styles.studentMessageTitle}>
+                A Message to Our Students
+              </h2>
               <p className={styles.studentMessageText}>
-                Hey there! We know there are a lot of gaming websites out there that look fun and exciting.
-                But here&apos;s something important you should know: some of those places can be dangerous.
-                There are people online called predators—adults who pretend to be kids or act friendly,
-                but they actually want to hurt young people like you.
+                Hey there! We know there are a lot of gaming websites out there
+                that look fun and exciting. But here&apos;s something important
+                you should know: some of those places can be dangerous. There
+                are people online called predators—adults who pretend to be kids
+                or act friendly, but they actually want to hurt young people
+                like you.
               </p>
               <p className={styles.studentMessageText}>
-                <strong>That&apos;s exactly why we built Xogos the way we did.</strong> Every safeguard
-                on this page exists to keep YOU safe while you have fun and learn. You can play games,
-                connect with your real friends and classmates, and earn coins for scholarships—all
-                without worrying about strangers trying to contact you. We&apos;ve got your back.
+                <strong>
+                  That&apos;s exactly why we built Xogos the way we did.
+                </strong>{" "}
+                Every safeguard on this page exists to keep YOU safe while you
+                have fun and learn. You can play games, connect with your real
+                friends and classmates, and earn coins for scholarships—all
+                without worrying about strangers trying to contact you.
+                We&apos;ve got your back.
               </p>
               <div className={styles.studentMessageHighlight}>
                 <span className={styles.highlightIcon}>💪</span>
-                <span>Play safe. Learn lots. Have fun with friends you actually know!</span>
+                <span>
+                  Play safe. Learn lots. Have fun with friends you actually
+                  know!
+                </span>
               </div>
             </div>
           </Container>
@@ -192,7 +206,9 @@ export default function StudentProtectionPage() {
               </h2>
               <div className={styles.differenceGrid}>
                 <div className={styles.differenceCard}>
-                  <h3 className={styles.differenceCardTitle}>Other Gaming Platforms</h3>
+                  <h3 className={styles.differenceCardTitle}>
+                    Other Gaming Platforms
+                  </h3>
                   <ul className={styles.differenceList}>
                     <li className={styles.differenceNegative}>
                       <span className={styles.xMark}>✗</span>
@@ -216,7 +232,9 @@ export default function StudentProtectionPage() {
                     </li>
                   </ul>
                 </div>
-                <div className={`${styles.differenceCard} ${styles.differenceCardXogos}`}>
+                <div
+                  className={`${styles.differenceCard} ${styles.differenceCardXogos}`}
+                >
                   <h3 className={styles.differenceCardTitle}>Xogos Gaming</h3>
                   <ul className={styles.differenceList}>
                     <li className={styles.differencePositive}>
@@ -256,17 +274,21 @@ export default function StudentProtectionPage() {
                   We Don&apos;t Monetize Your Students
                 </h2>
                 <p className={styles.noMonetizationDescription}>
-                  Most platforms treat students as products—showing them ads, pushing
-                  microtransactions, and selling their data. We took a different path.
-                  Xogos runs on a simple, transparent subscription model. No ads. No
-                  in-app purchases. No selling data. No tricks to keep kids glued to screens.
+                  Most platforms treat students as products—showing them ads,
+                  pushing microtransactions, and selling their data. We took a
+                  different path. Xogos runs on a simple, transparent
+                  subscription model. No ads. No in-app purchases. No selling
+                  data. No tricks to keep kids glued to screens.
                 </p>
                 <p className={styles.noMonetizationDescription}>
-                  <strong>Instead, we incentivize them to get off the screen.</strong> Our
-                  active incentive programs reward students for volunteering in their
-                  communities, staying physically active, and achieving academic goals
-                  in the real world. The coins they earn can be used in their games or converted to actual
-                  scholarships for their future education.
+                  <strong>
+                    Instead, we incentivize them to get off the screen.
+                  </strong>{" "}
+                  Our active incentive programs reward students for volunteering
+                  in their communities, staying physically active, and achieving
+                  academic goals in the real world. The coins they earn can be
+                  used in their games or converted to actual scholarships for
+                  their future education.
                 </p>
               </div>
               <div className={styles.noMonetizationVisual}>
@@ -295,10 +317,12 @@ export default function StudentProtectionPage() {
         <section className={styles.featuresSection}>
           <Container>
             <div className={styles.featuresHeading}>
-              <h2 className={styles.featuresTitle}>Our Six Pillars of Student Safety</h2>
+              <h2 className={styles.featuresTitle}>
+                Our Six Pillars of Student Safety
+              </h2>
               <p className={styles.featuresSubtitle}>
-                Every feature was designed with one question in mind:
-                &quot;How does this protect our students?&quot;
+                Every feature was designed with one question in mind: &quot;How
+                does this protect our students?&quot;
               </p>
             </div>
             <div className={styles.featuresGrid}>
@@ -310,7 +334,9 @@ export default function StudentProtectionPage() {
                     </div>
                     <h3 className={styles.featureTitle}>{feature.title}</h3>
                   </div>
-                  <p className={styles.featureDescription}>{feature.fullDescription}</p>
+                  <p className={styles.featureDescription}>
+                    {feature.fullDescription}
+                  </p>
                   <ul className={styles.featureDetails}>
                     {feature.details.map((detail, index) => (
                       <li key={index} className={styles.featureDetail}>
@@ -329,7 +355,9 @@ export default function StudentProtectionPage() {
         <section className={styles.ctaSection}>
           <Container>
             <div className={styles.ctaContent}>
-              <h2 className={styles.ctaTitle}>Ready to Give Your Student a Safe Place to Learn?</h2>
+              <h2 className={styles.ctaTitle}>
+                Ready to Give Your Student a Safe Place to Learn?
+              </h2>
               <p className={styles.ctaText}>
                 Join thousands of families who trust Xogos to provide a secure,
                 educational gaming experience.

@@ -80,7 +80,10 @@ export function GameHeader({
             </div>
 
             <div className={styles.buttonGroup}>
-              <Link href="https://www.xogosgaming.com" className={styles.playButton}>
+              <Link
+                href="https://www.xogosgaming.com"
+                className={styles.playButton}
+              >
                 Play Now
               </Link>
             </div>

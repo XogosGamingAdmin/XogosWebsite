@@ -58,9 +58,9 @@ export default function BylawsPage() {
             <h2 className={styles.sectionTitle}>2. Board Composition</h2>
             <div className={styles.sectionContent}>
               <p>
-                The Board of Directors consists of <strong>seven members</strong>
-                , selected based on expertise, integrity, and commitment to our
-                mission.
+                The Board of Directors consists of{" "}
+                <strong>seven members</strong>, selected based on expertise,
+                integrity, and commitment to our mission.
               </p>
               <div className={styles.rolesList}>
                 <div className={styles.role}>
@@ -87,7 +87,8 @@ export default function BylawsPage() {
                 <div className={styles.role}>
                   <span className={styles.roleTitle}>Technology</span>
                   <span className={styles.roleDesc}>
-                    Manages technology and evergreen programs to fund scholarships
+                    Manages technology and evergreen programs to fund
+                    scholarships
                   </span>
                 </div>
                 <div className={styles.role}>
@@ -103,7 +104,9 @@ export default function BylawsPage() {
                   </span>
                 </div>
                 <div className={styles.role}>
-                  <span className={styles.roleTitle}>CEO (External Relations)</span>
+                  <span className={styles.roleTitle}>
+                    CEO (External Relations)
+                  </span>
                   <span className={styles.roleDesc}>
                     Day-to-day management and executing board strategy
                   </span>
@@ -286,15 +289,13 @@ export default function BylawsPage() {
                 local, state, federal, and international levels.
               </p>
               <div className={styles.highlight}>
-                <strong>Evergreen Funding Focus:</strong> Particular attention to
-                SEC, FinCEN, and international financial regulations governing
-                digital currencies.
+                <strong>Evergreen Funding Focus:</strong> Particular attention
+                to SEC, FinCEN, and international financial regulations
+                governing digital currencies.
               </div>
               <ul className={styles.list}>
                 <li>Regular compliance training for employees and board</li>
-                <li>
-                  Whistleblower protection for reporting non-compliance
-                </li>
+                <li>Whistleblower protection for reporting non-compliance</li>
                 <li>Periodic external compliance audits</li>
               </ul>
             </div>
@@ -315,9 +316,7 @@ export default function BylawsPage() {
                   Good faith requirement: Actions must be reasonably believed to
                   be in company&apos;s best interest
                 </li>
-                <li>
-                  Expenses may be advanced pending final disposition
-                </li>
+                <li>Expenses may be advanced pending final disposition</li>
                 <li>
                   Company may purchase liability insurance for directors and
                   officers

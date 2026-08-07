@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { Container } from "@/primitives/Container";
 import styles from "./page.module.css";
 
@@ -33,38 +33,77 @@ const skillCategories: SkillCategory[] = [
   {
     name: "Core Governance Skills",
     color: "#e62739",
-    skills: ["Strategic Planning", "Board Leadership", "Financial Oversight", "Risk Management", "Legal/Regulatory Compliance", "Technology Governance"],
+    skills: [
+      "Strategic Planning",
+      "Board Leadership",
+      "Financial Oversight",
+      "Risk Management",
+      "Legal/Regulatory Compliance",
+      "Technology Governance",
+    ],
   },
   {
     name: "Educational Content & Assessment",
     color: "#7928ca",
-    skills: ["K-12 Curriculum Standards", "Educational Game Design", "Learning Assessment Methods", "Education Technology Trends", "Accessibility in Education"],
+    skills: [
+      "K-12 Curriculum Standards",
+      "Educational Game Design",
+      "Learning Assessment Methods",
+      "Education Technology Trends",
+      "Accessibility in Education",
+    ],
   },
   {
     name: "Cryptocurrency & Blockchain",
     color: "#2dd4bf",
-    skills: ["Blockchain Fundamentals", "Cryptocurrency Operations", "Token Economics", "Crypto Regulatory Landscape", "Digital Asset Security"],
+    skills: [
+      "Blockchain Fundamentals",
+      "Cryptocurrency Operations",
+      "Token Economics",
+      "Crypto Regulatory Landscape",
+      "Digital Asset Security",
+    ],
   },
   {
     name: "Youth Protection & Data Privacy",
     color: "#f59e0b",
-    skills: ["Student Online Protection", "Student Data Privacy", "Responsible Gaming Practices", "Identity Verification", "Digital Citizenship"],
+    skills: [
+      "Student Online Protection",
+      "Student Data Privacy",
+      "Responsible Gaming Practices",
+      "Identity Verification",
+      "Digital Citizenship",
+    ],
   },
   {
     name: "Scholarship & Financial Education",
     color: "#8b5cf6",
-    skills: ["Scholarship Administration", "Higher Education Financing", "Financial Literacy Education", "Incentive Program Design", "Impact Measurement"],
+    skills: [
+      "Scholarship Administration",
+      "Higher Education Financing",
+      "Financial Literacy Education",
+      "Incentive Program Design",
+      "Impact Measurement",
+    ],
   },
   {
     name: "Marketing & Communications",
     color: "#3b82f6",
-    skills: ["Brand Development", "Social Media Marketing", "Public Relations", "Content Strategy", "Marketing Analytics"],
+    skills: [
+      "Brand Development",
+      "Social Media Marketing",
+      "Public Relations",
+      "Content Strategy",
+      "Marketing Analytics",
+    ],
   },
 ];
 
 export default function SkillsResultsPage() {
   const [allSkills, setAllSkills] = useState<SkillData[]>([]);
-  const [membersWithSkills, setMembersWithSkills] = useState<MemberWithSkills[]>([]);
+  const [membersWithSkills, setMembersWithSkills] = useState<
+    MemberWithSkills[]
+  >([]);
   const [loading, setLoading] = useState(true);
   const [selectedMember, setSelectedMember] = useState<string | null>(null);
 
@@ -89,23 +128,35 @@ export default function SkillsResultsPage() {
 
   const getRatingColor = (rating: number): string => {
     switch (rating) {
-      case 5: return "#16a34a";
-      case 4: return "#22c55e";
-      case 3: return "#eab308";
-      case 2: return "#f97316";
-      case 1: return "#ef4444";
-      default: return "#374151";
+      case 5:
+        return "#16a34a";
+      case 4:
+        return "#22c55e";
+      case 3:
+        return "#eab308";
+      case 2:
+        return "#f97316";
+      case 1:
+        return "#ef4444";
+      default:
+        return "#374151";
     }
   };
 
   const getRatingText = (rating: number): string => {
     switch (rating) {
-      case 5: return "Expert";
-      case 4: return "Proficient";
-      case 3: return "Intermediate";
-      case 2: return "Basic";
-      case 1: return "Novice";
-      default: return "N/A";
+      case 5:
+        return "Expert";
+      case 4:
+        return "Proficient";
+      case 3:
+        return "Intermediate";
+      case 2:
+        return "Basic";
+      case 1:
+        return "Novice";
+      default:
+        return "N/A";
     }
   };
 
@@ -113,7 +164,10 @@ export default function SkillsResultsPage() {
     return allSkills.filter((s) => s.user_email === memberEmail);
   };
 
-  const getMemberSkillLevel = (memberEmail: string, skillName: string): number => {
+  const getMemberSkillLevel = (
+    memberEmail: string,
+    skillName: string
+  ): number => {
     const skill = allSkills.find(
       (s) => s.user_email === memberEmail && s.skill_name === skillName
     );
@@ -139,7 +193,12 @@ export default function SkillsResultsPage() {
   };
 
   const getGapAnalysis = () => {
-    const gaps: { skill: string; category: string; avg: number; gap: string }[] = [];
+    const gaps: {
+      skill: string;
+      category: string;
+      avg: number;
+      gap: string;
+    }[] = [];
 
     skillCategories.forEach((category) => {
       category.skills.forEach((skill) => {
@@ -149,7 +208,12 @@ export default function SkillsResultsPage() {
             skill,
             category: category.name,
             avg,
-            gap: avg === 0 ? "No coverage" : avg < 2 ? "Critical gap" : "Needs development",
+            gap:
+              avg === 0
+                ? "No coverage"
+                : avg < 2
+                  ? "Critical gap"
+                  : "Needs development",
           });
         }
       });
@@ -209,7 +273,17 @@ export default function SkillsResultsPage() {
             <div className={styles.statLabel}>Total Ratings</div>
           </div>
           <div className={styles.statCard}>
-            <div className={styles.statValue} style={{ color: gaps.length > 5 ? "#ef4444" : gaps.length > 0 ? "#f59e0b" : "#22c55e" }}>
+            <div
+              className={styles.statValue}
+              style={{
+                color:
+                  gaps.length > 5
+                    ? "#ef4444"
+                    : gaps.length > 0
+                      ? "#f59e0b"
+                      : "#22c55e",
+              }}
+            >
               {gaps.length}
             </div>
             <div className={styles.statLabel}>Skill Gaps</div>
@@ -227,14 +301,26 @@ export default function SkillsResultsPage() {
           <section className={styles.section}>
             <h2 className={styles.sectionTitle}>⚠️ Board Skill Gaps</h2>
             <p className={styles.sectionDescription}>
-              Areas where the board lacks sufficient expertise (average below 3.0)
+              Areas where the board lacks sufficient expertise (average below
+              3.0)
             </p>
             <div className={styles.gapsGrid}>
               {gaps.map((gap, idx) => (
-                <div key={idx} className={styles.gapCard} data-severity={gap.avg === 0 ? "critical" : gap.avg < 2 ? "high" : "medium"}>
+                <div
+                  key={idx}
+                  className={styles.gapCard}
+                  data-severity={
+                    gap.avg === 0 ? "critical" : gap.avg < 2 ? "high" : "medium"
+                  }
+                >
                   <div className={styles.gapHeader}>
                     <span className={styles.gapSkill}>{gap.skill}</span>
-                    <span className={styles.gapBadge} style={{ backgroundColor: getRatingColor(Math.round(gap.avg)) }}>
+                    <span
+                      className={styles.gapBadge}
+                      style={{
+                        backgroundColor: getRatingColor(Math.round(gap.avg)),
+                      }}
+                    >
                       {gap.avg > 0 ? gap.avg.toFixed(1) : "0"}
                     </span>
                   </div>
@@ -260,13 +346,21 @@ export default function SkillsResultsPage() {
 
               return (
                 <div key={category.name} className={styles.collectiveCard}>
-                  <div className={styles.collectiveHeader} style={{ borderColor: category.color }}>
-                    <h3 className={styles.collectiveCategory} style={{ color: category.color }}>
+                  <div
+                    className={styles.collectiveHeader}
+                    style={{ borderColor: category.color }}
+                  >
+                    <h3
+                      className={styles.collectiveCategory}
+                      style={{ color: category.color }}
+                    >
                       {category.name}
                     </h3>
                     <div
                       className={styles.collectiveAvg}
-                      style={{ backgroundColor: getRatingColor(Math.round(catAvg)) }}
+                      style={{
+                        backgroundColor: getRatingColor(Math.round(catAvg)),
+                      }}
                     >
                       {catAvg > 0 ? catAvg.toFixed(1) : "—"}
                     </div>
@@ -276,13 +370,17 @@ export default function SkillsResultsPage() {
                       const avg = getSkillAverage(skill);
                       return (
                         <div key={skill} className={styles.collectiveSkill}>
-                          <span className={styles.collectiveSkillName}>{skill}</span>
+                          <span className={styles.collectiveSkillName}>
+                            {skill}
+                          </span>
                           <div className={styles.collectiveBar}>
                             <div
                               className={styles.collectiveBarFill}
                               style={{
                                 width: `${(avg / 5) * 100}%`,
-                                backgroundColor: getRatingColor(Math.round(avg)),
+                                backgroundColor: getRatingColor(
+                                  Math.round(avg)
+                                ),
                               }}
                             ></div>
                           </div>
@@ -301,7 +399,9 @@ export default function SkillsResultsPage() {
 
         {/* Individual Member Results */}
         <section className={styles.section}>
-          <h2 className={styles.sectionTitle}>👤 Individual Board Member Results</h2>
+          <h2 className={styles.sectionTitle}>
+            👤 Individual Board Member Results
+          </h2>
           <p className={styles.sectionDescription}>
             Click on a board member to view their detailed assessment
           </p>
@@ -313,15 +413,29 @@ export default function SkillsResultsPage() {
                 <button
                   key={member.user_email}
                   className={`${styles.memberTab} ${selectedMember === member.user_email ? styles.active : ""}`}
-                  onClick={() => setSelectedMember(selectedMember === member.user_email ? null : member.user_email)}
+                  onClick={() =>
+                    setSelectedMember(
+                      selectedMember === member.user_email
+                        ? null
+                        : member.user_email
+                    )
+                  }
                 >
                   {member.user_avatar && (
-                    <img src={member.user_avatar} alt={member.user_name} className={styles.memberAvatar} />
+                    <img
+                      src={member.user_avatar}
+                      alt={member.user_name}
+                      className={styles.memberAvatar}
+                    />
                   )}
                   <div className={styles.memberTabInfo}>
-                    <span className={styles.memberName}>{member.user_name}</span>
+                    <span className={styles.memberName}>
+                      {member.user_name}
+                    </span>
                     <span className={styles.memberSkillCount}>
-                      {skillCount > 0 ? `${skillCount} skills rated` : "Not assessed"}
+                      {skillCount > 0
+                        ? `${skillCount} skills rated`
+                        : "Not assessed"}
                     </span>
                   </div>
                 </button>
@@ -332,7 +446,9 @@ export default function SkillsResultsPage() {
           {selectedMember && (
             <div className={styles.memberDetail}>
               {(() => {
-                const member = membersWithSkills.find((m) => m.user_email === selectedMember);
+                const member = membersWithSkills.find(
+                  (m) => m.user_email === selectedMember
+                );
                 const memberSkills = getMemberSkills(selectedMember);
 
                 if (!member) return null;
@@ -341,14 +457,26 @@ export default function SkillsResultsPage() {
                   <>
                     <div className={styles.memberDetailHeader}>
                       {member.user_avatar && (
-                        <img src={member.user_avatar} alt={member.user_name} className={styles.memberDetailAvatar} />
+                        <img
+                          src={member.user_avatar}
+                          alt={member.user_name}
+                          className={styles.memberDetailAvatar}
+                        />
                       )}
                       <div className={styles.memberDetailInfo}>
-                        <h3 className={styles.memberDetailName}>{member.user_name}</h3>
+                        <h3 className={styles.memberDetailName}>
+                          {member.user_name}
+                        </h3>
                         <p className={styles.memberDetailMeta}>
                           {memberSkills.length} skills assessed
                           {member.last_updated && (
-                            <> • Last updated: {new Date(member.last_updated).toLocaleDateString()}</>
+                            <>
+                              {" "}
+                              • Last updated:{" "}
+                              {new Date(
+                                member.last_updated
+                              ).toLocaleDateString()}
+                            </>
                           )}
                         </p>
                       </div>
@@ -356,7 +484,8 @@ export default function SkillsResultsPage() {
 
                     {memberSkills.length === 0 ? (
                       <div className={styles.noSkills}>
-                        This board member has not completed their skills assessment yet.
+                        This board member has not completed their skills
+                        assessment yet.
                       </div>
                     ) : (
                       <div className={styles.memberSkillsGrid}>
@@ -367,8 +496,14 @@ export default function SkillsResultsPage() {
                           if (categorySkills.length === 0) return null;
 
                           return (
-                            <div key={category.name} className={styles.memberCategoryCard}>
-                              <h4 className={styles.memberCategoryTitle} style={{ color: category.color }}>
+                            <div
+                              key={category.name}
+                              className={styles.memberCategoryCard}
+                            >
+                              <h4
+                                className={styles.memberCategoryTitle}
+                                style={{ color: category.color }}
+                              >
                                 {category.name}
                               </h4>
                               <table className={styles.skillsTable}>
@@ -386,12 +521,18 @@ export default function SkillsResultsPage() {
                                       <td>
                                         <span
                                           className={styles.levelBadge}
-                                          style={{ backgroundColor: getRatingColor(skill.proficiency_level) }}
+                                          style={{
+                                            backgroundColor: getRatingColor(
+                                              skill.proficiency_level
+                                            ),
+                                          }}
                                         >
                                           {skill.proficiency_level}
                                         </span>
                                       </td>
-                                      <td>{getRatingText(skill.proficiency_level)}</td>
+                                      <td>
+                                        {getRatingText(skill.proficiency_level)}
+                                      </td>
                                     </tr>
                                   ))}
                                 </tbody>

@@ -32,7 +32,9 @@ export default function BoardroomLayout({
             color: "#e5e5e5",
           }}
         >
-          <p>{status === "loading" ? "Loading..." : "Redirecting to sign in..."}</p>
+          <p>
+            {status === "loading" ? "Loading..." : "Redirecting to sign in..."}
+          </p>
         </div>
       </MarketingLayout>
     );

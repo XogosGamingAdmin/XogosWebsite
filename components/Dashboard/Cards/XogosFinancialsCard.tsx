@@ -87,7 +87,9 @@ export function XogosFinancialsCard() {
                     <YAxis
                       tick={{ fontSize: 11, fill: "#999" }}
                       stroke="#555"
-                      tickFormatter={(value) => `$${(value / 1000).toFixed(0)}k`}
+                      tickFormatter={(value) =>
+                        `$${(value / 1000).toFixed(0)}k`
+                      }
                     />
                     <Tooltip
                       contentStyle={{
