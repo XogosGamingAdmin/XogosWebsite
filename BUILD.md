@@ -31,8 +31,8 @@
 ### Key URLs:
 | URL | Description | Access |
 |-----|-------------|--------|
-| `/` | Homepage with arcade theme | Public |
-| `/games` | Games showcase (10 games) | Public |
+| `/` | Homepage — "Arcade 2.0 Supercharged" (audience switcher, game cabinet, subject cartridges, quest log, power-up meter, pricing) | Public |
+| `/games` | Games showcase (16 games) | Public |
 | `/blog` | Blog with 700+ posts | Public |
 | `/board` | Board room visualization (public dashboard) | Public |
 | `/boardroom` | Board member menu (6 cards) | Authenticated |
@@ -108,8 +108,10 @@ XogosWebsite/
 │   ├── board/                    # Public board pages
 │   ├── blog/                     # Blog pages
 │   ├── dashboard/                # Board member dashboard
+│   ├── designs/                  # Homepage design lab (UNTRACKED, local only)
 │   ├── finance/                  # Financial dashboard
 │   ├── games/                    # Games showcase
+│   ├── page.tsx                  # Homepage - "Arcade 2.0 Supercharged"
 │   └── ...                       # Other public pages
 ├── components/                   # React components
 │   ├── admin/                    # Admin components (ImageUpload)
@@ -319,6 +321,8 @@ Redirect to /dashboard
 - CSS Modules (`.module.css` files)
 - Dark theme with gradients (`#0d0d1a`, `#1a1a2e`)
 - Accent colors: Red (`#e62739`), Purple (`#7928ca`), Gold (`#e6bb84`)
+- The homepage maps these to the Play/Learn/Earn theme: red = PLAY, purple = LEARN, gold = EARN
+- Animation-heavy sections include `@media (prefers-reduced-motion: reduce)` fallbacks — keep that up when adding new ones
 
 ---
 
@@ -543,6 +547,39 @@ Financial Dashboard reflects changes
 
 **Important:** Keep Liveblocks at version 2.24.4. Version 3.x has initialization bugs.
 
+### 8. Homepage — "Arcade 2.0 Supercharged"
+
+**Location:** `/` — `app/page.tsx` + `app/page.module.css`
+
+A single `"use client"` component (~2,200 lines) aimed at homeschool families
+and educators, keeping the Play/Learn/Earn theme. Shipped August 2026,
+replacing the Game Boy arcade homepage.
+
+**How it is organized:** the page defines each section as an element in a
+`Record<SectionKey, React.ReactElement>`, then renders them in the order given
+by `sectionOrder: Record<Audience, SectionKey[]>`. Changing the selected
+audience re-messages *and* reorders the page.
+
+**Key mechanics:**
+- `Audience = "student" | "parent" | "educator"` — defaults to `"parent"`
+- `cartridgeGames(subject)` — builds each Subject Cartridge and appends
+  Lightning Round to all six (cross-subject quiz). "N GAMES LOADED" counts are
+  computed from `games.length`; **do not hardcode them**
+- `METER_MAX` — derived from the daily-quest checklist total, so adding a quest
+  automatically rebalances the Scholarship Power-Up Meter
+- `CtaLink.external` — renders `<a target="_blank">` for outbound links
+  (myXogos portal, Historical Conquest signup) vs Next `<Link>` for internal
+- Achievements, confetti, and screen shake are driven by `useEffect` watching
+  derived coin totals
+
+**Data it depends on:**
+- `/api/public-stats` → the Players Learning stat (falls back to "500+")
+- Everything else is hardcoded in the file (games, pricing, schedules, reviews)
+
+**When editing:** the games array here is separate from the one in
+`app/games/page.tsx` — adding a game means updating both, or `/games` and the
+homepage cabinet will disagree.
+
 ---
 
 ## Development Workflow
@@ -556,20 +593,39 @@ npm install
 # Start dev server
 npm run dev
 
+# Or on another port if 3000 is taken
+npm run dev -- -p 4321
+
 # Open browser
 # http://localhost:3000
 ```
+
+**Do not run `npm run build` / `npx next build` while the dev server is
+running.** The build overwrites `.next`, and the running dev server then serves
+404s for its JS chunks — pages render but never hydrate, which looks like a
+mysterious CSS or React bug. Stop the dev server first, and if it happens,
+`rm -rf .next` and restart.
 
 ### Making Changes
 
 1. Create feature branch (optional)
 2. Make code changes
 3. Run `npm run lint -- --fix` to fix formatting
-4. Test locally
-5. Commit with descriptive message
-6. Push to `main` branch
-7. Amplify auto-deploys
-8. Verify on production
+   - This reformats the **whole repo**, not just your files. If it touches
+     files unrelated to your change, commit that formatting separately so your
+     feature diff stays reviewable.
+4. Run `npm run typecheck` — must be clean
+5. Test locally
+6. Stop the dev server, then run `npx next build` to confirm it compiles
+7. Commit with descriptive message
+8. Push to `main` branch
+9. Amplify auto-deploys
+10. Verify on production
+
+**Adding images:** put files in `public/images/`, reference them with
+`next/image`, and confirm they are tracked by git before pushing
+(`git status`). Untracked images resolve fine locally and 404 in production —
+a fast way to ship a page full of broken images.
 
 ### Git Commit Convention
 
@@ -645,93 +701,164 @@ export const config = {
 
 ## Session History
 
-### Latest Session: August 5, 2026
+### Latest Session: August 5-7, 2026 — New Homepage Shipped
 
-#### Work Completed
+#### TL;DR for the next developer
 
-**Homepage Design Lab — 4 homeschooler-focused homepage concepts (localhost preview only, not yet live)**
+The homepage was completely replaced. `app/page.tsx` is no longer the Game Boy
+arcade page — it is now **"Arcade 2.0 Supercharged"**, an audience-aware page
+built for homeschool families and educators. It is **live in production**
+(pushed to `main`, commit `44c4f91`).
 
-Created a design-preview area to test homepage redesigns targeting homeschool families and educators, keeping the Play, Learn, Earn theme. Preview at `http://localhost:3000/designs` (gallery page linking to all four):
+Three things that will surprise you if nobody tells you:
 
-1. **`/designs/design1` — "Homeschool Command Center"** (parent-first, warm cream/navy palette): Build-Your-Homeschool-Day planner widget, subject-filterable curriculum map of games, scholarship coin calculator with animated coin jar, safety trust strip, parent testimonials.
-2. **`/designs/design2` — "Adventure Quest Map"** (kid-first, twilight storybook theme): scroll-activated quest path (Play → Learn → Earn → Scholarship stops light up), hidden clickable coin hunt with pouch counter and Quest Complete toast, subject islands revealing games, scroll-progress XP bar, parchment Parents' Guide.
-3. **`/designs/design3` — "The Homeschool Notebook"** (scrapbook/planner aesthetic): flip-card subject flashcards, Mon–Fri interactive lesson planner, sticker-chart reward checklist that drops coins into a jar, polaroid elective cards, washi tape/sticky-note styling.
-4. **`/designs/design4` — "Arcade 2.0: Choose Your Player"** (evolution of current arcade brand): hero audience switcher (Student / Homeschool Parent / Educator) that re-messages the page, scholarship power-up meter, neon subject-filter game grid with video modals, count-up stats.
+1. **`app/designs/` is untracked and local-only.** It holds the 5 design
+   concepts and an archive of the old homepage. It was deliberately NOT
+   committed, so a fresh clone will not have it — but a working copy from this
+   session will show it as untracked. Do not "clean it up" assuming it is
+   stale; it is the design history. See *Design Lab* below.
+2. **`app/designs/design5/` is a near-duplicate of `app/page.tsx`.** Design 5
+   became the homepage. The two were kept in sync manually. If you edit the
+   homepage, either re-sync design5 or delete the design lab.
+3. **Never run `npx next build` while `next dev` is running** — see *Gotchas*.
 
-#### Files Created
-- `app/designs/page.tsx` + `page.module.css` — design gallery index
-- `app/designs/design1..design4/page.tsx` + `page.module.css` — the four variants
+#### What is live now
 
-#### Architecture Notes
-- All variants are standalone `"use client"` pages wrapped in `MarketingLayout`, with hardcoded stats (no DB/API calls) and no `PageTracker`, so they are safe to preview and won't log analytics.
-- All reuse existing images in `/public/images` and the games data from `app/page.tsx`.
-- `npm run typecheck` passes; all routes verified compiling on the dev server.
+Pushed to `main` (auto-deploys to https://www.xogosgaming.com via Amplify):
 
-**Design 5 added — "Arcade 2.0 Supercharged" (`/designs/design5`), the frontrunner:**
-Zack liked Design 4 (especially the "Choose Your Own Adventure" player switcher) and was also interested in Design 3. Design 5 = Design 4's full structure (audience switcher, subject-filter game grid with video modals, scholarship power-up meter, count-up stats) plus Design 3's homeschool interactives restyled to the arcade theme (Weekly Quest Log Mon–Fri lesson planner, flip-card Subject Cartridges, daily quest checklist feeding coins into the meter, neon parent testimonial cards), plus new excitement: Achievement Unlocked toasts, confetti bursts, INSERT COIN hero prompt, scrolling event ticker marquee.
+| Commit | What |
+|--------|------|
+| `587b92a` | Prettier formatting only — 26 files reformatted by `npm run lint`. Line wrapping, no behavior change. Isolated so it does not muddy the feature diff. |
+| `44c4f91` | The new homepage, `/games` additions, social share image, 10 new images. |
 
-- Design 5 includes a "SELECT YOUR PASS" pricing section: **$7/month, $70/year (2 months free), $150 lifetime (up to 19 years of age)**; CTAs link to https://www.myXogos.com
-- Design 5 game cabinet expanded to 12 games (3 rows of 4): added **Body Battle**, **TimeQuest**, and new game **Splunker** (2nd card, first row; image `public/images/games/Splunker.png` copied from `/extra`; video uSYO-wM6t90). Science cartridge now holds Bug and Seek + Splunker + Body Battle; History cartridge gained TimeQuest.
-- **Historical Conquest tutorial video added** (OUg4Bu6AbnI) in design5, `app/games/page.tsx`, and `app/page.tsx` — production files changed, goes live on next push.
-- Dev preview runs on port **4321** (port 3000 is reserved for other work): `npm run dev -- -p 4321`
+#### The new homepage (`app/page.tsx`, `app/page.module.css`)
 
-**DESIGN 5 IS NOW THE HOMEPAGE (August 6, 2026)**
+A single large `"use client"` component (~2,200 lines). Structure:
 
-Zack selected Design 5. It was promoted to `app/page.tsx` + `app/page.module.css` (design5 files copied over), with homepage-specific changes:
-- Re-added `<PageTracker pagePath="/" pageName="Homepage" />` (design previews deliberately omit it)
-- Removed the "Design 5 · All Designs" corner badge
-- Restored the dynamic **Players Learning** stat from `/api/public-stats` (Admin → Statistics → Accounts), falling back to "500+" if the API returns nothing
-- Component renamed `Design5Page` → `HomePage`
-- Educational Games stat set to **18** (was 13)
-- Pricing: Yearly and Lifetime CTAs now link to `https://www.historicalconquest.com/xogos-gaming`; Monthly still links to `https://www.myXogos.com`
+- **"Choose Your Player" audience switcher** — `Audience = "student" | "parent" | "educator"`, defaults to `"parent"`. Selecting a player swaps the hero subtitle, CTAs, and a benefits panel, and **reorders the page sections** via `sectionOrder: Record<Audience, SectionKey[]>`. Sections are built as elements in a `Record<SectionKey, React.ReactElement>` and rendered in that order.
+- **The Game Cabinet** — 12 games in a fixed 4-column grid (3 rows of 4) with subject filter chips and a modal carrying a youtube-nocookie embed. Its `allGames` array is local to this file and is a subset of the 16 titles on `/games` — the two lists are maintained separately.
+- **Subject Cartridges** — six 3D flip cards, one per subject. Built by mapping `cartridgeDefs` through `cartridgeGames()`, which appends **Lightning Round to every cartridge** (it is a cross-subject quiz; the History cartridge skips the duplicate). The "N GAMES LOADED" hints are computed from `games.length` — do not hardcode them again, they drifted badly when they were literals.
+- **Weekly Quest Log** — Mon–Fri tabs showing sample homeschool day schedules with Xogos rows highlighted.
+- **Scholarship Power-Up Meter** — a daily quest checklist; checking items animates coins into a jar, fills a meter (`METER_MAX` is derived from the checklist total), and drives a rank from ROOKIE to SCHOLAR. Completing everything triggers confetti, a screen shake, and an achievement.
+- **Pricing — "SELECT YOUR PASS"** — $7/month, $70/year, $150 lifetime.
+- **Achievements** — six unlockable achievements with slide-in toasts and a trophy HUD; plus an event ticker marquee and count-up stat cards.
 
-The previous homepage is archived and viewable at **`/designs/original`** (PageTracker removed so it doesn't log visits as "/"). It also remains in git history. `/designs/design5` still exists as a duplicate of the live homepage.
+Homepage-only details that differ from the design5 preview:
+- `<PageTracker pagePath="/" pageName="Homepage" />` is present (previews omit it so they do not pollute analytics).
+- **Players Learning** stat is fetched from `/api/public-stats` (fed by Admin → Statistics → Accounts) and falls back to "500+" when the API returns nothing.
+- No "All Designs" corner badge.
 
-**Splunker added to `/games`** (`app/games/page.tsx`) so "View All Games" matches the homepage cabinet.
+#### Subscription links (important — two different destinations)
 
-Verified: `npm run typecheck` clean, `npx next build` exits 0, all routes 200. The only ESLint error in the repo is pre-existing in `lib/blog/getPosts.ts`, and `next.config.js` sets `eslint.ignoreDuringBuilds: true`, so it does not block deploys.
+| Button | Destination |
+|--------|-------------|
+| Start Monthly | `https://www.myXogos.com` |
+| Go Yearly | `https://www.historicalconquest.com/xogos-gaming` |
+| Unlock Lifetime | `https://www.historicalconquest.com/xogos-gaming` |
+| "Start Playing" CTAs (hero + final) | `https://www.myXogos.com` |
 
-**AI-generated art added to the homepage (August 6, 2026)**
+External links render as `<a target="_blank" rel="noopener noreferrer">`; the
+`CtaLink` type carries an `external?: boolean` flag so the hero can render a
+Next `<Link>` for internal destinations and an `<a>` for outbound ones.
 
-Nine generated images were copied from `/extra` into `public/images/` and wired into the homepage:
+The Lifetime tier is badged **"2026 LAUNCH SPECIAL"** and carries a note that it
+is available in 2026 only, as a promotion for the platform's opening year.
+Membership runs through age 19.
+
+#### Content and data changes
+
+- **Splunker** — new game added to the homepage cabinet and to `/games`. Image `public/images/games/Splunker.png`, video `uSYO-wM6t90`.
+- **Historical Conquest** — tutorial video `OUg4Bu6AbnI` added (it previously had none) in both `app/page.tsx` and `app/games/page.tsx`.
+- **Body Battle** and **TimeQuest** added to the homepage cabinet (both already existed on `/games`).
+- Stats strip: Educational Games set to **18**.
+
+#### Generated art (10 new images)
+
 | Image | Path | Used for |
 |-------|------|----------|
-| Player portraits (3) | `public/images/players/player-{student,parent,educator}.png` | "Choose Your Player" cards — replaced the 🎮/🏠/🏫 emoji with circular pixel-art portraits |
-| Review avatars (3) | `public/images/players/review-{1,2,3}.png` | Player Reviews cards (review-2→Sarah, review-3→Marcus, review-1→Denise) |
-| iPlay coin mascot | `public/images/iplay-coin.png` | Hero, in a circular frame with a gentle bob animation |
-| Homeschool family photo | `public/images/homeschool-family.png` | New two-column banner in "Built for Homeschool Families", with audience-specific copy + a safety stamp |
-| Social share image | `public/images/og-homepage.png` | Replaced the bare logo in `app/layout.tsx` openGraph + twitter metadata |
+| Player portraits (3) | `public/images/players/player-{student,parent,educator}.png` | "Choose Your Player" cards, circular pixel-art portraits (replaced 🎮/🏠/🏫 emoji) |
+| Review avatars (3) | `public/images/players/review-{1,2,3}.png` | Player Reviews (review-2→Sarah, review-3→Marcus, review-1→Denise) |
+| iPlay coin mascot | `public/images/iplay-coin.png` | Hero, circular frame with a bob animation |
+| Homeschool family photo | `public/images/homeschool-family.png` | "Built for Homeschool Families" banner |
+| Social share image | `public/images/og-homepage.png` | `app/layout.tsx` openGraph + twitter metadata |
+| Splunker key art | `public/images/games/Splunker.png` | Game cabinet + `/games` |
 
-New CSS classes appended to `app/page.module.css`: `.playerPortrait`, `.coinMascot`, `.familyBanner`, `.familyPhotoWrap`, `.familyCopy`, `.familyStamp`, `.reviewAvatar` (+ responsive and reduced-motion variants).
+Supporting CSS appended to `app/page.module.css`: `.playerPortrait`,
+`.coinMascot`, `.familyBanner`, `.familyPhotoWrap`, `.familyCopy`,
+`.familyStamp`, `.reviewAvatar`, `.pricingPromoNote` (+ responsive and
+`prefers-reduced-motion` variants).
 
-`app/designs/design5/` was re-synced from the homepage so the preview does not drift (it keeps the design badge and omits PageTracker).
+Known limitations of the art:
+- **The OG image is 1024×1024, not 1200×630** — social platforms will crop or letterbox it. Regenerating at 1200×630 is the highest-value fix.
+- The coin mascot has a **baked-in gold background** (not transparent), so it is shown inside a circular frame. A transparent version would allow free-floating placement.
+- Source PNGs are 0.5–2.4 MB. `next/image` resizes on delivery (avatars serve at 64px), so page weight is fine, but the repo carries full-size files. `sharp` is not installed, so there is no local downscaling step.
 
-Notes / follow-ups on the art:
-- **The OG image is 1024×1024, not 1200×630.** Facebook/Twitter will crop or letterbox a square. Regenerating at 1200×630 would render better in social previews.
-- The coin mascot has a baked-in gold background (not transparent), so it is displayed inside a circular frame — which reads as an intentional coin disc. A transparent-background version would allow free-floating placement.
-- Source PNGs are 0.5–1.7 MB each; `next/image` resizes them on delivery (review avatars serve at 64px), so page weight is fine, but the repo carries the full-size files.
+#### Design Lab (`app/designs/`) — UNTRACKED, local only
 
-**Homepage refinements (August 7, 2026)**
-- **Lightning Round now loads on all 6 Subject Cartridges.** It is a cross-subject quiz game, so `cartridgeGames()` appends it to every cartridge (skipping the duplicate on History, its own subject). The cartridges array is now built by mapping `cartridgeDefs`, and the "N GAMES LOADED" hints are **computed from `games.length`** instead of hardcoded, so counts can no longer drift. Current counts: Math 3, History 4, Science 4, Literature 2, STEM 2, Financial Literacy 2.
-- **Lifetime membership marked as a 2026-only promo.** The badge changed from "BEST VALUE" to **"2026 LAUNCH SPECIAL"**, and a dashed-gold note was added inside the card: "Available in 2026 only — a special promotion celebrating the opening of Xogos Gaming this year." New CSS: `.pricingPromoNote`, `.pricingPromoIcon`.
-- **"Start Playing" buttons now go to the play portal** `https://www.myXogos.com` (new tab, `rel="noopener noreferrer"`) instead of `/games` — both the Student-view hero CTA and the final "READY PLAYER ONE?" CTA. `CtaLink` gained an `external?: boolean` flag and the hero renders an `<a>` for external links and a Next `<Link>` for internal ones. Matches the existing convention on `app/games/page.tsx`.
+Five homepage concepts plus an archive of the previous homepage, each a
+standalone `"use client"` page in `MarketingLayout` with hardcoded stats, no
+DB/API calls, and no `PageTracker`. Gallery index at `/designs`.
 
-**Gotcha learned this session:** running `npx next build` while `next dev` is running corrupts the dev server's `.next` cache — the browser then 404s on `_next/static/chunks/*`, React never hydrates, and the hero stays invisible at `opacity: 0` (it waits on `isLoaded`). Fix: stop dev, `rm -rf .next`, restart. Always stop the dev server before building.
+| Route | Concept |
+|-------|---------|
+| `/designs/original` | The previous Game Boy homepage, archived for comparison |
+| `/designs/design1` | "Homeschool Command Center" — warm cream/navy, day planner, curriculum map, scholarship calculator |
+| `/designs/design2` | "Adventure Quest Map" — twilight quest path, hidden coin hunt, subject islands |
+| `/designs/design3` | "The Homeschool Notebook" — scrapbook/washi tape, flip flashcards, lesson planner, sticker chart |
+| `/designs/design4` | "Arcade 2.0: Choose Your Player" — the basis for the final design |
+| `/designs/design5` | "Arcade 2.0 Supercharged" — what became the homepage |
+
+Deliberately not committed: pushing it would publish six extra pages
+(including rejected concepts) on the production marketing site where they
+could be indexed. To ship it anyway, `git add app/designs/` — it builds clean.
+
+#### Verification performed
+
+- `npm run typecheck` — clean.
+- `npx next build` — exits 0 with the full site (443 static pages).
+- Browser-verified with Puppeteer (project devDependency): hero hydration, all six cartridges flipped and inspected, CTA destinations dumped per audience, pricing and reviews screenshotted.
+- Only ESLint error in the repo is pre-existing in `lib/blog/getPosts.ts`; `next.config.js` sets `eslint.ignoreDuringBuilds: true`, so it does not block deploys.
+
+#### Gotchas learned this session
+
+- **Never run `npx next build` while `next dev` is running.** It overwrites the dev server's `.next`, the browser then 404s on `_next/static/chunks/*`, React never hydrates, and the hero renders invisible (it sits at `opacity: 0` waiting on `isLoaded`). It looks exactly like a CSS bug and is not one. Fix: stop dev, `rm -rf .next`, restart.
+- Dev preview ran on **port 4321** this session (`npm run dev -- -p 4321`); port 3000 was in use.
+- `/api/track-visit` and `/api/public-stats` return 500 locally without database credentials. Expected in dev — they work in production.
+- The `extra/` folder is a local scratch area for source images. It is untracked by convention and should stay that way; copy what you need into `public/images/`.
 
 #### Xogos YouTube channel reference (verified Aug 6, 2026)
+
 Channel: **Xogos Educational Gaming Platform** — `https://www.youtube.com/channel/UCzT0I4sluqM3Eor8WE7vfag`
-Authoritative video list via YouTube's own RSS feed: `https://www.youtube.com/feeds/videos.xml?channel_id=UCzT0I4sluqM3Eor8WE7vfag`
-(Use `https://www.youtube.com/oembed?url=...&format=json` to verify any video ID before embedding — a wrong ID renders a dead player.)
+Authoritative video list via YouTube's own RSS feed:
+`https://www.youtube.com/feeds/videos.xml?channel_id=UCzT0I4sluqM3Eor8WE7vfag`
 
-Recent promo videos NOT yet used on the site include: Classics Games `SJ2eKK0gE-A`, Life of a City `6cwoINDCuN4`, Debate Arena `klRAotCaK9M`, Turbo Type `vtS56-tjnO0`, Xogos Banking/Scholarships `-pYdT1wYXSg`, Time Quest `CoGNW2n37qg`, Body Battle `rYno4aLSEVw`, Medical Diagnosis `RuGAsyLPpJE`, Monster Math `rgP4ryHnZgY`, Bug and Seek `tH1npwYQkUM`, Totally Medieval `KM30p99cjPk`, Lightning Round `0krDj6C9du0`, Exploration Library `Gzv3I_oA33Y`.
+**Verify every video ID before embedding** with
+`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=<ID>&format=json`
+— it returns the real title and channel, and a wrong ID renders a dead player.
+(Channel pages are JavaScript-rendered and cannot be scraped directly; use the
+RSS feed. Do not route through third-party reader proxies.)
 
-#### Pending
-- **Nothing is committed or pushed yet** — the new homepage is local only. Push to `main` triggers the Amplify deploy.
-- Games still without a tutorial video on `/games`: Debt-Free Millionaire, iServ Volunteer, Shakespeare's Conspiracy, TimeQuest (candidate IDs above).
-- No video of a parent + student playing on a laptop was found on the channel — would need to be filmed or licensed as stock.
-- `/games` lists 16 titles while the homepage stat claims 18 Educational Games; channel videos suggest Classics, Life of a City, Debate Arena, and Turbo Type exist but are not yet on the site — adding them would reconcile the count.
-- Zack can generate custom images (player-card avatars for Student/Parent/Educator, mascot art) to slot into the homepage.
-- The `/designs` routes are public if pushed — remove or gate them when no longer needed.
+Verified video IDs not yet used on the site: Classics Games `SJ2eKK0gE-A`,
+Life of a City `6cwoINDCuN4`, Debate Arena `klRAotCaK9M`, Turbo Type
+`vtS56-tjnO0`, Xogos Banking/Scholarships `-pYdT1wYXSg`, Time Quest
+`CoGNW2n37qg`, Body Battle `rYno4aLSEVw`, Medical Diagnosis `RuGAsyLPpJE`,
+Monster Math `rgP4ryHnZgY`, Bug and Seek `tH1npwYQkUM`, Totally Medieval
+`KM30p99cjPk`, Lightning Round `0krDj6C9du0`, Exploration Library `Gzv3I_oA33Y`.
+
+#### Where we left off / next steps
+
+Verify on production first:
+- [ ] **Players Learning** stat shows the real number, not the "500+" fallback (confirms `/api/public-stats` is reachable).
+- [ ] Social preview when sharing the URL (it will use the new arcade art, cropped from square).
+- [ ] Interactive sections on a real phone — cartridges, quest log, power meter.
+
+Then, in rough priority order:
+- [ ] **Regenerate the OG image at 1200×630** so social previews are not cropped.
+- [ ] **Reconcile the game count.** The homepage stat claims 18 Educational Games; `/games` lists 16 titles. The YouTube channel shows Classics Games, Life of a City, Debate Arena, and Turbo Type exist but are not on the site — adding them would make 18 true and is the cleanest fix.
+- [ ] **Add missing tutorial videos** on `/games`: Debt-Free Millionaire, iServ Volunteer, Shakespeare's Conspiracy, TimeQuest (candidate IDs above).
+- [ ] **No parent + student on a laptop video exists** on the channel — the homepage uses a generated still instead. Real footage would be the strongest asset for the parent audience and needs to be filmed or licensed.
+- [ ] **Decide the fate of `app/designs/`** — commit it, delete it, or leave it local. While it exists, homepage edits should be mirrored to `design5` or the two will silently diverge.
+- [ ] The Player Reviews are clearly labeled sample quotes. Replace them with real testimonials when available.
 
 ---
 
@@ -1217,5 +1344,5 @@ CREATE INDEX IF NOT EXISTS idx_board_skills_category ON board_skills(skill_categ
 
 ---
 
-*Last updated: July 22, 2026*
+*Last updated: August 7, 2026 — new homepage ("Arcade 2.0 Supercharged") shipped to production*
 *Maintained by: Development Team*
