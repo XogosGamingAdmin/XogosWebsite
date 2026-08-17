@@ -512,9 +512,8 @@ const lessonPlans: Record<Day, LessonItem[]> = {
     {
       time: "11:00",
       subject: "History",
-      activity: "Ask Hunt the Past about the topic you drew",
-      isXogos: true,
-      coins: "earns coins",
+      activity: "Narration + timeline project",
+      isXogos: false,
     },
     {
       time: "2:00",
@@ -539,10 +538,9 @@ const lessonPlans: Record<Day, LessonItem[]> = {
     },
     {
       time: "11:30",
-      subject: "Math",
-      activity: "Totally Medieval — build the granary",
-      isXogos: true,
-      coins: "earns coins",
+      subject: "Art",
+      activity: "Nature sketching & observation journal",
+      isXogos: false,
     },
     {
       time: "1:00",
@@ -569,9 +567,8 @@ const lessonPlans: Record<Day, LessonItem[]> = {
     {
       time: "11:00",
       subject: "STEM",
-      activity: "Digital Frontier — circuit repair level",
-      isXogos: true,
-      coins: "30 min · earns coins",
+      activity: "Hands-on circuits with breadboard kit",
+      isXogos: false,
     },
     {
       time: "1:00",
@@ -592,9 +589,8 @@ const lessonPlans: Record<Day, LessonItem[]> = {
     {
       time: "10:00",
       subject: "Review",
-      activity: "Lightning Round family quiz showdown",
-      isXogos: true,
-      coins: "earns coins",
+      activity: "Weekly review & portfolio update",
+      isXogos: false,
     },
     {
       time: "11:00",
