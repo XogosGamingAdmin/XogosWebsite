@@ -22,7 +22,8 @@ type SectionKey =
   | "homeschool"
   | "reviews"
   | "scholarship"
-  | "pricing";
+  | "pricing"
+  | "blog";
 
 type Day = "MON" | "TUE" | "WED" | "THU" | "FRI";
 
@@ -123,6 +124,15 @@ interface Review {
   player: string;
   accent: "red" | "purple" | "gold";
   avatar: string;
+}
+
+interface BlogPost {
+  id: string;
+  title: string;
+  excerpt: string;
+  imageUrl: string;
+  publishedAt: string;
+  category: string;
 }
 
 // ---------------------------------------------------------------------------
@@ -402,6 +412,7 @@ const sectionOrder: Record<Audience, SectionKey[]> = {
     "homeschool",
     "reviews",
     "scholarship",
+    "blog",
     "pricing",
   ],
   parent: [
@@ -412,6 +423,7 @@ const sectionOrder: Record<Audience, SectionKey[]> = {
     "games",
     "reviews",
     "scholarship",
+    "blog",
     "pricing",
     "stats",
   ],
@@ -423,6 +435,7 @@ const sectionOrder: Record<Audience, SectionKey[]> = {
     "homeschool",
     "reviews",
     "scholarship",
+    "blog",
     "pricing",
     "power",
   ],
@@ -894,6 +907,9 @@ export default function HomePage() {
   const [confetti, setConfetti] = useState<ConfettiPiece[]>([]);
   const [hudOpen, setHudOpen] = useState<boolean>(false);
 
+  // Latest blog post
+  const [latestPost, setLatestPost] = useState<BlogPost | null>(null);
+
   const unlockedRef = useRef<Set<AchievementId>>(new Set());
   const visitedAudiencesRef = useRef<Set<Audience>>(new Set(["parent"]));
   const flippedEverRef = useRef<Set<string>>(new Set());
@@ -917,6 +933,20 @@ export default function HomePage() {
       }
     }
     fetchMemberStats();
+
+    // Fetch latest blog post
+    async function fetchLatestPost() {
+      try {
+        const response = await fetch("/api/blog", { cache: "no-store" });
+        const data = await response.json();
+        if (data.data && data.data.length > 0) {
+          setLatestPost(data.data[0]);
+        }
+      } catch (error) {
+        console.error("Error fetching latest blog post:", error);
+      }
+    }
+    fetchLatestPost();
   }, []);
 
   useEffect(() => {
@@ -1930,6 +1960,51 @@ export default function HomePage() {
     </section>
   );
 
+  const blogSection = (
+    <section className={styles.blogSection}>
+      <div className={styles.sectionHeading}>
+        <span className={`${styles.sectionKeyword} ${styles.neonPurple}`}>
+          READ
+        </span>
+        <h2 className={styles.sectionTitle}>
+          <span className={styles.titleIcon}>📰</span>
+          LATEST FROM THE BLOG
+        </h2>
+      </div>
+      {latestPost ? (
+        <div className={styles.blogContent}>
+          <div className={styles.blogImageWrap}>
+            <Image
+              src={latestPost.imageUrl || "/images/blog-placeholder.png"}
+              alt={latestPost.title}
+              width={500}
+              height={300}
+              className={styles.blogImage}
+            />
+            <span className={styles.blogCategory}>{latestPost.category}</span>
+          </div>
+          <div className={styles.blogText}>
+            <h3 className={styles.blogTitle}>{latestPost.title}</h3>
+            <p className={styles.blogExcerpt}>{latestPost.excerpt}</p>
+            <div className={styles.blogMeta}>
+              <span className={styles.blogDate}>{latestPost.publishedAt}</span>
+            </div>
+            <Link href={`/blog/${latestPost.id}`} className={styles.primaryBtn}>
+              Read Article →
+            </Link>
+          </div>
+        </div>
+      ) : (
+        <div className={styles.blogLoading}>Loading latest post...</div>
+      )}
+      <div className={styles.blogAllLink}>
+        <Link href="/blog" className={styles.secondaryBtn}>
+          View All Articles →
+        </Link>
+      </div>
+    </section>
+  );
+
   const sections: Record<SectionKey, React.ReactElement> = {
     games: gamesSection,
     cartridges: cartridgesSection,
@@ -1940,6 +2015,7 @@ export default function HomePage() {
     reviews: reviewsSection,
     scholarship: scholarshipSection,
     pricing: pricingSection,
+    blog: blogSection,
   };
 
   // -------------------------------------------------------------------------
