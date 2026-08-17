@@ -490,7 +490,7 @@ const lessonPlans: Record<Day, LessonItem[]> = {
     {
       time: "1:00",
       subject: "Elective",
-      activity: "KitchenLab Academy — bake & measure",
+      activity: "Debt Free Millionaire: Personal Finance",
       isXogos: true,
       coins: "hands-on class",
     },
@@ -516,10 +516,11 @@ const lessonPlans: Record<Day, LessonItem[]> = {
       isXogos: false,
     },
     {
-      time: "2:00",
-      subject: "P.E.",
-      activity: "Bike ride or park day with the co-op",
-      isXogos: false,
+      time: "1:00",
+      subject: "Elective",
+      activity: "KitchenLab Academy — bake & measure",
+      isXogos: true,
+      coins: "hands-on class",
     },
   ],
   WED: [
