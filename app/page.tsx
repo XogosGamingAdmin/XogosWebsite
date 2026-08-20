@@ -1526,7 +1526,7 @@ export default function HomePage() {
         </span>
         <h2 className={styles.sectionTitle}>
           <span className={styles.titleIcon}>🏠</span>
-          BUILT FOR HOMESCHOOL FAMILIES
+          BUILT FOR ALL FAMILIES AND CLASSES
         </h2>
         <p className={styles.sectionSubtitle}>
           Xogos isn&apos;t just games. It&apos;s daily electives, real-world
