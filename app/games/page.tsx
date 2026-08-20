@@ -43,6 +43,7 @@ export default function GamesPage() {
       imagePath: "/images/games/DebtFreeMillionaire_logo.jpg",
       featured: true,
       status: "active",
+      videoId: "krluYVXttPY",
       features: [
         "Career simulation",
         "Budget management",
@@ -180,6 +181,7 @@ export default function GamesPage() {
         "Take action in your community—helping neighbors, running local events, cleaning parks, or mentoring younger kids—and every hour you serve earns you iPlay coins. These coins can be used in the Xogos Gaming Platform to unlock games, characters, and gear—or convert into real scholarships!",
       imagePath: "/images/games/new_iserv_volunteer.png",
       status: "active",
+      videoId: "bDGD6TZmnXA",
       features: [
         "Track volunteer hours",
         "Earn iPlay coins",
@@ -280,6 +282,7 @@ export default function GamesPage() {
         "Travel through time to experience history firsthand! Visit ancient civilizations, witness pivotal moments, and interact with historical figures across different eras. Complete missions that teach cause and effect, historical context, and the interconnected nature of world events.",
       imagePath: "/images/games/new_timequest.png",
       status: "active",
+      videoId: "CoGNW2n37qg",
       features: [
         "Time travel adventures",
         "Ancient civilizations",
