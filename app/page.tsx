@@ -2237,10 +2237,6 @@ export default function HomePage() {
               </div>
             </div>
 
-            <p className={styles.heroSubtitle} key={audience}>
-              {content.heroSubtitle}
-            </p>
-
             <div className={styles.heroActions}>
               {content.primaryCta.external ? (
                 <a
