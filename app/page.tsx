@@ -64,6 +64,7 @@ interface AudienceContent {
   playerIcon: string;
   playerImage: string;
   playerTagline: string;
+  platformImage: string;
   heroSubtitle: string;
   benefitsTitle: string;
   benefits: Benefit[];
@@ -290,6 +291,7 @@ const audienceContent: Record<Audience, AudienceContent> = {
     playerIcon: "🎮",
     playerImage: "/images/players/player-student.png",
     playerTagline: "Play games. Stack coins.",
+    platformImage: "/images/student-playing.png",
     heroSubtitle:
       "Play games that are actually fun, level up your skills without even noticing, and stack iPlay coins you can turn into real scholarship money. Yes, really.",
     benefitsTitle: "PLAYER PERKS",
@@ -331,6 +333,7 @@ const audienceContent: Record<Audience, AudienceContent> = {
     playerIcon: "🏠",
     playerImage: "/images/players/player-parent.png",
     playerTagline: "Curriculum, safety, scholarships.",
+    platformImage: "/images/mother-and-son.png",
     heroSubtitle:
       "A safe, ad-free platform where your kids play genuinely educational games, take real-world elective classes, balance their screen time with off-screen rewards, and earn iPlay coins that convert into real scholarship funds.",
     benefitsTitle: "WHY HOMESCHOOL FAMILIES CHOOSE XOGOS",
@@ -368,6 +371,7 @@ const audienceContent: Record<Audience, AudienceContent> = {
     playerIcon: "🏫",
     playerImage: "/images/players/player-educator.png",
     playerTagline: "Classroom-ready learning.",
+    platformImage: "/images/classroom-playing.png",
     heroSubtitle:
       "Curriculum-aligned games and electives your students will actually ask to play—wrapped in the safety controls, oversight, and structure your classroom requires.",
     benefitsTitle: "BUILT FOR YOUR CLASSROOM",
@@ -2216,11 +2220,11 @@ export default function HomePage() {
             </div>
 
             {/* Platform description with image */}
-            <div className={styles.platformIntro}>
+            <div className={styles.platformIntro} key={`platform-${audience}`}>
               <div className={styles.platformImageWrap}>
                 <Image
-                  src="/images/mother-and-son.png"
-                  alt="Mother helping son with homework"
+                  src={content.platformImage}
+                  alt={content.playerName}
                   width={480}
                   height={320}
                   className={styles.platformImage}
@@ -2228,12 +2232,7 @@ export default function HomePage() {
                 />
               </div>
               <div className={styles.platformText}>
-                <p>
-                  A safe, ad-free platform where your kids play genuinely
-                  educational games, take real-world elective classes, balance
-                  their screen time with off-screen rewards, and earn iPlay
-                  coins that convert into real scholarship funds.
-                </p>
+                <p>{content.heroSubtitle}</p>
               </div>
             </div>
 
