@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import ImageUpload from "@/components/admin/ImageUpload";
 import { canManageBlog } from "@/lib/auth/admin";
 import styles from "./page.module.css";
@@ -35,6 +35,13 @@ interface BlogPost {
   };
 }
 
+interface LibraryImage {
+  id: string;
+  public_url: string;
+  original_filename: string;
+  created_at: string;
+}
+
 export default function AdminPostsPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
@@ -60,6 +67,23 @@ export default function AdminPostsPage() {
 
   // Reference for the content textarea
   const contentRef = React.useRef<HTMLTextAreaElement>(null);
+
+  // Image/Video insertion modal state
+  const [showImageModal, setShowImageModal] = useState(false);
+  const [showVideoModal, setShowVideoModal] = useState(false);
+  const [libraryImages, setLibraryImages] = useState<LibraryImage[]>([]);
+  const [loadingLibrary, setLoadingLibrary] = useState(false);
+  const [selectedLibraryImage, setSelectedLibraryImage] = useState<string>("");
+  const [imagePosition, setImagePosition] = useState<
+    "left" | "center" | "right"
+  >("center");
+  const [imageSize, setImageSize] = useState<"small" | "medium" | "large">(
+    "medium"
+  );
+  const [imageAlt, setImageAlt] = useState("");
+  const [videoUrl, setVideoUrl] = useState("");
+  const [videoError, setVideoError] = useState("");
+  const [cursorPosition, setCursorPosition] = useState(0);
 
   // Rich text formatting helpers
   const wrapSelection = (before: string, after: string) => {
@@ -92,6 +116,126 @@ export default function AdminPostsPage() {
     wrapSelection(`<span style="color: ${color}">`, "</span>");
   const formatSize = (size: string) =>
     wrapSelection(`<span style="font-size: ${size}">`, "</span>");
+
+  // Load image library
+  const loadImageLibrary = useCallback(async () => {
+    setLoadingLibrary(true);
+    try {
+      const res = await fetch("/api/blog/images");
+      if (res.ok) {
+        const data = await res.json();
+        setLibraryImages(data.images || []);
+      }
+    } catch (error) {
+      console.error("Error loading image library:", error);
+    } finally {
+      setLoadingLibrary(false);
+    }
+  }, []);
+
+  // Open image modal
+  const openImageModal = () => {
+    const textarea = contentRef.current;
+    if (textarea) {
+      setCursorPosition(textarea.selectionStart);
+    }
+    setSelectedLibraryImage("");
+    setImagePosition("center");
+    setImageSize("medium");
+    setImageAlt("");
+    setShowImageModal(true);
+    loadImageLibrary();
+  };
+
+  // Open video modal
+  const openVideoModal = () => {
+    const textarea = contentRef.current;
+    if (textarea) {
+      setCursorPosition(textarea.selectionStart);
+    }
+    setVideoUrl("");
+    setVideoError("");
+    setShowVideoModal(true);
+  };
+
+  // Extract YouTube video ID from various URL formats
+  const extractYouTubeId = (url: string): string | null => {
+    const patterns = [
+      /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/,
+      /^([a-zA-Z0-9_-]{11})$/,
+    ];
+    for (const pattern of patterns) {
+      const match = url.match(pattern);
+      if (match) return match[1];
+    }
+    return null;
+  };
+
+  // Insert image at cursor position
+  const insertImage = () => {
+    if (!selectedLibraryImage) return;
+
+    const sizeMap = {
+      small: "300px",
+      medium: "500px",
+      large: "100%",
+    };
+
+    const alignMap = {
+      left: "flex-start",
+      center: "center",
+      right: "flex-end",
+    };
+
+    const floatStyle =
+      imagePosition === "center"
+        ? ""
+        : `float: ${imagePosition}; margin-${imagePosition === "left" ? "right" : "left"}: 1.5rem; margin-bottom: 1rem;`;
+
+    const imageHtml =
+      imagePosition === "center"
+        ? `<div class="blog-image" style="display: flex; justify-content: ${alignMap[imagePosition]}; margin: 2rem 0;">
+  <img src="${selectedLibraryImage}" alt="${imageAlt || "Blog image"}" style="max-width: ${sizeMap[imageSize]}; height: auto; border-radius: 8px;" />
+</div>`
+        : `<img src="${selectedLibraryImage}" alt="${imageAlt || "Blog image"}" class="blog-image" style="max-width: ${sizeMap[imageSize]}; height: auto; border-radius: 8px; ${floatStyle}" />`;
+
+    const newContent =
+      content.substring(0, cursorPosition) +
+      imageHtml +
+      content.substring(cursorPosition);
+    setContent(newContent);
+    setShowImageModal(false);
+  };
+
+  // Insert YouTube video at cursor position
+  const insertVideo = () => {
+    const videoId = extractYouTubeId(videoUrl);
+    if (!videoId) {
+      setVideoError(
+        "Invalid YouTube URL. Please enter a valid YouTube video link."
+      );
+      return;
+    }
+
+    const videoHtml = `<div class="blog-video" style="position: relative; margin: 2rem 0; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px; background: #000;">
+  <iframe
+    src="https://www.youtube-nocookie.com/embed/${videoId}?rel=0&modestbranding=1&showinfo=0&fs=1&disablekb=1&iv_load_policy=3"
+    title="Video"
+    allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"
+    allowfullscreen
+    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; border-radius: 12px;"
+  ></iframe>
+  <div style="position: absolute; top: 0; left: 0; right: 0; height: 70px; background: transparent; z-index: 10; cursor: default;"></div>
+  <div style="position: absolute; bottom: 0; right: 0; width: 150px; height: 50px; background: transparent; z-index: 10; cursor: default;"></div>
+</div>`;
+
+    const newContent =
+      content.substring(0, cursorPosition) +
+      videoHtml +
+      content.substring(cursorPosition);
+    setContent(newContent);
+    setShowVideoModal(false);
+  };
 
   // Fetch existing posts from blog API
   useEffect(() => {
@@ -404,6 +548,23 @@ export default function AdminPostsPage() {
                   <option value="1.5rem">X-Large</option>
                   <option value="2rem">Huge</option>
                 </select>
+                <span className={styles.toolbarDivider}></span>
+                <button
+                  type="button"
+                  onClick={openImageModal}
+                  className={styles.toolbarButton}
+                  title="Insert Image"
+                >
+                  🖼️
+                </button>
+                <button
+                  type="button"
+                  onClick={openVideoModal}
+                  className={styles.toolbarButton}
+                  title="Insert YouTube Video"
+                >
+                  🎬
+                </button>
               </div>
               <textarea
                 id="content"
@@ -502,6 +663,211 @@ Or use HTML directly:
           </div>
         </section>
       </div>
+
+      {/* Image Insert Modal */}
+      {showImageModal && (
+        <div className={styles.modalOverlay} onClick={() => setShowImageModal(false)}>
+          <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.modalHeader}>
+              <h3>Insert Image</h3>
+              <button
+                type="button"
+                onClick={() => setShowImageModal(false)}
+                className={styles.modalClose}
+              >
+                ×
+              </button>
+            </div>
+            <div className={styles.modalBody}>
+              <div className={styles.modalSection}>
+                <label>Select from Image Library</label>
+                {loadingLibrary ? (
+                  <div className={styles.loadingLibrary}>Loading images...</div>
+                ) : libraryImages.length === 0 ? (
+                  <div className={styles.noImages}>
+                    No images in library.{" "}
+                    <Link href="/admin/images" target="_blank">
+                      Upload images
+                    </Link>
+                  </div>
+                ) : (
+                  <div className={styles.imageGrid}>
+                    {libraryImages.map((img) => (
+                      <div
+                        key={img.id}
+                        className={`${styles.imageGridItem} ${selectedLibraryImage === img.public_url ? styles.selected : ""}`}
+                        onClick={() => setSelectedLibraryImage(img.public_url)}
+                      >
+                        <img src={img.public_url} alt={img.original_filename} />
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              <div className={styles.modalSection}>
+                <label>Or paste image URL</label>
+                <input
+                  type="text"
+                  value={selectedLibraryImage}
+                  onChange={(e) => setSelectedLibraryImage(e.target.value)}
+                  placeholder="https://..."
+                  className={styles.modalInput}
+                />
+              </div>
+
+              <div className={styles.modalRow}>
+                <div className={styles.modalSection}>
+                  <label>Position</label>
+                  <select
+                    value={imagePosition}
+                    onChange={(e) =>
+                      setImagePosition(e.target.value as "left" | "center" | "right")
+                    }
+                    className={styles.modalSelect}
+                  >
+                    <option value="left">Float Left</option>
+                    <option value="center">Center</option>
+                    <option value="right">Float Right</option>
+                  </select>
+                </div>
+                <div className={styles.modalSection}>
+                  <label>Size</label>
+                  <select
+                    value={imageSize}
+                    onChange={(e) =>
+                      setImageSize(e.target.value as "small" | "medium" | "large")
+                    }
+                    className={styles.modalSelect}
+                  >
+                    <option value="small">Small (300px)</option>
+                    <option value="medium">Medium (500px)</option>
+                    <option value="large">Large (Full Width)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className={styles.modalSection}>
+                <label>Alt Text (optional)</label>
+                <input
+                  type="text"
+                  value={imageAlt}
+                  onChange={(e) => setImageAlt(e.target.value)}
+                  placeholder="Describe the image..."
+                  className={styles.modalInput}
+                />
+              </div>
+
+              {selectedLibraryImage && (
+                <div className={styles.imagePreview}>
+                  <label>Preview</label>
+                  <img src={selectedLibraryImage} alt="Preview" />
+                </div>
+              )}
+            </div>
+            <div className={styles.modalFooter}>
+              <button
+                type="button"
+                onClick={() => setShowImageModal(false)}
+                className={styles.modalCancel}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={insertImage}
+                disabled={!selectedLibraryImage}
+                className={styles.modalConfirm}
+              >
+                Insert Image
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Video Insert Modal */}
+      {showVideoModal && (
+        <div className={styles.modalOverlay} onClick={() => setShowVideoModal(false)}>
+          <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.modalHeader}>
+              <h3>Insert YouTube Video</h3>
+              <button
+                type="button"
+                onClick={() => setShowVideoModal(false)}
+                className={styles.modalClose}
+              >
+                ×
+              </button>
+            </div>
+            <div className={styles.modalBody}>
+              <div className={styles.modalSection}>
+                <label>YouTube Video URL</label>
+                <input
+                  type="text"
+                  value={videoUrl}
+                  onChange={(e) => {
+                    setVideoUrl(e.target.value);
+                    setVideoError("");
+                  }}
+                  placeholder="https://www.youtube.com/watch?v=... or https://youtu.be/..."
+                  className={styles.modalInput}
+                />
+                {videoError && (
+                  <span className={styles.videoError}>{videoError}</span>
+                )}
+              </div>
+
+              <div className={styles.videoInfo}>
+                <p>
+                  <strong>Supported formats:</strong>
+                </p>
+                <ul>
+                  <li>https://www.youtube.com/watch?v=VIDEO_ID</li>
+                  <li>https://youtu.be/VIDEO_ID</li>
+                  <li>https://www.youtube.com/embed/VIDEO_ID</li>
+                  <li>Just the VIDEO_ID (11 characters)</li>
+                </ul>
+                <p className={styles.videoNote}>
+                  Videos will be embedded using privacy-enhanced mode and viewers
+                  cannot click on external YouTube links.
+                </p>
+              </div>
+
+              {videoUrl && extractYouTubeId(videoUrl) && (
+                <div className={styles.videoPreview}>
+                  <label>Preview</label>
+                  <div className={styles.videoPreviewContainer}>
+                    <iframe
+                      src={`https://www.youtube-nocookie.com/embed/${extractYouTubeId(videoUrl)}?rel=0&modestbranding=1`}
+                      title="Video Preview"
+                      allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    ></iframe>
+                  </div>
+                </div>
+              )}
+            </div>
+            <div className={styles.modalFooter}>
+              <button
+                type="button"
+                onClick={() => setShowVideoModal(false)}
+                className={styles.modalCancel}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={insertVideo}
+                disabled={!videoUrl}
+                className={styles.modalConfirm}
+              >
+                Insert Video
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -2155,13 +2155,13 @@ export default function HomePage() {
               <span>ARCADE 2.0 SUPERCHARGED · LEVEL UP YOUR EDUCATION</span>
             </div>
 
-            <div className={styles.coinMascot} aria-hidden="true">
+            <div className={styles.heroImageWrap}>
               <Image
-                src="/images/iplay-coin.png"
-                alt=""
-                width={150}
-                height={150}
-                className={styles.coinMascotImage}
+                src="/images/mother-and-son.png"
+                alt="Mother helping son with homework"
+                width={400}
+                height={280}
+                className={styles.heroFamilyImage}
                 priority
               />
             </div>

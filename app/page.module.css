@@ -3542,33 +3542,32 @@
     0 0 40px rgba(121, 40, 202, 0.25);
 }
 
-/* Hero coin mascot */
-.coinMascot {
-  width: 120px;
-  height: 120px;
-  margin: 4px auto 10px;
-  border-radius: 50%;
+/* Hero family image */
+.heroImageWrap {
+  max-width: 380px;
+  margin: 8px auto 16px;
+  border-radius: 16px;
   overflow: hidden;
   box-shadow:
-    0 0 26px rgba(230, 187, 132, 0.55),
-    0 0 60px rgba(230, 187, 132, 0.22);
-  animation: coinMascotBob 3.2s ease-in-out infinite;
+    0 8px 32px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.1);
+  animation: heroImageFloat 4s ease-in-out infinite;
 }
 
-.coinMascotImage {
+.heroFamilyImage {
   width: 100%;
-  height: 100%;
+  height: auto;
   object-fit: cover;
   display: block;
 }
 
-@keyframes coinMascotBob {
+@keyframes heroImageFloat {
   0%,
   100% {
-    transform: translateY(0) rotate(-2deg);
+    transform: translateY(0);
   }
   50% {
-    transform: translateY(-10px) rotate(2deg);
+    transform: translateY(-8px);
   }
 }
 
@@ -3667,9 +3666,8 @@
     margin: 0 auto;
   }
 
-  .coinMascot {
-    width: 92px;
-    height: 92px;
+  .heroImageWrap {
+    max-width: 300px;
   }
 
   .playerPortrait {
@@ -3679,7 +3677,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .coinMascot {
+  .heroImageWrap {
     animation: none;
   }
 

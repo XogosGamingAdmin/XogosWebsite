@@ -314,6 +314,7 @@ export default function BlogPostClient({
 }: BlogPostClientProps) {
   const [post, setPost] = useState<BlogPost | null>(initialPost || null);
   const [relatedPosts, setRelatedPosts] = useState<BlogPost[]>([]);
+  const [recentPosts, setRecentPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(!initialPost);
 
   useEffect(() => {
@@ -322,7 +323,7 @@ export default function BlogPostClient({
       if (initialPost) {
         setPost(initialPost);
 
-        // Still fetch related posts
+        // Fetch related posts and recent posts
         try {
           const allResponse = await fetch("/api/blog");
           const allResult = await allResponse.json();
@@ -334,6 +335,12 @@ export default function BlogPostClient({
               )
               .slice(0, 2);
             setRelatedPosts(related);
+
+            // Get 5 most recent posts (excluding current)
+            const recent = allResult.data
+              .filter((p: BlogPost) => p.id !== slug)
+              .slice(0, 5);
+            setRecentPosts(recent);
           }
         } catch (error) {
           console.error("Error loading related posts:", error);
@@ -351,6 +358,9 @@ export default function BlogPostClient({
             .filter((p) => p.id !== slug && p.category === staticPost.category)
             .slice(0, 2)
         );
+        setRecentPosts(
+          staticBlogPosts.filter((p) => p.id !== slug).slice(0, 5)
+        );
         setLoading(false);
         return;
       }
@@ -363,7 +373,7 @@ export default function BlogPostClient({
         if (result.data) {
           setPost(result.data);
 
-          // Fetch related posts
+          // Fetch related posts and recent posts
           const allResponse = await fetch("/api/blog");
           const allResult = await allResponse.json();
           if (allResult.data) {
@@ -374,6 +384,12 @@ export default function BlogPostClient({
               )
               .slice(0, 2);
             setRelatedPosts(related);
+
+            // Get 5 most recent posts (excluding current)
+            const recent = allResult.data
+              .filter((p: BlogPost) => p.id !== slug)
+              .slice(0, 5);
+            setRecentPosts(recent);
           }
         }
       } catch (error) {
@@ -485,15 +501,76 @@ export default function BlogPostClient({
           </div>
         </section>
 
-        {/* Article Content */}
-        <article className={styles.articleSection}>
-          <div className={styles.articleContainer}>
-            <div
-              className={styles.articleContent}
-              dangerouslySetInnerHTML={{ __html: displayContent }}
-            />
+        {/* Article Content with Sidebar */}
+        <section className={styles.articleSection}>
+          <div className={styles.articleLayout}>
+            {/* Main Article Content */}
+            <article className={styles.articleMain}>
+              <div
+                className={styles.articleContent}
+                dangerouslySetInnerHTML={{ __html: displayContent }}
+              />
+            </article>
+
+            {/* Sidebar with Recent Posts */}
+            <aside className={styles.sidebar}>
+              <div className={styles.sidebarSticky}>
+                <div className={styles.recentPostsCard}>
+                  <h3 className={styles.sidebarTitle}>Recent Posts</h3>
+                  <div className={styles.recentPostsList}>
+                    {recentPosts.map((recentPost) => (
+                      <Link
+                        key={recentPost.id}
+                        href={`/blog/${recentPost.id}`}
+                        className={styles.recentPostItem}
+                      >
+                        <div className={styles.recentPostThumb}>
+                          <Image
+                            src={recentPost.imageUrl}
+                            alt={recentPost.title}
+                            fill
+                            className={styles.recentPostImage}
+                            unoptimized={recentPost.imageUrl.startsWith("http")}
+                          />
+                        </div>
+                        <div className={styles.recentPostInfo}>
+                          <span className={styles.recentPostCategory}>
+                            {recentPost.category}
+                          </span>
+                          <h4 className={styles.recentPostTitle}>
+                            {recentPost.title}
+                          </h4>
+                          <span className={styles.recentPostDate}>
+                            {recentPost.publishedAt}
+                          </span>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Quick Links */}
+                <div className={styles.quickLinksCard}>
+                  <h3 className={styles.sidebarTitle}>Explore</h3>
+                  <div className={styles.quickLinks}>
+                    <Link href="/games" className={styles.quickLink}>
+                      <span className={styles.quickLinkIcon}>🎮</span>
+                      <span>Browse Games</span>
+                    </Link>
+                    <Link href="/classes" className={styles.quickLink}>
+                      <span className={styles.quickLinkIcon}>📚</span>
+                      <span>View Classes</span>
+                    </Link>
+                    <Link href="/scholarships" className={styles.quickLink}>
+                      <span className={styles.quickLinkIcon}>🎓</span>
+                      <span>Scholarships</span>
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </aside>
           </div>
-        </article>
+        </section>
 
         {/* Share Section */}
         <section className={styles.shareSection}>
