@@ -2155,17 +2155,6 @@ export default function HomePage() {
               <span>ARCADE 2.0 SUPERCHARGED · LEVEL UP YOUR EDUCATION</span>
             </div>
 
-            <div className={styles.heroImageWrap}>
-              <Image
-                src="/images/mother-and-son.png"
-                alt="Mother helping son with homework"
-                width={400}
-                height={280}
-                className={styles.heroFamilyImage}
-                priority
-              />
-            </div>
-
             <h1 className={styles.heroTitle}>
               <span
                 className={`${styles.glitchWord} ${styles.neonRed}`}
@@ -2223,6 +2212,28 @@ export default function HomePage() {
                     )}
                   </button>
                 ))}
+              </div>
+            </div>
+
+            {/* Platform description with image */}
+            <div className={styles.platformIntro}>
+              <div className={styles.platformImageWrap}>
+                <Image
+                  src="/images/mother-and-son.png"
+                  alt="Mother helping son with homework"
+                  width={480}
+                  height={320}
+                  className={styles.platformImage}
+                  priority
+                />
+              </div>
+              <div className={styles.platformText}>
+                <p>
+                  A safe, ad-free platform where your kids play genuinely
+                  educational games, take real-world elective classes, balance
+                  their screen time with off-screen rewards, and earn iPlay
+                  coins that convert into real scholarship funds.
+                </p>
               </div>
             </div>
 

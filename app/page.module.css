@@ -3542,32 +3542,62 @@
     0 0 40px rgba(121, 40, 202, 0.25);
 }
 
-/* Hero family image */
-.heroImageWrap {
-  max-width: 380px;
-  margin: 8px auto 16px;
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow:
-    0 8px 32px rgba(0, 0, 0, 0.4),
-    0 0 0 1px rgba(255, 255, 255, 0.1);
-  animation: heroImageFloat 4s ease-in-out infinite;
+/* Platform intro section with image */
+.platformIntro {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2.5rem;
+  align-items: center;
+  max-width: 900px;
+  margin: 2rem auto 1.5rem;
+  padding: 1.5rem;
+  background: linear-gradient(
+    135deg,
+    rgba(121, 40, 202, 0.12) 0%,
+    rgba(230, 39, 57, 0.08) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  backdrop-filter: blur(10px);
 }
 
-.heroFamilyImage {
+.platformImageWrap {
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow:
+    0 12px 40px rgba(0, 0, 0, 0.35),
+    0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+.platformImage {
   width: 100%;
   height: auto;
   object-fit: cover;
   display: block;
 }
 
-@keyframes heroImageFloat {
-  0%,
-  100% {
-    transform: translateY(0);
+.platformText {
+  padding: 0.5rem 0;
+}
+
+.platformText p {
+  font-size: 1.125rem;
+  line-height: 1.7;
+  color: rgba(229, 229, 229, 0.95);
+  margin: 0;
+  font-weight: 400;
+}
+
+@media (max-width: 768px) {
+  .platformIntro {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    text-align: center;
+    padding: 1.25rem;
   }
-  50% {
-    transform: translateY(-8px);
+
+  .platformText p {
+    font-size: 1rem;
   }
 }
 
@@ -3666,10 +3696,6 @@
     margin: 0 auto;
   }
 
-  .heroImageWrap {
-    max-width: 300px;
-  }
-
   .playerPortrait {
     width: 74px;
     height: 74px;
@@ -3677,10 +3703,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .heroImageWrap {
-    animation: none;
-  }
-
   .playerCard:hover .playerPortrait {
     transform: none;
   }
