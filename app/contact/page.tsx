@@ -1,13 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useRef, useState } from "react";
 import { PageTracker } from "@/components/Analytics";
 import { MarketingLayout } from "@/layouts/Marketing";
 import styles from "@/components/Marketing/InfoPage.module.css";
 
-// Local API endpoint that stores messages in the database
-const CONTACT_ENDPOINT = "/api/contact";
+// Platform API (api/generic/contact.php): emails each message to zack@xogosgaming.com via SES with
+// Reply-To set to the visitor. It accepts requests only from xogosgaming.com and rate-limits by IP.
+const CONTACT_ENDPOINT = "https://api.myxogos.com/api/generic/contact.php";
 
 const TOPICS = [
   "General question",
