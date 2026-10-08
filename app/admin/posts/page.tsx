@@ -65,8 +65,8 @@ export default function AdminPostsPage() {
   const [uploadedImageId, setUploadedImageId] = useState<string | null>(null);
   const [scheduledDate, setScheduledDate] = useState("");
 
-  // Reference for the content textarea
-  const contentRef = React.useRef<HTMLTextAreaElement>(null);
+  // Reference for the visual editor
+  const editorRef = React.useRef<HTMLDivElement>(null);
 
   // Image/Video insertion modal state
   const [showImageModal, setShowImageModal] = useState(false);
@@ -83,39 +83,111 @@ export default function AdminPostsPage() {
   const [imageAlt, setImageAlt] = useState("");
   const [videoUrl, setVideoUrl] = useState("");
   const [videoError, setVideoError] = useState("");
-  const [cursorPosition, setCursorPosition] = useState(0);
 
-  // Rich text formatting helpers
-  const wrapSelection = (before: string, after: string) => {
-    const textarea = contentRef.current;
-    if (!textarea) return;
-
-    const start = textarea.selectionStart;
-    const end = textarea.selectionEnd;
-    const selectedText = content.substring(start, end);
-    const newContent =
-      content.substring(0, start) +
-      before +
-      selectedText +
-      after +
-      content.substring(end);
-    setContent(newContent);
-
-    // Restore cursor position after the inserted text
-    setTimeout(() => {
-      textarea.focus();
-      textarea.setSelectionRange(start + before.length, end + before.length);
-    }, 0);
+  // Rich text formatting helpers using execCommand
+  const formatBold = () => {
+    document.execCommand("bold", false);
+    editorRef.current?.focus();
+  };
+  const formatItalic = () => {
+    document.execCommand("italic", false);
+    editorRef.current?.focus();
+  };
+  const formatUnderline = () => {
+    document.execCommand("underline", false);
+    editorRef.current?.focus();
+  };
+  const formatHeading = () => {
+    document.execCommand("formatBlock", false, "h3");
+    editorRef.current?.focus();
+  };
+  const formatParagraph = () => {
+    document.execCommand("formatBlock", false, "p");
+    editorRef.current?.focus();
+  };
+  const formatColor = (color: string) => {
+    document.execCommand("foreColor", false, color);
+    editorRef.current?.focus();
+  };
+  const formatSize = (size: string) => {
+    // For font size, we need to use a span with inline style
+    const selection = window.getSelection();
+    if (selection && selection.rangeCount > 0) {
+      const range = selection.getRangeAt(0);
+      const span = document.createElement("span");
+      span.style.fontSize = size;
+      range.surroundContents(span);
+    }
+    editorRef.current?.focus();
+  };
+  const insertLink = () => {
+    const url = prompt("Enter URL:");
+    if (url) {
+      document.execCommand("createLink", false, url);
+    }
+    editorRef.current?.focus();
+  };
+  const formatBulletList = () => {
+    document.execCommand("insertUnorderedList", false);
+    editorRef.current?.focus();
+  };
+  const formatNumberedList = () => {
+    document.execCommand("insertOrderedList", false);
+    editorRef.current?.focus();
   };
 
-  const formatBold = () => wrapSelection("<strong>", "</strong>");
-  const formatItalic = () => wrapSelection("<em>", "</em>");
-  const formatUnderline = () => wrapSelection("<u>", "</u>");
-  const formatHeading = () => wrapSelection("<h3>", "</h3>");
-  const formatColor = (color: string) =>
-    wrapSelection(`<span style="color: ${color}">`, "</span>");
-  const formatSize = (size: string) =>
-    wrapSelection(`<span style="font-size: ${size}">`, "</span>");
+  // Handle content changes in the editor
+  const handleEditorInput = () => {
+    if (editorRef.current) {
+      setContent(editorRef.current.innerHTML);
+    }
+  };
+
+  // Handle paste to clean up and preserve formatting
+  const handlePaste = (e: React.ClipboardEvent) => {
+    e.preventDefault();
+    const text = e.clipboardData.getData("text/html") || e.clipboardData.getData("text/plain");
+
+    // If plain text, convert line breaks to paragraphs
+    if (!e.clipboardData.getData("text/html")) {
+      const plainText = e.clipboardData.getData("text/plain");
+      const paragraphs = plainText.split(/\n\n+/).filter(p => p.trim());
+      const html = paragraphs.map(p => `<p>${p.replace(/\n/g, "<br>")}</p>`).join("");
+      document.execCommand("insertHTML", false, html);
+    } else {
+      document.execCommand("insertHTML", false, text);
+    }
+    handleEditorInput();
+  };
+
+  // Handle keyboard shortcuts
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.ctrlKey || e.metaKey) {
+      switch (e.key.toLowerCase()) {
+        case "b":
+          e.preventDefault();
+          formatBold();
+          break;
+        case "i":
+          e.preventDefault();
+          formatItalic();
+          break;
+        case "u":
+          e.preventDefault();
+          formatUnderline();
+          break;
+        case "k":
+          e.preventDefault();
+          insertLink();
+          break;
+      }
+    }
+    // Handle Enter key to create paragraphs
+    if (e.key === "Enter" && !e.shiftKey) {
+      // Let browser handle with default paragraph behavior
+      setTimeout(handleEditorInput, 0);
+    }
+  };
 
   // Load image library
   const loadImageLibrary = useCallback(async () => {
@@ -133,12 +205,29 @@ export default function AdminPostsPage() {
     }
   }, []);
 
+  // Save selection range for insertion
+  const [savedRange, setSavedRange] = useState<Range | null>(null);
+
+  const saveSelection = () => {
+    const selection = window.getSelection();
+    if (selection && selection.rangeCount > 0) {
+      setSavedRange(selection.getRangeAt(0).cloneRange());
+    }
+  };
+
+  const restoreSelection = () => {
+    if (savedRange) {
+      const selection = window.getSelection();
+      if (selection) {
+        selection.removeAllRanges();
+        selection.addRange(savedRange);
+      }
+    }
+  };
+
   // Open image modal
   const openImageModal = () => {
-    const textarea = contentRef.current;
-    if (textarea) {
-      setCursorPosition(textarea.selectionStart);
-    }
+    saveSelection();
     setSelectedLibraryImage("");
     setImagePosition("center");
     setImageSize("medium");
@@ -149,10 +238,7 @@ export default function AdminPostsPage() {
 
   // Open video modal
   const openVideoModal = () => {
-    const textarea = contentRef.current;
-    if (textarea) {
-      setCursorPosition(textarea.selectionStart);
-    }
+    saveSelection();
     setVideoUrl("");
     setVideoError("");
     setShowVideoModal(true);
@@ -199,11 +285,11 @@ export default function AdminPostsPage() {
 </div>`
         : `<img src="${selectedLibraryImage}" alt="${imageAlt || "Blog image"}" class="blog-image" style="max-width: ${sizeMap[imageSize]}; height: auto; border-radius: 8px; ${floatStyle}" />`;
 
-    const newContent =
-      content.substring(0, cursorPosition) +
-      imageHtml +
-      content.substring(cursorPosition);
-    setContent(newContent);
+    // Restore selection and insert HTML
+    editorRef.current?.focus();
+    restoreSelection();
+    document.execCommand("insertHTML", false, imageHtml);
+    handleEditorInput();
     setShowImageModal(false);
   };
 
@@ -229,11 +315,11 @@ export default function AdminPostsPage() {
   <div style="position: absolute; bottom: 0; right: 0; width: 150px; height: 50px; background: transparent; z-index: 10; cursor: default;"></div>
 </div>`;
 
-    const newContent =
-      content.substring(0, cursorPosition) +
-      videoHtml +
-      content.substring(cursorPosition);
-    setContent(newContent);
+    // Restore selection and insert HTML
+    editorRef.current?.focus();
+    restoreSelection();
+    document.execCommand("insertHTML", false, videoHtml);
+    handleEditorInput();
     setShowVideoModal(false);
   };
 
@@ -271,6 +357,15 @@ export default function AdminPostsPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Validate content is not empty
+    const contentText = editorRef.current?.innerText?.trim() || "";
+    if (!contentText) {
+      setMessage({ type: "error", text: "Content is required" });
+      editorRef.current?.focus();
+      return;
+    }
+
     setSaving(true);
     setMessage(null);
 
@@ -305,6 +400,9 @@ export default function AdminPostsPage() {
         setTitle("");
         setExcerpt("");
         setContent("");
+        if (editorRef.current) {
+          editorRef.current.innerHTML = "";
+        }
         setImageUrl("/images/XogosLogo.png");
         setUploadedImageId(null);
         setScheduledDate("");
@@ -354,7 +452,13 @@ export default function AdminPostsPage() {
   }
 
   if (!session || !canManageBlog(session?.user?.email)) {
-    return null;
+    return (
+      <div className={styles.container}>
+        <div className={styles.loading}>
+          Redirecting to sign in...
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -476,13 +580,18 @@ export default function AdminPostsPage() {
             </div>
 
             <div className={styles.formGroup}>
-              <label htmlFor="content">Content *</label>
+              <div className={styles.editorLabel}>
+                <label htmlFor="content">Content *</label>
+                <span className={styles.editorHint}>
+                  Type directly - formatting appears as it will on the blog
+                </span>
+              </div>
               <div className={styles.editorToolbar}>
                 <button
                   type="button"
                   onClick={formatBold}
                   className={styles.toolbarButton}
-                  title="Bold"
+                  title="Bold (Ctrl+B)"
                 >
                   <strong>B</strong>
                 </button>
@@ -490,7 +599,7 @@ export default function AdminPostsPage() {
                   type="button"
                   onClick={formatItalic}
                   className={styles.toolbarButton}
-                  title="Italic"
+                  title="Italic (Ctrl+I)"
                 >
                   <em>I</em>
                 </button>
@@ -498,10 +607,11 @@ export default function AdminPostsPage() {
                   type="button"
                   onClick={formatUnderline}
                   className={styles.toolbarButton}
-                  title="Underline"
+                  title="Underline (Ctrl+U)"
                 >
                   <u>U</u>
                 </button>
+                <span className={styles.toolbarDivider}></span>
                 <button
                   type="button"
                   onClick={formatHeading}
@@ -509,6 +619,30 @@ export default function AdminPostsPage() {
                   title="Heading"
                 >
                   H3
+                </button>
+                <button
+                  type="button"
+                  onClick={formatParagraph}
+                  className={styles.toolbarButton}
+                  title="Paragraph"
+                >
+                  P
+                </button>
+                <button
+                  type="button"
+                  onClick={formatBulletList}
+                  className={styles.toolbarButton}
+                  title="Bullet List"
+                >
+                  •
+                </button>
+                <button
+                  type="button"
+                  onClick={formatNumberedList}
+                  className={styles.toolbarButton}
+                  title="Numbered List"
+                >
+                  1.
                 </button>
                 <span className={styles.toolbarDivider}></span>
                 <select
@@ -528,7 +662,7 @@ export default function AdminPostsPage() {
                   <option value="#e6bb84">Gold</option>
                   <option value="#22c55e">Green</option>
                   <option value="#3b82f6">Blue</option>
-                  <option value="#ffffff">White</option>
+                  <option value="#1a1a2e">Dark</option>
                 </select>
                 <select
                   onChange={(e) => {
@@ -551,6 +685,14 @@ export default function AdminPostsPage() {
                 <span className={styles.toolbarDivider}></span>
                 <button
                   type="button"
+                  onClick={insertLink}
+                  className={styles.toolbarButton}
+                  title="Insert Link (Ctrl+K)"
+                >
+                  🔗
+                </button>
+                <button
+                  type="button"
                   onClick={openImageModal}
                   className={styles.toolbarButton}
                   title="Insert Image"
@@ -566,20 +708,23 @@ export default function AdminPostsPage() {
                   🎬
                 </button>
               </div>
-              <textarea
+              <div
                 id="content"
-                ref={contentRef}
+                ref={editorRef}
+                className={styles.visualEditor}
+                contentEditable
+                onInput={handleEditorInput}
+                onPaste={handlePaste}
+                onKeyDown={handleKeyDown}
+                data-placeholder="Start typing your blog post here... What you see is what you get."
+                suppressContentEditableWarning
+              />
+              {/* Hidden input to satisfy form validation */}
+              <input
+                type="hidden"
+                name="content"
                 value={content}
-                onChange={(e) => setContent(e.target.value)}
-                rows={15}
                 required
-                placeholder="Write your post content here. Select text and use the toolbar above to format.
-
-You can also paste plain text with paragraphs - they will be preserved automatically.
-
-Or use HTML directly:
-<h3>Section Title</h3>
-<p>Your paragraph text goes here.</p>"
               />
             </div>
 

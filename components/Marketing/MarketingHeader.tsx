@@ -75,10 +75,27 @@ export function MarketingHeader({
               <Link href="/blog" className={styles.navLink}>
                 Blog
               </Link>
+              {/* Mobile Sign-In button - shown only in mobile menu */}
+              <a
+                href="https://www.myXogos.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.mobileSignInButton}
+              >
+                Sign-In/Register
+              </a>
             </div>
           </nav>
         </div>
         <div className={styles.actionButtons}>
+          <a
+            href="https://www.myXogos.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.signInButton}
+          >
+            Sign-In/Register
+          </a>
           <button
             className={clsx(
               styles.mobileMenuToggle,
