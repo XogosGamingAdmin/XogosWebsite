@@ -1,14 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { PageTracker } from "@/components/Analytics";
 import { MarketingLayout } from "@/layouts/Marketing";
 import styles from "@/components/Marketing/InfoPage.module.css";
 
 // Local API endpoint that stores messages in the database
 const CONTACT_ENDPOINT = "/api/contact";
-const CONTACT_EMAIL = "zack@xogosgaming.com";
 
 const TOPICS = [
   "General question",
@@ -33,10 +32,26 @@ export default function ContactPage() {
   const [website, setWebsite] = useState(""); // honeypot
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState("");
+  const [isHuman, setIsHuman] = useState(false); // human verification checkbox
+  const pageLoadTime = useRef(Date.now()); // track when page loaded for timing check
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+
+    // Human verification check
+    if (!isHuman) {
+      setError("Please confirm you are not a robot.");
+      return;
+    }
+
+    // Timing check - if submitted too quickly (under 3 seconds), likely a bot
+    const timeSinceLoad = Date.now() - pageLoadTime.current;
+    if (timeSinceLoad < 3000) {
+      setError("Please wait a moment before submitting.");
+      return;
+    }
+
     if (message.trim().length < 10) {
       setError("Please write a little more in your message.");
       return;
@@ -55,12 +70,12 @@ export default function ContactPage() {
       }
       setError(
         data?.message ||
-          `Your message could not be sent. Please email ${CONTACT_EMAIL} directly.`
+          "Your message could not be sent. Please try again later."
       );
       setStatus("error");
     } catch {
       setError(
-        `We couldn't reach our server. Please check your connection, or email ${CONTACT_EMAIL} directly.`
+        "We couldn't reach our server. Please check your connection and try again."
       );
       setStatus("error");
     }
@@ -71,7 +86,9 @@ export default function ContactPage() {
     setEmail("");
     setTopic(TOPICS[0]);
     setMessage("");
+    setIsHuman(false);
     setStatus("idle");
+    pageLoadTime.current = Date.now(); // reset timing
   };
 
   return (
@@ -197,6 +214,21 @@ export default function ContactPage() {
                       />
                     </div>
 
+                    {/* Human verification checkbox */}
+                    <div className={styles.humanCheck}>
+                      <label className={styles.checkboxLabel}>
+                        <input
+                          type="checkbox"
+                          checked={isHuman}
+                          onChange={(e) => setIsHuman(e.target.checked)}
+                          className={styles.checkbox}
+                        />
+                        <span className={styles.checkboxText}>
+                          I confirm I am not a robot or AI
+                        </span>
+                      </label>
+                    </div>
+
                     {error && (
                       <div className={styles.alertError} role="alert">
                         {error}
@@ -226,22 +258,6 @@ export default function ContactPage() {
                 Many common questions are already answered in our FAQ.
               </p>
               <div className={styles.infoList}>
-                <div className={styles.infoItem}>
-                  <span className={styles.infoIcon} aria-hidden="true">
-                    ✉️
-                  </span>
-                  <div>
-                    <div className={styles.infoLabel}>Email</div>
-                    <div className={styles.infoText}>
-                      <a
-                        href={`mailto:${CONTACT_EMAIL}`}
-                        className={styles.textLink}
-                      >
-                        {CONTACT_EMAIL}
-                      </a>
-                    </div>
-                  </div>
-                </div>
                 <div className={styles.infoItem}>
                   <span className={styles.infoIcon} aria-hidden="true">
                     ❓

@@ -517,6 +517,36 @@
   }
 }
 
+/* ------------------------------ Human Check ----------------------------- */
+
+.humanCheck {
+  padding: 16px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  margin-top: 8px;
+}
+
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.checkbox {
+  width: 22px;
+  height: 22px;
+  accent-color: #e62739;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.checkboxText {
+  font-size: 15px;
+  color: rgba(229, 229, 229, 0.9);
+  line-height: 1.4;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .primaryBtn:hover,
   .secondaryBtn:hover {
